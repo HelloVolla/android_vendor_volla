@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2021 Hallo Welt Systeme UG
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="volla_license">
+        <![CDATA[
+            <h1>Volla OS - Endbenutzer-Lizenzvereinbarung (EULA)</h1>
+
+            <h2>Hinweis zu Open-Source-Software</h2>
+
+            <p>Das Volla OS enthält basiert auf das Android Open Source Project und enthält Open Source Android Apps. Ihre Befugnisse und Ansprüche hinsichtlich dieser Open-Source-Komponenten richten sich ausschließlich nach der jeweiligen Open-Source-Lizenz. Entgegenstehende Regelungen in diesem EULA finden keine Anwendung auf Open-Source-Komponenten.</p>
+
+            <p>Hinsichtlich der Open-Source-Komponenten ist jegliche Haftung und Gewährleistung der Programmierer dieser Komponenten ausgeschlossen.</p>
+
+            <h2>I. Vertragsgegenstand</h2>
+
+            <p>Diese Vereinbarung regelt die Nutzung der Software iQser Instantli („Software“) zwischen Ihnen („Sie“ oder „Nutzer“) und der Hallo Welt Systeme UG (haftungsbeschränkt), Kölner Straße 102, 42897 Remscheid, Deutschland („Lizenzgeber“) als Hersteller dieser Software.</p>
+
+            <h2>II. Einräumung von Nutzungsrechten</h2>
+
+            <ol>
+            <li>Der Lizenzgeber gewährt dem Nutzer, im Rahmen dieser Vereinbarung, eine nicht ausschließliche und nicht übertragbare Lizenz zur Nutzung der Software gewährt.</li>
+            <li>Die Software wird dem Nutzer ausschließlich zur Nutzung auf einem Smartphone der Marke Volla und für private und persönliche berufliche Zwecke auf Dauer zur Verfügung gestellt. Die Nutzung für persönliche berufliche Zwecke umfasst die Nutzung im Rahmen der eigenen Tätigkeit des Benutzers als Angestellter, Organ oder Selbständiger. Die Nutzung auf einem Smartphone einer anderen Marke als Volla ist ausdrücklich nicht gestattet.</li>
+            <li>Der Nutzer darf das gelieferte Programm vervielfältigen, soweit die jeweilige Vervielfältigung für die Benutzung des Programms notwendig ist. Zu den notwendigen Vervielfältigungen zählen insbesondere die Installation des Programms vom Originaldatenträger auf den Massenspeicher der eingesetzten Hardware sowie das Laden des Programms in den Arbeitsspeicher. Darüber hinaus darf der Nutzer eine (1) Vervielfältigung zu Sicherungszwecken anfertigen. Es darf jedoch jeweils nur eine einzige Sicherungskopie angefertigt und aufbewahrt werden.</li>
+            </ol>
+
+            <h2>III. Beschränkte Nutzungsbefugnis</h2>
+
+            <ol>
+            <li>Diese Vereinbarung gestattet Ihnen nur eine beschränkte Nutzung der Software, wie sie in Ziffer II dieser Vereinbarung beschrieben ist. Der Lizenzgeber behält im Übrigen alle Nutzungsrechte und Befugnisse an der Software (sowohl als unabhängiges Werk als auch als Werk, das als Grundlage für von Ihnen entwickelte Anwendungen dient) sowie an allen Kopien davon. Alle nicht ausdrücklich in dieser Vereinbarung gewährten Rechte, einschließlich aller in- und ausländischen Urheberrechte, verbleiben beim Lizenzgeber.</li>
+            <li>Insbesondere ist es dem Nutzer nicht gestattet, die Software zu vervielfältigen (mit Ausnahme einer Sicherungskopie), öffentlich zugänglich zu machen (einschließlich einer Zugänglichmachung über Peer-to-Peer-Netze), zu verändern und zu bearbeiten oder die Software in eine andere Software ganz oder teilweise zu integrieren.</li>
+            </ol>
+
+            <h2>IV. Weitergabe der Software</h2>
+
+            <ol>
+            <li>Der Nutzer darf die Software an Dritte verschenken, sofern sich der Dritte mit der Weitergeltung der vorliegenden Vertragsbedingungen auch ihm gegenüber einverstanden erklärt. Eine Veräußerung oder sonstige kostenpflichtige Weitergabe ist nicht gestattet.</li>
+            <li>Der Nutzer darf die Software Dritten auf Zeit überlassen, sofern dies nicht im Wege der Vermietung zu Erwerbszwecken (z. B. Application Service Providing, Software as a Service etc.) oder des Leasing geschieht und sich der Dritte mit der Weitergeltung der vorliegenden Vertragsbedingungen auch ihm gegenüber einverstanden erklärt. Eine Vermietung zu Erwerbszwecken oder das Verleasen sind unzulässig.</li>
+            </ol>
+
+            <h2>V. Dekompilierung und Programmänderungen</h2>
+
+            <ol>
+            <li>Die Rückübersetzung der Software bzw. des Software-Codes in andere Codeformen (Dekompilierung, Disassemblierung) sowie sonstige Arten der Rückerschließung der verschiedenen Herstellungsstufen der Software (Reverse Engineering), sind nur zulässig, wenn und soweit diese Handlungen notwendig sind, um Informationen zu erhalten, die zur Herstellung der Interoperabilität der Software mit einem unabhängig geschaffenen Computerprogramm unerlässlich sind. Sie sind unzulässig, soweit sich die Handlungen nicht auf die Teile der Software beschränken, die zur Herstellung der Interoperabilität notwendig sind.</li>
+            <li>Die im Rahmen einer nach V (1) zulässigen Handlung gewonnenen Informationen dürfen nicht zu anderen Zwecken als zur Herstellung der Interoperabilität des unabhängig geschaffenen Programms verwendet werden, und dürfen nur dann an Dritte weitergegeben werden, wenn dies für die Interoperabilität des unabhängig geschaffenen Programms notwendig ist. Die Rechte nach §§ 69c Nr.3, 69d Abs. 2 und 3 und 69e des deutschen Urheberrechtsgesetzes (UrhG) oder vergleichbarer Bestimmungen in anderen Rechtsordnungen werden durch diese Regelungen nicht eingeschränkt.</li>
+            <li>Die Entfernung eines Kopierschutzes oder ähnlicher Schutzmechanismen ist nur zulässig, sofern durch diesen Schutzmechanismus die störungsfreie Programmnutzung beeinträchtigt oder verhindert wird. Für die Beeinträchtigung oder Verhinderung störungsfreier Benutzbarkeit durch den Schutzmechanismus, trägt der Nutzer die Beweislast.</li>
+            <li>Urhebervermerke, Seriennummern sowie sonstige der Programmidentifikation dienende Merkmale dürfen auf keinen Fall entfernt oder verändert werden. Gleiches gilt für eine Unterdrückung der Bildschirmanzeige entsprechender Merkmale.</li>
+            </ol>
+
+            <h2>VI. Haftung und Gewährleistung</h2>
+
+            <ol>
+            <li>Der Lizenzgeber überlässt das Nutzungsrecht an der Software auf Dauer kostenfrei. Aus diesem Grund stehen dem Nutzer bei Mängeln und Schäden, die direkt oder indirekt aus der Nutzung resultieren, nur in eingeschränktem Umfang Ansprüche zu. Es gelten die gesetzlichen Bestimmungen.</li>
+            <li>Die Haftung für Datenverlust ist auf den typischen Wiederherstellungsaufwand beschränkt, der bei regelmäßiger und gefahrentsprechender Anfertigung von Sicherungskopien eingetreten wäre.</li>
+            </ol>
+
+            <h2>VII. Weiterentwicklung</h2>
+
+            <p>Der Lizenznehmer hat keinen Anspruch auf Weiterentwicklung, Updates oder Bugfixes der Software. Die Weiterentwicklung und Pflege des Moduls ist alleinige Entscheidung des Lizenzgebers.</p>
+
+            <h2>VIII. Anwendbares Recht</h2>
+
+            <p>Diese Vereinbarung unterliegt dem Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts, soweit dem Verbraucher dadurch nicht der Schutz entzogen wird, der ihm durch die Bestimmungen gewährt wird, von denen nach dem Recht des Staates, in dem er seinen gewöhnlichen Aufenthalt hat, nicht durch Vereinbarung abgewichen werden darf. </p>
+
+            <p>Verbraucher ist jeder Nutzer, der diese Vereinbarung zu Zwecken abschließt, die überwiegend weder seiner gewerblichen noch seiner selbständigen beruflichen Tätigkeit zugerechnet werden kann.</p>
+
+            <h2>IX. Gerichtsstand</h2>
+
+            <p>Gerichtsstand für alle Streitigkeiten aus diesem Vertrag ist Walldorf, sofern der Nutzer Kaufmann oder juristische Person des öffentlichen Rechts ist. </p>
+
+            <h2>X. Salvatorische Klausel, Schriftform</h2>
+
+            <ol>
+            <li>Sollten Teile dieses Vertrages ganz oder teilweise unwirksam sein oder werden, so berührt dies die Wirksamkeit der übrigen Regelungen nicht. Die Parteien verpflichten sich vielmehr, die unwirksame Regelung durch eine solche zu ersetzen, die dem wirtschaftlich Gewollten am nächsten kommt.</li>
+            <li>Änderungen dieses Vertrages bedürfen der Schriftform. Gleiches gilt für die Aufhebung dieser Schriftformklausel.</li>
+            </ol>
+
+            <h2>Abweichende Bestimmungen für die USA</h2>
+
+            <p>Sofern Sie zum Zeitpunkt des Downloads Ihren ständigen Wohnsitz in den USA haben, gelten zusätzlich die nachfolgenden Bestimmungen. Wenn und soweit die nachfolgenden Bestimmungen in Widerspruch zu anderen Bestimmungen dieser Vereinbarung stehen, gelten ausschließlich und vorrangig die nachfolgenden Bestimmungen:</p>
+
+            <p>Dem Nutzer ist es nicht gestattet, </p>
+
+            <ul>
+            <li>technische Beschränkungen der Software zu umgehen;</li>
+            <li>die Software zu dekompilieren oder zu disassemblieren oder ein Reverse Engineering vorzunehmen, soweit nicht zwingende Bestimmungen ihrer Rechtsordnung diese Handlungen gestatten;</li>
+            <li>die Software zum Zweck der Vervielfältigung zur Verfügung zu stellen;</li>
+            <li>mehr Kopien der Software anzufertigen als in diesem EULA oder nach dem anwendbaren Recht zulässig sind;</li>
+            <li>die Software zu vermieten, zu verleihen oder zu verleasen;</li>
+            <li>die Software oder diesen Lizenzvertrag auf einen Dritten zu übertragen;</li>
+            <li>die Software für kommerzielle Software-Hostingdienstleistungen zu nutzen.</li>
+            </ul>
+        ]]>
+    </string>
+
+</resources>

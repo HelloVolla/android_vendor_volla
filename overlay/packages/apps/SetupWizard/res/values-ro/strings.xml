@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2021 Hallo Welt Systeme UG
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="setup_services">Caracteristici VollaOS</string>
+    <string name="services_explanation" product="tablet">Aceste servicii extind capacitățile tabletei dumneavoastră. Datele vor fi folosite în conformitate cu VollaOS <xliff:g id="name" example="Privacy Policy">%s</xliff:g>.</string>
+    <string name="services_explanation" product="default">Aceste servicii extind capacitățile telefonului dumneavoastră. Datele vor fi folosite în conformitate cu VollaOS <xliff:g id="name" example="Privacy Policy">%s</xliff:g>.</string>
+    <string name="services_help_improve_cm">Ajutați la îmbunătățirea <xliff:g id="name" example="VollaOS">%s</xliff:g></string>
+    <string name="services_metrics_label"><xliff:g id="name" example="Help improve VollaOS">%1$s</xliff:g> prin trimiterea automată a statisticilor se utilizare și de utilizare a datelor la VollaOS. Aceste informații nu pot fi utilizate pentru identificarea dvs., ci oferă o mână de ajutor echipei care lucrează la lucruri ca durata bateriei, performanța aplicațiilor și la noile caracteristici <xliff:g id="name" example="VollaOS">%2$s</xliff:g>.</string>
+    <string name="intro_restore_subtitle" product="tablet">Dacă aveţi o copie de rezervă de pe ultima dvs. tabletă VollaOS, o puteţi restaura aici.</string>
+    <string name="intro_restore_subtitle" product="default">Dacă aveţi o copie de rezervă de pe ultimul dvs. telefon VollaOS, o puteţi restaura aici.</string>
+</resources>

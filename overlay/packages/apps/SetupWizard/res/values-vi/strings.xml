@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2021 Hallo Welt Systeme UG
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="setup_services">Các tính năng VollaOS</string>
+    <string name="services_explanation" product="tablet">Các dịch vụ này giúp mở rộng khả năng làm việc máy tính bảng của bạn. Dữ liệu sẽ được sử dụng theo VollaOS\'s <xliff:g id="name" example="Privacy Policy">%s</xliff:g>.</string>
+    <string name="services_explanation" product="default">Các dịch vụ này giúp mở rộng khả năng làm việc điện thoại của bạn. Dữ liệu sẽ được sử dụng theo VollaOS <xliff:g id="name" example="Privacy Policy">%s</xliff:g>.</string>
+    <string name="services_help_improve_cm">Giúp cải thiện <xliff:g id="name" example="VollaOS">%s</xliff:g></string>
+    <string name="services_metrics_label"><xliff:g id="name" example="Help improve VollaOS">%1$s</xliff:g> bằng cách tự động gửi dữ liệu chẩn đoán và sử dụng đến VollaOS. Thông tin này không được sử dụng để nhận dạng bạn và giúp nhóm thực hiện những thứ như thời lượng pin, hiệu suất ứng dụng và các tính năng <xliff:g id="name" example="VollaOS">%2$s</xliff:g> mới.</string>
+</resources>

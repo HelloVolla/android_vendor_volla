@@ -1,0 +1,24 @@
+From f86fb3c195f6824ac6967569050f344f2dde57c5 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Fri, 9 Jul 2021 17:30:29 +0430
+Subject: [PATCH] overlay: LineageSettings: Set statistics off
+
+Change-Id: I342fe89115ae4542d467fc107c25eaf962a32756
+---
+ .../packages/LineageSettingsProvider/res/values/defaults.xml    | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/overlay/common/lineage-sdk/packages/LineageSettingsProvider/res/values/defaults.xml b/overlay/common/lineage-sdk/packages/LineageSettingsProvider/res/values/defaults.xml
+index 56031b7f..5c17b840 100644
+--- a/overlay/common/lineage-sdk/packages/LineageSettingsProvider/res/values/defaults.xml
++++ b/overlay/common/lineage-sdk/packages/LineageSettingsProvider/res/values/defaults.xml
+@@ -18,5 +18,5 @@
+     <!-- Defaults for Secure -->
+ 
+     <!-- Default for LineageSettings.Secure.STATS_COLLECTION -->
+-    <bool name="def_stats_collection">true</bool>
++    <bool name="def_stats_collection">false</bool>
+ </resources>
+-- 
+2.29.2
+

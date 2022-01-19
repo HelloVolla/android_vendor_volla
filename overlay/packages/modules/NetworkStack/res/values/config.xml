@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_captive_portal_http_url" translatable="false">http://connectivitycheck.volla.tech/generate_204</string>
+    <string name="default_captive_portal_https_url" translatable="false">https://connectivitycheck.volla.tech/generate_204</string>
+</resources>

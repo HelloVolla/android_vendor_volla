@@ -1,0 +1,25 @@
+From 4277afa42e24c2db8ac6e8485703e8d4121f0d32 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Tue, 16 Jun 2020 19:15:40 +0800
+Subject: [PATCH] volla: Drop lineage from build number
+
+Change-Id: Icbf165698a3bb06f342f7d4bacee8aaa0db9c7bc
+---
+ core/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/core/Makefile b/core/Makefile
+index f5a05f032..6ec78791c 100644
+--- a/core/Makefile
++++ b/core/Makefile
+@@ -310,7 +310,7 @@ BUILD_VERSION_TAGS += $(BUILD_KEYS)
+ BUILD_VERSION_TAGS := $(subst $(space),$(comma),$(sort $(BUILD_VERSION_TAGS)))
+
+ # A human-readable string that descibes this build in detail.
+-build_desc := $(TARGET_PRODUCT)-$(TARGET_BUILD_VARIANT) $(PLATFORM_VERSION) $(BUILD_ID) $(BUILD_NUMBER_FROM_FILE) $(BUILD_VERSION_TAGS)
++build_desc := $(TARGET_DEVICE)-$(TARGET_BUILD_VARIANT) $(PLATFORM_VERSION) $(BUILD_ID) $(BUILD_NUMBER_FROM_FILE) $(BUILD_VERSION_TAGS)
+ $(intermediate_system_build_prop): PRIVATE_BUILD_DESC := $(build_desc)
+
+ # The string used to uniquely identify the combined build and product; used by the OTA server.
+--
+2.25.1

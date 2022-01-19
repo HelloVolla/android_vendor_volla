@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2021 Hallo Welt Systeme UG
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="setup_services">Funcionalidades VollaOS</string>
+    <string name="services_explanation" product="tablet">Estes serviços servem para ampliar os recursos do seu tablet. Os dados serão utilizados em conformidade com a <xliff:g id="name" example="Privacy Policy">%s</xliff:g> da VollaOS.</string>
+    <string name="services_explanation" product="default">Estes serviços servem para ampliar os recursos do seu telefone. Os dados serão utilizados em conformidade com a <xliff:g id="name" example="Privacy Policy">%s</xliff:g> da VollaOS.</string>
+    <string name="services_help_improve_cm">Ajude a melhorar a <xliff:g id="name" example="VollaOS">%s</xliff:g></string>
+    <string name="services_metrics_label"><xliff:g id="name" example="Ajude a melhorar a VollaOS">%1$s</xliff:g> enviando automaticamente dados de diagnóstico e utilização para a VollaOS. Esta informação não pode ser usada para identificá-lo e ajuda as equipas de desenvolvimento a melhorarem coisas como a duração da bateria, o desempenho das aplicações e no desenvolvimento de novas funcionalidades para a <xliff:g id="name" example="VollaOS">%2$s</xliff:g>.</string>
+    <string name="intro_restore_subtitle" product="tablet">Se tiver uma cópia de segurança do seu anterior tablet com VollaOS, pode restaurá-la aqui.</string>
+    <string name="intro_restore_subtitle" product="default">Se tiver uma cópia de segurança do seu anterior telefone com VollaOS, pode restaurá-la aqui.</string>
+</resources>

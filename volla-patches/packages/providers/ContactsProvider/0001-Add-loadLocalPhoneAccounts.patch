@@ -1,0 +1,146 @@
+From 7cbe9a165b451f3021084ff48e8e6ec7ec79dae5 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Mon, 16 Aug 2021 12:37:02 +0430
+Subject: [PATCH] Add loadLocalPhoneAccounts
+
+---
+ .../contacts/AccountWithDataSet.java          |  3 +-
+ .../contacts/ContactsDatabaseHelper.java      |  7 ++
+ .../providers/contacts/ContactsProvider2.java | 71 +++++++++++++++++++
+ 3 files changed, 80 insertions(+), 1 deletion(-)
+
+diff --git a/src/com/android/providers/contacts/AccountWithDataSet.java b/src/com/android/providers/contacts/AccountWithDataSet.java
+index 45b776c1..80b46785 100644
+--- a/src/com/android/providers/contacts/AccountWithDataSet.java
++++ b/src/com/android/providers/contacts/AccountWithDataSet.java
+@@ -62,7 +62,8 @@ public class AccountWithDataSet {
+     }
+ 
+     public boolean isLocalAccount() {
+-        return "DEVICE".equals(mAccountName) && "com.android.contacts".equals(mAccountType);
++        return ("DEVICE".equals(mAccountName) && "com.android.contacts".equals(mAccountType)) ||
++                (mAccountType != null && mAccountType.equals("Local Phone Account"));
+     }
+ 
+     @Override
+diff --git a/src/com/android/providers/contacts/ContactsDatabaseHelper.java b/src/com/android/providers/contacts/ContactsDatabaseHelper.java
+index 4c521f40..22cbeb70 100644
+--- a/src/com/android/providers/contacts/ContactsDatabaseHelper.java
++++ b/src/com/android/providers/contacts/ContactsDatabaseHelper.java
+@@ -232,6 +232,13 @@ public class ContactsDatabaseHelper extends SQLiteOpenHelper {
+                 +   RawContactsColumns.CONCRETE_ACCOUNT_ID + "=" + AccountsColumns.CONCRETE_ID
+                     + ")"
+                 + "LEFT OUTER JOIN " + Tables.SETTINGS + " ON ("
++                    + " ("
++                        + AccountsColumns.CONCRETE_ACCOUNT_NAME + " IS NULL AND ("
++                        + SettingsColumns.CONCRETE_ACCOUNT_NAME + " = 'Phone' OR "
++                        + SettingsColumns.CONCRETE_ACCOUNT_NAME + " = 'Tablet') AND "
++                        + AccountsColumns.CONCRETE_ACCOUNT_TYPE + " IS NULL AND "
++                        + SettingsColumns.CONCRETE_ACCOUNT_TYPE + " = 'Local Phone Account'"
++                    + " ) OR "
+                     + AccountsColumns.CONCRETE_ACCOUNT_NAME + "="
+                         + SettingsColumns.CONCRETE_ACCOUNT_NAME + " AND "
+                     + AccountsColumns.CONCRETE_ACCOUNT_TYPE + "="
+diff --git a/src/com/android/providers/contacts/ContactsProvider2.java b/src/com/android/providers/contacts/ContactsProvider2.java
+index 02c8bf00..f50c4ff1 100644
+--- a/src/com/android/providers/contacts/ContactsProvider2.java
++++ b/src/com/android/providers/contacts/ContactsProvider2.java
+@@ -59,9 +59,11 @@ import android.os.Bundle;
+ import android.os.CancellationSignal;
+ import android.os.ParcelFileDescriptor;
+ import android.os.ParcelFileDescriptor.AutoCloseInputStream;
++import android.os.Process;
+ import android.os.RemoteException;
+ import android.os.StrictMode;
+ import android.os.SystemClock;
++import android.os.SystemProperties;
+ import android.os.UserHandle;
+ import android.preference.PreferenceManager;
+ import android.provider.BaseColumns;
+@@ -1687,9 +1689,13 @@ public class ContactsProvider2 extends AbstractContactsProvider
+         switchToContactMode();
+         switch (task) {
+             case BACKGROUND_TASK_INITIALIZE: {
++                int prio = Process.getThreadPriority(Process.myTid());
++                Process.setThreadPriority(Process.THREAD_PRIORITY_DEFAULT);
+                 initForDefaultLocale();
+                 mReadAccessLatch.countDown();
+                 mReadAccessLatch = null;
++                loadLocalPhoneAccounts();
++                Process.setThreadPriority(prio);
+                 break;
+             }
+ 
+@@ -9922,4 +9928,69 @@ public class ContactsProvider2 extends AbstractContactsProvider
+     public ProfileProvider getProfileProviderForTest() {
+         return mProfileProvider;
+     }
++
++    protected void loadLocalPhoneAccounts() {
++        Log.d(TAG, "loadLocalPhoneAccounts()+ ");
++        // TODO : Check the unit test.
++        switchToContactMode();
++        SQLiteDatabase db = mDbHelper.get().getWritableDatabase();
++        String productCharacteristic = SystemProperties.get("ro.build.characteristics");
++
++        try {
++            db.beginTransaction();
++        } catch (android.database.sqlite.SQLiteDiskIOException ex) {
++            Log.w(TAG, "[loadLocalPhoneAccounts]catch SQLiteDiskIOException.");
++            return;
++        }
++
++      try {
++          // Add an account entry with an empty data set into settings table.
++          Cursor cursor = db.rawQuery("SELECT "
++                 + Settings.ACCOUNT_NAME + "," + Settings.ACCOUNT_TYPE
++                 + " FROM " + Tables.SETTINGS
++                 + " WHERE " + Settings.ACCOUNT_NAME + " = 'Phone'", null);
++         try {
++             Log.i(TAG, "loadLocal Phone Accounts -cursor.count:"
++                     + ((cursor == null) ? 0 : cursor.getCount()));
++             if (cursor != null && cursor.getCount() == 0) {
++                 // Add an account entry with an empty data set into settings
++                 // table.
++                 if ((productCharacteristic != null) && (productCharacteristic.equals("tablet"))) {
++                     db.execSQL("INSERT INTO " + Tables.SETTINGS + " (" + Settings.ACCOUNT_NAME
++                             + ", " + Settings.ACCOUNT_TYPE + ", " + Settings.DATA_SET + ", "
++                             + Settings.UNGROUPED_VISIBLE + ", " + Settings.SHOULD_SYNC
++                             + ") VALUES (?, ?, ?, ?, ?)", new String[] {
++                             "Tablet", "Local Phone Account", null, "1", "1"
++                     });
++                 } else {
++                     db.execSQL("INSERT INTO " + Tables.SETTINGS + " (" + Settings.ACCOUNT_NAME
++                             + ", " + Settings.ACCOUNT_TYPE + ", " + Settings.DATA_SET + ", "
++                             + Settings.UNGROUPED_VISIBLE + ", " + Settings.SHOULD_SYNC
++                             + ") VALUES (?, ?, ?, ?, ?)", new String[] {
++                             "Phone", "Local Phone Account", null, "1", "1"
++                     });
++                 }
++             }
++         } finally {
++             cursor.close();
++         }
++
++         db.setTransactionSuccessful();
++        } finally {
++            try {
++                db.endTransaction();
++            } catch (android.database.sqlite.SQLiteDiskIOException ex) {
++                Log.w(TAG, "[loadLocalPhoneAccounts]catch SQLiteDiskIOException.");
++                return;
++            } catch (android.database.sqlite.SQLiteCantOpenDatabaseException ex) {
++                Log.e(TAG, "[loadLocalPhoneAccounts]" +
++                        "catch SQLiteCantOpenDatabaseException. for endTransaction()");
++                return;
++            } catch (android.database.sqlite.SQLiteException ex) {
++                Log.e(TAG, "[loadLocalPhoneAccounts]catch SQLiteException for endTransaction()");
++                return;
++            }
++
++        }
++    }
+ }
+-- 
+2.29.2
+

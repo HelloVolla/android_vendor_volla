@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Flag indicating whether round icons should be parsed from the application manifest. -->
+    <bool name="config_useRoundIcon">true</bool>
+    
+    <!-- Controls the navigation bar interaction mode:
+         0: 3 button mode (back, home, overview buttons)
+         1: 2 button mode (back, home buttons + swipe up for overview)
+         2: gestures only for back, home and overview -->
+    <integer name="config_navBarInteractionMode">1</integer>
+
+    <!-- Whether or not swipe up gesture's opt-in setting is available on this device -->
+    <bool name="config_swipe_up_gesture_setting_available">true</bool>
+
+    <!-- Specifies the path that is used by AdaptiveIconDrawable class to crop launcher icons. -->
+    <string name="config_icon_mask">M50 0C77.6 0 100 22.4 100 50C100 77.6 77.6 100 50 100C22.4 100 0 77.6 0 50C0 22.4 22.4 0 50 0Z</string>
+    
+    <!-- Control the default night mode to use when there is no other mode override set.
+         One of the following values (see UiModeManager.java):
+             0 - MODE_NIGHT_AUTO
+             1 - MODE_NIGHT_NO
+             2 - MODE_NIGHT_YES
+    -->
+    <integer name="config_defaultNightMode">2</integer>
+
+    <!-- The name of the package that will hold the dialer role by default. -->
+    <string name="config_defaultDialer" translatable="false">com.simplemobiletools.dialer</string>
+
+    <!--  Control whether to lock day/night mode change from normal application. When it is
+         true, day / night mode change is only allowed to apps with MODIFY_DAY_NIGHT_MODE
+         permission. -->
+    <bool name="config_lockDayNightMode">false</bool>
+
+    <!-- Whether to enable network location overlay which allows network
+        location provider to be replaced by an app at run-time. When disabled,
+        only the config_networkLocationProviderPackageName package will be
+        searched for network location provider, otherwise packages whose
+        signature matches the signatures of config_locationProviderPackageNames
+        will be searched, and the service with the highest version number will
+        be picked. Anyone who wants to disable the overlay mechanism can set it
+        to false.
+     -->
+    <bool name="config_enableNetworkLocationOverlay" translatable="false">false</bool>
+
+    <!-- Package name providing network location support. Used only when
+        config_enableNetworkLocationOverlay is false. -->
+    <string name="config_networkLocationProviderPackageName" translatable="false">com.volla.nlp</string>
+
+    <!-- Whether to enable geocoder overlay which allows geocoder to be replaced
+        by an app at run-time. When disabled, only the
+        config_geocoderProviderPackageName package will be searched for
+        geocoder, otherwise any system package is eligible. Anyone who wants to
+        disable the overlay mechanism can set it to false.
+     -->
+
+    <bool name="config_enableGeocoderOverlay" translatable="false">false</bool>
+    <!-- Package name providing geocoder API support. Used only when
+        config_enableGeocoderOverlay is false. -->
+
+    <string name="config_geocoderProviderPackageName" translatable="false">com.volla.nlp</string>
+
+    <string-array name="config_locationProviderPackageNames" translatable="false">
+        <!-- The standard AOSP fused location provider -->
+        <item>com.android.location.fused</item>
+        <item>com.volla.nlp</item>
+    </string-array>
+	
+	<string translatable="false" name="config_networkCaptivePortalServerUrl">http://connectivitycheck.volla.tech/generate_204</string>
+
+</resources>

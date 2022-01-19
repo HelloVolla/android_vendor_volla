@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2021 Hallo Welt Systeme UG
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="512.000000dp"
+    android:height="512.000000dp"
+    android:viewportWidth="512.000000"
+    android:viewportHeight="512.000000">
+
+    <group
+            android:translateY="512.000000"
+            android:scaleX="0.297674"
+            android:scaleY="-0.297674">
+        <path
+            android:fillColor="#ff3615"
+            android:strokeWidth="1"
+            android:pathData="M727 1700 c-189 -30 -383 -140 -513 -292 -358 -417 -224 -1073 271 -1320 234 -117 519 -117 759 1 179 88 300 209 386 386 71 146 84 203 84 375 1 171 -13 238 -80 377 -138 289 -413 468 -734 478 -63 2 -141 0 -173 -5z m12 -560 c68 -47 85 -134 56 -283 -21 -112 -20 -172 5 -197 57 -57 140 23 205 196 30 79 53 114 77 114 4 0 25 -16 47 -35 49 -44 98 -65 155 -65 50 0 73 -23 61 -61 -15 -45 -117 -49 -203 -7 -24 11 -44 19 -45 17 -1 -2 -17 -35 -36 -72 -69 -138 -158 -206 -258 -194 -36 4 -54 12 -75 36 -46 51 -53 100 -34 221 23 146 21 212 -4 235 -22 20 -70 22 -114 6 -42 -17 -127 -74 -176 -119 -48 -46 -61 -50 -84 -26 -29 28 -19 57 42 115 71 69 109 96 181 126 72 31 152 28 200 -7z" />
+    </group>
+</vector>

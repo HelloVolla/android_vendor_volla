@@ -1,0 +1,40 @@
+From fddbe0384ceae1b11106badfdb88ac15865ea200 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Fri, 9 Jul 2021 18:56:01 +0430
+Subject: [PATCH] volla: Add more fonts
+
+Change-Id: I4bb34598ae557cdb76faab8b3cf49ed0ba5f2336
+---
+ prebuilt/common/etc/fonts_customization.xml | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/prebuilt/common/etc/fonts_customization.xml b/prebuilt/common/etc/fonts_customization.xml
+index 0c9a7fb3..271c5854 100644
+--- a/prebuilt/common/etc/fonts_customization.xml
++++ b/prebuilt/common/etc/fonts_customization.xml
+@@ -21,4 +21,22 @@
+     </family>
+     <alias name="rubik-medium" to="rubik" weight="500" />
+     <alias name="rubik-bold" to="rubik" weight="700" />
++
++    <family customizationType="new-named-family" name="ibmplexsans">
++        <font weight="100" style="normal">IBMPlexSans-Thin.ttf</font>
++        <font weight="100" style="italic">IBMPlexSans-ThinItalic.ttf</font>
++        <font weight="200" style="normal">IBMPlexSans-ExtraLight.ttf</font>
++        <font weight="200" style="italic">IBMPlexSans-ExtraLightItalic.ttf</font>
++        <font weight="300" style="normal">IBMPlexSans-Light.ttf</font>
++        <font weight="300" style="italic">IBMPlexSans-LightItalic.ttf</font>
++        <font weight="400" style="normal">IBMPlexSans-Regular.ttf</font>
++        <font weight="400" style="italic">IBMPlexSans-Italic.ttf</font>
++        <font weight="500" style="normal">IBMPlexSans-Medium.ttf</font>
++        <font weight="500" style="italic">IBMPlexSans-MediumItalic.ttf</font>
++        <font weight="900" style="normal">IBMPlexSans-SemiBold.ttf</font>
++        <font weight="900" style="italic">IBMPlexSans-SemiBoldItalic.ttf</font>
++        <font weight="700" style="normal">IBMPlexSans-Bold.ttf</font>
++        <font weight="700" style="italic">IBMPlexSans-BoldItalic.ttf</font>
++    </family>
++    <alias name="ibmplexsans-medium" to="ibmplexsans" weight="500" />
+ </fonts-modification>
+-- 
+2.29.2
+

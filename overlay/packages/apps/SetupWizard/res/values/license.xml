@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2021 Hallo Welt Systeme UG
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="volla_license">
+        <![CDATA[
+            <h1>Volla OS - End User License Agreement (EULA)</h1>
+
+            <h2>Notice about Open Source Software</h2>
+
+            <p>The Volla OS is based on the Android Open Source Project and contains open source Android apps. Your authority and claims regarding these open source components are exclusively based on the respective open source license. Conflicting provisions in this EULA do not apply to open source components.</p>
+
+            <p>With regard to the open source components, any liability and warranty of the programmers of these components is excluded.</p>
+
+            <h2>I. Contractual object</h2>
+
+            <p>This agreement covers the usage of the iQser Instantli product („Software“) between you („you“ or „user“) and Hallo Welt Systeme UG (haftungsbeschränkt), Kölner Straße 102, 42897 Remscheid, Germany („licence provider“) as the software’s manufacturer.</p>
+
+            <h2>II. Rights of use granted</h2>
+
+            <ol>
+            <li>Through this contract, the license provider grants the user a non-exclusive, non-transferrable license to use the software.</li>
+            <li>The software is provided to the user exclusively for use on a Volla brand smartphone and for private and personal professional purposes on a permanent basis. The use for personal professional purposes includes the use within the scope of the users own activity as employee, organ or self-employed person. The use on a smartphone of another brand than Volla is explicitly not granted.</li>
+            <li>The user may copy the delivered program as necessary to use the program. Required copies include in particular the installation of the program from the original data storage device to the hardware device on which it will be used, and opening the program in RAM. Beyond the required copies, the user may create one (1) backup copy of the software. The user is permitted to create and retain only one backup copy of the software.</li>
+            </ol>
+
+            <h2>III. Utilization authority</h2>
+
+            <ol>
+            <li>This agreement allows you a limited use of the software as described under section II of this agreement. The license provider reserves all usage and access rights to the software (including independent works and works that serve as a basis for other applications you may develop) as well as all software copies. All rights that are not explicitly defined in this contract, including domestic and international copyrights, remain reserved by the license provider.</li>
+            <li>The user is not permitted to copy the software (with exception of one backup copy), publish the software (including making it accessible over peer-to-peer networks), change the software, modify the software, or integrate it in another software in whole or in part.</li>
+            </ol>
+
+            <h2>IV. Software transfer</h2>
+
+            <ol>
+            <li>The user may give the software away to a third party, insofern the third party accepts the terms of the contract as applicable to himself. A sale or other fee-based transfer is not permitted.</li>
+            <li>The user may transfer the software to a third party for a limited time, insofern this transfer does not serve commercial leasing, resale or rental purposes (e.g. application service provider, software as a service offering, etc.), and the third party accepts the terms of the contract as applicable to himself. Commercial leasing, resale or rental is prohibited.</li>
+            </ol>
+
+            <h2>V. Decompilation and program modifications</h2>
+
+            <ol>
+            <li>Decompiling or disassembling the software code in other code forms, as well as other types of reverse engineering the diverse compile stages of the software, are only permissible when these actions are necessary to establish interoperability between the software and an independently acquired computer program. They are not permissible when the actions are not necessary to establish the aforementioned interoperability.</li>
+            <li>The information obtained through actions permitted under V (1) may not be used for any purpose other than to establish interoperability between the independently acquired program, and may only be transferred to third parties when necessary to establish interoperability with the aforementioned program. The rights accorded by §§ 69c Nr.3, 69d Abs. 2 and 3 and 69e of the German Copyright Law (UrhG) or comparable rights in other legal systems remain reserved and are not affected by this regulation.</li>
+            <li><p>Removing copy protection or other, similar protection mechanisms is only permissible insofern the protection mechanism hinders or prevents interference-free program usage. In this case, the user is required to prove that the protection mechanism hinders or prevents interference-free program usage.</p>
+            (4)  Copyright notices, serial numbers and other program identifying attributes must not be removed or changed. The same applies to suppressing the display of such features on the screen.</li>
+            </ol>
+
+            <h2>VI. Liability and warranty</h2>
+
+            <ol>
+            <li>The license granter transfers a right to use the software permanently free of charge. As a result, errors or damages that the user may encounter resulting directly or indirectly from using the software can only be covered by limited liability. The legal provisions apply.</li>
+            <li>Liability over data loss is limited to typical restore efforts from an appropriately scheduled, regular backup copy.</li>
+            </ol>
+
+            <h2>VII. Weiterentwicklung</h2>
+
+            <p>The licensee does not have a right to continued development, updates, or bug fixes of the software. Continued development and maintenance is a sole decision of the license provider.</p>
+
+            <h2>VIII. Applicable law</h2>
+
+            <p>This agreement is governed by the laws of the Federal Republic of Germany, to the exclusion of the UN Convention on Contracts for the International Sale of Goods, insofar that the consumer cannot contractually modify the protection granted through the terms of the laws governing the jurisdiction in which the consumer resides. </p>
+
+            <p>A consumer is any user who consents to this agreement for personal purposes, which cannot be attributed to a commercial or independent occupational activity.</p>
+
+            <h2>IX. Court of jurisdiction</h2>
+
+            <p>The court of jurisdiction for all disputes on this contract is Walldorf, Germany, provided that the user is a merchant or legal entity under public law. </p>
+
+            <h2>X. Severance clause</h2>
+
+            <ol>
+            <li>Should parts of this contract be or become invalid, in part or in full, the remaining clauses remain effective and their validity remains unaffected. The parties oblige themselves to replace the invalid clause(s) to reflect the original intent as closely as possible.</li>
+            <li>Any amendments or changes to this contract shall be in writing. The same applies to a removal of this clause.</li>
+            </ol>
+
+            <h2>Deviating provisions for the United States of America</h2>
+
+            <p>If your place of residence is in the United States of America at the time you downloaded the software, the following additional provisions apply. Should these conditions pose a direct contradiction to other provisions of this agreement, the following conditions apply exclusively and with priority:</p>
+
+            <p>The user is not permitted to: </p>
+
+            <ul>
+            <li>work around technical limitations of the software;</li>
+            <li>decompile, disassemble, or reverse engineer the software, soweit nicht zwingende Bestimmungen ihrer Rechtsordnung diese Handlungen gestatten;</li>
+            <li>provide the software for purposes of copying it;</li>
+            <li>create more copies of the software than is allowed by this EULA or by the applicable law;</li>
+            <li>rent, loan, or lease the software;</li>
+            <li>transfer the software to a third party under this license agreement; or</li>
+            <li>use the software for commercial software hosting services.</li>
+            </ul>
+        ]]>
+    </string>
+
+</resources>
