@@ -28,3 +28,15 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/etc/default-permissions/default_permissions_net.osmand.plus.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_net.osmand.plus.xml \
     $(LOCAL_PATH)/etc/default-permissions/default_permissions_org.fdroid.fdroid.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_org.fdroid.fdroid.xml \
     $(LOCAL_PATH)/etc/default-permissions/default_permissions_com.volla.gsmnlp.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_com.volla.gsmnlp.xml
+
+# Permissions
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/etc/permissions/whitelist_com.volla.launcher.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/whitelist_com.volla.launcher.xml
+
+# Localhost SSL key
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/etc/localhost.bks:$(TARGET_COPY_OUT_SYSTEM)/etc/localhost.bks
+
+# APNs
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/etc/apns-conf.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/apns-conf.xml

@@ -1,4 +1,4 @@
-From 7cbe9a165b451f3021084ff48e8e6ec7ec79dae5 Mon Sep 17 00:00:00 2001
+From 4e2547148d21dd9332b7e4402b3a5520fbc4d429 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Mon, 16 Aug 2021 12:37:02 +0430
 Subject: [PATCH] Add loadLocalPhoneAccounts
@@ -24,7 +24,7 @@ index 45b776c1..80b46785 100644
  
      @Override
 diff --git a/src/com/android/providers/contacts/ContactsDatabaseHelper.java b/src/com/android/providers/contacts/ContactsDatabaseHelper.java
-index 4c521f40..22cbeb70 100644
+index 2e5cdacf..878e1c4e 100644
 --- a/src/com/android/providers/contacts/ContactsDatabaseHelper.java
 +++ b/src/com/android/providers/contacts/ContactsDatabaseHelper.java
 @@ -232,6 +232,13 @@ public class ContactsDatabaseHelper extends SQLiteOpenHelper {
@@ -42,10 +42,10 @@ index 4c521f40..22cbeb70 100644
                          + SettingsColumns.CONCRETE_ACCOUNT_NAME + " AND "
                      + AccountsColumns.CONCRETE_ACCOUNT_TYPE + "="
 diff --git a/src/com/android/providers/contacts/ContactsProvider2.java b/src/com/android/providers/contacts/ContactsProvider2.java
-index 02c8bf00..f50c4ff1 100644
+index 3a0f7db8..f72c93a2 100644
 --- a/src/com/android/providers/contacts/ContactsProvider2.java
 +++ b/src/com/android/providers/contacts/ContactsProvider2.java
-@@ -59,9 +59,11 @@ import android.os.Bundle;
+@@ -63,9 +63,11 @@ import android.os.Bundle;
  import android.os.CancellationSignal;
  import android.os.ParcelFileDescriptor;
  import android.os.ParcelFileDescriptor.AutoCloseInputStream;
@@ -57,7 +57,7 @@ index 02c8bf00..f50c4ff1 100644
  import android.os.UserHandle;
  import android.preference.PreferenceManager;
  import android.provider.BaseColumns;
-@@ -1687,9 +1689,13 @@ public class ContactsProvider2 extends AbstractContactsProvider
+@@ -1673,9 +1675,13 @@ public class ContactsProvider2 extends AbstractContactsProvider
          switchToContactMode();
          switch (task) {
              case BACKGROUND_TASK_INITIALIZE: {
@@ -71,7 +71,7 @@ index 02c8bf00..f50c4ff1 100644
                  break;
              }
  
-@@ -9922,4 +9928,69 @@ public class ContactsProvider2 extends AbstractContactsProvider
+@@ -9862,4 +9868,69 @@ public class ContactsProvider2 extends AbstractContactsProvider
      public ProfileProvider getProfileProviderForTest() {
          return mProfileProvider;
      }

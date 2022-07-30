@@ -1,0 +1,9 @@
+allow toolbox self:capability sys_admin;
+allow toolbox mmcblk1_block_device:blk_file rw_file_perms;
+
+allowxperm toolbox mmcblk1_block_device:blk_file ioctl {
+  0x301
+  0x1260
+  0x125f
+  0x127b
+};

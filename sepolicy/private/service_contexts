@@ -1,0 +1,3 @@
+vollaapplock                                     u:object_r:volla_service:s0
+vollafirewall                                    u:object_r:volla_service:s0
+vollachildmode                                   u:object_r:volla_service:s0

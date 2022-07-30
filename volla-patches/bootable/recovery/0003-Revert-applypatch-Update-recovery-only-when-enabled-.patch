@@ -1,0 +1,27 @@
+From 80664adcf84c2ca0a364cd9ff17ef81b0ca69808 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Mon, 13 Dec 2021 18:48:56 +0330
+Subject: [PATCH] Revert "applypatch: Update recovery only when enabled in
+ Updater settings"
+
+This reverts commit 576edb34e616b10673b615d0dfe17394e70c43d4.
+---
+ applypatch/vendor_flash_recovery.rc | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/applypatch/vendor_flash_recovery.rc b/applypatch/vendor_flash_recovery.rc
+index e4890c85..37a7c2be 100644
+--- a/applypatch/vendor_flash_recovery.rc
++++ b/applypatch/vendor_flash_recovery.rc
+@@ -1,8 +1,3 @@
+ service vendor_flash_recovery /vendor/bin/install-recovery.sh
+     class main
+     oneshot
+-    disabled
+-
+-# update recovery if enabled
+-on property:persist.vendor.recovery_update=true
+-    start vendor_flash_recovery
+-- 
+2.29.2
+

@@ -1,0 +1,119 @@
+From 984806fdbd265fd5663090193ac004903780f409 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Fri, 1 Apr 2022 22:50:47 +0430
+Subject: [PATCH] DownloadProvider: Fix mtk db downgrade
+
+Change-Id: Icb92d8ac1f0dc89ca5c7784dd15eccabe212d2ea
+---
+ .../providers/downloads/DownloadProvider.java | 88 +++++++++++++++++++
+ 1 file changed, 88 insertions(+)
+
+diff --git a/src/com/android/providers/downloads/DownloadProvider.java b/src/com/android/providers/downloads/DownloadProvider.java
+index 105d81be..20330719 100644
+--- a/src/com/android/providers/downloads/DownloadProvider.java
++++ b/src/com/android/providers/downloads/DownloadProvider.java
+@@ -51,6 +51,7 @@ import android.database.Cursor;
+ import android.database.DatabaseUtils;
+ import android.database.SQLException;
+ import android.database.sqlite.SQLiteDatabase;
++import android.database.sqlite.SQLiteException;
+ import android.database.sqlite.SQLiteOpenHelper;
+ import android.database.sqlite.SQLiteQueryBuilder;
+ import android.net.Uri;
+@@ -313,6 +314,93 @@ public final class DownloadProvider extends ContentProvider {
+             }
+         }
+ 
++        @Override
++        public void onDowngrade(SQLiteDatabase db, int oldNumber, int newNumber) {
++            if (oldNumber == 115) {
++                Log.e(Constants.TAG, "onDowngrade: Upgrading to 114.");
++                nullifyMediaStoreUris(db);
++
++                Log.e(Constants.TAG, "onDowngrade: Destroying all mtk data.");
++                try {
++                    db.execSQL("DROP TABLE IF EXISTS downloads_tmp;");
++                    db.execSQL("ALTER TABLE downloads RENAME TO downloads_tmp;");
++                    createDownloadsTable(db);
++                    addColumn(db, DB_TABLE, Downloads.Impl.COLUMN_IS_PUBLIC_API,
++                              "INTEGER NOT NULL DEFAULT 0");
++                    addColumn(db, DB_TABLE, Downloads.Impl.COLUMN_ALLOW_ROAMING,
++                              "INTEGER NOT NULL DEFAULT 0");
++                    addColumn(db, DB_TABLE, Downloads.Impl.COLUMN_ALLOWED_NETWORK_TYPES,
++                              "INTEGER NOT NULL DEFAULT 0");
++                    addColumn(db, DB_TABLE, Downloads.Impl.COLUMN_IS_VISIBLE_IN_DOWNLOADS_UI,
++                              "INTEGER NOT NULL DEFAULT 1");
++                    addColumn(db, DB_TABLE, Downloads.Impl.COLUMN_BYPASS_RECOMMENDED_SIZE_LIMIT,
++                            "INTEGER NOT NULL DEFAULT 0");
++                    addColumn(db, DB_TABLE, Downloads.Impl.COLUMN_MEDIAPROVIDER_URI, "TEXT");
++                    addColumn(db, DB_TABLE, Downloads.Impl.COLUMN_DELETED,
++                            "BOOLEAN NOT NULL DEFAULT 0");
++                    addColumn(db, DB_TABLE, Downloads.Impl.COLUMN_ERROR_MSG, "TEXT");
++                    addColumn(db, DB_TABLE, Downloads.Impl.COLUMN_ALLOW_METERED,
++                            "INTEGER NOT NULL DEFAULT 1");
++                    addColumn(db, DB_TABLE, Downloads.Impl.COLUMN_ALLOW_WRITE,
++                            "BOOLEAN NOT NULL DEFAULT 0");
++                    addColumn(db, DB_TABLE, Downloads.Impl.COLUMN_FLAGS,
++                            "INTEGER NOT NULL DEFAULT 0");
++                    addColumn(db, DB_TABLE, Downloads.Impl.COLUMN_MEDIASTORE_URI,
++                            "TEXT DEFAULT NULL");
++
++                    final String downloads_columns = Downloads.Impl._ID + ", " +
++                        Downloads.Impl.COLUMN_URI + ", " +
++                        Constants.RETRY_AFTER_X_REDIRECT_COUNT + ", " +
++                        Downloads.Impl.COLUMN_APP_DATA + ", " +
++                        Downloads.Impl.COLUMN_NO_INTEGRITY + ", " +
++                        Downloads.Impl.COLUMN_FILE_NAME_HINT + ", " +
++                        Constants.OTA_UPDATE + ", " +
++                        Downloads.Impl._DATA + ", " +
++                        Downloads.Impl.COLUMN_MIME_TYPE + ", " +
++                        Downloads.Impl.COLUMN_DESTINATION + ", " +
++                        Constants.NO_SYSTEM_FILES + ", " +
++                        Downloads.Impl.COLUMN_VISIBILITY + ", " +
++                        Downloads.Impl.COLUMN_CONTROL + ", " +
++                        Downloads.Impl.COLUMN_STATUS + ", " +
++                        Downloads.Impl.COLUMN_FAILED_CONNECTIONS + ", " +
++                        Downloads.Impl.COLUMN_LAST_MODIFICATION + ", " +
++                        Downloads.Impl.COLUMN_NOTIFICATION_PACKAGE + ", " +
++                        Downloads.Impl.COLUMN_NOTIFICATION_CLASS + ", " +
++                        Downloads.Impl.COLUMN_NOTIFICATION_EXTRAS + ", " +
++                        Downloads.Impl.COLUMN_COOKIE_DATA + ", " +
++                        Downloads.Impl.COLUMN_USER_AGENT + ", " +
++                        Downloads.Impl.COLUMN_REFERER + ", " +
++                        Downloads.Impl.COLUMN_TOTAL_BYTES + ", " +
++                        Downloads.Impl.COLUMN_CURRENT_BYTES + ", " +
++                        Constants.ETAG + ", " +
++                        Constants.UID + ", " +
++                        Downloads.Impl.COLUMN_OTHER_UID + ", " +
++                        Downloads.Impl.COLUMN_TITLE + ", " +
++                        Downloads.Impl.COLUMN_DESCRIPTION + ", " +
++                        Downloads.Impl.COLUMN_MEDIA_SCANNED + ", " +
++                        Downloads.Impl.COLUMN_IS_PUBLIC_API + ", " +
++                        Downloads.Impl.COLUMN_ALLOW_ROAMING + ", " +
++                        Downloads.Impl.COLUMN_ALLOWED_NETWORK_TYPES + ", " +
++                        Downloads.Impl.COLUMN_IS_VISIBLE_IN_DOWNLOADS_UI + ", " +
++                        Downloads.Impl.COLUMN_BYPASS_RECOMMENDED_SIZE_LIMIT + ", " +
++                        Downloads.Impl.COLUMN_MEDIAPROVIDER_URI + ", " +
++                        Downloads.Impl.COLUMN_DELETED + ", " +
++                        Downloads.Impl.COLUMN_ERROR_MSG + ", " +
++                        Downloads.Impl.COLUMN_ALLOW_METERED + ", " +
++                        Downloads.Impl.COLUMN_ALLOW_WRITE + ", " +
++                        Downloads.Impl.COLUMN_FLAGS + ", " +
++                        Downloads.Impl.COLUMN_MEDIASTORE_URI;
++                    db.execSQL("INSERT INTO downloads (" + downloads_columns + ") SELECT " + downloads_columns + " FROM downloads_tmp");
++                    db.execSQL("DROP TABLE downloads_tmp;");
++                } catch (SQLiteException e) {
++                    Log.e(Constants.TAG, "[onDowngrade] Exception removing column "
++                            + "priority; " + e);
++                }
++
++                MediaScanTriggerJob.schedule(getContext());
++            }
++        }
++
+         /**
+          * Upgrade database from (version - 1) to version.
+          */
+-- 
+2.29.2
+

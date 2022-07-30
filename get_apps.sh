@@ -11,6 +11,22 @@ addCopy() {
 if [ "$2"  == "YES" ] || [ "$3"  == "YES" ];then
 cp apk/$1.apk apk/$1-Stub.apk
 gzip apk/$1.apk
+if [ "$4"  == "YES" ];then
+cat >> Android.mk <<EOF
+include \$(CLEAR_VARS)
+LOCAL_MODULE := $1-Stub
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := apk/$1-Stub.apk
+LOCAL_MODULE_CLASS := APPS
+LOCAL_MODULE_SUFFIX := \$(COMMON_ANDROID_PACKAGE_SUFFIX)
+LOCAL_OVERRIDES_PACKAGES := $2
+LOCAL_CERTIFICATE := PRESIGNED
+LOCAL_DEX_PREOPT := nostripping
+LOCAL_PRIVILEGED_MODULE := true
+LOCAL_POST_INSTALL_CMD = mkdir -p \$(TARGET_OUT)/priv-app/$1 && cp \$(LOCAL_PATH)/apk/$1.apk.gz \$(TARGET_OUT)/priv-app/$1/
+include \$(BUILD_PREBUILT)
+EOF
+else
 cat >> Android.mk <<EOF
 include \$(CLEAR_VARS)
 LOCAL_MODULE := $1-Stub
@@ -24,7 +40,21 @@ LOCAL_DEX_PREOPT := nostripping
 LOCAL_POST_INSTALL_CMD = mkdir -p \$(TARGET_OUT)/app/$1 && cp \$(LOCAL_PATH)/apk/$1.apk.gz \$(TARGET_OUT)/app/$1/
 include \$(BUILD_PREBUILT)
 EOF
+fi
 echo -e "\t$1-Stub \\" >> apps.mk
+else
+if [ "$4"  == "YES" ];then
+cat >> Android.mk <<EOF
+include \$(CLEAR_VARS)
+LOCAL_MODULE := $1
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := apk/$1.apk
+LOCAL_MODULE_CLASS := APPS
+LOCAL_CERTIFICATE := PRESIGNED
+LOCAL_OVERRIDES_PACKAGES := $2
+LOCAL_PRIVILEGED_MODULE := true
+include \$(BUILD_PREBUILT)
+EOF
 else
 cat >> Android.mk <<EOF
 include \$(CLEAR_VARS)
@@ -36,6 +66,7 @@ LOCAL_CERTIFICATE := PRESIGNED
 LOCAL_OVERRIDES_PACKAGES := $2
 include \$(BUILD_PREBUILT)
 EOF
+fi
 echo -e "\t$1 \\" >> apps.mk
 fi
 }
@@ -77,11 +108,12 @@ downloadFromFdroid com.simplemobiletools.thankyou
 downloadFromFdroid net.osmand.plus
 downloadFromFdroid org.mozilla.fennec_fdroid "Jelly" YES
 downloadFromFdroid com.maxfour.music "Eleven"
+downloadFromFdroid com.fsck.k9
 
 
 repo=https://fdroid.volla.tech/fdroid/repo/
 
-downloadFromFdroid com.volla.launcher "" YES
+downloadFromFdroid com.volla.launcher "" YES YES
 downloadFromFdroid hideme.android.vpn.noPlayStore "" YES
 
 echo >> apps.mk

@@ -1,4 +1,4 @@
-From 559443c516ae8e605d9f4384ac7bd1381142d59a Mon Sep 17 00:00:00 2001
+From f22e25d0ec39baa15cb49a8eb9e74b223872ad5b Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 7 Aug 2021 00:46:47 +0430
 Subject: [PATCH] build: Rebrand to VollaOS
@@ -12,7 +12,7 @@ Change-Id: I5a1466d3d4880d9852e146047c3f7474c84185ab
  3 files changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/build/envsetup.sh b/build/envsetup.sh
-index 47995f4a..feda9b84 100644
+index 73db9558..ae1f3a0e 100644
 --- a/build/envsetup.sh
 +++ b/build/envsetup.sh
 @@ -93,7 +93,7 @@ alias bib=breakfast
@@ -25,7 +25,7 @@ index 47995f4a..feda9b84 100644
              echo "Nothing to eat"
              return 1
 diff --git a/build/tasks/bacon.mk b/build/tasks/bacon.mk
-index f0184400..9eee51ce 100644
+index 4f8bedc9..ce529a1d 100644
 --- a/build/tasks/bacon.mk
 +++ b/build/tasks/bacon.mk
 @@ -16,7 +16,7 @@
@@ -35,10 +35,10 @@ index f0184400..9eee51ce 100644
 -LINEAGE_TARGET_PACKAGE := $(PRODUCT_OUT)/lineage-$(LINEAGE_VERSION).zip
 +LINEAGE_TARGET_PACKAGE := $(PRODUCT_OUT)/volla-$(LINEAGE_VERSION).zip
  
- .PHONY: bacon
- bacon: $(INTERNAL_OTA_PACKAGE_TARGET)
+ SHA256 := prebuilts/build-tools/path/$(HOST_PREBUILT_TAG)/sha256sum
+ 
 diff --git a/config/common.mk b/config/common.mk
-index 2fe9cb01..1a3bd5db 100644
+index 204da249..a9eed2bc 100644
 --- a/config/common.mk
 +++ b/config/common.mk
 @@ -1,7 +1,7 @@
@@ -50,16 +50,16 @@ index 2fe9cb01..1a3bd5db 100644
  
  PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
  
-@@ -191,7 +191,7 @@ PRODUCT_DEXPREOPT_SPEED_APPS += \
+@@ -184,7 +184,7 @@ PRODUCT_DEXPREOPT_SPEED_APPS += \
  PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += vendor/lineage/overlay
- DEVICE_PACKAGE_OVERLAYS += vendor/lineage/overlay/common
+ PRODUCT_PACKAGE_OVERLAYS += vendor/lineage/overlay/common
  
--PRODUCT_VERSION_MAJOR = 17
-+PRODUCT_VERSION_MAJOR = 10
+-PRODUCT_VERSION_MAJOR = 18
++PRODUCT_VERSION_MAJOR = 11
  PRODUCT_VERSION_MINOR = 1
  PRODUCT_VERSION_MAINTENANCE := 0
  
-@@ -243,13 +243,16 @@ else
+@@ -236,13 +236,16 @@ else
      LINEAGE_EXTRAVERSION :=
  endif
  

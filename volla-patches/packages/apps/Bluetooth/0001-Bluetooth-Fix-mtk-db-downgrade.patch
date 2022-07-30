@@ -1,0 +1,63 @@
+From d1ced0652fe9f1a93b6316ba9f2c6401111aed3f Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Fri, 1 Apr 2022 22:16:57 +0430
+Subject: [PATCH] Bluetooth: Fix mtk db downgrade
+
+Change-Id: I737eefe956188dc06f9b9d57daabdbc3434ec5f0
+---
+ .../bluetooth/opp/BluetoothOppProvider.java   | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/src/com/android/bluetooth/opp/BluetoothOppProvider.java b/src/com/android/bluetooth/opp/BluetoothOppProvider.java
+index 4079a874b..c635aade8 100644
+--- a/src/com/android/bluetooth/opp/BluetoothOppProvider.java
++++ b/src/com/android/bluetooth/opp/BluetoothOppProvider.java
+@@ -39,6 +39,7 @@ import android.content.UriMatcher;
+ import android.database.Cursor;
+ import android.database.SQLException;
+ import android.database.sqlite.SQLiteDatabase;
++import android.database.sqlite.SQLiteException;
+ import android.database.sqlite.SQLiteOpenHelper;
+ import android.database.sqlite.SQLiteQueryBuilder;
+ import android.net.Uri;
+@@ -135,6 +136,37 @@ public final class BluetoothOppProvider extends ContentProvider {
+             createTable(db);
+         }
+ 
++        @Override
++        public void onDowngrade(SQLiteDatabase db, int oldNumber, int newNumber) {
++            if (oldNumber == 2) {
++                Log.e(TAG, "onDowngrade: Destroying all mtk data.");
++                try {
++                    db.execSQL("DROP TABLE IF EXISTS btopp_tmp;");
++                    db.execSQL("ALTER TABLE btopp RENAME TO btopp_tmp;");
++                    createTable(db);
++                    final String btopp_columns = BluetoothShare._ID + ", " +
++                        BluetoothShare.URI + ", " +
++                        BluetoothShare.FILENAME_HINT + ", " +
++                        BluetoothShare._DATA + ", " +
++                        BluetoothShare.MIMETYPE + ", " +
++                        BluetoothShare.DIRECTION + ", " +
++                        BluetoothShare.DESTINATION + ", " +
++                        BluetoothShare.VISIBILITY + ", " +
++                        BluetoothShare.USER_CONFIRMATION + ", " +
++                        BluetoothShare.STATUS + ", " +
++                        BluetoothShare.TOTAL_BYTES + ", " +
++                        BluetoothShare.CURRENT_BYTES + ", " +
++                        BluetoothShare.TIMESTAMP + ", " +
++                        Constants.MEDIA_SCANNED;
++                    db.execSQL("INSERT INTO btopp (" + btopp_columns + ") SELECT " + btopp_columns + " FROM btopp_tmp");
++                    db.execSQL("DROP TABLE btopp_tmp;");
++                } catch (SQLiteException e) {
++                    Log.e(TAG, "[onDowngrade] Exception removing column "
++                            + "priority; " + e);
++                }
++            }
++        }
++
+     }
+ 
+     private void createTable(SQLiteDatabase db) {
+-- 
+2.29.2
+

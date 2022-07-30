@@ -1,0 +1,11 @@
+LOCAL_PATH := $(call my-dir)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := MtkEmail
+LOCAL_MODULE_CLASS := APPS
+LOCAL_MODULE_TAGS := optional
+LOCAL_OVERRIDES_PACKAGES := Exchange Exchange2 Email
+LOCAL_CERTIFICATE := platform
+LOCAL_SRC_FILES := MtkEmail.apk
+LOCAL_PRODUCT_MODULE := true
+include $(BUILD_PREBUILT)

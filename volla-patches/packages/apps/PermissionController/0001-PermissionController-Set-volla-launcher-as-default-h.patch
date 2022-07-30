@@ -1,4 +1,4 @@
-From edcb70502cb1a05f8dde86566fec45d8843641e8 Mon Sep 17 00:00:00 2001
+From 04cd68c0865a0ef0d2c5a4753821b96a736cd2f8 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 18 Jul 2021 13:15:08 +0800
 Subject: [PATCH] PermissionController: Set volla launcher as default home
@@ -8,10 +8,10 @@ Change-Id: I4fbdcb63fe0ead9f9932fca7ccc426054fa24e06
  .../role/model/HomeRoleBehavior.java          | 27 +------------------
  1 file changed, 1 insertion(+), 26 deletions(-)
 
-diff --git a/src/com/android/packageinstaller/role/model/HomeRoleBehavior.java b/src/com/android/packageinstaller/role/model/HomeRoleBehavior.java
-index eb808acb..219de360 100644
---- a/src/com/android/packageinstaller/role/model/HomeRoleBehavior.java
-+++ b/src/com/android/packageinstaller/role/model/HomeRoleBehavior.java
+diff --git a/src/com/android/permissioncontroller/role/model/HomeRoleBehavior.java b/src/com/android/permissioncontroller/role/model/HomeRoleBehavior.java
+index 4d0db813f..1047a5e20 100644
+--- a/src/com/android/permissioncontroller/role/model/HomeRoleBehavior.java
++++ b/src/com/android/permissioncontroller/role/model/HomeRoleBehavior.java
 @@ -64,32 +64,7 @@ public class HomeRoleBehavior implements RoleBehavior {
      @Nullable
      @Override
@@ -47,5 +47,5 @@ index eb808acb..219de360 100644
  
      @Override
 -- 
-2.25.1
+2.29.2
 

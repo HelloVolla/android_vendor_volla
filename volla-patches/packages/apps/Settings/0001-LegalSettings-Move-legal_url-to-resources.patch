@@ -1,4 +1,4 @@
-From 67285e98bee82ea98530f5ff83c4d2db6b73c34c Mon Sep 17 00:00:00 2001
+From 565bb1e9164a78274753e4285eca58a46e3b4751 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 7 Aug 2021 00:36:50 +0430
 Subject: [PATCH] LegalSettings: Move legal_url to resources
@@ -10,22 +10,22 @@ Change-Id: I1270ff984b2c4143c3c1477896004a775ca2d848
  2 files changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
-index 12ad48e683..54413d05f2 100644
+index 1c78816577..24ca321f96 100644
 --- a/res/values/cm_strings.xml
 +++ b/res/values/cm_strings.xml
-@@ -197,4 +197,7 @@
-     <!-- FastCharge feature -->
-     <string name="fast_charging_title">Fast charging</string>
-     <string name="fast_charging_summary">Disable to reduce the heat produced by the device while charging or to extend the lifespan of the battery</string>
+@@ -172,4 +172,7 @@
+ 
+     <!-- Display settings screen, peak refresh rate settings summary [CHAR LIMIT=NONE] -->
+     <string name="peak_refresh_rate_summary_custom">Automatically raises the refresh rate from 60 to %1$d Hz for some content. Increases battery usage.</string>
 +
 +    <!-- Legal -->
 +    <string name="lineage_legal_url">https://lineageos.org/legal</string>
  </resources>
 diff --git a/src/com/android/settings/LegalSettings.java b/src/com/android/settings/LegalSettings.java
-index 85067ee0c5..427362cf1e 100644
+index 93abf94256..cc6b1eb4ec 100644
 --- a/src/com/android/settings/LegalSettings.java
 +++ b/src/com/android/settings/LegalSettings.java
-@@ -38,7 +38,6 @@ public class LegalSettings extends DashboardFragment {
+@@ -32,7 +32,6 @@ public class LegalSettings extends DashboardFragment {
  
      private static final String TAG = "LegalSettings";
  
@@ -33,7 +33,7 @@ index 85067ee0c5..427362cf1e 100644
      private static final String KEY_LINEAGE_LICENSE = "lineagelicense";
  
      @Override
-@@ -54,7 +53,7 @@ public class LegalSettings extends DashboardFragment {
+@@ -48,7 +47,7 @@ public class LegalSettings extends DashboardFragment {
      @Override
      public boolean onPreferenceTreeClick(Preference preference) {
          if (preference.getKey().equals(KEY_LINEAGE_LICENSE)) {

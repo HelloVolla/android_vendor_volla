@@ -1,0 +1,2 @@
+# Bootloader Manager
+/data/abm(/.*)?                                 u:object_r:abm_file:s0

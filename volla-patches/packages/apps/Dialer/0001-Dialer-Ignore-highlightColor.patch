@@ -1,0 +1,33 @@
+From 4e7f1d1e17d40fecba68a326668f95625396ef54 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Wed, 2 Feb 2022 13:41:03 +0100
+Subject: [PATCH] Dialer: Ignore highlightColor
+
+Change-Id: I7d65661918933cce6efe6274ce5250739fc96dc7
+---
+ java/com/android/incallui/ThemeColorManager.java | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/java/com/android/incallui/ThemeColorManager.java b/java/com/android/incallui/ThemeColorManager.java
+index 1d4c287be..0ad75d8db 100644
+--- a/java/com/android/incallui/ThemeColorManager.java
++++ b/java/com/android/incallui/ThemeColorManager.java
+@@ -81,14 +81,14 @@ public class ThemeColorManager {
+       backgroundColorMiddle = context.getColor(R.color.incall_background_gradient_middle);
+       backgroundColorBottom = context.getColor(R.color.incall_background_gradient_bottom);
+       backgroundColorSolid = context.getColor(R.color.incall_background_multiwindow);
+-      if (highlightColor != PhoneAccount.NO_HIGHLIGHT_COLOR) {
++      /*if (highlightColor != PhoneAccount.NO_HIGHLIGHT_COLOR) {
+         // The default background gradient has a subtle alpha. We grab that alpha and apply it to
+         // the phone account color.
+         backgroundColorTop = applyAlpha(palette.mPrimaryColor, backgroundColorTop);
+         backgroundColorMiddle = applyAlpha(palette.mPrimaryColor, backgroundColorMiddle);
+         backgroundColorBottom = applyAlpha(palette.mPrimaryColor, backgroundColorBottom);
+         backgroundColorSolid = applyAlpha(palette.mPrimaryColor, backgroundColorSolid);
+-      }
++      }*/
+     }
+
+     primaryColor = palette.mPrimaryColor;
+--
+2.25.1

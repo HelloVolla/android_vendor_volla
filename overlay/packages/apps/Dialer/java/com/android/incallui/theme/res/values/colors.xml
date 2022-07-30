@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="background_colors">
+        <item>#000000</item>
+        <item>#000000</item>
+        <item>#000000</item>
+        <item>#000000</item>
+        <item>#000000</item>
+        <item>#000000</item>
+        <item>#000000</item>
+    </array>
+
+    <array name="background_colors_dark">
+        <item>#000000</item>
+        <item>#000000</item>
+        <item>#000000</item>
+        <item>#000000</item>
+        <item>#000000</item>
+        <item>#000000</item>
+        <item>#000000</item>
+    </array>
+
+    <color name="incall_background_gradient_top">#E9000000</color>
+    <color name="incall_background_gradient_middle">#E9000000</color>
+    <color name="incall_background_gradient_bottom">#CC000000</color>
+
+    <color name="incall_background_multiwindow">#E9000000</color>
+</resources>

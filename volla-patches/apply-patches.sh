@@ -14,9 +14,12 @@ LOCALDIR=`cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd`
 cd $LOCALDIR
 
 if [ "$USE_PATCH" == "1" ]; then
-    for patch in `find . -name *.patch |sort`; do
-        cd $OLD_WD/$(dirname $patch)
-        patch -p1 < $LOCALDIR/$patch
+    MBS=$(find . -name *.patch -exec dirname {} \; |sort -u)
+    for mb in $MBS; do
+        cd $OLD_WD/$mb
+        git am --abort > /dev/null 2>&1
+        git reset --hard > /dev/null 2>&1
+        git clean -fd > /dev/null 2>&1
     done
 else
     MBS=$(find . -name *.patch -exec dirname {} \; |sort -u)

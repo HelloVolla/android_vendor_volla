@@ -1,0 +1,92 @@
+From 4eb3e61286193cbbeb1b53b3a712e0ebde88a238 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Thu, 7 Apr 2022 04:37:14 +0430
+Subject: [PATCH] Add mtk email permissions
+
+Change-Id: Ia7dc8acb5f89af715ae0c2725b59ddfa921e0e8f
+---
+ lineage/res/AndroidManifest.xml               | 16 +++++++++++++
+ lineage/res/res/drawable/perm_group_email.xml | 14 +++++++++++
+ lineage/res/res/values/mtk_strings.xml        | 23 +++++++++++++++++++
+ 3 files changed, 53 insertions(+)
+ create mode 100644 lineage/res/res/drawable/perm_group_email.xml
+ create mode 100644 lineage/res/res/values/mtk_strings.xml
+
+diff --git a/lineage/res/AndroidManifest.xml b/lineage/res/AndroidManifest.xml
+index e6ec86d2..9bd57015 100644
+--- a/lineage/res/AndroidManifest.xml
++++ b/lineage/res/AndroidManifest.xml
+@@ -151,4 +151,20 @@
+                 android:description="@string/permdesc_manageRemotePrefs"
+                 android:protectionLevel="signature|privileged" />
+ 
++    <!-- Allows an application to send email
++         @hide -->
++    <permission android:name="com.mediatek.permission.CTA_SEND_EMAIL"
++        android:permissionGroup="com.mediatek.permission-group.EMAIL"
++        android:label="@string/permlab_cta_send_email"
++        android:description="@string/permdesc_cta_send_email"
++        android:protectionLevel="dangerous" />
++
++    <!-- Used for runtime permissions related to email settings.
++         @hide -->
++    <permission-group android:name="com.mediatek.permission-group.EMAIL"
++        android:icon="@drawable/perm_group_email"
++        android:label="@string/permgrouplab_email"
++        android:description="@string/permgroupdesc_email"
++        android:priority="1000" />
++
+ </manifest>
+diff --git a/lineage/res/res/drawable/perm_group_email.xml b/lineage/res/res/drawable/perm_group_email.xml
+new file mode 100644
+index 00000000..e85c8ea5
+--- /dev/null
++++ b/lineage/res/res/drawable/perm_group_email.xml
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="utf-8"?>
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++
++    <path
++        android:fillColor="#000000"
++        android:pathData="M20 4H4c-1.1 0-1.99 .9 -1.99 2L2 18c0 1.1 .9 2 2 2h16c1.1 0 2-.9
++2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
++    <path
++        android:pathData="M0 0h24v24H0z" />
++</vector>
+\ No newline at end of file
+diff --git a/lineage/res/res/values/mtk_strings.xml b/lineage/res/res/values/mtk_strings.xml
+new file mode 100644
+index 00000000..3f47ec37
+--- /dev/null
++++ b/lineage/res/res/values/mtk_strings.xml
+@@ -0,0 +1,23 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++     Copyright (C) 2012 The Android Open Source Project.
++
++     Licensed under the Apache License, Version 2.0 (the "License");
++     you may not use this file except in compliance with the License.
++     You may obtain a copy of the License at
++
++          http://www.apache.org/licenses/LICENSE-2.0
++
++     Unless required by applicable law or agreed to in writing, software
++     distributed under the License is distributed on an "AS IS" BASIS,
++     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++     See the License for the specific language governing permissions and
++     limitations under the License.
++-->
++<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
++    <string name="permlab_cta_send_email">send emails</string>
++    <string name="permdesc_cta_send_email">Allows the app to send emails. This may result in unexpected cellular data consuming. Malicious apps may cost you money by sending emails without your confirmation.</string>
++    <string name="permgrouplab_email">Email</string>
++    <string name="permgroupdesc_email">send emails</string>
++
++</resources>
+-- 
+2.29.2
+

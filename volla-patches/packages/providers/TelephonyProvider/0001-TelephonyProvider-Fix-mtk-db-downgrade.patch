@@ -1,0 +1,314 @@
+From 15a5d1b5de49b6a48d1c00c4da3c1c1965bc9bab Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Fri, 1 Apr 2022 22:00:22 +0430
+Subject: [PATCH] TelephonyProvider: Fix mtk db downgrade
+
+Change-Id: I6e39704e03859c092cb347633818f41a4be8e277
+---
+ .../telephony/MmsSmsDatabaseHelper.java       | 258 +++++++++++++++++-
+ 1 file changed, 255 insertions(+), 3 deletions(-)
+
+diff --git a/src/com/android/providers/telephony/MmsSmsDatabaseHelper.java b/src/com/android/providers/telephony/MmsSmsDatabaseHelper.java
+index 2f3f076a..25835231 100644
+--- a/src/com/android/providers/telephony/MmsSmsDatabaseHelper.java
++++ b/src/com/android/providers/telephony/MmsSmsDatabaseHelper.java
+@@ -1037,10 +1037,17 @@ public class MmsSmsDatabaseHelper extends SQLiteOpenHelper {
+     // email address if from an email gateway, otherwise same as address
+     @VisibleForTesting
+     void createSmsTables(SQLiteDatabase db) {
++        createSmsTables(db, false);
++    }
++
++    @VisibleForTesting
++    void createSmsTables(SQLiteDatabase db, boolean onlySMS) {
+         // N.B.: Whenever the columns here are changed, the columns in
+         // {@ref MmsSmsProvider} must be changed to match.
+         db.execSQL(CREATE_SMS_TABLE_STRING);
+ 
++        if (onlySMS) return;
++
+         db.execSQL(CREATE_RAW_TABLE_STRING);
+ 
+         db.execSQL(CREATE_ATTACHMENTS_TABLE_STRING);
+@@ -1087,6 +1094,11 @@ public class MmsSmsDatabaseHelper extends SQLiteOpenHelper {
+ 
+     @VisibleForTesting
+     void createCommonTables(SQLiteDatabase db) {
++        createCommonTables(db, false);
++    }
++
++    @VisibleForTesting
++    void createCommonTables(SQLiteDatabase db, boolean threadsOnly) {
+         // TODO Ensure that each entry is removed when the last use of
+         // any address equivalent to its address is removed.
+ 
+@@ -1099,9 +1111,10 @@ public class MmsSmsDatabaseHelper extends SQLiteOpenHelper {
+          * will be used. The _id is created with AUTOINCREMENT so it
+          * will never be reused again if a recipient is deleted.
+          */
+-        db.execSQL("CREATE TABLE canonical_addresses (" +
+-                   "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+-                   "address TEXT);");
++        if (!threadsOnly)
++            db.execSQL("CREATE TABLE canonical_addresses (" +
++                      "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
++                      "address TEXT);");
+ 
+         /**
+          * This table maps the subject and an ordered set of recipient
+@@ -1124,6 +1137,8 @@ public class MmsSmsDatabaseHelper extends SQLiteOpenHelper {
+                    Threads.ERROR + " INTEGER DEFAULT 0," +
+                    Threads.HAS_ATTACHMENT + " INTEGER DEFAULT 0);");
+ 
++        if (threadsOnly)
++            return;
+         /**
+          * This table stores the queue of messages to be sent/downloaded.
+          */
+@@ -1677,6 +1692,243 @@ public class MmsSmsDatabaseHelper extends SQLiteOpenHelper {
+         onCreate(db);
+     }
+ 
++    @Override
++    public void onDowngrade(SQLiteDatabase db, int oldNumber, int newNumber) {
++        if (oldNumber == 670020) {
++            Log.e(TAG, "onDowngrade: Destroying all mtk data.");
++
++            db.execSQL("DROP TABLE IF EXISTS wappush;");
++            try {
++                db.execSQL("DROP TABLE IF EXISTS pdu_tmp;");
++                db.execSQL("ALTER TABLE pdu RENAME TO pdu_tmp;");
++                db.execSQL("CREATE TABLE " + MmsProvider.TABLE_PDU + " (" +
++                       Mms._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
++                       Mms.THREAD_ID + " INTEGER," +
++                       Mms.DATE + " INTEGER," +
++                       Mms.DATE_SENT + " INTEGER DEFAULT 0," +
++                       Mms.MESSAGE_BOX + " INTEGER," +
++                       Mms.READ + " INTEGER DEFAULT 0," +
++                       Mms.MESSAGE_ID + " TEXT," +
++                       Mms.SUBJECT + " TEXT," +
++                       Mms.SUBJECT_CHARSET + " INTEGER," +
++                       Mms.CONTENT_TYPE + " TEXT," +
++                       Mms.CONTENT_LOCATION + " TEXT," +
++                       Mms.EXPIRY + " INTEGER," +
++                       Mms.MESSAGE_CLASS + " TEXT," +
++                       Mms.MESSAGE_TYPE + " INTEGER," +
++                       Mms.MMS_VERSION + " INTEGER," +
++                       Mms.MESSAGE_SIZE + " INTEGER," +
++                       Mms.PRIORITY + " INTEGER," +
++                       Mms.READ_REPORT + " INTEGER," +
++                       Mms.REPORT_ALLOWED + " INTEGER," +
++                       Mms.RESPONSE_STATUS + " INTEGER," +
++                       Mms.STATUS + " INTEGER," +
++                       Mms.TRANSACTION_ID + " TEXT," +
++                       Mms.RETRIEVE_STATUS + " INTEGER," +
++                       Mms.RETRIEVE_TEXT + " TEXT," +
++                       Mms.RETRIEVE_TEXT_CHARSET + " INTEGER," +
++                       Mms.READ_STATUS + " INTEGER," +
++                       Mms.CONTENT_CLASS + " INTEGER," +
++                       Mms.RESPONSE_TEXT + " TEXT," +
++                       Mms.DELIVERY_TIME + " INTEGER," +
++                       Mms.DELIVERY_REPORT + " INTEGER," +
++                       Mms.LOCKED + " INTEGER DEFAULT 0," +
++                       Mms.SUBSCRIPTION_ID + " INTEGER DEFAULT "
++                               + SubscriptionManager.INVALID_SUBSCRIPTION_ID + ", " +
++                       Mms.SEEN + " INTEGER DEFAULT 0," +
++                       Mms.CREATOR + " TEXT," +
++                       Mms.TEXT_ONLY + " INTEGER DEFAULT 0" +
++                       ");");
++
++                final String pdu_columns = Mms._ID + ", " +
++                    Mms.THREAD_ID + ", " +
++                    Mms.DATE + ", " +
++                    Mms.DATE_SENT + ", " +
++                    Mms.MESSAGE_BOX + ", " +
++                    Mms.READ + ", " +
++                    Mms.MESSAGE_ID + ", " +
++                    Mms.SUBJECT + ", " +
++                    Mms.SUBJECT_CHARSET + ", " +
++                    Mms.CONTENT_TYPE + ", " +
++                    Mms.CONTENT_LOCATION + ", " +
++                    Mms.EXPIRY + ", " +
++                    Mms.MESSAGE_CLASS + ", " +
++                    Mms.MESSAGE_TYPE + ", " +
++                    Mms.MMS_VERSION + ", " +
++                    Mms.MESSAGE_SIZE + ", " +
++                    Mms.PRIORITY + ", " +
++                    Mms.READ_REPORT + ", " +
++                    Mms.REPORT_ALLOWED + ", " +
++                    Mms.RESPONSE_STATUS + ", " +
++                    Mms.STATUS + ", " +
++                    Mms.TRANSACTION_ID + ", " +
++                    Mms.RETRIEVE_STATUS + ", " +
++                    Mms.RETRIEVE_TEXT + ", " +
++                    Mms.RETRIEVE_TEXT_CHARSET + ", " +
++                    Mms.READ_STATUS + ", " +
++                    Mms.CONTENT_CLASS + ", " +
++                    Mms.RESPONSE_TEXT + ", " +
++                    Mms.DELIVERY_TIME + ", " +
++                    Mms.DELIVERY_REPORT + ", " +
++                    Mms.LOCKED + ", " +
++                    Mms.SUBSCRIPTION_ID + ", " +
++                    Mms.SEEN + ", " +
++                    Mms.CREATOR + ", " +
++                    Mms.TEXT_ONLY;
++                db.execSQL("INSERT INTO pdu (" + pdu_columns + ") SELECT " + pdu_columns + " FROM pdu_tmp");
++                db.execSQL("DROP TABLE pdu_tmp");
++            } catch (SQLiteException e) {
++                Log.e(TAG, "[onDowngrade] Exception removing columns " + "from pdu table; " + e);
++            }
++
++            try {
++                db.execSQL("DROP TABLE IF EXISTS sms_tmp;");
++                db.execSQL("ALTER TABLE sms RENAME TO sms_tmp;");
++                createSmsTables(db, true);
++                final String sms_columns = "_id, thread_id, address, person, date, date_sent, " +
++                        "protocol, read, status, type, reply_path_present, subject, body, service_center, " +
++                        "locked, sub_id, error_code, creator, seen";
++                db.execSQL("INSERT INTO sms (" + sms_columns + ") SELECT " + sms_columns + " FROM sms_tmp");
++                db.execSQL("DROP TABLE sms_tmp;");
++            } catch (SQLiteException e) {
++                Log.e(TAG, "[onDowngrade] Exception removing column "
++                        + "priority; " + e);
++            }
++
++            try {
++                db.execSQL("DROP TABLE IF EXISTS threads_tmp;");
++                db.execSQL("ALTER TABLE threads RENAME TO threads_tmp;");
++                createCommonTables(db, true);
++                final String threads_columns = Threads._ID + ", " + Threads.DATE + ", " + Threads.MESSAGE_COUNT + ", "
++                        + Threads.RECIPIENT_IDS + ", " + Threads.SNIPPET + ", " + Threads.SNIPPET_CHARSET + ", "
++                        + Threads.READ + ", " + Threads.ARCHIVED + ", " + Threads.TYPE + ", " + Threads.ERROR + ", "
++                        + Threads.HAS_ATTACHMENT;
++                db.execSQL("INSERT INTO threads (" + threads_columns + ") SELECT " + threads_columns + " FROM threads_tmp");
++                db.execSQL("DROP TABLE threads_tmp");
++            } catch (SQLiteException e) {
++                Log.e(TAG, "[onDowngrade] Exception removing columns " + "from threads table; " + e);
++            }
++
++            db.execSQL("DROP TABLE IF EXISTS cellbroadcast;");
++            db.execSQL("DROP TABLE IF EXISTS thread_settings;");
++
++            db.execSQL("DROP TRIGGER IF EXISTS pdu_update_thread_on_insert");
++            db.execSQL("DROP TRIGGER IF EXISTS sms_update_thread_on_insert");
++            db.execSQL("CREATE TRIGGER sms_update_thread_on_insert AFTER INSERT ON sms "
++                    + SMS_UPDATE_THREAD_DATE_SNIPPET_COUNT_ON_UPDATE);
++
++            db.execSQL("DROP TRIGGER IF EXISTS sms_update_thread_read_on_update");
++            db.execSQL("CREATE TRIGGER sms_update_thread_read_on_update AFTER" +
++                       "  UPDATE OF " + Sms.READ +
++                       "  ON sms " +
++                       "BEGIN " +
++                       SMS_UPDATE_THREAD_READ_BODY +
++                       "END;");
++            db.execSQL("DROP TRIGGER IF EXISTS sms_update_thread_on_split");
++            db.execSQL("DROP TRIGGER IF EXISTS wappush_update_thread_on_update");
++            db.execSQL("DROP TRIGGER IF EXISTS delete_obsolete_threads_when_update_pdu");
++
++            db.execSQL("DROP TRIGGER IF EXISTS update_threads_error_on_update_mms");
++            db.execSQL("CREATE TRIGGER update_threads_error_on_update_mms " +
++                       "  AFTER UPDATE OF err_type ON pending_msgs " +
++                       "  WHEN (OLD.err_type < 10 AND NEW.err_type >= 10)" +
++                       "    OR (OLD.err_type >= 10 AND NEW.err_type < 10) " +
++                       "BEGIN" +
++                       "  UPDATE threads SET error = " +
++                       "    CASE" +
++                       "      WHEN NEW.err_type >= 10 THEN error + 1" +
++                       "      ELSE error - 1" +
++                       "    END " +
++                       "  WHERE _id =" +
++                       "   (SELECT DISTINCT thread_id" +
++                       "    FROM pdu" +
++                       "    WHERE _id = NEW.msg_id); " +
++                       "END;");
++
++            db.execSQL("DROP TRIGGER IF EXISTS cb_update_thread_on_insert");
++            db.execSQL("DROP TRIGGER IF EXISTS cb_update_thread_read_on_update");
++            db.execSQL("DROP TRIGGER IF EXISTS cb_update_thread_on_delete");
++            db.execSQL("DROP TRIGGER IF EXISTS insert_thread_settings_when_insert_threads");
++            db.execSQL("DROP TRIGGER IF EXISTS delete_thread_settings_when_delete_threads");
++
++            db.execSQL("DROP TRIGGER IF EXISTS delete_mms_pending_on_update");
++            db.execSQL("CREATE TRIGGER delete_mms_pending_on_update " +
++                       "AFTER UPDATE ON " + MmsProvider.TABLE_PDU + " " +
++                       "WHEN old." + Mms.MESSAGE_BOX + "=" + Mms.MESSAGE_BOX_OUTBOX +
++                       "  AND new." + Mms.MESSAGE_BOX + "!=" + Mms.MESSAGE_BOX_OUTBOX + " " +
++                       "BEGIN " +
++                       "  DELETE FROM " + MmsSmsProvider.TABLE_PENDING_MSG +
++                       "  WHERE " + PendingMessages.MSG_ID + "=new._id; " +
++                       "END;");
++            db.execSQL("DROP TRIGGER IF EXISTS insert_mms_pending_on_update");
++            db.execSQL("CREATE TRIGGER insert_mms_pending_on_update " +
++                       "AFTER UPDATE ON pdu " +
++                       "WHEN new." + Mms.MESSAGE_TYPE + "=" + PduHeaders.MESSAGE_TYPE_SEND_REQ +
++                       "  AND new." + Mms.MESSAGE_BOX + "=" + Mms.MESSAGE_BOX_OUTBOX +
++                       "  AND old." + Mms.MESSAGE_BOX + "!=" + Mms.MESSAGE_BOX_OUTBOX + " " +
++                       "BEGIN " +
++                       "  INSERT INTO " + MmsSmsProvider.TABLE_PENDING_MSG +
++                       "    (" + PendingMessages.PROTO_TYPE + "," +
++                       "     " + PendingMessages.MSG_ID + "," +
++                       "     " + PendingMessages.MSG_TYPE + "," +
++                       "     " + PendingMessages.ERROR_TYPE + "," +
++                       "     " + PendingMessages.ERROR_CODE + "," +
++                       "     " + PendingMessages.RETRY_INDEX + "," +
++                       "     " + PendingMessages.DUE_TIME + ") " +
++                       "  VALUES " +
++                       "    (" + MmsSms.MMS_PROTO + "," +
++                       "      new." + BaseColumns._ID + "," +
++                       "      new." + Mms.MESSAGE_TYPE + ",0,0,0,0);" +
++                       "END;");
++            db.execSQL("DROP TRIGGER IF EXISTS pdu_update_thread_on_delete");
++            db.execSQL("CREATE TRIGGER pdu_update_thread_on_delete " +
++                       "AFTER DELETE ON pdu " +
++                       "BEGIN " +
++                       "  UPDATE threads SET " +
++                       "     date = (strftime('%s','now') * 1000)" +
++                       "  WHERE threads._id = old." + Mms.THREAD_ID + "; " +
++                       UPDATE_THREAD_COUNT_ON_OLD +
++                       UPDATE_THREAD_SNIPPET_SNIPPET_CS_ON_DELETE +
++                       "END;");
++            db.execSQL("DROP TRIGGER IF EXISTS pdu_update_thread_on_insert");
++            db.execSQL("CREATE TRIGGER pdu_update_thread_on_insert AFTER INSERT ON " +
++                       MmsProvider.TABLE_PDU + " " +
++                       PDU_UPDATE_THREAD_CONSTRAINTS +
++                       PDU_UPDATE_THREAD_DATE_SNIPPET_COUNT_ON_UPDATE);
++            db.execSQL("DROP TRIGGER IF EXISTS pdu_update_thread_read_on_update");
++            db.execSQL("CREATE TRIGGER pdu_update_thread_read_on_update AFTER" +
++                       "  UPDATE OF " + Mms.READ +
++                       "  ON " + MmsProvider.TABLE_PDU + " " +
++                       PDU_UPDATE_THREAD_CONSTRAINTS +
++                       "BEGIN " +
++                       PDU_UPDATE_THREAD_READ_BODY +
++                       "END;");
++            db.execSQL("DROP TRIGGER IF EXISTS update_threads_error_on_move_mms");
++            db.execSQL("CREATE TRIGGER update_threads_error_on_move_mms " +
++                       "  BEFORE UPDATE OF msg_box ON pdu " +
++                       "  WHEN (OLD.msg_box = 4 AND NEW.msg_box != 4) " +
++                       "  AND (OLD._id IN (SELECT DISTINCT msg_id" +
++                       "                   FROM pending_msgs" +
++                       "                   WHERE err_type >= 10)) " +
++                       "BEGIN " +
++                       "  UPDATE threads SET error = error - 1" +
++                       "  WHERE _id = OLD.thread_id; " +
++                       "END;");
++
++            db.execSQL("DROP TRIGGER IF EXISTS sms_words_update");
++            db.execSQL("DROP TRIGGER IF EXISTS sms_words_delete");
++            db.execSQL("DROP TRIGGER IF EXISTS wp_words_update");
++            db.execSQL("DROP TRIGGER IF EXISTS wp_words_delete");
++            db.execSQL("CREATE TRIGGER sms_words_update AFTER UPDATE ON sms BEGIN UPDATE words "
++                    + " SET index_text = NEW.body WHERE (source_id=NEW._id AND table_to_use=1); " + " END;");
++            db.execSQL("CREATE TRIGGER sms_words_delete AFTER DELETE ON sms BEGIN DELETE FROM "
++                    + "  words WHERE source_id = OLD._id AND table_to_use = 1; END;");
++
++            db.execSQL("DROP TABLE IF EXISTS quicktext;");
++            db.execSQL("DROP TABLE IF EXISTS mwi;");
++        }
++    }
++
+     private void dropAll(SQLiteDatabase db) {
+         // Clean the database out in order to start over from scratch.
+         // We don't need to drop our triggers here because SQLite automatically
+-- 
+2.29.2
+

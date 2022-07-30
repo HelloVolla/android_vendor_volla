@@ -1,25 +1,25 @@
-From 92b101b6a8825dbca807af88158e674a8bf350bd Mon Sep 17 00:00:00 2001
+From 9016d49db27a2414e61ec739e7562dcf41826f69 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Wed, 11 Aug 2021 14:44:41 +0430
 Subject: [PATCH] volla: Add VollaOS License page
 
 ---
  AndroidManifest.xml                           | 12 +++
- res/layout/setup_volla_license.xml            | 61 ++++++++++++
+ res/layout/setup_volla_license.xml            | 66 +++++++++++++
  res/values-de/license.xml                     | 81 ++++++++++++++++
  res/values/license.xml                        | 88 ++++++++++++++++++
  .../setupwizard/VollaLicenseActivity.java     | 93 +++++++++++++++++++
- 5 files changed, 335 insertions(+)
+ 5 files changed, 340 insertions(+)
  create mode 100644 res/layout/setup_volla_license.xml
  create mode 100644 res/values-de/license.xml
  create mode 100644 res/values/license.xml
  create mode 100644 src/org/lineageos/setupwizard/VollaLicenseActivity.java
 
 diff --git a/AndroidManifest.xml b/AndroidManifest.xml
-index 491ea8d..21d69ef 100644
+index ce81d12..7f0b506 100644
 --- a/AndroidManifest.xml
 +++ b/AndroidManifest.xml
-@@ -235,6 +235,18 @@
+@@ -258,6 +258,18 @@
              </intent-filter>
          </activity>
  
@@ -40,10 +40,10 @@ index 491ea8d..21d69ef 100644
                    android:excludeFromRecents="true"
 diff --git a/res/layout/setup_volla_license.xml b/res/layout/setup_volla_license.xml
 new file mode 100644
-index 0000000..3afd1f7
+index 0000000..6a9a98e
 --- /dev/null
 +++ b/res/layout/setup_volla_license.xml
-@@ -0,0 +1,61 @@
+@@ -0,0 +1,66 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<!--
 +     Copyright (C) 2021 Hallo Welt Systeme UG
@@ -60,51 +60,56 @@ index 0000000..3afd1f7
 +     See the License for the specific language governing permissions and
 +     limitations under the License.
 +-->
-+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-+              android:orientation="vertical"
-+              android:layout_width="match_parent"
-+              android:layout_height="match_parent"
-+              android:background="@color/primary">
++<com.google.android.setupdesign.GlifLayout
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    android:id="@+id/setup_wizard_layout"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent">
 +
-+
-+    <include layout="@layout/header_condensed" />
-+
-+    <FrameLayout android:id="@+id/page"
-+                 android:layout_width="match_parent"
-+                 android:layout_height="0dp"
-+                 android:layout_weight="1">
-+
-+        <ScrollView android:layout_width="match_parent"
-+                    android:layout_height="match_parent"
-+                    android:fillViewport="true"
-+                    android:id="@+id/scrollView">
-+
-+            <LinearLayout
-+                android:orientation="vertical"
-+                android:layout_width="match_parent"
-+                android:layout_height="match_parent">
-+
-+                <TextView
-+                    android:id="@+id/license"
-+                    android:layout_width="match_parent"
-+                    android:layout_height="wrap_content"
-+                    android:layout_marginBottom="@dimen/summary_margin_bottom"
-+                    android:paddingLeft="@dimen/content_margin_left"
-+                    android:paddingRight="@dimen/content_margin_right"
-+                    style="@style/PageSummaryText"
-+                    android:text="@string/volla_license"/>
-+
-+            </LinearLayout>
-+        </ScrollView>
-+    </FrameLayout>
-+
-+    <com.google.android.setupdesign.view.NavigationBar
-+        android:id="@+id/navigation_bar"
-+        style="@style/SudNavBarTheme"
++    <LinearLayout
++        android:orientation="vertical"
 +        android:layout_width="match_parent"
-+        android:layout_height="@dimen/sud_navbar_height" />
++        android:layout_height="match_parent"
++        style="@style/SudContentFrame">
 +
-+</LinearLayout>
++        <FrameLayout
++            android:id="@+id/page"
++            android:layout_width="match_parent"
++            android:layout_height="0dp"
++            android:layout_weight="1">
++
++            <ScrollView android:layout_width="match_parent"
++                        android:layout_height="match_parent"
++                        android:fillViewport="true"
++                        android:id="@+id/scrollView">
++
++                <LinearLayout
++                    android:orientation="vertical"
++                    android:layout_width="match_parent"
++                    android:layout_height="match_parent">
++
++                    <TextView
++                        android:id="@+id/license"
++                        android:layout_width="match_parent"
++                        android:layout_height="wrap_content"
++                        android:layout_marginBottom="@dimen/summary_margin_bottom"
++                        android:paddingLeft="@dimen/content_margin_left"
++                        android:paddingRight="@dimen/content_margin_right"
++                        style="@style/SudItemTitle"
++                        android:text="@string/volla_license"/>
++
++                </LinearLayout>
++            </ScrollView>
++        </FrameLayout>
++
++        <org.lineageos.setupwizard.NavigationLayout
++            android:id="@+id/navigation_bar"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content" />
++
++    </LinearLayout>
++</com.google.android.setupdesign.GlifLayout>
 diff --git a/res/values-de/license.xml b/res/values-de/license.xml
 new file mode 100644
 index 0000000..97bc9d8

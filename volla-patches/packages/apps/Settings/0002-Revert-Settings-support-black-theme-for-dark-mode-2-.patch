@@ -1,0 +1,32 @@
+From 6d205fef76c376e882ebbb070774a1dd027b2b49 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Mon, 13 Dec 2021 19:35:43 +0330
+Subject: [PATCH] Revert "Settings: support black theme for dark mode [2/4]"
+
+This reverts commit ac41e8de44190837bfed4e6cb45cb0babadfda27.
+
+Change-Id: I7505dd9da5d610011bfaabdc877c00194b771ce3
+---
+ res/xml/dark_mode_settings.xml | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/res/xml/dark_mode_settings.xml b/res/xml/dark_mode_settings.xml
+index 54837950e9..0ebc044404 100644
+--- a/res/xml/dark_mode_settings.xml
++++ b/res/xml/dark_mode_settings.xml
+@@ -55,12 +55,6 @@
+         settings:allowDividerBelow="true"
+         settings:controller="com.android.settings.display.darkmode.DarkModeActivationPreferenceController"/>
+ 
+-    <lineageos.preference.LineageSystemSettingSwitchPreference
+-        android:key="berry_black_theme"
+-        android:title="@string/berry_black_theme_title"
+-        android:summary="@string/berry_black_theme_summary"
+-        android:defaultValue="false" />
+-
+     <com.android.settingslib.widget.FooterPreference
+             android:key="dark_ui_footer"
+             android:title="@string/dark_ui_text"
+-- 
+2.29.2
+

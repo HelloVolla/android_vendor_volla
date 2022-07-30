@@ -1,0 +1,5 @@
+java_import {
+    name: "org.nanohttpd",
+    jars: ["nanohttpd-2.3.1.jar"],
+    sdk_version: "current",
+}

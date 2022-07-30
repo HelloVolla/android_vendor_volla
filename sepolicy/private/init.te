@@ -1,0 +1,3 @@
+allow init abm_file:dir mounton;
+allow init abm_file:filesystem { unmount mount relabelfrom relabelto };
+allow abm_file self:filesystem associate;

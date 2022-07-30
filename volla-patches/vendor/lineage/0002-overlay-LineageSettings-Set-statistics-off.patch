@@ -1,4 +1,4 @@
-From f86fb3c195f6824ac6967569050f344f2dde57c5 Mon Sep 17 00:00:00 2001
+From 06bab2b0a6e508587b71bbd2f879c13ab143e589 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Fri, 9 Jul 2021 17:30:29 +0430
 Subject: [PATCH] overlay: LineageSettings: Set statistics off

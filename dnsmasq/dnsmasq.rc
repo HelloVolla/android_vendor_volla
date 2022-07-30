@@ -1,0 +1,5 @@
+service volla.dnsmasq /system/bin/dnsmasq --keep-in-foreground -x /data/misc/dhcp/dnsmasq.pid -C /system/etc/volladns.conf --log-queries
+    user root
+    group root
+    writepid /dev/cpuset/foreground/tasks
+    disabled

@@ -1,0 +1,301 @@
+From ee121e1a8005845fcabadf5d9784f07257886958 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Thu, 10 Feb 2022 10:50:10 +0330
+Subject: [PATCH] Implement ChildMode
+
+Change-Id: I1d48248a381f4f47baea7443e9b4dfee4eb3a020
+---
+ Android.mk                                    |  2 +-
+ api/lineage_current.txt                       | 11 +++
+ .../platform/internal/ChildModeService.java   | 83 +++++++++++++++++
+ lineage/res/res/values/config.xml             |  1 +
+ .../app/LineageContextConstants.java          |  7 ++
+ .../lineageos/childmode/ChildModeManager.java | 91 +++++++++++++++++++
+ .../childmode/IChildModeService.aidl          | 25 +++++
+ 7 files changed, 219 insertions(+), 1 deletion(-)
+ create mode 100644 lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
+ create mode 100644 sdk/src/java/lineageos/childmode/ChildModeManager.java
+ create mode 100644 sdk/src/java/lineageos/childmode/IChildModeService.aidl
+
+diff --git a/Android.mk b/Android.mk
+index 0319e0ad..18a224aa 100644
+--- a/Android.mk
++++ b/Android.mk
+@@ -27,7 +27,7 @@ include $(CLEAR_VARS)
+ lineage_platform_res := APPS/org.lineageos.platform-res_intermediates/aapt
+ 
+ # List of packages used in lineage-api-stubs
+-lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.power:lineageos.util:lineageos.weather:lineageos.weatherservice:lineageos.style:lineageos.trust:lineageos.applock:lineageos.firewall
++lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.power:lineageos.util:lineageos.weather:lineageos.weatherservice:lineageos.style:lineageos.trust:lineageos.applock:lineageos.firewall:lineageos.childmode
+ 
+ lineage_framework_module := $(LOCAL_INSTALLED_MODULE)
+ 
+diff --git a/api/lineage_current.txt b/api/lineage_current.txt
+index db0acfac..705f5303 100644
+--- a/api/lineage_current.txt
++++ b/api/lineage_current.txt
+@@ -1223,3 +1223,14 @@ package lineageos.firewall {
+   }
+ 
+ }
++
++package lineageos.childmode {
++
++  public class ChildModeManager {
++    method public static lineageos.childmode.ChildModeManager getInstance(android.content.Context);
++    method public static lineageos.childmode.ChildModeManager getService();
++    method public void activate(boolean);
++    method public boolean isActivate();
++  }
++
++}
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java b/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
+new file mode 100644
+index 00000000..a76aea22
+--- /dev/null
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
+@@ -0,0 +1,83 @@
++/**
++ * Copyright (C) 2022 Hallo Welt Systeme UG
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.lineageos.platform.internal;
++
++import android.content.Context;
++import android.os.SystemProperties;
++import android.os.IBinder;
++import android.util.Slog;
++
++import lineageos.childmode.IChildModeService;
++import lineageos.applock.AppLockManager;
++import lineageos.firewall.FirewallManager;
++import lineageos.app.LineageContextConstants;
++
++import com.android.internal.R;
++import com.android.server.LocalServices;
++import com.android.server.SystemService;
++
++public class ChildModeService extends LineageSystemService {
++
++    private static final String TAG = "ChildModeService";
++    private static final boolean DEBUG_CHILDMODE = true;
++
++    private Context mContext;
++
++    public ChildModeService(Context context) {
++        super(context);
++        mContext = context;
++    }
++
++    @Override
++    public String getFeatureDeclaration() {
++        return LineageContextConstants.Features.HARDWARE_ABSTRACTION;
++    }
++
++    @Override
++    public void onStart() {
++        if (DEBUG_CHILDMODE) Slog.v(TAG, "Starting ChildModeService");
++        publishBinderService(LineageContextConstants.VOLLA_CHILDMODE_SERVICE, mService);
++    }
++
++    public void activate(boolean enable) {
++        AppLockManager appLockManager = AppLockManager.getInstance(mContext);
++        FirewallManager firewallManager = FirewallManager.getInstance(mContext);
++        if (appLockManager.isActivate() != enable)
++            appLockManager.activate(enable);
++        if (appLockManager.isInstallLockerEnabled() != enable)
++            appLockManager.enableInstallLocker(enable);
++        if (firewallManager.isActivate() != enable)
++            firewallManager.activate(enable);
++        SystemProperties.set("persist.volla.childmode.enable", enable ? "true" : "false");
++    }
++
++    public boolean isActivate() {
++        return SystemProperties.getBoolean("persist.volla.childmode.enable", false);
++    }
++
++    private final IBinder mService = new IChildModeService.Stub() {
++        @Override
++        public void activate(boolean enable) {
++            ChildModeService.this.activate(enable);
++        }
++
++        @Override
++        public boolean isActivate() {
++            return ChildModeService.this.isActivate();
++        }
++    };
++}
+diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
+index 37c4a645..773c0bdd 100644
+--- a/lineage/res/res/values/config.xml
++++ b/lineage/res/res/values/config.xml
+@@ -111,6 +111,7 @@
+         <item>org.lineageos.platform.internal.LineageGlobalActionsService</item>
+         <item>org.lineageos.platform.internal.AppLockService</item>
+         <item>org.lineageos.platform.internal.FirewallService</item>
++        <item>org.lineageos.platform.internal.ChildModeService</item>
+     </string-array>
+ 
+     <!-- The LineageSystemServer class that is invoked from Android's SystemServer -->
+diff --git a/sdk/src/java/lineageos/app/LineageContextConstants.java b/sdk/src/java/lineageos/app/LineageContextConstants.java
+index 603e0df7..ea5d66bd 100644
+--- a/sdk/src/java/lineageos/app/LineageContextConstants.java
++++ b/sdk/src/java/lineageos/app/LineageContextConstants.java
+@@ -129,6 +129,13 @@ public final class LineageContextConstants {
+      */
+     public static final String VOLLA_FIREWALL_SERVICE = "vollafirewall";
+ 
++    /**
++     * Volla Child mode
++     *
++     * @hide
++     */
++    public static final String VOLLA_CHILDMODE_SERVICE = "vollachildmode";
++
+     /**
+      * Features supported by the Lineage SDK.
+      */
+diff --git a/sdk/src/java/lineageos/childmode/ChildModeManager.java b/sdk/src/java/lineageos/childmode/ChildModeManager.java
+new file mode 100644
+index 00000000..c82b3bd6
+--- /dev/null
++++ b/sdk/src/java/lineageos/childmode/ChildModeManager.java
+@@ -0,0 +1,91 @@
++/**
++ * Copyright (C) 2022 Hallo Welt Systeme UG
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package lineageos.childmode;
++
++import android.content.Context;
++import android.os.IBinder;
++import android.os.RemoteException;
++import android.os.ServiceManager;
++import android.os.ServiceManager.ServiceNotFoundException;
++import android.util.Log;
++
++import lineageos.app.LineageContextConstants;
++
++import java.util.List;
++
++public class ChildModeManager {
++    private static final String TAG = "ChildModeManager";
++
++    private static IChildModeService sService;
++    private static ChildModeManager sInstance;
++
++    private Context mContext;
++
++    private ChildModeManager(Context context) {
++        Context appContext = context.getApplicationContext();
++        mContext = appContext == null ? context : appContext;
++        sService = getService();
++        if (sService == null) {
++            throw new RuntimeException("Unable to get ChildModeService. The service" +
++                    " either crashed, was not started, or the interface has been called to early" +
++                    " in SystemServer init");
++        }
++    }
++
++    public static ChildModeManager getInstance(Context context) {
++        if (sInstance == null) {
++            sInstance = new ChildModeManager(context);
++        }
++        return sInstance;
++    }
++
++    /** @hide **/
++    public static IChildModeService getService() {
++        if (sService != null) {
++            return sService;
++        }
++        IBinder b = ServiceManager.getService(LineageContextConstants.VOLLA_CHILDMODE_SERVICE);
++
++        if (b == null) {
++            Log.e(TAG, "null service. SAD!");
++            return null;
++        }
++
++        sService = IChildModeService.Stub.asInterface(b);
++        return sService;
++    }
++
++    public ChildModeManager(IChildModeService service) {
++        sService = service;
++    }
++
++    public void activate(boolean enable) {
++        try {
++            sService.activate(enable);
++        } catch (RemoteException e) {
++            throw e.rethrowFromSystemServer();
++        }
++    }
++
++    public boolean isActivate() {
++        try {
++            return sService.isActivate();
++        } catch (RemoteException e) {
++            throw e.rethrowFromSystemServer();
++        }
++    }
++}
+diff --git a/sdk/src/java/lineageos/childmode/IChildModeService.aidl b/sdk/src/java/lineageos/childmode/IChildModeService.aidl
+new file mode 100644
+index 00000000..ecae4484
+--- /dev/null
++++ b/sdk/src/java/lineageos/childmode/IChildModeService.aidl
+@@ -0,0 +1,25 @@
++/**
++ * Copyright (C) 2022 Hallo Welt Systeme UG
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package lineageos.childmode;
++
++/** @hide */
++interface IChildModeService {
++
++    void activate(boolean enable);
++
++    boolean isActivate();
++}
+-- 
+2.29.2
+

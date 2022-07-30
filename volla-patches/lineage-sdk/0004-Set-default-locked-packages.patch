@@ -1,0 +1,60 @@
+From b665e28b516b42ea5326739dbbf31676df35f114 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sat, 19 Feb 2022 12:43:04 +0330
+Subject: [PATCH] Set default locked packages
+
+Change-Id: I55c04b4ba7495841a9464ac605ec2f07037f86da
+---
+ .../org/lineageos/platform/internal/AppLockService.java   | 8 ++++++--
+ lineage/res/res/values/config.xml                         | 5 +++++
+ lineage/res/res/values/symbols.xml                        | 3 +++
+ 3 files changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java b/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
+index 8dbe5067..f7640c26 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
+@@ -181,8 +181,12 @@ public class AppLockService extends LineageSystemService {
+             parseXml(parser);
+             if (DEBUG_APPLOCK) Slog.v(TAG, "Read locked-apps.xml successfully");
+         } catch (FileNotFoundException e) {
+-            if (DEBUG_APPLOCK) Slog.v(TAG, "locked-apps.xml not found");
+-            Slog.i(TAG, "locked-apps.xml not found");
++            Slog.i(TAG, "locked-apps.xml not found, initializing");
++            String[] defaultPackages = mContext.getResources().getStringArray(
++                    org.lineageos.platform.internal.R.array.config_defaultLockedPackages);
++            if (defaultPackages != null && defaultPackages.length > 0)
++                for (String defaultPackage : defaultPackages)
++                    addAppToList(defaultPackage);
+         } catch (XmlPullParserException | IOException e) {
+             throw new IllegalStateException("Failed to parse locked-apps.xml: " + mFile, e);
+         }
+diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
+index 773c0bdd..38100133 100644
+--- a/lineage/res/res/values/config.xml
++++ b/lineage/res/res/values/config.xml
+@@ -300,4 +300,9 @@
+     <!-- Whether to notify fingerprint client of successful cancelled authentication
+          (needed for some older vendor fingerprint HAL implementations) -->
+     <bool name="config_fingerprintPostResetRunnableForAllClients">false</bool>
++
++    <!-- Array of packages to get locked by default. -->
++    <string-array name="config_defaultLockedPackages">
++        <item>org.fdroid.fdroid</item>
++    </string-array>
+ </resources>
+diff --git a/lineage/res/res/values/symbols.xml b/lineage/res/res/values/symbols.xml
+index facc7330..3de0b559 100644
+--- a/lineage/res/res/values/symbols.xml
++++ b/lineage/res/res/values/symbols.xml
+@@ -191,4 +191,7 @@
+     <!-- Whether to notify fingerprint client of successful cancelled authentication
+          (needed for some older vendor fingerprint HAL implementations) -->
+     <java-symbol type="bool" name="config_fingerprintPostResetRunnableForAllClients" />
++
++    <!-- AppLocker. -->
++    <java-symbol type="array" name="config_defaultLockedPackages" />
+ </resources>
+-- 
+2.29.2
+

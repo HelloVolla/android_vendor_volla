@@ -15,6 +15,9 @@
 #
 
 # Project inherits
+ifneq ($(strip $(VOLLA_BUILD_FLAVOR)),)
+-include vendor/$(VOLLA_BUILD_FLAVOR)/product.mk
+endif
 $(call inherit-product, vendor/volla-prebuilt-apps/apps.mk)
 $(call inherit-product, $(LOCAL_PATH)/prebuilts/product.mk)
 
@@ -22,24 +25,50 @@ $(call inherit-product, $(LOCAL_PATH)/prebuilts/product.mk)
 PRODUCT_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += $(LOCAL_PATH)/overlay
 
+ifeq ($(filter %_yggdrasil %_yggdrasilx,$(TARGET_PRODUCT)),)
+PRODUCT_PACKAGE_OVERLAYS += $(LOCAL_PATH)/wallpaper-new
+PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += $(LOCAL_PATH)/wallpaper-new
+else
+PRODUCT_PACKAGE_OVERLAYS += $(LOCAL_PATH)/wallpaper-yggdrasil
+PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += $(LOCAL_PATH)/wallpaper-yggdrasil
+endif
+
 # Packages - Apps
 PRODUCT_PACKAGES += \
+    BootloaderManager \
+    ChildModeSettings \
     F-DroidPrivilegedExtension \
     MtkCamera \
     SimpleAppsTheme
 
+# Email
+ifneq ($(filter %_yggdrasilx,$(TARGET_PRODUCT)),)
+PRODUCT_PACKAGES += \
+    Email \
+    Exchange2 \
+    K9Remover
+endif
+ifneq ($(filter %_yggdrasil,$(TARGET_PRODUCT)),)
+PRODUCT_PACKAGES += \
+    MtkEmail \
+    K9Remover
+endif
+ifeq ($(filter %_yggdrasil %_yggdrasilx,$(TARGET_PRODUCT)),)
+PRODUCT_PACKAGES += AOSPEmailRemover
+endif
+
 # Updater
-ifneq ($(filter RELEASE,$(VOLLA_BUILDTYPE)),)
+ifeq ($(strip $(VOLLA_BUILD_FLAVOR)),)
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    lineage.updater.uri=https://ota.volla.tech/api/v1/{device}/{type}/{incr}
-else
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    lineage.updater.uri=https://ota-devel.volla.tech/api/v1/{device}/{type}/{incr}
+    lineage.updater.uri=https://ota.volla.tech/api/v1/{device}/{type}/{incr} \
+    volla.updater.devel.uri=https://ota-devel.volla.tech/api/v1/{device}/{type}/{incr}
 endif
 
 # F-Droid repos
-PRODUCT_PACKAGES += \
-    additional_repos.xml
+ifeq ($(strip $(VOLLA_BUILD_FLAVOR)),)
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/FDroidRepos/additional_repos.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/org.fdroid.fdroid/additional_repos.xml
+endif
 
 # Fonts
 PRODUCT_PACKAGES += \
@@ -78,3 +107,8 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.boot.vendor.overlay.theme=com.volla.overlay.nlp
+
+# DNS
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/dnsmasq/dnsmasq.rc:$(TARGET_COPY_OUT_SYSTEM)/etc/init/dnsmasq.rc \
+    $(LOCAL_PATH)/dnsmasq/volladns.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/volladns.conf

@@ -1,34 +1,25 @@
-From 1d2c6feda7e03e0fb37ece833a4212ab50effcd3 Mon Sep 17 00:00:00 2001
+From 0f06fb7a02650af58f6144c405e7657787ec0e15 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
-Date: Sat, 10 Jul 2021 22:15:13 +0800
+Date: Mon, 13 Dec 2021 23:14:14 +0330
 Subject: [PATCH] SetupWizard: Switch to volla black theme
 
-Change-Id: I2698ad8048d7ae38c57cd5b9b3fa84770bb67f7c
 ---
- res/layout/header_condensed.xml | 1 +
- res/values/colors.xml           | 8 ++++----
- res/values/styles.xml           | 6 ++----
- 3 files changed, 7 insertions(+), 8 deletions(-)
+ res/values/colors.xml                               | 13 ++++++-------
+ res/values/styles.xml                               |  2 +-
+ .../lineageos/setupwizard/BiometricActivity.java    |  2 +-
+ .../setupwizard/wizardmanager/WizardManager.java    |  2 +-
+ 4 files changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/res/layout/header_condensed.xml b/res/layout/header_condensed.xml
-index b507b08..84fa430 100644
---- a/res/layout/header_condensed.xml
-+++ b/res/layout/header_condensed.xml
-@@ -31,6 +31,7 @@
-         android:adjustViewBounds="true"
-         android:scaleType="centerInside"
-         android:visibility="gone"
-+        android:tint="@color/primary_text"
-         android:contentDescription="@null" />
- 
-     <TextView
 diff --git a/res/values/colors.xml b/res/values/colors.xml
-index 4e5bedb..fdbb878 100644
+index 81fb5aa..679f56f 100644
 --- a/res/values/colors.xml
 +++ b/res/values/colors.xml
-@@ -18,13 +18,13 @@
+@@ -16,15 +16,15 @@
+      limitations under the License.
+ -->
  <resources>
-     <color name="black">#21272b</color>
+-    <color name="black">#21272b</color>
++    <color name="black">#ffffff</color>
      <color name="white">#ffffff</color>
 -    <color name="page_background">#e4e7e9</color>
 +    <color name="page_background">#ff000000</color>
@@ -44,38 +35,53 @@ index 4e5bedb..fdbb878 100644
      <color name="button_bar_text_enabled">#ff1e1e1e</color>
      <color name="button_bar_text_disabled">#321e1e1e</color>
      <color name="divider">#40000000</color>
+@@ -34,6 +34,5 @@
+     <color name="biometric_setup_text_color">#167C80</color>
+ 
+     <!-- Partner customization -->
+-    <color name="sud_glif_background_color_light">@color/white</color>
+-    <color name="sud_color_accent_glif_v3_light">@color/accent</color>
++    <color name="sud_color_accent_glif_v3_dark">@color/accent</color>
+ </resources>
 diff --git a/res/values/styles.xml b/res/values/styles.xml
-index 3aa373b..c456f7c 100644
+index 3927eae..9ecba0c 100644
 --- a/res/values/styles.xml
 +++ b/res/values/styles.xml
-@@ -15,7 +15,7 @@
+@@ -16,7 +16,7 @@
       limitations under the License.
  -->
  <resources>
--    <style name="Theme.Setup" parent="@android:style/Theme.Material.Light">
-+    <style name="Theme.Setup" parent="@android:style/Theme.Material">
-         <item name="android:windowActionBar">false</item>
-         <item name="android:windowNoTitle">true</item>
-         <item name="android:windowIsTranslucent">true</item>
-@@ -24,9 +24,7 @@
-         <item name="android:colorPrimaryDark">@color/primary</item>
-         <item name="android:colorAccent">@color/accent</item>
-         <item name="android:textColorLink">@color/accent</item>
--        <item name="android:statusBarColor">@android:color/transparent</item>
-         <item name="android:windowAnimationStyle">@style/ActivityAnimations</item>
--        <item name="android:windowLightStatusBar">true</item>
-         <item name="localePickerStyle">@style/LocaleWidget.Material.LocalePicker</item>
-     </style>
+-    <style name="Theme.Setup" parent="SudThemeGlifV3.Light" />
++    <style name="Theme.Setup" parent="SudThemeGlifV3" />
  
-@@ -54,7 +52,7 @@
-     <style name="PageTitle">
-         <item name="android:id">@android:id/title</item>
-         <item name="android:textSize">20sp</item>
--        <item name="android:textColor">@color/black</item>
-+        <item name="android:textColor">@color/primary_text</item>
-     </style>
+     <style name="SpinnerItem">
+         <item name="android:textSize">15sp</item>
+diff --git a/src/org/lineageos/setupwizard/BiometricActivity.java b/src/org/lineageos/setupwizard/BiometricActivity.java
+index e3dfbe1..e1de25d 100644
+--- a/src/org/lineageos/setupwizard/BiometricActivity.java
++++ b/src/org/lineageos/setupwizard/BiometricActivity.java
+@@ -83,7 +83,7 @@ public class BiometricActivity extends SubBaseActivity {
  
-     <style name="PageSummaryText">
+     private void launchBiometricSetup() {
+         Intent intent = new Intent(ACTION_SETUP_BIOMETRIC);
+-        intent.putExtra(WizardManagerHelper.EXTRA_THEME, ThemeHelper.THEME_GLIF_V3_LIGHT);
++        intent.putExtra(WizardManagerHelper.EXTRA_THEME, ThemeHelper.THEME_GLIF_V3);
+         intent.putExtra(EXTRA_TITLE,
+                 getString(getTitleResId()));
+         intent.putExtra(EXTRA_DETAILS,
+diff --git a/src/org/lineageos/setupwizard/wizardmanager/WizardManager.java b/src/org/lineageos/setupwizard/wizardmanager/WizardManager.java
+index 317d520..bf9c120 100644
+--- a/src/org/lineageos/setupwizard/wizardmanager/WizardManager.java
++++ b/src/org/lineageos/setupwizard/wizardmanager/WizardManager.java
+@@ -84,7 +84,7 @@ public class WizardManager extends Activity {
+ 
+     private void addExtras(Intent intent) {
+         intent.putExtra(WizardManagerHelper.EXTRA_IS_FIRST_RUN, true);
+-        intent.putExtra(WizardManagerHelper.EXTRA_THEME, ThemeHelper.THEME_GLIF_V3_LIGHT);
++        intent.putExtra(WizardManagerHelper.EXTRA_THEME, ThemeHelper.THEME_GLIF_V3);
+     }
+ 
+     private void doAction(String scriptUri, WizardAction action, Intent extras) {
 -- 
 2.29.2
 

@@ -1,0 +1,178 @@
+From 62c7c9ec2ca0671702bc8dec2fdc9ed960050c73 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sun, 5 Jun 2022 06:59:05 +0430
+Subject: [PATCH] Redesign firewall page
+
+Change-Id: Idc032e9d8212e40272258e01e738566a17c1111c
+---
+ .../platform/internal/FirewallService.java    | 28 +++++++--
+ lineage/res/res/raw/firewall.html             | 63 +++++++++++++++++++
+ lineage/res/res/values/symbols.xml            |  4 ++
+ lineage/res/res/values/volla_strings.xml      |  5 ++
+ 4 files changed, 94 insertions(+), 6 deletions(-)
+ create mode 100644 lineage/res/res/raw/firewall.html
+ create mode 100644 lineage/res/res/values/volla_strings.xml
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index 1b79765c..ccd62aef 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -46,6 +46,7 @@ import org.xmlpull.v1.XmlPullParser;
+ import org.xmlpull.v1.XmlPullParserException;
+ import org.xmlpull.v1.XmlSerializer;
+ 
++import java.io.ByteArrayOutputStream;
+ import java.io.File;
+ import java.io.FileInputStream;
+ import java.io.FileNotFoundException;
+@@ -79,6 +80,8 @@ import android.net.IDnsResolver;
+ import android.net.shared.PrivateDnsConfig;
+ import com.android.server.connectivity.MockableSystemProperties;
+ import com.android.server.connectivity.DnsManager;
++import com.android.server.LocalServices;
++import com.android.server.UiModeManagerInternal;
+ 
+ import fi.iki.elonen.NanoHTTPD;
+ 
+@@ -95,6 +98,7 @@ public class FirewallService extends LineageSystemService {
+ 
+     private int mUserId;
+     private Context mContext;
++    private UiModeManagerInternal mUiModeMgr;
+ 
+     private AtomicFile mFile;
+     private final FirewallHandler mHandler;
+@@ -111,6 +115,7 @@ public class FirewallService extends LineageSystemService {
+         mContext = context;
+         mHandler = new FirewallHandler(BackgroundThread.getHandler().getLooper());
+         mUserId = ActivityManager.getCurrentUser();
++        mUiModeMgr = LocalServices.getService(UiModeManagerInternal.class);
+     }
+ 
+     @Override
+@@ -383,12 +388,23 @@ public class FirewallService extends LineageSystemService {
+     }
+ 
+     private String getBlockedPage() {
+-        String msg = "<html><head>";
+-        msg += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">";
+-        msg += "</head><body><h2 style=\"text-align:center;font-family:Roboto\">";
+-        msg += "This domain is blocked by firewall";
+-        msg += "</h2></body></html>\n";
+-        return msg;
++        InputStream inputStream = mContext.getResources().openRawResource(org.lineageos.platform.internal.R.raw.firewall);
++        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
++
++        byte buf[] = new byte[1024];
++        int len;
++        try {
++            while ((len = inputStream.read(buf)) != -1) {
++                outputStream.write(buf, 0, len);
++            }
++            outputStream.close();
++            inputStream.close();
++        } catch (IOException e) {
++            return "";
++        }
++        return outputStream.toString()
++                .replace("BLOCKED_TEXT", mContext.getResources().getString(org.lineageos.platform.internal.R.string.firewall_text))
++                .replace("DARKMODE_STATUS", String.valueOf(mUiModeMgr.isNightMode()));
+     }
+ 
+     private final IBinder mService = new IFirewallService.Stub() {
+diff --git a/lineage/res/res/raw/firewall.html b/lineage/res/res/raw/firewall.html
+new file mode 100644
+index 00000000..cd5808b0
+--- /dev/null
++++ b/lineage/res/res/raw/firewall.html
+@@ -0,0 +1,63 @@
++<!DOCTYPE html>
++<html>
++<style>
++body {
++  position: absolute;
++  height:100%;
++  width:100%;
++}
++
++body {
++    background-color: white;
++    color: gray;
++    font-family: "Helvetica";
++}
++.content {
++  margin: none;
++  position: relative;
++  text-align: center;
++  top: 25%;
++  width: 100%;
++}
++.dark {
++    background-color: black;
++    color: gray;
++}
++</style>
++<script>
++function setDarkMode(enabled) {
++    let content = document.body;
++    if (enabled) {
++        content.classList.add("dark");
++        console.log("Dark Mode Enabled");
++    } else {
++        content.classList.remove("dark");
++        console.log("Dark Mode Disabled");
++    }
++}
++
++window.onload = function() {
++    setDarkMode(DARKMODE_STATUS);
++}
++
++window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
++    setDarkMode(event.matches);
++});
++
++</script>
++  <head>
++    <title>Website Blocked</title>
++  </head>
++  <body>
++    <div class="content">
++        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="15%" viewBox="0 0 32 32" xml:space="preserve">
++            <path style="fill:#ff0000;stroke-width:9.94629;paint-order:stroke fill markers" id="circle"
++                d="M 31.718297,13.123324 A 15.961002,15.996568 0 0 1 18.9933,31.804763 15.961002,15.996568 0 0 1 0.35000941,19.056385 15.961002,15.996568 0 0 1 13.065081,0.36815918 15.961002,15.996568 0 0 1 31.715141,13.106589" />
++            <path style="fill:#ffffff;stroke-width:0.599999" id="lock"
++                d="m 16,8 c -2.306248,0 -4.2,1.89375 -4.2,4.2 V 14 H 10 v 9.6 H 22 V 14 H 20.199999 V 12.2 C 20.199999,9.89375 18.306246,8 16,8 Z m 0,1.2 c 1.65234,0 2.999999,1.347656 2.999999,3 V 14 H 13 v -1.8 c 0,-1.652344 1.34766,-3 3,-3 z m -4.8,6.000001 h 9.6 V 22.4 h -9.6 z" />
++        </svg>
++
++        <p id="message" style="margin: 1em 1em 0em 1em; font-size: 40pt; text-align: center;">BLOCKED_TEXT</p>
++    </div>
++  </body>
++</html>
+diff --git a/lineage/res/res/values/symbols.xml b/lineage/res/res/values/symbols.xml
+index 3de0b559..e3997acd 100644
+--- a/lineage/res/res/values/symbols.xml
++++ b/lineage/res/res/values/symbols.xml
+@@ -194,4 +194,8 @@
+ 
+     <!-- AppLocker. -->
+     <java-symbol type="array" name="config_defaultLockedPackages" />
++
++    <!-- Firewall -->
++    <java-symbol type="string" name="firewall_text" />
++    <java-symbol type="raw" name="firewall" />
+ </resources>
+diff --git a/lineage/res/res/values/volla_strings.xml b/lineage/res/res/values/volla_strings.xml
+new file mode 100644
+index 00000000..509ab03f
+--- /dev/null
++++ b/lineage/res/res/values/volla_strings.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
++    <string name="firewall_text">This website cannot be accessed while Parental Control is on.</string>
++
++</resources>
+-- 
+2.29.2
+

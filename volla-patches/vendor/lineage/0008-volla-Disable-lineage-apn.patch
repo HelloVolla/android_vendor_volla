@@ -1,0 +1,26 @@
+From 9bc01a831b2a3e32ab1f96d6427aa233626e770a Mon Sep 17 00:00:00 2001
+From: Your Name <you@example.com>
+Date: Fri, 20 May 2022 15:12:32 +0200
+Subject: [PATCH] volla: Disable lineage apn
+
+Change-Id: I496931a13a1153a158c454503f157340ae319ac3
+---
+ prebuilt/common/Android.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/prebuilt/common/Android.mk b/prebuilt/common/Android.mk
+index 8c60140c..dd466f0e 100644
+--- a/prebuilt/common/Android.mk
++++ b/prebuilt/common/Android.mk
+@@ -6,7 +6,7 @@ LOCAL_PATH := $(call my-dir)
+ # is added or replaced to the $(DEFAULT_APNS_FILE).
+ include $(CLEAR_VARS)
+ 
+-LOCAL_MODULE := apns-conf.xml
++LOCAL_MODULE := apns-conf.xml_disabled
+ LOCAL_MODULE_CLASS := ETC
+ 
+ DEFAULT_APNS_FILE := vendor/lineage/prebuilt/common/etc/apns-conf.xml
+-- 
+2.29.2
+

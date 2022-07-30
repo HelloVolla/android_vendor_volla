@@ -1,0 +1,154 @@
+From a6f3507cff813395bea8fd2a39c7b920a412baf0 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Mon, 13 Jun 2022 02:12:16 +0430
+Subject: [PATCH] Import firewall translations
+
+Change-Id: I533151d7e491a566cfb68bcd1752f89fc68ba3e9
+---
+ lineage/res/res/values-bg/volla_settings.xml | 5 +++++
+ lineage/res/res/values-de/volla_settings.xml | 5 +++++
+ lineage/res/res/values-es/volla_settings.xml | 5 +++++
+ lineage/res/res/values-fi/volla_settings.xml | 5 +++++
+ lineage/res/res/values-fr/volla_settings.xml | 5 +++++
+ lineage/res/res/values-it/volla_settings.xml | 5 +++++
+ lineage/res/res/values-nl/volla_settings.xml | 5 +++++
+ lineage/res/res/values-ro/volla_settings.xml | 5 +++++
+ lineage/res/res/values-se/volla_settings.xml | 5 +++++
+ lineage/res/res/values-sk/volla_settings.xml | 5 +++++
+ lineage/res/res/values/volla_strings.xml     | 2 +-
+ 11 files changed, 51 insertions(+), 1 deletion(-)
+ create mode 100644 lineage/res/res/values-bg/volla_settings.xml
+ create mode 100644 lineage/res/res/values-de/volla_settings.xml
+ create mode 100644 lineage/res/res/values-es/volla_settings.xml
+ create mode 100644 lineage/res/res/values-fi/volla_settings.xml
+ create mode 100644 lineage/res/res/values-fr/volla_settings.xml
+ create mode 100644 lineage/res/res/values-it/volla_settings.xml
+ create mode 100644 lineage/res/res/values-nl/volla_settings.xml
+ create mode 100644 lineage/res/res/values-ro/volla_settings.xml
+ create mode 100644 lineage/res/res/values-se/volla_settings.xml
+ create mode 100644 lineage/res/res/values-sk/volla_settings.xml
+
+diff --git a/lineage/res/res/values-bg/volla_settings.xml b/lineage/res/res/values-bg/volla_settings.xml
+new file mode 100644
+index 00000000..59e4e12e
+--- /dev/null
++++ b/lineage/res/res/values-bg/volla_settings.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
++    <string name="firewall_text">Този уебсайт не може да бъде достъпен, докато режимът на сигурност е включен.</string>
++
++</resources>
+diff --git a/lineage/res/res/values-de/volla_settings.xml b/lineage/res/res/values-de/volla_settings.xml
+new file mode 100644
+index 00000000..ed98ff74
+--- /dev/null
++++ b/lineage/res/res/values-de/volla_settings.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
++    <string name="firewall_text">Diese Website kann nicht aufgerufen werden, wenn der Sicherheitsmodus aktiviert ist.</string>
++
++</resources>
+diff --git a/lineage/res/res/values-es/volla_settings.xml b/lineage/res/res/values-es/volla_settings.xml
+new file mode 100644
+index 00000000..fd3fb80b
+--- /dev/null
++++ b/lineage/res/res/values-es/volla_settings.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
++    <string name="firewall_text">No se puede acceder a este sitio web mientras el modo de seguridad esté activado.</string>
++
++</resources>
+diff --git a/lineage/res/res/values-fi/volla_settings.xml b/lineage/res/res/values-fi/volla_settings.xml
+new file mode 100644
+index 00000000..dd0e4618
+--- /dev/null
++++ b/lineage/res/res/values-fi/volla_settings.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
++    <string name="firewall_text">Tälle verkkosivustolle ei voi päästä, kun suojaustila on päällä.</string>
++
++</resources>
+diff --git a/lineage/res/res/values-fr/volla_settings.xml b/lineage/res/res/values-fr/volla_settings.xml
+new file mode 100644
+index 00000000..6d910abe
+--- /dev/null
++++ b/lineage/res/res/values-fr/volla_settings.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
++    <string name="firewall_text">Ce site web n\'est pas accessible lorsque le mode sécurité est activé.</string>
++
++</resources>
+diff --git a/lineage/res/res/values-it/volla_settings.xml b/lineage/res/res/values-it/volla_settings.xml
+new file mode 100644
+index 00000000..0aa2884c
+--- /dev/null
++++ b/lineage/res/res/values-it/volla_settings.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
++    <string name="firewall_text">Non è possibile accedere a questo sito web se la modalità di sicurezza è attiva.</string>
++
++</resources>
+diff --git a/lineage/res/res/values-nl/volla_settings.xml b/lineage/res/res/values-nl/volla_settings.xml
+new file mode 100644
+index 00000000..453f1d77
+--- /dev/null
++++ b/lineage/res/res/values-nl/volla_settings.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
++    <string name="firewall_text">Deze website kan niet worden bezocht zolang de beveiligingsmodus is ingeschakeld.</string>
++
++</resources>
+diff --git a/lineage/res/res/values-ro/volla_settings.xml b/lineage/res/res/values-ro/volla_settings.xml
+new file mode 100644
+index 00000000..afda645c
+--- /dev/null
++++ b/lineage/res/res/values-ro/volla_settings.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
++    <string name="firewall_text">Acest site nu poate fi accesat în timp ce modul de securitate este activat.</string>
++
++</resources>
+diff --git a/lineage/res/res/values-se/volla_settings.xml b/lineage/res/res/values-se/volla_settings.xml
+new file mode 100644
+index 00000000..b5bf2d9e
+--- /dev/null
++++ b/lineage/res/res/values-se/volla_settings.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
++    <string name="firewall_text">Denna webbplats kan inte nås när säkerhetsläget är aktiverat.</string>
++
++</resources>
+diff --git a/lineage/res/res/values-sk/volla_settings.xml b/lineage/res/res/values-sk/volla_settings.xml
+new file mode 100644
+index 00000000..b4298525
+--- /dev/null
++++ b/lineage/res/res/values-sk/volla_settings.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
++    <string name="firewall_text">Táto webová stránka nie je prístupná, ak je zapnutý bezpečnostný režim.</string>
++
++</resources>
+diff --git a/lineage/res/res/values/volla_strings.xml b/lineage/res/res/values/volla_strings.xml
+index 509ab03f..7e890c93 100644
+--- a/lineage/res/res/values/volla_strings.xml
++++ b/lineage/res/res/values/volla_strings.xml
+@@ -1,5 +1,5 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+-    <string name="firewall_text">This website cannot be accessed while Parental Control is on.</string>
++    <string name="firewall_text">This website cannot be accessed while security mode is on.</string>
+ 
+ </resources>
+-- 
+2.29.2
+

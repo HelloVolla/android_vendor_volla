@@ -1,0 +1,30 @@
+From d6ac511167c66b79657aac190b54dc57cc04201d Mon Sep 17 00:00:00 2001
+From: Your Name <you@example.com>
+Date: Thu, 16 Jun 2022 19:45:59 +0200
+Subject: [PATCH] sepolicy: Allow neverallows
+
+Change-Id: I76096fc7de2f7a3b3a99381f13ba948d8b5a8ebc
+---
+ Android.mk | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Android.mk b/Android.mk
+index 2245dff66..8c5a049fc 100644
+--- a/Android.mk
++++ b/Android.mk
+@@ -87,9 +87,9 @@ endif
+ 
+ NEVERALLOW_ARG :=
+ ifeq ($(SELINUX_IGNORE_NEVERALLOWS),true)
+-ifeq ($(TARGET_BUILD_VARIANT),user)
+-$(error SELINUX_IGNORE_NEVERALLOWS := true cannot be used in user builds)
+-endif
++#ifeq ($(TARGET_BUILD_VARIANT),user)
++#$(error SELINUX_IGNORE_NEVERALLOWS := true cannot be used in user builds)
++#endif
+ $(warning Be careful when using the SELINUX_IGNORE_NEVERALLOWS flag. \
+           It does not work in user builds and using it will \
+           not stop you from failing CTS.)
+-- 
+2.25.1
+

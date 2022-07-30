@@ -1,0 +1,4 @@
+volla.                u:object_r:exported_system_prop:s0
+ro.volla.             u:object_r:exported_system_prop:s0
+persist.volla.        u:object_r:exported_system_prop:s0
+sys.volla.            u:object_r:exported_system_prop:s0

@@ -13,7 +13,7 @@
     <bool name="config_swipe_up_gesture_setting_available">true</bool>
 
     <!-- Specifies the path that is used by AdaptiveIconDrawable class to crop launcher icons. -->
-    <string name="config_icon_mask">M50 0C77.6 0 100 22.4 100 50C100 77.6 77.6 100 50 100C22.4 100 0 77.6 0 50C0 22.4 22.4 0 50 0Z</string>
+    <string name="config_icon_mask" translatable="false">M50 0C77.6 0 100 22.4 100 50C100 77.6 77.6 100 50 100C22.4 100 0 77.6 0 50C0 22.4 22.4 0 50 0Z</string>
     
     <!-- Control the default night mode to use when there is no other mode override set.
          One of the following values (see UiModeManager.java):
@@ -22,9 +22,6 @@
              2 - MODE_NIGHT_YES
     -->
     <integer name="config_defaultNightMode">2</integer>
-
-    <!-- The name of the package that will hold the dialer role by default. -->
-    <string name="config_defaultDialer" translatable="false">com.simplemobiletools.dialer</string>
 
     <!--  Control whether to lock day/night mode change from normal application. When it is
          true, day / night mode change is only allowed to apps with MODIFY_DAY_NIGHT_MODE
@@ -66,5 +63,8 @@
     </string-array>
 	
 	<string translatable="false" name="config_networkCaptivePortalServerUrl">http://connectivitycheck.volla.tech/generate_204</string>
+
+    <!-- Colon separated list of package names that should be granted Notification Listener access -->
+    <string name="config_defaultListenerAccessPackages" translatable="false">com.volla.launcher</string>
 
 </resources>
