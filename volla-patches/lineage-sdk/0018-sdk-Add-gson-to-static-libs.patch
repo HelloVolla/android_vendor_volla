@@ -1,0 +1,25 @@
+From 25e663d9e7d013380e574746c33dd8d90b93c6aa Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Thu, 2 Feb 2023 06:31:58 +0330
+Subject: [PATCH] sdk: Add gson to static libs
+
+Change-Id: Ied533f1c25efc1d9a503ffeb7a18b808a101e3da
+---
+ Android.bp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Android.bp b/Android.bp
+index d588fc50..17ea3661 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -77,6 +77,7 @@ lineage_sdk_LOCAL_STATIC_JAVA_LIBRARIES = [
+     "vendor.lineage.livedisplay-V2.1-java",
+     "vendor.lineage.touch-V1.0-java",
+     "vendor.lineage.trust-V1.0-java",
++    "gson-prebuilt-jar",
+ ]
+ 
+ // READ ME: ########################################################
+-- 
+2.29.2
+

@@ -1,0 +1,44 @@
+From 71420581b65c29f40b098814de43a77d37e53172 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Tue, 20 Sep 2022 19:11:08 +0430
+Subject: [PATCH] Firewall: Create blank dnsmasq file on activation
+
+Change-Id: Ife9f499f30bcb7a213b9446237508e3a864f891c
+---
+ .../platform/internal/FirewallService.java          | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index 528e286c..29efc022 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -298,6 +298,7 @@ public class FirewallService extends LineageSystemService {
+         File dnsmasqDir = new File(Environment.getDataSystemCeDirectory(mUserId), "dnsmasq");
+         if (!dnsmasqDir.exists() && !dnsmasqDir.mkdirs())
+             Slog.e(TAG, "Error while creating dnsmasq directory: " + dnsmasqDir);
++        confLines.add("# Volla firewall fonfiguration file for dnsmasq.");
+         if (mDomainsList.size() > 0) {
+             for (String domain : mDomainsList) {
+                 if (blacklist)
+@@ -307,12 +308,12 @@ public class FirewallService extends LineageSystemService {
+             }
+             if (!blacklist)
+                 confLines.add("address=/#/127.0.0.1");
+-            try {
+-                Files.write(Paths.get(dnsmasqDir.getAbsolutePath() + "/dns.conf"),
+-                  confLines, StandardCharsets.UTF_8);
+-            } catch (IOException e) {
+-                Slog.wtf(TAG, "Failed to write dnsmasq config", e);
+-            }
++        }
++        try {
++            Files.write(Paths.get(dnsmasqDir.getAbsolutePath() + "/dns.conf"),
++              confLines, StandardCharsets.UTF_8);
++        } catch (IOException e) {
++            Slog.wtf(TAG, "Failed to write dnsmasq config", e);
+         }
+         if (isActivate())
+             SystemProperties.set("ctl.restart", "volla.dnsmasq");
+-- 
+2.29.2
+

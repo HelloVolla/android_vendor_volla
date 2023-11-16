@@ -1,3 +1,6 @@
 # SELinux
 SELINUX_IGNORE_NEVERALLOWS := true
-BOARD_PLAT_PRIVATE_SEPOLICY_DIR += vendor/extra/sepolicy/private
+SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += vendor/extra/sepolicy/private
+
+# Build
+BUILD_BROKEN_DUP_RULES := true

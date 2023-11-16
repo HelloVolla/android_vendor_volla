@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fonts-modification version="1">
+    <family customizationType="new-named-family" name="lato">
+        <font weight="400" style="normal">Lato-Regular.ttf</font>
+        <font weight="400" style="italic">Lato-Italic.ttf</font>
+        <font weight="500" style="normal">Lato-Medium.ttf</font>
+        <font weight="500" style="italic">Lato-MediumItalic.ttf</font>
+        <font weight="700" style="normal">Lato-Bold.ttf</font>
+        <font weight="700" style="italic">Lato-BoldItalic.ttf</font>
+    </family>
+    <alias name="lato-medium" to="lato" weight="500" />
+    <alias name="lato-bold" to="lato" weight="700" />
+
+    <family customizationType="new-named-family" name="rubik">
+        <font weight="400" style="normal">Rubik-Regular.ttf</font>
+        <font weight="400" style="italic">Rubik-Italic.ttf</font>
+        <font weight="500" style="normal">Rubik-Medium.ttf</font>
+        <font weight="500" style="italic">Rubik-MediumItalic.ttf</font>
+        <font weight="700" style="normal">Rubik-Bold.ttf</font>
+        <font weight="700" style="italic">Rubik-BoldItalic.ttf</font>
+    </family>
+    <alias name="rubik-medium" to="rubik" weight="500" />
+    <alias name="rubik-bold" to="rubik" weight="700" />
+
+    <family customizationType="new-named-family" name="ibmplexsans">
+        <font weight="100" style="normal">IBMPlexSans-Thin.ttf</font>
+        <font weight="100" style="italic">IBMPlexSans-ThinItalic.ttf</font>
+        <font weight="200" style="normal">IBMPlexSans-ExtraLight.ttf</font>
+        <font weight="200" style="italic">IBMPlexSans-ExtraLightItalic.ttf</font>
+        <font weight="300" style="normal">IBMPlexSans-Light.ttf</font>
+        <font weight="300" style="italic">IBMPlexSans-LightItalic.ttf</font>
+        <font weight="400" style="normal">IBMPlexSans-Regular.ttf</font>
+        <font weight="400" style="italic">IBMPlexSans-Italic.ttf</font>
+        <font weight="500" style="normal">IBMPlexSans-Medium.ttf</font>
+        <font weight="500" style="italic">IBMPlexSans-MediumItalic.ttf</font>
+        <font weight="700" style="normal">IBMPlexSans-SemiBold.ttf</font>
+        <font weight="700" style="italic">IBMPlexSans-SemiBoldItalic.ttf</font>
+        <font weight="900" style="normal">IBMPlexSans-Bold.ttf</font>
+        <font weight="900" style="italic">IBMPlexSans-BoldItalic.ttf</font>
+    </family>
+    <alias name="ibmplexsans-medium" to="ibmplexsans" weight="500" />
+
+    <family customizationType="new-named-family" name="poppins">
+        <font weight="100" style="normal">Poppins-Thin.ttf</font>
+        <font weight="100" style="italic">Poppins-ThinItalic.ttf</font>
+        <font weight="200" style="normal">Poppins-ExtraLight.ttf</font>
+        <font weight="200" style="italic">Poppins-ExtraLightItalic.ttf</font>
+        <font weight="300" style="normal">Poppins-Light.ttf</font>
+        <font weight="300" style="italic">Poppins-LightItalic.ttf</font>
+        <font weight="400" style="normal">Poppins-Regular.ttf</font>
+        <font weight="400" style="italic">Poppins-RegularItalic.ttf</font>
+        <font weight="500" style="normal">Poppins-Medium.ttf</font>
+        <font weight="500" style="italic">Poppins-MediumItalic.ttf</font>
+        <font weight="600" style="normal">Poppins-SemiBold.ttf</font>
+        <font weight="600" style="italic">Poppins-SemiBoldItalic.ttf</font>
+        <font weight="700" style="normal">Poppins-Bold.ttf</font>
+        <font weight="700" style="italic">Poppins-BoldItalic.ttf</font>
+        <font weight="800" style="normal">Poppins-ExtraBold.ttf</font>
+        <font weight="800" style="italic">Poppins-ExtraBoldItalic.ttf</font>
+        <font weight="900" style="normal">Poppins-Black.ttf</font>
+        <font weight="900" style="italic">Poppins-BlackItalic.ttf</font>
+    </family>
+    <alias name="poppins-medium" to="poppins" weight="500" />
+    <alias name="poppins-bold" to="poppins" weight="700" />
+
+    <family customizationType="new-named-family" name="selawik">
+        <font weight="100" style="normal">selawkl.ttf</font>
+        <font weight="300" style="normal">selawksl.ttf</font>
+        <font weight="400" style="normal">selawk.ttf</font>
+        <font weight="700" style="normal">selawksb.ttf</font>
+        <font weight="900" style="normal">selawkb.ttf</font>
+    </family>
+    <alias name="selawik-medium" to="selawik" weight="500" />
+    <alias name="selawik-bold" to="selawik" weight="700" />
+
+</fonts-modification>

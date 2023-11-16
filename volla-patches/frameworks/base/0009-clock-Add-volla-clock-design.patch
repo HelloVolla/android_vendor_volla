@@ -1,0 +1,85 @@
+From 39ea1985380ef869eb4017c73a19c9adbd8da613 Mon Sep 17 00:00:00 2001
+From: Your Name <you@example.com>
+Date: Wed, 5 Apr 2023 23:16:17 +0200
+Subject: [PATCH] clock: Add volla clock design
+
+Change-Id: If145453899a0bbd04762ec3aa9e6effb8317d5d6
+---
+ .../layout/keyguard_clock_switch.xml          | 19 ++++++++++---------
+ .../com/android/keyguard/TextInterpolator.kt  |  6 ++++++
+ 2 files changed, 16 insertions(+), 9 deletions(-)
+
+diff --git a/packages/SystemUI/res-keyguard/layout/keyguard_clock_switch.xml b/packages/SystemUI/res-keyguard/layout/keyguard_clock_switch.xml
+index 87a9825af1cb..144cc1c70d4d 100644
+--- a/packages/SystemUI/res-keyguard/layout/keyguard_clock_switch.xml
++++ b/packages/SystemUI/res-keyguard/layout/keyguard_clock_switch.xml
+@@ -38,13 +38,13 @@
+             android:layout_gravity="start"
+             android:gravity="start"
+             android:textSize="@dimen/clock_text_size"
+-            android:fontFamily="@font/clock"
++            android:textStyle="bold"
++            android:fontFamily="ibmplexsans"
+             android:elegantTextHeight="false"
+-            android:singleLine="true"
+             android:fontFeatureSettings="pnum"
+             chargeAnimationDelay="350"
+-            dozeWeight="200"
+-            lockScreenWeight="400"
++            dozeWeight="300"
++            lockScreenWeight="900"
+         />
+     </FrameLayout>
+     <FrameLayout
+@@ -57,15 +57,16 @@
+             android:id="@+id/animatable_clock_view_large"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+-            android:layout_gravity="center"
++            android:layout_gravity="center_vertical"
++            android:layout_marginStart="30dp"
+             android:gravity="center_horizontal"
+             android:textSize="@dimen/large_clock_text_size"
+-            android:fontFamily="@font/clock"
+-            android:typeface="monospace"
++            android:textStyle="bold"
++            android:fontFamily="ibmplexsans"
+             android:elegantTextHeight="false"
+             chargeAnimationDelay="200"
+-            dozeWeight="200"
+-            lockScreenWeight="400"
++            dozeWeight="300"
++            lockScreenWeight="900"
+         />
+     </FrameLayout>
+ 
+diff --git a/packages/SystemUI/src/com/android/keyguard/TextInterpolator.kt b/packages/SystemUI/src/com/android/keyguard/TextInterpolator.kt
+index 5d5797cbbb3d..38b2884b28bb 100644
+--- a/packages/SystemUI/src/com/android/keyguard/TextInterpolator.kt
++++ b/packages/SystemUI/src/com/android/keyguard/TextInterpolator.kt
+@@ -16,6 +16,7 @@
+ package com.android.keyguard
+ 
+ import android.graphics.Canvas
++import android.graphics.Color
+ import android.graphics.Paint
+ import android.graphics.fonts.Font
+ import android.graphics.text.PositionedGlyphs
+@@ -240,9 +241,14 @@ class TextInterpolator(
+                     val origin = layout.getDrawOrigin(lineNo)
+                     canvas.translate(origin, layout.getLineBaseline(lineNo).toFloat())
+ 
++                    var oldColor = tmpDrawPaint.color
++                    if (lineNo == 1) {
++                        tmpDrawPaint.setColor(Color.parseColor("#FF3615"))
++                    }
+                     run.fontRuns.forEach { fontRun ->
+                         drawFontRun(canvas, run, fontRun, tmpDrawPaint)
+                     }
++                    tmpDrawPaint.setColor(oldColor)
+                 } finally {
+                     canvas.restore()
+                 }
+-- 
+2.29.2
+

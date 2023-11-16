@@ -1,0 +1,8 @@
+allow toolbox bootdevice_block_device:blk_file { read open rw_file_perms };
+
+allowxperm toolbox bootdevice_block_device:blk_file ioctl {
+  0x301
+  0x1260
+  0x125f
+  0x127b
+};

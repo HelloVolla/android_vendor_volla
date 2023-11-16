@@ -1,0 +1,36 @@
+From 6fd4587394dad36952a8c3ac8f1d00af3db1fbf6 Mon Sep 17 00:00:00 2001
+From: cjh1249131356 <cjh1249131356@gmail.com>
+Date: Fri, 15 Apr 2022 08:41:37 +0800
+Subject: [PATCH] KernelCpuUidActiveTimeReader: Do not spam log with negative
+ active time
+
+Change-Id: I1b57e50c0e437aadcb5c35fc3eb2516331e3781b
+---
+ core/java/com/android/internal/os/KernelCpuUidTimeReader.java | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/core/java/com/android/internal/os/KernelCpuUidTimeReader.java b/core/java/com/android/internal/os/KernelCpuUidTimeReader.java
+index 50df166605db..f5c4d056aab8 100644
+--- a/core/java/com/android/internal/os/KernelCpuUidTimeReader.java
++++ b/core/java/com/android/internal/os/KernelCpuUidTimeReader.java
+@@ -481,7 +481,7 @@ public abstract class KernelCpuUidTimeReader<T> {
+                 // Unit is 10ms.
+                 mDeltaTimes[i] = mCurTimes[i] - lastTimes[i];
+                 if (mDeltaTimes[i] < 0) {
+-                    Slog.e(mTag, "Negative delta from freq time for uid: " + uid
++                    if (DEBUG) Slog.e(mTag, "Negative delta from freq time for uid: " + uid
+                             + ", delta: " + mDeltaTimes[i]);
+                     return;
+                 }
+@@ -648,7 +648,7 @@ public abstract class KernelCpuUidTimeReader<T> {
+                         cb.onUidCpuTime(uid, delta);
+                     }
+                 } else if (delta < 0) {
+-                    Slog.e(mTag, "Negative delta from active time for uid: " + uid
++                    if (DEBUG) Slog.e(mTag, "Negative delta from active time for uid: " + uid
+                             + ", delta: " + delta);
+                 }
+             }
+-- 
+2.29.2
+

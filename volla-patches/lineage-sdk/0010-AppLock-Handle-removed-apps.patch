@@ -1,0 +1,49 @@
+From 4a856c5f23df728c5747a3777b9f81f7d9235c74 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Tue, 20 Sep 2022 19:02:12 +0430
+Subject: [PATCH] AppLock: Handle removed apps
+
+Change-Id: I344b3af34efb63fab23b71f5a824387a25db9158
+---
+ .../lineageos/platform/internal/AppLockService.java   | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java b/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
+index f7640c26..52c2dd0b 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
+@@ -164,6 +164,7 @@ public class AppLockService extends LineageSystemService {
+         if (DEBUG_APPLOCK) Slog.v(TAG, "initLockedApps(" + mUserId + ")");
+         mFile = new AtomicFile(getFile());
+         readState();
++        mHandler.sendEmptyMessage(AppLockHandler.MSG_WRITE_STATE);
+     }
+ 
+     private File getFile() {
+@@ -224,8 +225,10 @@ public class AppLockService extends LineageSystemService {
+             if (parser.getName().equals(TAG_PACKAGE)) {
+                 String pkgName = parser.getAttributeValue(null, ATTRIBUTE_NAME);
+                 AppLockContainer cont = new AppLockContainer(pkgName);
+-                mAppsList.put(pkgName, cont);
+-                if (DEBUG_APPLOCK) Slog.v(TAG, "parsePackages(): pkgName=" + pkgName);
++                if (cont.getAppLabel() != null) {
++                    mAppsList.put(pkgName, cont);
++                    if (DEBUG_APPLOCK) Slog.v(TAG, "parsePackages(): pkgName=" + pkgName);
++                }
+             }
+         }
+     }
+@@ -488,6 +491,10 @@ public class AppLockService extends LineageSystemService {
+             appLabel = mPackageManager.getApplicationLabel(aInfo);
+         }
+ 
++        private CharSequence getAppLabel() {
++            return appLabel;
++        }
++
+         private void appRemovedFromList() {
+             if (isActivate())
+                 mPackageManager.setApplicationEnabledSetting(packageName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, 0);
+-- 
+2.29.2
+

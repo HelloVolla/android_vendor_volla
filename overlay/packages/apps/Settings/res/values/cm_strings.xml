@@ -21,4 +21,6 @@
 
     <!-- Legal -->
     <string name="lineage_legal_url">https://volla.online/en/eula/index.html</string>
+    
+    <string name="battery_charging_limit_title">Maximum charging level</string>
 </resources>

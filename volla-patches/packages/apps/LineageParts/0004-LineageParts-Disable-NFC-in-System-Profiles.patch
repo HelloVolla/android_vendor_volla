@@ -1,0 +1,44 @@
+From 7ded61c627cb62cbd524c39214f587f3e9a3b763 Mon Sep 17 00:00:00 2001
+From: techyminati <sinha.aryan03@gmail.com>
+Date: Thu, 31 Aug 2023 15:20:55 +0200
+Subject: [PATCH] LineageParts: Disable NFC in System Profiles
+
+Change-Id: I21c169165022d7c9f33f9856c4c7a284b992a8b2
+Signed-off-by: techyminati <sinha.aryan03@gmail.com>
+---
+ .../lineageparts/profiles/TriggerPagerAdapter.java          | 6 +-----
+ .../lineageparts/profiles/actions/item/TriggerItem.java     | 2 --
+ 2 files changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/src/org/lineageos/lineageparts/profiles/TriggerPagerAdapter.java b/src/org/lineageos/lineageparts/profiles/TriggerPagerAdapter.java
+index 25dd1ae..c38065b 100644
+--- a/src/org/lineageos/lineageparts/profiles/TriggerPagerAdapter.java
++++ b/src/org/lineageos/lineageparts/profiles/TriggerPagerAdapter.java
+@@ -177,11 +177,7 @@ public class TriggerPagerAdapter extends FragmentPagerAdapter {
+         /**
+          * The album fragment
+          */
+-        BLUETOOTH(BluetoothTriggerFragment.class, R.string.profile_tabs_bluetooth),
+-        /**
+-         * The song fragment
+-         */
+-        NFC(NfcTriggerFragment.class, R.string.profile_tabs_nfc);
++        BLUETOOTH(BluetoothTriggerFragment.class, R.string.profile_tabs_bluetooth);
+ 
+         private final Class<? extends Fragment> mFragmentClass;
+         private final int mNameRes;
+diff --git a/src/org/lineageos/lineageparts/profiles/actions/item/TriggerItem.java b/src/org/lineageos/lineageparts/profiles/actions/item/TriggerItem.java
+index 8757b4d..ae911a6 100644
+--- a/src/org/lineageos/lineageparts/profiles/actions/item/TriggerItem.java
++++ b/src/org/lineageos/lineageparts/profiles/actions/item/TriggerItem.java
+@@ -77,8 +77,6 @@ public class TriggerItem extends Item {
+                 return R.string.profile_tabs_wifi;
+             case BLUETOOTH:
+                 return R.string.profile_tabs_bluetooth;
+-            case NFC:
+-                return R.string.profile_tabs_nfc;
+             default: return 0;
+         }
+     }
+-- 
+2.34.1

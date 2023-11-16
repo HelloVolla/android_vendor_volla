@@ -1,0 +1,59 @@
+From f2e2e912bd29f3161ea9951013ac22f8ec267083 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sat, 25 Jun 2022 16:11:04 +0430
+Subject: [PATCH] Updater: Add volla props for switching channel
+
+Change-Id: I3117fdcbf68cee0927af6eed7e9c6005ce68d842
+---
+ src/org/lineageos/updater/misc/Constants.java |  3 +++
+ src/org/lineageos/updater/misc/Utils.java     | 11 ++++++++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/src/org/lineageos/updater/misc/Constants.java b/src/org/lineageos/updater/misc/Constants.java
+index 6144ed7..8ce1a07 100644
+--- a/src/org/lineageos/updater/misc/Constants.java
++++ b/src/org/lineageos/updater/misc/Constants.java
+@@ -46,6 +46,9 @@ public final class Constants {
+     public static final String PROP_RELEASE_TYPE = "ro.lineage.releasetype";
+     public static final String PROP_UPDATER_ALLOW_DOWNGRADING = "lineage.updater.allow_downgrading";
+     public static final String PROP_UPDATER_URI = "lineage.updater.uri";
++    public static final String PROP_UPDATER_DEVEL_URI = "volla.updater.devel.uri";
++    public static final String PROP_VOLLA_TYPE = "persist.volla.update.type";
++    public static final String PROP_VOLLA_DEVEL = "persist.volla.update.isdevel";
+ 
+     public static final String PREF_INSTALL_OLD_TIMESTAMP = "install_old_timestamp";
+     public static final String PREF_INSTALL_NEW_TIMESTAMP = "install_new_timestamp";
+diff --git a/src/org/lineageos/updater/misc/Utils.java b/src/org/lineageos/updater/misc/Utils.java
+index 79ded8f..25abedd 100644
+--- a/src/org/lineageos/updater/misc/Utils.java
++++ b/src/org/lineageos/updater/misc/Utils.java
+@@ -103,7 +103,11 @@ public class Utils {
+             Log.d(TAG, update.getName() + " is older than/equal to the current build");
+             return false;
+         }
+-        if (!update.getType().equalsIgnoreCase(SystemProperties.get(Constants.PROP_RELEASE_TYPE))) {
++        String type = SystemProperties.get(Constants.PROP_RELEASE_TYPE);
++        String vollaType = SystemProperties.get(Constants.PROP_VOLLA_TYPE);
++        if (!vollaType.trim().isEmpty())
++            type = vollaType;
++        if (!update.getType().equalsIgnoreCase(type)) {
+             Log.d(TAG, update.getName() + " has type " + update.getType());
+             return false;
+         }
+@@ -154,8 +158,13 @@ public class Utils {
+         String device = SystemProperties.get(Constants.PROP_NEXT_DEVICE,
+                 SystemProperties.get(Constants.PROP_DEVICE));
+         String type = SystemProperties.get(Constants.PROP_RELEASE_TYPE).toLowerCase(Locale.ROOT);
++        String vollaType = SystemProperties.get(Constants.PROP_VOLLA_TYPE).toLowerCase(Locale.ROOT);
++        if (!vollaType.trim().isEmpty())
++            type = vollaType;
+ 
+         String serverUrl = SystemProperties.get(Constants.PROP_UPDATER_URI);
++        if (SystemProperties.getBoolean(Constants.PROP_VOLLA_DEVEL, false))
++            serverUrl = SystemProperties.get(Constants.PROP_UPDATER_DEVEL_URI);
+         if (serverUrl.trim().isEmpty()) {
+             serverUrl = context.getString(R.string.updater_server_url);
+         }
+-- 
+2.29.2
+

@@ -19,4 +19,5 @@
     <string name="header_title_text">VollaOS\n%1$s</string>
     <string name="list_build_version">VollaOS <xliff:g id="version" example="14.1">%1$s</xliff:g></string>
     <string name="list_build_version_date">VollaOS <xliff:g id="version" example="14.1">%1$s</xliff:g> - <xliff:g id="date" example="July 11, 2017">%2$s</xliff:g></string>
+    <string name="info_dialog_message">VollaOS 업데이트는 전체 설치 패키지입니다. 중간에 몇 개 버전을 건너뛰었더라도 가장 최신 버전만 설치하면 됩니다!</string>
 </resources>

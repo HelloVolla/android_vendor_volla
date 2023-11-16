@@ -91,7 +91,7 @@ downloadFromFdroid() {
 	marketvercode="$(xmlstarlet sel -t -m '//application[id="'"$1"'"]' -v ./marketvercode tmp/index.xml || true)"
 	apk="$(xmlstarlet sel -t -m '//application[id="'"$1"'"]/package[versioncode="'"$marketvercode"'"]' -v ./apkname tmp/index.xml || xmlstarlet sel -t -m '//application[id="'"$1"'"]/package[1]' -v ./apkname tmp/index.xml)"
     while ! wget --connect-timeout=10 $repo/$apk -O apk/$1.apk;do sleep 1;done
-	addCopy $1 "$2" $3
+	addCopy $1 "$2" $3 $4
 }
 
 downloadFromFdroid org.fdroid.fdroid
@@ -103,8 +103,6 @@ downloadFromFdroid com.simplemobiletools.contacts.pro "Contacts"
 downloadFromFdroid com.simplemobiletools.dialer
 downloadFromFdroid com.simplemobiletools.filemanager.pro
 downloadFromFdroid com.simplemobiletools.gallery.pro "Gallery2 Gallery Gallery3D GalleryNew3D"
-downloadFromFdroid com.simplemobiletools.notes.pro
-downloadFromFdroid com.simplemobiletools.thankyou
 downloadFromFdroid net.osmand.plus
 downloadFromFdroid org.mozilla.fennec_fdroid "Jelly" YES
 downloadFromFdroid com.maxfour.music "Eleven"
@@ -115,6 +113,11 @@ repo=https://fdroid.volla.tech/fdroid/repo/
 
 downloadFromFdroid com.volla.launcher "" YES YES
 downloadFromFdroid hideme.android.vpn.noPlayStore "" YES
+
+repo=https://microg.org/fdroid/repo/
+downloadFromFdroid com.google.android.gms "" NO YES
+downloadFromFdroid com.google.android.gsf
+downloadFromFdroid com.android.vending "" NO YES
 
 echo >> apps.mk
 

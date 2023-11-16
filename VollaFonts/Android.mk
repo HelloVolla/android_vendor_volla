@@ -15,14 +15,50 @@ VOLLA_PRODUCT_FONTS := \
     IBMPlexSans-SemiBold.ttf \
     IBMPlexSans-SemiBoldItalic.ttf \
     IBMPlexSans-Thin.ttf \
-    IBMPlexSans-ThinItalic.ttf
-
-VOLLA_SYSTEM_FONTS := \
+    IBMPlexSans-ThinItalic.ttf \
+    Poppins-Black.ttf \
+    Poppins-BlackItalic.ttf \
+    Poppins-Bold.ttf \
+    Poppins-BoldItalic.ttf \
+    Poppins-ExtraBold.ttf \
+    Poppins-ExtraBoldItalic.ttf \
+    Poppins-ExtraLight.ttf \
+    Poppins-ExtraLightItalic.ttf \
+    Poppins-Italic.ttf \
+    Poppins-Light.ttf \
+    Poppins-LightItalic.ttf \
+    Poppins-Medium.ttf \
+    Poppins-MediumItalic.ttf \
+    Poppins-Regular.ttf \
+    Poppins-SemiBold.ttf \
+    Poppins-SemiBoldItalic.ttf \
+    Poppins-Thin.ttf \
+    Poppins-ThinItalic.ttf \
     selawk.ttf \
     selawkb.ttf \
     selawkl.ttf \
     selawksb.ttf \
     selawksl.ttf
+
+VOLLA_SYSTEM_FONTS := \
+    NotoSans-Black.ttf \
+    NotoSans-BlackItalic.ttf \
+    NotoSans-Bold.ttf \
+    NotoSans-BoldItalic.ttf \
+    NotoSans-ExtraBold.ttf \
+    NotoSans-ExtraBoldItalic.ttf \
+    NotoSans-ExtraLight.ttf \
+    NotoSans-ExtraLightItalic.ttf \
+    NotoSans-Italic.ttf \
+    NotoSans-Light.ttf \
+    NotoSans-LightItalic.ttf \
+    NotoSans-Medium.ttf \
+    NotoSans-MediumItalic.ttf \
+    NotoSans-Regular.ttf \
+    NotoSans-SemiBold.ttf \
+    NotoSans-SemiBoldItalic.ttf \
+    NotoSans-Thin.ttf \
+    NotoSans-ThinItalic.ttf
 
 define define-volla-product-font
 include $$(CLEAR_VARS)

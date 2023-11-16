@@ -1,0 +1,37 @@
+From d7cb15d17362aeba4e109e07e1f218ff22d49f39 Mon Sep 17 00:00:00 2001
+From: Your Name <you@example.com>
+Date: Sun, 20 Feb 2022 10:02:50 +0100
+Subject: [PATCH] volla: Add app installation locker
+
+Change-Id: I8ffb117e663b29bd158b730c5addf6f195413d67
+---
+ .../android/packageinstaller/PackageInstallerActivity.java  | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/packages/PackageInstaller/src/com/android/packageinstaller/PackageInstallerActivity.java b/packages/PackageInstaller/src/com/android/packageinstaller/PackageInstallerActivity.java
+index 9c6113ce4b47..833d97ab2bba 100644
+--- a/packages/PackageInstaller/src/com/android/packageinstaller/PackageInstallerActivity.java
++++ b/packages/PackageInstaller/src/com/android/packageinstaller/PackageInstallerActivity.java
+@@ -44,6 +44,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
+ import android.net.Uri;
+ import android.os.Bundle;
+ import android.os.Process;
++import android.os.SystemProperties;
+ import android.os.UserManager;
+ import android.provider.Settings;
+ import android.util.Log;
+@@ -446,6 +447,11 @@ public class PackageInstallerActivity extends AlertActivity {
+      * show the appropriate dialog.
+      */
+     private void checkIfAllowedAndInitiateInstall() {
++        if (SystemProperties.getBoolean("persist.volla.unknown_app.block", false) &&
++            SystemProperties.getBoolean("persist.volla.applock.enable", false)) {
++            showDialogInner(DLG_UNKNOWN_SOURCES_RESTRICTED_FOR_USER);
++            return;
++        }
+         // Check for install apps user restriction first.
+         final int installAppsRestrictionSource = mUserManager.getUserRestrictionSource(
+                 UserManager.DISALLOW_INSTALL_APPS, Process.myUserHandle());
+-- 
+2.29.2
+

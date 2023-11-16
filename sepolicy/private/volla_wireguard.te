@@ -1,0 +1,47 @@
+type volla_wireguard_exec, system_file_type, exec_type, file_type;
+type volla_wireguard, domain;
+
+typeattribute volla_wireguard coredomain;
+typeattribute volla_wireguard mlstrustedsubject;
+
+init_daemon_domain(volla_wireguard)
+
+binder_use(volla_wireguard)
+
+binder_service(volla_wireguard)
+
+add_service(volla_wireguard, volla_wireguard_service)
+
+allow volla_wireguard activity_service:service_manager find;
+allow volla_wireguard dnsresolver_service:service_manager find;
+allow volla_wireguard netd_service:service_manager find;
+allow volla_wireguard shell_exec:file { execute execute_no_trans getattr map open read };
+allow volla_wireguard sysfs:file { getattr open read };
+allow volla_wireguard system_file:file execute_no_trans;
+allow volla_wireguard self:netlink_route_socket { nlmsg_read nlmsg_readpriv nlmsg_write read setopt write getattr bind create };
+allow volla_wireguard self:netlink_generic_socket { read setopt write getattr bind create };
+allow volla_wireguard self:rawip_socket { create ioctl };
+allow volla_wireguard self:udp_socket { create ioctl };
+allowxperm volla_wireguard self:udp_socket ioctl {
+    0x8933
+};
+
+allow volla_wireguard self:capability { net_raw net_admin sys_module dac_override dac_read_search };
+allow volla_wireguard app_data_file:file { create_file_perms x_file_perms };
+allow volla_wireguard app_data_file:sock_file { create_file_perms };
+allow volla_wireguard dnsproxyd_socket:sock_file { create_file_perms };
+allow volla_wireguard app_data_file:dir create_dir_perms;
+allow volla_wireguard net_data_file:file { getattr open read };
+allow volla_wireguard net_data_file:dir search;
+allow volla_wireguard system_server:binder call;
+allow volla_wireguard fs_bpf:dir search;
+allow volla_wireguard proc_net:file { getattr open read };
+allow volla_wireguard system_file:file lock;
+allow volla_wireguard bpfloader:bpf prog_run;
+allow volla_wireguard fs_bpf:file read;
+allow volla_wireguard netd:binder call;
+allow volla_wireguard self:rawip_socket { getopt setopt };
+allow volla_wireguard netd:unix_stream_socket connectto;
+allow volla_wireguard self:udp_socket { bind setattr };
+
+set_prop(volla_wireguard, exported_system_prop)

@@ -19,4 +19,5 @@
     <string name="header_title_text">VollaOS\n%1$s</string>
     <string name="list_build_version">VollaOS <xliff:g id="version" example="14.1">%1$s</xliff:g></string>
     <string name="list_build_version_date">VollaOS <xliff:g id="version" example="14.1">%1$s</xliff:g> - <xliff:g id="date" example="July 11, 2017">%2$s</xliff:g></string>
+    <string name="info_dialog_message">Обновления VollaOS представляют собой полные установочные пакеты. Это означает, что вы всегда можете установить только последнее обновление, даже если вы пропустили некоторые из них!</string>
 </resources>

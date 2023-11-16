@@ -1,3 +1,6 @@
 vollaapplock                                     u:object_r:volla_service:s0
 vollafirewall                                    u:object_r:volla_service:s0
 vollachildmode                                   u:object_r:volla_service:s0
+vollazombifier                                   u:object_r:volla_service:s0
+
+vollawireguard                                   u:object_r:volla_wireguard_service:s0

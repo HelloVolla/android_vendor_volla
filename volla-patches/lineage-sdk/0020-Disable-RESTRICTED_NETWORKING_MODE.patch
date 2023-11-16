@@ -1,0 +1,49 @@
+From aeb8d8590660002229c13937653422f18fbd7035 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Mon, 7 Aug 2023 01:56:37 +0330
+Subject: [PATCH] Disable RESTRICTED_NETWORKING_MODE
+
+---
+ .../lineagesettings/LineageDatabaseHelper.java       | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/packages/LineageSettingsProvider/src/org/lineageos/lineagesettings/LineageDatabaseHelper.java b/packages/LineageSettingsProvider/src/org/lineageos/lineagesettings/LineageDatabaseHelper.java
+index a7107ae1..2a088bac 100644
+--- a/packages/LineageSettingsProvider/src/org/lineageos/lineagesettings/LineageDatabaseHelper.java
++++ b/packages/LineageSettingsProvider/src/org/lineageos/lineagesettings/LineageDatabaseHelper.java
+@@ -60,7 +60,7 @@ public class LineageDatabaseHelper extends SQLiteOpenHelper{
+     private static final boolean LOCAL_LOGV = false;
+ 
+     private static final String DATABASE_NAME = "lineagesettings.db";
+-    private static final int DATABASE_VERSION = 16;
++    private static final int DATABASE_VERSION = 17;
+ 
+     private static final String DATABASE_NAME_OLD = "cmsettings.db";
+ 
+@@ -419,6 +419,14 @@ public class LineageDatabaseHelper extends SQLiteOpenHelper{
+             }
+             upgradeVersion = 16;
+         }
++
++        if (upgradeVersion < 17) {
++            // Disable RESTRICTED_NETWORKING_MODE
++            Settings.Global.putInt(mContext.getContentResolver(),
++                    Settings.Global.RESTRICTED_NETWORKING_MODE, 0);
++
++            upgradeVersion = 17;
++        }
+         // *** Remember to update DATABASE_VERSION above!
+         if (upgradeVersion != newVersion) {
+             Log.wtf(TAG, "warning: upgrading settings database to version "
+@@ -572,7 +580,7 @@ public class LineageDatabaseHelper extends SQLiteOpenHelper{
+ 
+     private void loadRestrictedNetworkingModeSetting() {
+         Settings.Global.putInt(mContext.getContentResolver(),
+-                Settings.Global.RESTRICTED_NETWORKING_MODE, 1);
++                Settings.Global.RESTRICTED_NETWORKING_MODE, 0);
+         try {
+             List<PackageInfo> packages = new ArrayList<>();
+             for (UserInfo userInfo : UserManager.get(mContext).getAliveUsers()) {
+-- 
+2.29.2
+

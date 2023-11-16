@@ -1,0 +1,50 @@
+From b94324891a9b4ee1a5463830f03e3e1f125f0478 Mon Sep 17 00:00:00 2001
+From: Your Name <you@example.com>
+Date: Sun, 20 Feb 2022 10:05:50 +0100
+Subject: [PATCH] volla: Add local DNS
+
+Change-Id: I353dc2f92a9c2a231e81e0888935ba8f1f1cdcef
+---
+ .../com/android/server/connectivity/DnsManager.java  | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/service/src/com/android/server/connectivity/DnsManager.java b/service/src/com/android/server/connectivity/DnsManager.java
+index 1493cae79..630f48a2f 100644
+--- a/service/src/com/android/server/connectivity/DnsManager.java
++++ b/service/src/com/android/server/connectivity/DnsManager.java
+@@ -44,6 +44,7 @@ import android.net.shared.PrivateDnsConfig;
+ import android.os.Binder;
+ import android.os.RemoteException;
+ import android.os.ServiceSpecificException;
++import android.os.SystemProperties;
+ import android.os.UserHandle;
+ import android.provider.Settings;
+ import android.text.TextUtils;
+@@ -365,7 +366,7 @@ public class DnsManager {
+         // networks like IMS.
+         final PrivateDnsConfig privateDnsCfg = mPrivateDnsMap.getOrDefault(netId,
+                 PRIVATE_DNS_OFF);
+-        final boolean useTls = privateDnsCfg.useTls;
++        boolean useTls = privateDnsCfg.useTls;
+         final boolean strictMode = privateDnsCfg.inStrictMode();
+ 
+         paramsParcel.netId = netId;
+@@ -384,6 +385,15 @@ public class DnsManager {
+                 : useTls ? paramsParcel.servers  // Opportunistic
+                 : new String[0];            // Off
+         paramsParcel.transportTypes = transportTypes;
++
++        if (SystemProperties.getBoolean("persist.volla.firewall.enable", false)) {
++            useTls = false;
++            paramsParcel.tlsServers = new String[0];
++            paramsParcel.domains = new String[0];
++            paramsParcel.tlsName = "";
++            paramsParcel.servers = new String[]{"127.0.0.1"};
++        }
++
+         // Prepare to track the validation status of the DNS servers in the
+         // resolver config when private DNS is in opportunistic or strict mode.
+         if (useTls) {
+-- 
+2.29.2
+

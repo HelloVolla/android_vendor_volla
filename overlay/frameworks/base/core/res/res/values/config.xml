@@ -37,7 +37,7 @@
         be picked. Anyone who wants to disable the overlay mechanism can set it
         to false.
      -->
-    <bool name="config_enableNetworkLocationOverlay" translatable="false">false</bool>
+    <bool name="config_enableNetworkLocationOverlay" translatable="false">true</bool>
 
     <!-- Package name providing network location support. Used only when
         config_enableNetworkLocationOverlay is false. -->
@@ -49,8 +49,7 @@
         geocoder, otherwise any system package is eligible. Anyone who wants to
         disable the overlay mechanism can set it to false.
      -->
-
-    <bool name="config_enableGeocoderOverlay" translatable="false">false</bool>
+    <bool name="config_enableGeocoderOverlay" translatable="false">true</bool>
     <!-- Package name providing geocoder API support. Used only when
         config_enableGeocoderOverlay is false. -->
 
@@ -60,6 +59,7 @@
         <!-- The standard AOSP fused location provider -->
         <item>com.android.location.fused</item>
         <item>com.volla.nlp</item>
+        <item>com.google.android.gms</item>
     </string-array>
 	
 	<string translatable="false" name="config_networkCaptivePortalServerUrl">http://connectivitycheck.volla.tech/generate_204</string>

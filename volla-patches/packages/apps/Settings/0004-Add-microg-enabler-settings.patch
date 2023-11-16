@@ -1,0 +1,44 @@
+From 8259cc5c9feb14bfbc16276e5e346ca6d6890141 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sat, 3 Dec 2022 20:49:58 +0330
+Subject: [PATCH] Add microg enabler settings
+
+Change-Id: Id6ca2cb774b4c0f621a2e2a1c0e368b11c57d86c
+---
+ res/values/cm_strings.xml | 3 +++
+ res/xml/apps.xml          | 7 +++++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
+index 98ac9da30b..de7c543ff9 100644
+--- a/res/values/cm_strings.xml
++++ b/res/values/cm_strings.xml
+@@ -205,4 +205,7 @@
+     <string name="lineage_legal_url">https://lineageos.org/legal</string>
+ 
+     <string name="battery_charging_limit_title">Charging limit value</string>
++
++    <string name="enable_microg_title">Manage MicroG</string>
++    <string name="enable_microg_summary">Enable or disable MicroG</string>
+ </resources>
+diff --git a/res/xml/apps.xml b/res/xml/apps.xml
+index e6314dab28..e06c077487 100644
+--- a/res/xml/apps.xml
++++ b/res/xml/apps.xml
+@@ -69,6 +69,13 @@
+         android:order="-995"
+         settings:controller="com.android.settings.applications.GameSettingsPreferenceController">
+     </Preference>
++    
++    <lineageos.preference.LineageSystemSettingSwitchPreference
++        android:key="enable_microg"
++        android:title="@string/enable_microg_title"
++        android:summary="@string/enable_microg_summary"
++        android:order="-994"
++        android:defaultValue="false" />
+ 
+     <PreferenceCategory
+         android:key="dashboard_tile_placeholder"
+-- 
+2.29.2
+

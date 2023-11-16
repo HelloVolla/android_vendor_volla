@@ -1,0 +1,31 @@
+From d158e1c7d170611a2737f33c6b55e309a7a45c62 Mon Sep 17 00:00:00 2001
+From: techyminati <sinha.aryan03@gmail.com>
+Date: Thu, 03 Aug 2023 09:44:51 +0530
+Subject: [PATCH] BatteryService: Improve Battery Charging Patch
+
+---
+ .../com/android/server/BatteryService.java    | 8 +++++++++++++++++++
+ 1 files changed, 8 insertions(+)
+
+diff --git a/services/core/java/com/android/server/BatteryService.java b/services/core/java/com/android/server/BatteryService.java
+index 4788fd833439..f2f3c2c67f76 100644
+--- a/services/core/java/com/android/server/BatteryService.java
++++ b/services/core/java/com/android/server/BatteryService.java
+@@ -660,7 +660,14 @@ public final class BatteryService extends SystemService {
+                 // too noisy.
+                 EventLog.writeEvent(EventLogTags.BATTERY_LEVEL,
+                         mHealthInfo.batteryLevel, mHealthInfo.batteryVoltage, mHealthInfo.batteryTemperature);
+-                File ChargingDisabler = new File("/sys/devices/platform/charger/cmd_charge_disable");
++                File ChargingDisabler;
++                String deviceName = SystemProperties.get("ro.product.device", "");
++
++                if ("vidofnir".equals(deviceName)) {
++                ChargingDisabler = new File("/sys/class/cmd_charge_disable/cmd_charge_disable");
++                } else {
++                ChargingDisabler = new File("/sys/devices/platform/charger/cmd_charge_disable");
++                }
+                 if (ChargingDisabler.exists()) {
+                     int isChargingDisabled = 0;
+                     try {
+--
+2.29.2

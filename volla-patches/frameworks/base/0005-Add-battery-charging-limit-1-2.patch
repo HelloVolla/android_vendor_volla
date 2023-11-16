@@ -1,0 +1,74 @@
+From d158e1c7d170611a2737f33c6b55e309a7a45c62 Mon Sep 17 00:00:00 2001
+From: Your Name <you@example.com>
+Date: Wed, 28 Sep 2022 08:38:50 +0200
+Subject: [PATCH] Add battery charging limit [1/2]
+
+Change-Id: Ia28c51461036402e0ce963914df1f8c96929df08
+---
+ core/java/android/provider/Settings.java      |  5 +++
+ .../com/android/server/BatteryService.java    | 33 +++++++++++++++++++
+ 2 files changed, 38 insertions(+)
+
+diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
+index 1c5650b540f0..b06b8d74d434 100644
+--- a/core/java/android/provider/Settings.java
++++ b/core/java/android/provider/Settings.java
+@@ -5224,6 +5224,11 @@ public final class Settings {
+         @Readable
+         public static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
+ 
++        /**
++         * @hide
++         */
++        public static final String BATTERY_CHARGING_LIMIT = "battery_charging_limit";
++
+         /**
+          * IMPORTANT: If you add a new public settings you also have to add it to
+          * PUBLIC_SETTINGS below. If the new setting is hidden you have to add
+diff --git a/services/core/java/com/android/server/BatteryService.java b/services/core/java/com/android/server/BatteryService.java
+index 87a8c99e38c4..4788fd833439 100644
+--- a/services/core/java/com/android/server/BatteryService.java
++++ b/services/core/java/com/android/server/BatteryService.java
+@@ -660,6 +660,39 @@ public final class BatteryService extends SystemService {
+                 // too noisy.
+                 EventLog.writeEvent(EventLogTags.BATTERY_LEVEL,
+                         mHealthInfo.batteryLevel, mHealthInfo.batteryVoltage, mHealthInfo.batteryTemperature);
++                File ChargingDisabler = new File("/sys/devices/platform/charger/cmd_charge_disable");
++                if (ChargingDisabler.exists()) {
++                    int isChargingDisabled = 0;
++                    try {
++                        isChargingDisabled = Integer.parseInt(FileUtils.readTextFile(ChargingDisabler, 0, null).trim());
++                    } catch (IOException e) {
++                        Slog.e(TAG, "Error reading ChargingDisabler", e);
++                    }
++
++                    if (mPlugType != 0) {
++                        int limit = Settings.System.getInt(mContext.getContentResolver(),
++                                Settings.System.BATTERY_CHARGING_LIMIT, 100);
++                        if (mHealthInfo.batteryLevel >= limit) {
++                            try {
++                                FileUtils.stringToFile(ChargingDisabler.getAbsolutePath(), "1");
++                            } catch (IOException e) {
++                                Slog.e(TAG, "Unable to write to " + ChargingDisabler.getAbsolutePath());
++                            }
++                        } else {
++                            try {
++                                FileUtils.stringToFile(ChargingDisabler.getAbsolutePath(), "0");
++                            } catch (IOException e) {
++                                Slog.e(TAG, "Unable to write to " + ChargingDisabler.getAbsolutePath());
++                            }
++                        }
++                    } else if (isChargingDisabled == 1) {
++                        try {
++                            FileUtils.stringToFile(ChargingDisabler.getAbsolutePath(), "0");
++                        } catch (IOException e) {
++                            Slog.e(TAG, "Unable to write to " + ChargingDisabler.getAbsolutePath());
++                        }
++                    }
++                }
+             }
+             if (mBatteryLevelCritical && !mLastBatteryLevelCritical &&
+                     mPlugType == BATTERY_PLUGGED_NONE) {
+-- 
+2.29.2
+

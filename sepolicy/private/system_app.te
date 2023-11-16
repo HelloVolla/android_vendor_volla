@@ -27,3 +27,10 @@ allowxperm system_app mmcblk1_block_device:blk_file ioctl {
   0x125f
   0x127b
 };
+
+allowxperm system_app block_device:blk_file ioctl {
+  0x301
+  0x1260
+  0x125f
+  0x127b
+};

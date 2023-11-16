@@ -1,2 +1,8 @@
 # Bootloader Manager
 /data/abm(/.*)?                                 u:object_r:abm_file:s0
+
+# Signald
+/data/signald(/.*)?                             u:object_r:signald_file:s0
+
+# Wireguard
+/(system_ext|system/system_ext)/bin/wg-service  u:object_r:volla_wireguard_exec:s0

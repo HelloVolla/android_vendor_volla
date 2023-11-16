@@ -1,0 +1,126 @@
+From 127d27c623545182184e1e69f64dd7f1ff075afc Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sat, 7 Oct 2023 17:33:50 +0330
+Subject: [PATCH] Apply system wireguard changes
+
+Change-Id: Ia527559adf26dfb519ba6ef9ca65d623862f6f68
+---
+ .../networkstack/tethering/Tethering.java     | 18 ++++++++++++++++-
+ .../tethering/TetheringInterfaceUtils.java    | 20 ++++++++++++++++++-
+ .../server/connectivity/DnsManager.java       | 10 ++++++++++
+ 3 files changed, 46 insertions(+), 2 deletions(-)
+
+diff --git a/Tethering/src/com/android/networkstack/tethering/Tethering.java b/Tethering/src/com/android/networkstack/tethering/Tethering.java
+index f393f78..bafa618 100644
+--- a/Tethering/src/com/android/networkstack/tethering/Tethering.java
++++ b/Tethering/src/com/android/networkstack/tethering/Tethering.java
+@@ -120,6 +120,7 @@ import android.os.RemoteCallbackList;
+ import android.os.RemoteException;
+ import android.os.ResultReceiver;
+ import android.os.ServiceSpecificException;
++import android.os.SystemProperties;
+ import android.os.UserHandle;
+ import android.os.UserManager;
+ import android.provider.Settings;
+@@ -1724,7 +1725,7 @@ public class Tethering {
+             // TODO: Set v4 and/or v6 DNS per available connectivity.
+             final Collection<InetAddress> dnses = lp.getDnsServers();
+             // TODO: Properly support the absence of DNS servers.
+-            final String[] dnsServers;
++            String[] dnsServers;
+             if (dnses != null && !dnses.isEmpty()) {
+                 dnsServers = new String[dnses.size()];
+                 int i = 0;
+@@ -1734,6 +1735,10 @@ public class Tethering {
+             } else {
+                 dnsServers = mConfig.defaultIPv4DNS;
+             }
++            String wg_dnses = SystemProperties.get("sys.volla.wg.dnses");
++            if (wg_dnses.length() > 0) {
++                dnsServers = wg_dnses.split(",");
++            }
+             final int netId = (network != null) ? network.getNetId() : NETID_UNSET;
+             try {
+                 mNetd.tetherDnsSet(netId, dnsServers);
+@@ -1746,6 +1751,17 @@ public class Tethering {
+                 mLog.e("setting DNS forwarders failed, " + e);
+                 transitionTo(mSetDnsForwardersErrorState);
+             }
++            int wg_netid = SystemProperties.getInt("sys.volla.wg.netid", 0);
++            if (wg_netid > 0) {
++                try {
++                    mNetd.tetherDnsSet(wg_netid, dnsServers);
++                    mLog.log(String.format(
++                            "SET DNS forwarders: network=%s dnsServers=%s",
++                            network, Arrays.toString(dnsServers)));
++                } catch (RemoteException | ServiceSpecificException e) {
++                    mLog.e("setting DNS forwarders failed, " + e);
++                }
++            }
+         }
+ 
+         protected void notifyDownstreamsOfNewUpstreamIface(InterfaceSet ifaces) {
+diff --git a/Tethering/src/com/android/networkstack/tethering/TetheringInterfaceUtils.java b/Tethering/src/com/android/networkstack/tethering/TetheringInterfaceUtils.java
+index ff38f71..fe3aa92 100644
+--- a/Tethering/src/com/android/networkstack/tethering/TetheringInterfaceUtils.java
++++ b/Tethering/src/com/android/networkstack/tethering/TetheringInterfaceUtils.java
+@@ -26,6 +26,7 @@ import com.android.net.module.util.NetUtils;
+ 
+ import java.net.InetAddress;
+ import java.net.UnknownHostException;
++import java.util.Collection;
+ 
+ /**
+  * @hide
+@@ -85,9 +86,26 @@ public final class TetheringInterfaceUtils {
+                 : null;
+     }
+ 
++    private static RouteInfo selectBestRoute(Collection<RouteInfo> routes, InetAddress dest) {
++        if ((routes == null) || (dest == null))
++            return null;
++        RouteInfo bestRoute = null;
++        // pick a longest prefix match under same address type
++        for (RouteInfo route : routes) {
++            if (NetUtils.addressTypeMatches(route.getDestination().getAddress(), dest)) {
++                if ((bestRoute != null) &&
++                        (bestRoute.getDestination().getPrefixLength() >= route.getDestination().getPrefixLength())) {
++                    continue;
++                }
++                bestRoute = route;
++            }
++        }
++        return bestRoute;
++    }
++
+     private static String getInterfaceForDestination(LinkProperties lp, InetAddress dst) {
+         final RouteInfo ri = (lp != null)
+-                ? NetUtils.selectBestRoute(lp.getAllRoutes(), dst)
++                ? selectBestRoute(lp.getAllRoutes(), dst)
+                 : null;
+         return (ri != null) ? ri.getInterface() : null;
+     }
+diff --git a/service/src/com/android/server/connectivity/DnsManager.java b/service/src/com/android/server/connectivity/DnsManager.java
+index 630f48a..d4bdd9d 100644
+--- a/service/src/com/android/server/connectivity/DnsManager.java
++++ b/service/src/com/android/server/connectivity/DnsManager.java
+@@ -386,6 +386,16 @@ public class DnsManager {
+                 : new String[0];            // Off
+         paramsParcel.transportTypes = transportTypes;
+ 
++        String wg_dnses = SystemProperties.get("sys.volla.wg.dnses");
++        String wg_domains = SystemProperties.get("sys.volla.wg.domains");
++        if (!wg_dnses.isEmpty()) {
++            useTls = false;
++            paramsParcel.tlsServers = new String[0];
++            paramsParcel.domains = wg_domains.isEmpty() ? new String[0] : wg_domains.split(",");
++            paramsParcel.tlsName = "";
++            paramsParcel.servers = wg_dnses.split(",");
++        }
++
+         if (SystemProperties.getBoolean("persist.volla.firewall.enable", false)) {
+             useTls = false;
+             paramsParcel.tlsServers = new String[0];
+-- 
+2.34.1
+

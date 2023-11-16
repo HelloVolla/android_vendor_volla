@@ -1,0 +1,26 @@
+From 6525145c4d9c9fe209b079f9dbc482b715b3503c Mon Sep 17 00:00:00 2001
+From: Your Name <you@example.com>
+Date: Sat, 10 Jun 2023 16:48:02 +0200
+Subject: [PATCH] Full black color on lockscreen text
+
+Change-Id: I7da612d4d99603e0051e4b4389968adcf76b947b
+---
+ packages/SystemUI/res/values/styles.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/packages/SystemUI/res/values/styles.xml b/packages/SystemUI/res/values/styles.xml
+index ba0361de6e8b..37ec9f3d02d8 100644
+--- a/packages/SystemUI/res/values/styles.xml
++++ b/packages/SystemUI/res/values/styles.xml
+@@ -290,7 +290,7 @@
+     <style name="Theme.SystemUI.LightWallpaper">
+         <item name="wallpaperTextColor">@*android:color/primary_text_material_light</item>
+         <item name="wallpaperTextColorSecondary">@*android:color/secondary_text_material_light</item>
+-        <item name="wallpaperTextColorAccent">@*android:color/system_accent2_600</item>
++        <item name="wallpaperTextColorAccent">@*android:color/system_accent2_1000</item>
+         <item name="android:colorError">@*android:color/error_color_material_light</item>
+         <item name="shadowRadius">0</item>
+ 
+-- 
+2.25.1
+

@@ -1,0 +1,25 @@
+From 535e888d76541cbf42bac6e30240f74065904989 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Mon, 7 Aug 2023 02:09:30 +0330
+Subject: [PATCH] Disable restrict_all
+
+Change-Id: I4177645189b572687666edeb1748b672d59f587b
+---
+ res/xml/app_data_usage.xml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/res/xml/app_data_usage.xml b/res/xml/app_data_usage.xml
+index a864b88ee2..04eda72f1f 100644
+--- a/res/xml/app_data_usage.xml
++++ b/res/xml/app_data_usage.xml
+@@ -57,6 +57,7 @@
+ 
+         <com.android.settingslib.RestrictedSwitchPreference
+             android:key="restrict_all"
++            android:enabled="false"
+             android:title="@string/data_usage_app_restrict_all"
+             android:summary="@string/data_usage_app_restrict_all_summary" />
+ 
+-- 
+2.29.2
+

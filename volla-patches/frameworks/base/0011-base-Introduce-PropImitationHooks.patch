@@ -1,0 +1,223 @@
+From ad824494c63bcecc6ee009b79e2a5697ca43d91e Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Fri, 16 Jun 2023 16:57:01 +0330
+Subject: [PATCH] base: Introduce PropImitationHooks
+
+Change-Id: Icbf6ed3c736c385c0d40d182ee6fb03bcd6eea1e
+---
+ core/java/android/app/Instrumentation.java    |   3 +
+ .../internal/util/PropImitationHooks.java     | 174 ++++++++++++++++++
+ 2 files changed, 177 insertions(+)
+ create mode 100644 core/java/com/android/internal/util/PropImitationHooks.java
+
+diff --git a/core/java/android/app/Instrumentation.java b/core/java/android/app/Instrumentation.java
+index fd6fa57b9e8d..58a82809383d 100644
+--- a/core/java/android/app/Instrumentation.java
++++ b/core/java/android/app/Instrumentation.java
+@@ -56,6 +56,7 @@ import android.view.Window;
+ import android.view.WindowManagerGlobal;
+ 
+ import com.android.internal.content.ReferrerIntent;
++import com.android.internal.util.PropImitationHooks;
+ 
+ import java.io.File;
+ import java.lang.annotation.Retention;
+@@ -1188,6 +1189,7 @@ public class Instrumentation {
+         Application app = getFactory(context.getPackageName())
+                 .instantiateApplication(cl, className);
+         app.attach(context);
++        PropImitationHooks.setProps(context);
+         return app;
+     }
+     
+@@ -1205,6 +1207,7 @@ public class Instrumentation {
+             ClassNotFoundException {
+         Application app = (Application)clazz.newInstance();
+         app.attach(context);
++        PropImitationHooks.setProps(context);
+         return app;
+     }
+ 
+diff --git a/core/java/com/android/internal/util/PropImitationHooks.java b/core/java/com/android/internal/util/PropImitationHooks.java
+new file mode 100644
+index 000000000000..50e81059b3d2
+--- /dev/null
++++ b/core/java/com/android/internal/util/PropImitationHooks.java
+@@ -0,0 +1,174 @@
++/*
++ * Copyright (C) 2022 Paranoid Android
++ *           (C) 2023 The LibreMobileOS Foundation
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.android.internal.util;
++
++import android.app.ActivityTaskManager;
++import android.app.Application;
++import android.app.TaskStackListener;
++import android.content.ComponentName;
++import android.content.Context;
++import android.content.res.Resources;
++import android.os.Build;
++import android.os.Binder;
++import android.os.Process;
++import android.os.SystemProperties;
++import android.text.TextUtils;
++import android.util.Log;
++
++import com.android.internal.R;
++
++import java.lang.reflect.Field;
++import java.util.ArrayList;
++import java.util.Arrays;
++import java.util.Collections;
++import java.util.HashMap;
++import java.util.HashSet;
++import java.util.List;
++import java.util.Map;
++import java.util.Set;
++
++public class PropImitationHooks {
++
++    private static final String TAG = "PropImitationHooks";
++    private static final boolean DEBUG = true;
++
++    private static final String PACKAGE_FINSKY = "com.android.vending";
++
++    private static final ComponentName GMS_ADD_ACCOUNT_ACTIVITY = ComponentName.unflattenFromString(
++            "com.google.android.gms/.auth.uiflows.minutemaid.MinuteMaidActivity");
++
++    private static volatile boolean sIsGms = false;
++    private static volatile boolean sIsFinsky = false;
++
++    private static void setField(Class<?> clz, String key, Object value) {
++        try {
++            if (DEBUG) Log.d(TAG, "Defining prop " + key + " to " + value.toString());
++            Field field = clz.getDeclaredField(key);
++            field.setAccessible(true);
++            field.set(null, value);
++            field.setAccessible(false);
++        } catch (NoSuchFieldException | IllegalAccessException e) {
++            Log.e(TAG, "Failed to set prop " + key, e);
++        }
++    }
++
++    private static void setPropValue(String key, Object value) {
++        setField(Build.class, key, value);
++    }
++
++    private static void setVersionField(String key, Integer value) {
++        setField(Build.VERSION.class, key, value);
++    }
++
++    private static boolean setAllProps(Set<String> packages, Map<String, String> props, String packageName) {
++        if (packages != null && !packages.contains(packageName))
++            return false;
++        List<String> keep = propsToKeep.getOrDefault(packageName, new ArrayList<>());
++        if (DEBUG) Log.d(TAG, "Defining props for: " + packageName);
++        for (Map.Entry<String, String> prop : props.entrySet()) {
++            String key = prop.getKey();
++            if (keep.contains(key)) {
++                if (DEBUG) Log.d(TAG, "Not defining " + key + " prop for: " + packageName);
++                continue;
++            }
++            String value = prop.getValue();
++            setPropValue(key, value);
++        }
++        return true;
++    }
++
++    /* *** PROP SPOOFING *** */
++
++    private static final Map<String, String> propsToChangePixelXL = new HashMap<String, String>() {{
++        put("BRAND", "google");
++        put("MANUFACTURER", "Google");
++        put("DEVICE", "marlin");
++        put("PRODUCT", "marlin");
++        put("MODEL", "Pixel XL");
++        put("FINGERPRINT", "google/marlin/marlin:7.1.2/NJH47F/4146041:user/release-keys");
++    }};
++    private static final Map<String, List<String>> propsToKeep = new HashMap<>();
++
++    // Packages to Spoof as Pixel XL (WILL NOT BE APPLIED ON PIXEL DEVICES)
++    private static final Set<String> packagesToChangePixelXL = new HashSet<>(Set.of(
++            "com.nhs.online.nhsonline",
++            "com.android.chrome",
++            "com.android.vending",
++            "org.microg.gms.droidguard",
++            "dk.mitid.app.android"
++    ));
++
++    // Packages to Keep with original device
++    private static final Set<String> packagesToKeep = new HashSet<>(Set.of(
++            "com.google.android.GoogleCamera",
++            "com.google.android.GoogleCamera.Cameight",
++            "com.google.android.GoogleCamera.Go",
++            "com.google.android.GoogleCamera.Urnyx",
++            "com.google.android.GoogleCameraAsp",
++            "com.google.android.GoogleCameraCVM",
++            "com.google.android.GoogleCameraEng",
++            "com.google.android.GoogleCameraEng2",
++            "com.google.android.GoogleCameraGood",
++            "com.google.android.MTCL83",
++            "com.google.android.UltraCVM",
++            "com.google.android.apps.cameralite",
++            "com.google.android.euicc",
++            "com.google.ar.core",
++            "com.google.android.apps.recorder",
++            "com.google.android.apps.wearables.maestro.companion"
++    ));
++
++    public static void setProps(Context context) {
++        final String packageName = context.getPackageName();
++
++        if (packageName == null) {
++            if (DEBUG) Log.e(TAG, "Null package name");
++            return;
++        }
++
++        boolean done = false;
++        propsToKeep.put("com.google.android.settings.intelligence", Collections.singletonList("FINGERPRINT"));
++        sIsFinsky = packageName.equals(PACKAGE_FINSKY);
++
++        // Set proper indexing fingerprint
++        if (packageName.equals("com.google.android.settings.intelligence")) {
++            setPropValue("FINGERPRINT", Build.VERSION.INCREMENTAL);
++        }
++
++        if (packageName.startsWith("com.google.") && !packagesToKeep.contains(packageName)) {
++            // Google spoofing
++            done = setAllProps(packagesToChangePixelXL, propsToChangePixelXL, packageName)
++                || setAllProps(null, propsToChangePixelXL, packageName)
++            ;
++        }
++        if (DEBUG) Log.d(TAG, "Done setting props for: " + packageName + " status: " + done);
++    }
++
++    private static boolean isCallerSafetyNet() {
++        return sIsGms && Arrays.stream(Thread.currentThread().getStackTrace())
++                .anyMatch(elem -> elem.getClassName().contains("DroidGuard"));
++    }
++
++    public static void onEngineGetCertificateChain() {
++        // Check stack for SafetyNet or Play Integrity
++        if (isCallerSafetyNet() || sIsFinsky) {
++            if (DEBUG) Log.d(TAG, "Blocked key attestation sIsGms=" + sIsGms + " sIsFinsky=" + sIsFinsky);
++            throw new UnsupportedOperationException();
++        }
++    }
++}
+-- 
+2.29.2
+

@@ -1,0 +1,64 @@
+From 08bbf2f6dbc0590d71e5e13747dc1b122cdfc2bd Mon Sep 17 00:00:00 2001
+From: ironydelerium <42721860+ironydelerium@users.noreply.github.com>
+Date: Fri, 31 Dec 2021 02:20:28 -0800
+Subject: [PATCH] TelephonyMetrics: Add writeRilSendSms method
+
+Reintroduce 'public void TelephonyMetrics.writeRilSendSms(int, int, int, int)'
+
+The MediaTek IMS package for Android Q, at the very least (likely for the rest, too)
+invoke this method in their `sendSms` method; Google, in their infinite wisdom,
+decided that this method needed a message ID passed in as well, changing the signature
+to 'public void TelephonyMetrics.writeRilSendSms(int, int, int, int, long)' and resulting
+in a MethodNotFoundException being raised in com.mediatek.ims, crashing it.
+
+Fixes https://github.com/phhusson/treble_experimentations/issues/2125.
+
+12-19 12:54:08.462 E/AndroidRuntime( 2930): FATAL EXCEPTION: Binder:2930_1
+12-19 12:54:08.462 E/AndroidRuntime( 2930): Process: com.mediatek.ims, PID: 2930
+12-19 12:54:08.462 E/AndroidRuntime( 2930): java.lang.NoSuchMethodError: No virtual method writeRilSendSms(IIII)V in class Lcom/android/internal/telephony/metrics/TelephonyMetrics; or its super classes (declaration of 'com.android.internal.telephony.metrics.TelephonyMetrics' appears in /system/framework/telephony-common.jar)
+12-19 12:54:08.462 E/AndroidRuntime( 2930):  at com.mediatek.ims.ril.ImsRILAdapter.sendSms(ImsRILAdapter.java:3741)
+12-19 12:54:08.462 E/AndroidRuntime( 2930):  at com.mediatek.ims.ImsService.sendSms(ImsService.java:3115)
+12-19 12:54:08.462 E/AndroidRuntime( 2930):  at com.mediatek.ims.feature.MtkImsSmsImpl.sendSms(MtkImsSmsImpl.java:134)
+12-19 12:54:08.462 E/AndroidRuntime( 2930):  at android.telephony.ims.feature.MmTelFeature.sendSms(MmTelFeature.java:801)
+12-19 12:54:08.462 E/AndroidRuntime( 2930):  at android.telephony.ims.feature.MmTelFeature.access$200(MmTelFeature.java:60)
+12-19 12:54:08.462 E/AndroidRuntime( 2930):  at android.telephony.ims.feature.MmTelFeature$1.sendSms(MmTelFeature.java:196)
+12-19 12:54:08.462 E/AndroidRuntime( 2930):  at android.telephony.ims.aidl.IImsMmTelFeature$Stub.onTransact(IImsMmTelFeature.java:416)
+12-19 12:54:08.462 E/AndroidRuntime( 2930):  at android.os.Binder.execTransactInternal(Binder.java:1184)
+12-19 12:54:08.462 E/AndroidRuntime( 2930):  at android.os.Binder.execTransact(Binder.java:1143)
+
+Co-authored-by: Sarah Vandomelen <sarah@sightworks.com>
+Signed-off-by: SamarV-121 <samarvispute121@pm.me>
+Change-Id: I37244803d31e496ce3f388c12290d1499bd115a0
+Signed-off-by: 7Soldier <reg.fm4@gmail.com>
+Signed-off-by: Beru Hinode <windowz414@1337.lgbt>
+---
+ .../telephony/metrics/TelephonyMetrics.java         | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/src/java/com/android/internal/telephony/metrics/TelephonyMetrics.java b/src/java/com/android/internal/telephony/metrics/TelephonyMetrics.java
+index 7028d9506..2f16a5075 100644
+--- a/src/java/com/android/internal/telephony/metrics/TelephonyMetrics.java
++++ b/src/java/com/android/internal/telephony/metrics/TelephonyMetrics.java
+@@ -2317,6 +2317,19 @@ public class TelephonyMetrics {
+         smsSession.increaseExpectedResponse();
+     }
+ 
++    /**
++     * Write Send SMS event (backwards-compatible method for R and earlier IMS implementations)
++     *
++     * @param phoneId Phone id
++     * @param rilSerial RIL request serial number
++     * @param tech SMS RAT
++     * @param format SMS format. Either {@link SmsMessage#FORMAT_3GPP} or
++     *         {@link SmsMessage#FORMAT_3GPP2}.
++     */
++    public void writeRilSendSms(int phoneId, int rilSerial, int tech, int format) {
++    	writeRilSendSms(phoneId, rilSerial, tech, format, 0);
++    }
++
+     /**
+      * Write Send SMS event using ImsService. Expecting response from
+      * {@link #writeOnSmsSolicitedResponse}.
+-- 
+2.29.2
+

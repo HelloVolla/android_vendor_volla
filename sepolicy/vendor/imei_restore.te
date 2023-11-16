@@ -1,0 +1,14 @@
+type imei_restore, domain;
+type imei_restore_exec, exec_type, file_type;
+
+allow imei_restore devpts:chr_file { read write getattr};
+allow imei_restore toolbox_exec:file { entrypoint execute map read getattr};
+allow imei_restore vendor_toolbox_exec:file entrypoint;
+allow imei_restore file_contexts_file:file { getattr open read };
+allow imei_restore self:capability dac_read_search;
+allow imei_restore mnt_vendor_file:dir search;
+allow imei_restore nvdata_file:dir {getattr search};
+allow imei_restore nvdata_file:file getattr;
+allow imei_restore protect_f_data_file:dir {getattr search};
+
+init_daemon_domain(imei_restore)

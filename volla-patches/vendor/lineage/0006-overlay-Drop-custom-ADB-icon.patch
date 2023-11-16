@@ -1,4 +1,4 @@
-From 36217b78486ecdc0607ea26dd5ce9eed708ecca5 Mon Sep 17 00:00:00 2001
+From f6731ad4a8a295c154d5f73b567c9fad73fe49cf Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Tue, 20 Jul 2021 16:10:28 +0430
 Subject: [PATCH] overlay: Drop custom ADB icon

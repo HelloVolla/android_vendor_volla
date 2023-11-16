@@ -1,0 +1,243 @@
+From aa5d60e093bd568d3e1c2bc9ac8b5e9fa3d17f60 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sun, 12 Feb 2023 16:53:17 +0330
+Subject: [PATCH] sdk: Twelve bringup
+
+Change-Id: I09df867aa5ea59e0f0d6d2aa54d60336a44eb802
+---
+ .../platform/internal/AppLockService.java     | 19 ++++---
+ .../platform/internal/ChildModeService.java   | 21 +++++---
+ .../platform/internal/FirewallService.java    | 49 ++++++-------------
+ .../platform/internal/MicrogService.java      |  4 +-
+ 4 files changed, 43 insertions(+), 50 deletions(-)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java b/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
+index 52c2dd0b..c848e8c1 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
+@@ -18,6 +18,8 @@
+ package org.lineageos.platform.internal;
+ 
+ import android.app.ActivityManager;
++import android.annotation.NonNull;
++import android.annotation.Nullable;
+ import android.content.BroadcastReceiver;
+ import android.content.Context;
+ import android.content.Intent;
+@@ -132,18 +134,20 @@ public class AppLockService extends LineageSystemService {
+     }
+ 
+     @Override
+-    public void onUnlockUser(int userHandle) {
+-        if (DEBUG_APPLOCK) Slog.v(TAG, "onUnlockUser() mUserId:" + userHandle);
++    public void onUserUnlocking(@NonNull TargetUser targetUser) {
++        int userHandle = targetUser.getUserIdentifier();
++        if (DEBUG_APPLOCK) Slog.v(TAG, "onUserUnlocking() mUserId:" + userHandle);
+         if (!UserManager.get(mContext).isManagedProfile(userHandle)) {
+-            if (DEBUG_APPLOCK) Slog.v(TAG, "onUnlockUser() is NOT ManagedProfile");
++            if (DEBUG_APPLOCK) Slog.v(TAG, "onUserUnlocking() is NOT ManagedProfile");
+             mUserId = userHandle;
+             mHandler.sendEmptyMessage(AppLockHandler.MSG_INIT_APPS);
+         }
+     }
+ 
+     @Override
+-    public void onSwitchUser(int userHandle) {
+-        if (DEBUG_APPLOCK) Slog.v(TAG, "onSwitchUser() mUserId:" + userHandle);
++    public void onUserSwitching(@Nullable TargetUser from, @NonNull TargetUser to) {
++        int userHandle = to.getUserIdentifier();
++        if (DEBUG_APPLOCK) Slog.v(TAG, "onUserSwitching() mUserId:" + userHandle);
+         if (!UserManager.get(mContext).isManagedProfile(userHandle)) {
+             if (DEBUG_APPLOCK) Slog.v(TAG, "onSwitchUser() is NOT ManagedProfile");
+             mUserId = userHandle;
+@@ -152,8 +156,9 @@ public class AppLockService extends LineageSystemService {
+     }
+ 
+     @Override
+-    public void onStopUser(int userHandle) {
+-        if (DEBUG_APPLOCK) Slog.v(TAG, "onStopUser() userHandle:" + userHandle);
++    public void onUserStopping(@NonNull TargetUser targetUser) {
++        int userHandle = targetUser.getUserIdentifier();
++        if (DEBUG_APPLOCK) Slog.v(TAG, "onUserStopping() userHandle:" + userHandle);
+         if (mUserId == userHandle) {
+             mUserId = ActivityManager.getCurrentUser();
+             mHandler.sendEmptyMessage(AppLockHandler.MSG_INIT_APPS);
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java b/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
+index 7f88edeb..7b581e60 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
+@@ -17,6 +17,8 @@
+ package org.lineageos.platform.internal;
+ 
+ import android.app.ActivityManager;
++import android.annotation.NonNull;
++import android.annotation.Nullable;
+ import android.content.Context;
+ import android.os.Environment;
+ import android.os.SystemProperties;
+@@ -82,26 +84,29 @@ public class ChildModeService extends LineageSystemService {
+     }
+ 
+     @Override
+-    public void onUnlockUser(int userHandle) {
+-        if (DEBUG_CHILDMODE) Slog.v(TAG, "onUnlockUser() mUserId:" + userHandle);
++    public void onUserUnlocking(@NonNull TargetUser targetUser) {
++        int userHandle = targetUser.getUserIdentifier();
++        if (DEBUG_CHILDMODE) Slog.v(TAG, "onUserUnlocking() mUserId:" + userHandle);
+         if (!UserManager.get(mContext).isManagedProfile(userHandle)) {
+-            if (DEBUG_CHILDMODE) Slog.v(TAG, "onUnlockUser() is NOT ManagedProfile");
++            if (DEBUG_CHILDMODE) Slog.v(TAG, "onUserUnlocking() is NOT ManagedProfile");
+             mUserId = userHandle;
+         }
+     }
+ 
+     @Override
+-    public void onSwitchUser(int userHandle) {
+-        if (DEBUG_CHILDMODE) Slog.v(TAG, "onSwitchUser() mUserId:" + userHandle);
++    public void onUserSwitching(@Nullable TargetUser from, @NonNull TargetUser to) {
++        int userHandle = to.getUserIdentifier();
++        if (DEBUG_CHILDMODE) Slog.v(TAG, "onUserSwitching() mUserId:" + userHandle);
+         if (!UserManager.get(mContext).isManagedProfile(userHandle)) {
+-            if (DEBUG_CHILDMODE) Slog.v(TAG, "onSwitchUser() is NOT ManagedProfile");
++            if (DEBUG_CHILDMODE) Slog.v(TAG, "onUserSwitching() is NOT ManagedProfile");
+             mUserId = userHandle;
+         }
+     }
+ 
+     @Override
+-    public void onStopUser(int userHandle) {
+-        if (DEBUG_CHILDMODE) Slog.v(TAG, "onStopUser() userHandle:" + userHandle);
++    public void onUserStopping(@NonNull TargetUser targetUser) {
++        int userHandle = targetUser.getUserIdentifier();
++        if (DEBUG_CHILDMODE) Slog.v(TAG, "onUserStopping() userHandle:" + userHandle);
+         if (mUserId == userHandle) {
+             mUserId = ActivityManager.getCurrentUser();
+         }
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index 97711be5..9d81af83 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -17,6 +17,8 @@
+ package org.lineageos.platform.internal;
+ 
+ import android.app.ActivityManager;
++import android.annotation.NonNull;
++import android.annotation.Nullable;
+ import android.content.BroadcastReceiver;
+ import android.content.Context;
+ import android.content.Intent;
+@@ -41,6 +43,8 @@ import android.util.Xml;
+ 
+ import com.android.internal.os.BackgroundThread;
+ import com.android.server.SystemService;
++import com.android.server.UiModeManagerInternal;
++import com.android.server.LocalServices;
+ 
+ import org.xmlpull.v1.XmlPullParser;
+ import org.xmlpull.v1.XmlPullParserException;
+@@ -70,18 +74,7 @@ import libcore.io.IoUtils;
+ import lineageos.app.LineageContextConstants;
+ import lineageos.firewall.IFirewallService;
+ 
+-import static android.net.NetworkCapabilities.MIN_TRANSPORT;
+-import static android.net.NetworkCapabilities.MAX_TRANSPORT;
+-
+-import android.net.Network;
+-import android.net.ConnectivityManager;
+-import android.net.LinkProperties;
+-import android.net.IDnsResolver;
+-import android.net.shared.PrivateDnsConfig;
+-import com.android.server.connectivity.MockableSystemProperties;
+-import com.android.server.connectivity.DnsManager;
+-import com.android.server.LocalServices;
+-import com.android.server.UiModeManagerInternal;
++import static android.provider.Settings.Global.PRIVATE_DNS_DEFAULT_MODE;
+ 
+ import fi.iki.elonen.NanoHTTPD;
+ 
+@@ -130,10 +123,11 @@ public class FirewallService extends LineageSystemService {
+     }
+ 
+     @Override
+-    public void onUnlockUser(int userHandle) {
+-        if (DEBUG_FIREWALL) Slog.v(TAG, "onUnlockUser() mUserId:" + userHandle);
++    public void onUserUnlocking(@NonNull TargetUser targetUser) {
++        int userHandle = targetUser.getUserIdentifier();
++        if (DEBUG_FIREWALL) Slog.v(TAG, "onUserUnlocking() mUserId:" + userHandle);
+         if (!UserManager.get(mContext).isManagedProfile(userHandle)) {
+-            if (DEBUG_FIREWALL) Slog.v(TAG, "onUnlockUser() is NOT ManagedProfile");
++            if (DEBUG_FIREWALL) Slog.v(TAG, "onUserUnlocking() is NOT ManagedProfile");
+             mUserId = userHandle;
+             mHandler.sendEmptyMessage(FirewallHandler.MSG_INIT_APPS);
+             mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
+@@ -152,7 +146,8 @@ public class FirewallService extends LineageSystemService {
+     }
+ 
+     @Override
+-    public void onSwitchUser(int userHandle) {
++    public void onUserSwitching(@Nullable TargetUser from, @NonNull TargetUser to) {
++        int userHandle = to.getUserIdentifier();
+         if (DEBUG_FIREWALL) Slog.v(TAG, "onSwitchUser() mUserId:" + userHandle);
+         if (!UserManager.get(mContext).isManagedProfile(userHandle)) {
+             if (DEBUG_FIREWALL) Slog.v(TAG, "onSwitchUser() is NOT ManagedProfile");
+@@ -163,7 +158,8 @@ public class FirewallService extends LineageSystemService {
+     }
+ 
+     @Override
+-    public void onStopUser(int userHandle) {
++    public void onUserStopping(@NonNull TargetUser targetUser) {
++        int userHandle = targetUser.getUserIdentifier();
+         if (DEBUG_FIREWALL) Slog.v(TAG, "onStopUser() userHandle:" + userHandle);
+         if (mUserId == userHandle) {
+             mUserId = ActivityManager.getCurrentUser();
+@@ -328,23 +324,8 @@ public class FirewallService extends LineageSystemService {
+             SystemProperties.set("ctl.stop", "volla.dnsmasq");
+         }
+         activateWebServer(enable);
+-        ConnectivityManager connectivityManager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+-        IDnsResolver resolver = IDnsResolver.Stub
+-                .asInterface(ServiceManager.getService("dnsresolver"));
+-        MockableSystemProperties systemProperties = new MockableSystemProperties();
+-        DnsManager dnsManager = new DnsManager(mContext, resolver, systemProperties);
+-        Network network = connectivityManager.getActiveNetwork();
+-        LinkProperties linkProperties = connectivityManager.getActiveLinkProperties();
+-        PrivateDnsConfig cfg = dnsManager.getPrivateDnsConfig();
+-        if (network != null) {
+-            dnsManager.updatePrivateDns(network, cfg);
+-            dnsManager.updateTransportsForNetwork(network.netId, IntStream.range(MIN_TRANSPORT, MAX_TRANSPORT).toArray());
+-            dnsManager.noteDnsServersForNetwork(network.netId, linkProperties);
+-            dnsManager.sendDnsConfigurationForNetwork(network.netId);
+-            dnsManager.setDefaultDnsSystemProperties(linkProperties.getDnsServers());
+-            dnsManager.flushVmDnsCache();
+-            dnsManager.updatePrivateDnsStatus(network.netId, linkProperties);
+-        }
++        Settings.Global.putString(mContext.getContentResolver(), PRIVATE_DNS_DEFAULT_MODE,
++            enable ? "off" : "opportunistic");
+     }
+ 
+     public boolean isActivate() {
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/MicrogService.java b/lineage/lib/main/java/org/lineageos/platform/internal/MicrogService.java
+index ed6d2973..e91f106e 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/MicrogService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/MicrogService.java
+@@ -16,6 +16,7 @@
+ 
+ package org.lineageos.platform.internal;
+ 
++import android.annotation.NonNull;
+ import android.content.Context;
+ import android.os.ServiceManager;
+ import android.util.Log;
+@@ -64,7 +65,8 @@ public class MicrogService extends LineageSystemService {
+     }
+ 
+     @Override
+-    public void onUnlockUser(int userId) {
++    public void onUserUnlocking(@NonNull TargetUser targetUser) {
++        int userId = targetUser.getUserIdentifier();
+         Slog.v(TAG, "Loading Service");
+         settingChanged(userId);
+         SettingsHelper.get(mContext).startWatching(new SettingsHelper.OnSettingsChangeListener() {
+-- 
+2.29.2
+

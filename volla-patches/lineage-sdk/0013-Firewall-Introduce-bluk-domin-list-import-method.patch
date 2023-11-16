@@ -1,0 +1,87 @@
+From ced677bcbe539f386b57f3bc2abab951ccea6d3d Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Tue, 20 Sep 2022 21:58:56 +0430
+Subject: [PATCH] Firewall: Introduce bluk domin list import method
+
+Change-Id: Ifd8ca3daaf8d25820306e842bb57d3b46d31601b
+---
+ api/lineage_current.txt                             |  1 +
+ .../platform/internal/FirewallService.java          | 13 +++++++++++++
+ .../java/lineageos/firewall/FirewallManager.java    |  8 ++++++++
+ .../java/lineageos/firewall/IFirewallService.aidl   |  2 ++
+ 4 files changed, 24 insertions(+)
+
+diff --git a/api/lineage_current.txt b/api/lineage_current.txt
+index a7ade8e1..934bf56b 100644
+--- a/api/lineage_current.txt
++++ b/api/lineage_current.txt
+@@ -886,6 +886,7 @@ package lineageos.firewall {
+     method public int getDomainsListCount();
+     java.util.List<java.lang.String> getDomainsList();
+     method public void clearDomainList();
++    method public void addDomainListToList(java.util.List<java.lang.String>);
+   }
+ 
+ }
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index 80659464..130784fd 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -399,6 +399,14 @@ public class FirewallService extends LineageSystemService {
+         }
+     }
+ 
++    private void addDomainListToList(List<String> domains) {
++        if (!domains.isEmpty()) {
++            mDomainsList.addAll(domains);
++            mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_STATE);
++            mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
++        }
++    }
++
+     private String getBlockedPage() {
+         InputStream inputStream = mContext.getResources().openRawResource(org.lineageos.platform.internal.R.raw.firewall);
+         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+@@ -469,6 +477,11 @@ public class FirewallService extends LineageSystemService {
+         public void clearDomainList() {
+             FirewallService.this.clearDomainList();
+         }
++
++        @Override
++        public void addDomainListToList(List<String> domains) {
++            FirewallService.this.addDomainListToList(domains);
++        }
+     };
+ 
+     private class FirewallHandler extends Handler {
+diff --git a/sdk/src/java/lineageos/firewall/FirewallManager.java b/sdk/src/java/lineageos/firewall/FirewallManager.java
+index b9a60d6b..757ddf79 100644
+--- a/sdk/src/java/lineageos/firewall/FirewallManager.java
++++ b/sdk/src/java/lineageos/firewall/FirewallManager.java
+@@ -152,4 +152,12 @@ public class FirewallManager {
+             throw e.rethrowFromSystemServer();
+         }
+     }
++
++    public void addDomainListToList(List<String> domains) {
++        try {
++            sService.addDomainListToList(domains);
++        } catch (RemoteException e) {
++            throw e.rethrowFromSystemServer();
++        }
++    }
+ }
+diff --git a/sdk/src/java/lineageos/firewall/IFirewallService.aidl b/sdk/src/java/lineageos/firewall/IFirewallService.aidl
+index d5588e81..a2697a09 100644
+--- a/sdk/src/java/lineageos/firewall/IFirewallService.aidl
++++ b/sdk/src/java/lineageos/firewall/IFirewallService.aidl
+@@ -38,4 +38,6 @@ interface IFirewallService {
+     List<String> getDomainsList();
+ 
+     void clearDomainList();
++
++    void addDomainListToList(in List<String> domains);
+ }
+-- 
+2.29.2
+

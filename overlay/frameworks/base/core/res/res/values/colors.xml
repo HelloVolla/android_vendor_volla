@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2022 The LineageOS Project
+ *
+ * SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    
+    <color name="system_accent1_0">#ffffff</color>
+    <color name="system_accent1_10">#FBFBFB</color>
+    <color name="system_accent1_50">#EEEEEE</color>
+    <color name="system_accent1_100">#DEDEDE</color>
+    <color name="system_accent1_200">#BABABA</color>
+    <color name="system_accent1_300">#9B9B9B</color>
+    <color name="system_accent1_400">#7B7B7B</color>
+    <color name="system_accent1_500">#5D5D5D</color>
+    <color name="system_accent1_600">#4B4B4B</color>
+    <color name="system_accent1_700">#383838</color>
+    <color name="system_accent1_800">#272727</color>
+    <color name="system_accent1_900">#161616</color>
+    <color name="system_accent1_1000">#000000</color>
+
+    <color name="system_accent2_0">#ffffff</color>
+    <color name="system_accent2_10">#FBFBFB</color>
+    <color name="system_accent2_50">#EEEEEE</color>
+    <color name="system_accent2_100">#E0E0E0</color>
+    <color name="system_accent2_200">#C5C5C5</color>
+    <color name="system_accent2_300">#A9A9A9</color>
+    <color name="system_accent2_400">#8F8F8F</color>
+    <color name="system_accent2_500">#747474</color>
+    <color name="system_accent2_600">#5C5C5C</color>
+    <color name="system_accent2_700">#444444</color>
+    <color name="system_accent2_800">#2E2E2E</color>
+    <color name="system_accent2_900">#181818</color>
+    <color name="system_accent2_1000">#000000</color>
+
+    <color name="system_accent3_0">#ffffff</color>
+    <color name="system_accent3_10">#FCFCFC</color>
+    <color name="system_accent3_50">#F1F1F1</color>
+    <color name="system_accent3_100">#E4E4E4</color>
+    <color name="system_accent3_200">#C8C8C8</color>
+    <color name="system_accent3_300">#ACACAC</color>
+    <color name="system_accent3_400">#929292</color>
+    <color name="system_accent3_500">#777777</color>
+    <color name="system_accent3_600">#5F5F5F</color>
+    <color name="system_accent3_700">#474747</color>
+    <color name="system_accent3_800">#313131</color>
+    <color name="system_accent3_900">#1C1C1C</color>
+    <color name="system_accent3_1000">#000000</color>
+
+  <color name="system_neutral1_0">#FFFFFF</color>
+  <color name="system_neutral1_10">#FFFFFF</color>
+  <color name="system_neutral1_50">@android:color/system_accent2_50</color>
+  <color name="system_neutral1_100">@android:color/system_accent1_50</color>
+  <color name="system_neutral1_200">@android:color/system_accent1_50</color>
+  <color name="system_neutral1_300">@android:color/system_accent1_50</color>
+  <color name="system_neutral1_400">@android:color/system_accent1_100</color>
+  <color name="system_neutral1_500">#242424</color>
+  <color name="system_neutral1_600">#212121</color>
+  <color name="system_neutral1_700">#191919</color>
+  <color name="system_neutral1_800">#171717</color>
+  <color name="system_neutral1_900">#000000</color>
+  <color name="system_neutral1_1000">#000000</color>
+
+  <color name="system_neutral2_0">#FFFFFF</color>
+  <color name="system_neutral2_10">#FFFFFF</color>
+  <color name="system_neutral2_50">@android:color/system_accent2_50</color>
+  <color name="system_neutral2_100">@android:color/system_accent1_50</color>
+  <color name="system_neutral2_200">@android:color/system_accent2_100</color>
+  <color name="system_neutral2_300">@android:color/system_accent2_200</color>
+  <color name="system_neutral2_400">@android:color/system_accent2_300</color>
+  <color name="system_neutral2_500">#242424</color>
+  <color name="system_neutral2_600">#212121</color>
+  <color name="system_neutral2_700">#191919</color>
+  <color name="system_neutral2_800">#171717</color>
+  <color name="system_neutral2_900">#000000</color>
+  <color name="system_neutral2_1000">#000000</color>
+</resources>

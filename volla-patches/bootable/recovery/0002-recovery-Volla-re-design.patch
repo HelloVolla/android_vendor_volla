@@ -1,4 +1,4 @@
-From 5c2bed9c71391ed559adfc5247a0865a085b3e6e Mon Sep 17 00:00:00 2001
+From 744f377b80c85125bc740456e128da8668950007 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Fri, 6 Aug 2021 23:52:00 +0430
 Subject: [PATCH] recovery: Volla re-design
@@ -28,10 +28,10 @@ Subject: [PATCH] recovery: Volla re-design
  21 files changed, 5 insertions(+), 14 deletions(-)
 
 diff --git a/recovery_ui/screen_ui.cpp b/recovery_ui/screen_ui.cpp
-index f568af68..15cc7cf9 100644
+index 668d47a4..cfd682bd 100644
 --- a/recovery_ui/screen_ui.cpp
 +++ b/recovery_ui/screen_ui.cpp
-@@ -562,16 +562,10 @@ void ScreenRecoveryUI::draw_foreground_locked() {
+@@ -565,16 +565,10 @@ void ScreenRecoveryUI::draw_foreground_locked() {
  void ScreenRecoveryUI::SetColor(UIElement e) const {
    switch (e) {
      case UIElement::INFO:
@@ -50,7 +50,7 @@ index f568af68..15cc7cf9 100644
        break;
      case UIElement::MENU:
        gr_color(0xd8, 0xd8, 0xd8, 255);
-@@ -579,18 +573,15 @@ void ScreenRecoveryUI::SetColor(UIElement e) const {
+@@ -582,18 +576,15 @@ void ScreenRecoveryUI::SetColor(UIElement e) const {
      case UIElement::MENU_SEL_BG:
      case UIElement::SCROLLBAR:
        if (fastbootd_logo_enabled_)

@@ -1,0 +1,158 @@
+From 00af8f6ca1467b48745ac14c0aad6e991cac0818 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Thu, 2 Feb 2023 06:29:46 +0330
+Subject: [PATCH] Add microg disabler service
+
+Change-Id: I03a8d4f8914946ec6671cad82e05c712d4dd2a5e
+---
+ .../platform/internal/MicrogService.java      | 95 +++++++++++++++++++
+ lineage/res/res/values/config.xml             |  1 +
+ .../lineageos/providers/LineageSettings.java  | 11 +++
+ 3 files changed, 107 insertions(+)
+ create mode 100644 lineage/lib/main/java/org/lineageos/platform/internal/MicrogService.java
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/MicrogService.java b/lineage/lib/main/java/org/lineageos/platform/internal/MicrogService.java
+new file mode 100644
+index 00000000..ed6d2973
+--- /dev/null
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/MicrogService.java
+@@ -0,0 +1,95 @@
++/*
++ * Copyright (C) 2018 The LineageOS Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.lineageos.platform.internal;
++
++import android.content.Context;
++import android.os.ServiceManager;
++import android.util.Log;
++import android.util.Slog;
++import android.net.Uri;
++
++import com.android.server.pm.PackageManagerService;
++
++import lineageos.app.LineageContextConstants;
++import lineageos.preference.SettingsHelper;
++import lineageos.providers.LineageSettings;
++
++import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
++import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
++import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT;
++
++/** @hide */
++public class MicrogService extends LineageSystemService {
++    private static final String TAG = "MicrogService";
++    private final Uri ENABLE_MICROG_URI =
++            LineageSettings.System.getUriFor(LineageSettings.System.ENABLE_MICROG);
++
++    private final Context mContext;
++    private final PackageManagerService mPm;
++
++    private static final String[] MICROG_PACKAGES = new String[]{
++            "com.google.android.gms",
++            "com.android.vending"
++    };
++    private static final String VOLLA_NLP_PACKAGE = "com.volla.nlp";
++
++    public MicrogService(Context context) {
++        super(context);
++        mContext = context;
++        mPm = (PackageManagerService) ServiceManager.getService("package");
++    }
++
++    @Override
++    public String getFeatureDeclaration() {
++        return LineageContextConstants.Features.HARDWARE_ABSTRACTION;
++    }
++
++    @Override
++    public void onStart() {
++        Slog.v(TAG, "Starting Service");
++    }
++
++    @Override
++    public void onUnlockUser(int userId) {
++        Slog.v(TAG, "Loading Service");
++        settingChanged(userId);
++        SettingsHelper.get(mContext).startWatching(new SettingsHelper.OnSettingsChangeListener() {
++            @Override
++            public void onSettingsChanged(Uri settingsUri) {
++                settingChanged(userId);
++            }
++        }, ENABLE_MICROG_URI);
++    }
++
++    private void settingChanged(int userId) {
++       int value = LineageSettings.System.getIntForUser(mContext.getContentResolver(),
++               LineageSettings.System.ENABLE_MICROG, 0, userId);
++       for (String packageId : MICROG_PACKAGES) {
++           setAppEnabled(packageId, value == 1, userId);
++       }
++       setAppEnabled(VOLLA_NLP_PACKAGE, value != 1, userId);
++    }
++
++    private void setAppEnabled(String packageName, boolean enabled, int userId) {
++        int currentState = mPm.getApplicationEnabledSetting(packageName, userId);
++        boolean isCurrentEnabled = (currentState == COMPONENT_ENABLED_STATE_DEFAULT) || (currentState == COMPONENT_ENABLED_STATE_ENABLED);
++        if (isCurrentEnabled != enabled) {
++            int state = enabled ? COMPONENT_ENABLED_STATE_ENABLED : COMPONENT_ENABLED_STATE_DISABLED;
++            mPm.setApplicationEnabledSetting(packageName, state, 0, userId, TAG);
++        }
++    }
++}
+diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
+index f8935e98..65b857ad 100644
+--- a/lineage/res/res/values/config.xml
++++ b/lineage/res/res/values/config.xml
+@@ -110,6 +110,7 @@
+         <item>org.lineageos.platform.internal.AppLockService</item>
+         <item>org.lineageos.platform.internal.FirewallService</item>
+         <item>org.lineageos.platform.internal.ChildModeService</item>
++        <item>org.lineageos.platform.internal.MicrogService</item>
+     </string-array>
+ 
+     <!-- The LineageSystemServer class that is invoked from Android's SystemServer -->
+diff --git a/sdk/src/java/lineageos/providers/LineageSettings.java b/sdk/src/java/lineageos/providers/LineageSettings.java
+index 757e2bf9..f5b22e56 100644
+--- a/sdk/src/java/lineageos/providers/LineageSettings.java
++++ b/sdk/src/java/lineageos/providers/LineageSettings.java
+@@ -2054,6 +2054,15 @@ public final class LineageSettings {
+         public static final Validator FINGERPRINT_WAKE_UNLOCK_VALIDATOR =
+                 sNonNegativeIntegerValidator;
+ 
++        /**
++         * Whether to enable microg.
++         */
++        public static final String ENABLE_MICROG = "enable_microg";
++
++        /** @hide */
++        public static final Validator ENABLE_MICROG_VALIDATOR =
++                sBooleanValidator;
++
+         /**
+          * I can haz more bukkits
+          * @hide
+@@ -2321,6 +2330,8 @@ public final class LineageSettings {
+                     ENABLE_TASKBAR_VALIDATOR);
+             VALIDATORS.put(FINGERPRINT_WAKE_UNLOCK,
+                     FINGERPRINT_WAKE_UNLOCK_VALIDATOR);
++            VALIDATORS.put(ENABLE_MICROG,
++                    ENABLE_MICROG_VALIDATOR);
+             VALIDATORS.put(__MAGICAL_TEST_PASSING_ENABLER,
+                     __MAGICAL_TEST_PASSING_ENABLER_VALIDATOR);
+         };
+-- 
+2.29.2
+

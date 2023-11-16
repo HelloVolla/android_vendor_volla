@@ -1,7 +1,7 @@
-From 1c42a09d11c9c28e6f973a9615196c5033954bd8 Mon Sep 17 00:00:00 2001
+From bc6f7bdbb9edba6c5a1c2edbdbd7b741e67bfa0c Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 10 Jul 2021 22:22:16 +0800
-Subject: [PATCH 2/2] LineageParts: set 1:1 ratio for easter egg
+Subject: [PATCH] LineageParts: set 1:1 ratio for easter egg
 
 Change-Id: Id4c228e397bbbd1730caa1113ae4fc3e7065fa9e
 ---
@@ -9,12 +9,12 @@ Change-Id: Id4c228e397bbbd1730caa1113ae4fc3e7065fa9e
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/org/lineageos/lineageparts/logo/PlatLogoActivity.java b/src/org/lineageos/lineageparts/logo/PlatLogoActivity.java
-index 4895caf..ea37c20 100644
+index db5e815..6d0060c 100644
 --- a/src/org/lineageos/lineageparts/logo/PlatLogoActivity.java
 +++ b/src/org/lineageos/lineageparts/logo/PlatLogoActivity.java
-@@ -74,7 +74,7 @@ public class PlatLogoActivity extends Activity {
+@@ -70,7 +70,7 @@ public class PlatLogoActivity extends Activity {
              // LineageOS logo
-             mLogo = context.getResources().getDrawable(R.drawable.logo_lineage);
+             mLogo = context.getResources().getDrawable(R.drawable.logo_lineage, context.getTheme());
              mLogo.setColorFilter(new ColorMatrixColorFilter(WHITE)); // apply color filter
 -            mLogo.setBounds(0, 0, 360, 180); // Aspect ratio 2:1
 +            mLogo.setBounds(0, 0, 360, 360); // Aspect ratio 1:1
@@ -22,5 +22,5 @@ index 4895caf..ea37c20 100644
  
          /**
 -- 
-2.25.1
+2.29.2
 

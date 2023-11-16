@@ -1,4 +1,4 @@
-From b665e28b516b42ea5326739dbbf31676df35f114 Mon Sep 17 00:00:00 2001
+From f7766d28246083b11094e50a2c5c69f8246ac191 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 19 Feb 2022 12:43:04 +0330
 Subject: [PATCH] Set default locked packages
@@ -30,13 +30,13 @@ index 8dbe5067..f7640c26 100644
              throw new IllegalStateException("Failed to parse locked-apps.xml: " + mFile, e);
          }
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index 773c0bdd..38100133 100644
+index d5d558a4..f8935e98 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
-@@ -300,4 +300,9 @@
-     <!-- Whether to notify fingerprint client of successful cancelled authentication
-          (needed for some older vendor fingerprint HAL implementations) -->
-     <bool name="config_fingerprintPostResetRunnableForAllClients">false</bool>
+@@ -304,4 +304,9 @@
+     <!-- The list of components which should be forced to be enabled. -->
+     <string-array name="config_forceEnabledComponents" translatable="false">
+     </string-array>
 +
 +    <!-- Array of packages to get locked by default. -->
 +    <string-array name="config_defaultLockedPackages">
@@ -44,13 +44,13 @@ index 773c0bdd..38100133 100644
 +    </string-array>
  </resources>
 diff --git a/lineage/res/res/values/symbols.xml b/lineage/res/res/values/symbols.xml
-index facc7330..3de0b559 100644
+index 5adb8773..0fadacc4 100644
 --- a/lineage/res/res/values/symbols.xml
 +++ b/lineage/res/res/values/symbols.xml
-@@ -191,4 +191,7 @@
-     <!-- Whether to notify fingerprint client of successful cancelled authentication
-          (needed for some older vendor fingerprint HAL implementations) -->
-     <java-symbol type="bool" name="config_fingerprintPostResetRunnableForAllClients" />
+@@ -177,4 +177,7 @@
+     <java-symbol type="array" name="config_deviceDisabledComponents" />
+     <java-symbol type="array" name="config_globallyDisabledComponents" />
+     <java-symbol type="array" name="config_forceEnabledComponents" />
 +
 +    <!-- AppLocker. -->
 +    <java-symbol type="array" name="config_defaultLockedPackages" />

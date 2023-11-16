@@ -1,0 +1,66 @@
+From 871299b38259c58d6f0bfbaf31ce1685c3f08cbb Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Wed, 26 Oct 2022 23:18:40 +0330
+Subject: [PATCH] soong: Add mtk codec soong config variable
+
+Change-Id: Ib557beece2dbfa59d79657e2e3513a87b4e64f5e
+---
+ build/soong/Android.bp     | 18 ++++++++++++++++++
+ config/BoardConfigSoong.mk |  5 +++++
+ 2 files changed, 23 insertions(+)
+
+diff --git a/build/soong/Android.bp b/build/soong/Android.bp
+index 34af118c..b52b0580 100644
+--- a/build/soong/Android.bp
++++ b/build/soong/Android.bp
+@@ -370,6 +370,24 @@ egl_display_array {
+     },
+ }
+ 
++// Mediatek specific config modules
++soong_config_module_type {
++    name: "mtk_codecs",
++    module_type: "cc_defaults",
++    config_namespace: "lineageMediatekVars",
++    bool_variables: ["uses_mtk_codecs"],
++    properties: ["cppflags"],
++}
++
++mtk_codecs {
++    name: "mtk_codecs_defaults",
++    soong_config_variables: {
++        uses_mtk_codecs: {
++            cppflags: ["-DHAS_MTK_CODECS"],
++        },
++    },
++}
++
+ // NVIDIA specific config modules
+ soong_config_module_type {
+     name: "nvidia_enhancements",
+diff --git a/config/BoardConfigSoong.mk b/config/BoardConfigSoong.mk
+index 797dd219..46c89cfc 100644
+--- a/config/BoardConfigSoong.mk
++++ b/config/BoardConfigSoong.mk
+@@ -46,6 +46,10 @@ SOONG_CONFIG_lineageGlobalVars += \
+     uses_camera_parameter_lib \
+     uses_egl_display_array
+ 
++SOONG_CONFIG_NAMESPACES += lineageMediatekVars
++SOONG_CONFIG_lineageMediatekVars += \
++    uses_mtk_codecs
++
+ SOONG_CONFIG_NAMESPACES += lineageNvidiaVars
+ SOONG_CONFIG_lineageNvidiaVars += \
+     uses_nvidia_enhancements
+@@ -74,6 +78,7 @@ SOONG_CONFIG_lineageGlobalVars_ignores_ftp_pptp_conntrack_failure := $(TARGET_IG
+ SOONG_CONFIG_lineageGlobalVars_needs_camera_boottime := $(TARGET_CAMERA_BOOTTIME_TIMESTAMP)
+ SOONG_CONFIG_lineageGlobalVars_needs_netd_direct_connect_rule := $(TARGET_NEEDS_NETD_DIRECT_CONNECT_RULE)
+ SOONG_CONFIG_lineageGlobalVars_uses_egl_display_array := $(TARGET_USES_EGL_DISPLAY_ARRAY)
++SOONG_CONFIG_lineageMediatekVars_uses_mtk_codecs := $(TARGET_USES_MTK_CODECS)
+ SOONG_CONFIG_lineageNvidiaVars_uses_nvidia_enhancements := $(NV_ANDROID_FRAMEWORK_ENHANCEMENTS)
+ SOONG_CONFIG_lineageQcomVars_legacy_hw_disk_encryption := $(TARGET_LEGACY_HW_DISK_ENCRYPTION)
+ SOONG_CONFIG_lineageQcomVars_should_wait_for_qsee := $(TARGET_KEYMASTER_WAIT_FOR_QSEE)
+-- 
+2.29.2
+

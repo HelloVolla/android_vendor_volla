@@ -17,29 +17,43 @@
 # Project inherits
 ifneq ($(strip $(VOLLA_BUILD_FLAVOR)),)
 -include vendor/$(VOLLA_BUILD_FLAVOR)/product.mk
-endif
+else
 $(call inherit-product, vendor/volla-prebuilt-apps/apps.mk)
+endif
 $(call inherit-product, $(LOCAL_PATH)/prebuilts/product.mk)
+
+# PicoTTS
+$(call inherit-product, external/svox/svox_tts.mk)
 
 # Overlay
 PRODUCT_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += $(LOCAL_PATH)/overlay
 
-ifeq ($(filter %_yggdrasil %_yggdrasilx,$(TARGET_PRODUCT)),)
-PRODUCT_PACKAGE_OVERLAYS += $(LOCAL_PATH)/wallpaper-new
-PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += $(LOCAL_PATH)/wallpaper-new
-else
-PRODUCT_PACKAGE_OVERLAYS += $(LOCAL_PATH)/wallpaper-yggdrasil
-PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += $(LOCAL_PATH)/wallpaper-yggdrasil
+ifeq ($(strip $(VOLLA_BUILD_FLAVOR)),)
+PRODUCT_PACKAGE_OVERLAYS += $(LOCAL_PATH)/wallpaper
+PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += $(LOCAL_PATH)/wallpaper
 endif
+
+PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
 
 # Packages - Apps
 PRODUCT_PACKAGES += \
-    BootloaderManager \
     ChildModeSettings \
-    F-DroidPrivilegedExtension \
-    MtkCamera \
-    SimpleAppsTheme
+    F-DroidPrivilegedExtension
+    
+ifeq ($(filter %_gsi_arm64,$(TARGET_PRODUCT)),)
+PRODUCT_PACKAGES += \
+    MtkCamera
+endif
+
+ifeq ($(filter %_yggdrasil,$(TARGET_PRODUCT)),)
+PRODUCT_PACKAGES += BootloaderManager
+endif
+
+ifneq ($(filter %_vidofnir,$(TARGET_PRODUCT)),)
+PRODUCT_PACKAGES += \
+    OpenEUICC
+endif
 
 # Email
 ifneq ($(filter %_yggdrasilx,$(TARGET_PRODUCT)),)
@@ -74,7 +88,13 @@ endif
 PRODUCT_PACKAGES += \
     AOSPRobotoFont \
     VollaFonts \
-    VollaPlexFont
+    VollaPlexFont \
+    VollaPoppinsFont \
+    VollaSelawikFont
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/VollaFonts/fonts.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/fonts.xml \
+    $(LOCAL_PATH)/VollaFonts/fonts_customization.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/fonts_customization.xml
 
 # Audio
 PRODUCT_COPY_FILES += \
@@ -95,10 +115,6 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PACKAGES += \
     RemovePackages
 
-# Color
-PRODUCT_PACKAGES += \
-    AccentColorTealOverlay
-
 # NLP
 PRODUCT_PACKAGES += \
     VollaNlp \
@@ -112,3 +128,66 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/dnsmasq/dnsmasq.rc:$(TARGET_COPY_OUT_SYSTEM)/etc/init/dnsmasq.rc \
     $(LOCAL_PATH)/dnsmasq/volladns.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/volladns.conf
+
+# imei_restore
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/imei_restore/imei_restore.rc:$(TARGET_COPY_OUT_SYSTEM)/etc/init/imei_restore.rc
+
+# Wireguard
+PRODUCT_PACKAGES += \
+    wg-service \
+    wg
+
+PRODUCT_ARTIFACT_PATH_REQUIREMENT_ALLOWED_LIST += \
+    system/app/VollaNlpRRO/VollaNlpRRO.apk \
+    system/app/at.bitfire.davdroid/at.bitfire.davdroid.apk \
+    system/app/com.aurora.store/com.aurora.store.apk \
+    system/app/com.fsck.k9/com.fsck.k9.apk \
+    system/app/com.google.android.gsf/com.google.android.gsf.apk \
+    system/app/com.maxfour.music/com.maxfour.music.apk \
+    system/app/com.simplemobiletools.calendar.pro/com.simplemobiletools.calendar.pro.apk \
+    system/app/com.simplemobiletools.clock/com.simplemobiletools.clock.apk \
+    system/app/com.simplemobiletools.contacts.pro/com.simplemobiletools.contacts.pro.apk \
+    system/app/com.simplemobiletools.dialer/com.simplemobiletools.dialer.apk \
+    system/app/com.simplemobiletools.filemanager.pro/com.simplemobiletools.filemanager.pro.apk \
+    system/app/com.simplemobiletools.gallery.pro/com.simplemobiletools.gallery.pro.apk \
+    system/app/hideme.android.vpn.noPlayStore-Stub/hideme.android.vpn.noPlayStore-Stub.apk \
+    system/app/net.osmand.plus/net.osmand.plus.apk \
+    system/app/org.fdroid.fdroid/org.fdroid.fdroid.apk \
+    system/app/org.mozilla.fennec_fdroid-Stub/org.mozilla.fennec_fdroid-Stub.apk \
+    system/etc/com.volla.gsmnlp/lacells.db \
+    system/etc/init/abm.rc \
+    system/etc/init/dnsmasq.rc \
+    system/etc/init/imei_restore.rc \
+    system/etc/localhost.bks \
+    system/etc/org.fdroid.fdroid/additional_repos.xml \
+    system/etc/permissions/permissions_org.fdroid.fdroid.privileged.xml \
+    system/etc/permissions/whitelist_com.android.vending.xml \
+    system/etc/permissions/whitelist_com.google.android.gms.xml \
+    system/etc/permissions/whitelist_com.volla.launcher.xml \
+    system/etc/sysconfig/whitelist_com.google.android.gms.xml \
+    system/etc/volladns.conf \
+    system/fonts/NotoSans-Black.ttf \
+    system/fonts/NotoSans-BlackItalic.ttf \
+    system/fonts/NotoSans-Bold.ttf \
+    system/fonts/NotoSans-BoldItalic.ttf \
+    system/fonts/NotoSans-ExtraBold.ttf \
+    system/fonts/NotoSans-ExtraBoldItalic.ttf \
+    system/fonts/NotoSans-ExtraLight.ttf \
+    system/fonts/NotoSans-ExtraLightItalic.ttf \
+    system/fonts/NotoSans-Italic.ttf \
+    system/fonts/NotoSans-Light.ttf \
+    system/fonts/NotoSans-LightItalic.ttf \
+    system/fonts/NotoSans-Medium.ttf \
+    system/fonts/NotoSans-MediumItalic.ttf \
+    system/fonts/NotoSans-Regular.ttf \
+    system/fonts/NotoSans-SemiBold.ttf \
+    system/fonts/NotoSans-SemiBoldItalic.ttf \
+    system/fonts/NotoSans-Thin.ttf \
+    system/fonts/NotoSans-ThinItalic.ttf \
+    system/media/bootanimation.zip \
+    system/priv-app/BootloaderManager/BootloaderManager.apk \
+    system/priv-app/F-DroidPrivilegedExtension/F-DroidPrivilegedExtension.apk \
+    system/priv-app/com.android.vending/com.android.vending.apk \
+    system/priv-app/com.google.android.gms/com.google.android.gms.apk \
+    system/priv-app/com.volla.launcher-Stub/com.volla.launcher-Stub.apk

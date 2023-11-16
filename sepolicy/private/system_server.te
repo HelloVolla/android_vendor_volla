@@ -1,1 +1,6 @@
 add_service(system_server, volla_service);
+
+allow system_server signald_file:dir create_dir_perms;
+allow system_server signald_file:file create_file_perms;
+allow system_server signald_file:sock_file create_file_perms;
+allow system_server signald_file:lnk_file create_file_perms;

@@ -1,0 +1,2 @@
+type mmcblk1_block_device, dev_type;
+type mmcblk1p1_block_device, dev_type;

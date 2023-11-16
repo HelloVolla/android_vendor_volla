@@ -1,0 +1,105 @@
+From 60058c681452ffba8168efad4f08bfefb31661a6 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Fri, 16 Jun 2023 17:01:41 +0330
+Subject: [PATCH] init: Report valid verified boot for SafetyNet checks
+
+Change-Id: I0a1da21cd35a7002ee4986c974966e18282d6a56
+---
+ init/property_service.cpp | 60 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 58 insertions(+), 2 deletions(-)
+
+diff --git a/init/property_service.cpp b/init/property_service.cpp
+index 5a8fc54..222c730 100644
+--- a/init/property_service.cpp
++++ b/init/property_service.cpp
+@@ -118,6 +118,8 @@ struct PropertyAuditData {
+     const char* name;
+ };
+ 
++static bool weaken_prop_override_security = false;
++
+ static int PropertyAuditCallback(void* data, security_class_t /*cls*/, char* buf, size_t len) {
+     auto* d = reinterpret_cast<PropertyAuditData*>(data);
+ 
+@@ -188,8 +190,8 @@ static uint32_t PropertySet(const std::string& name, const std::string& value, s
+ 
+     prop_info* pi = (prop_info*) __system_property_find(name.c_str());
+     if (pi != nullptr) {
+-        // ro.* properties are actually "write-once".
+-        if (StartsWith(name, "ro.")) {
++        // ro.* properties are actually "write-once", unless the system decides to
++        if (StartsWith(name, "ro.") && !weaken_prop_override_security) {
+             *error = "Read-only property was already set";
+             return PROP_ERROR_READ_ONLY_PROPERTY;
+         }
+@@ -1251,6 +1253,57 @@ static void ProcessBootconfig() {
+     });
+ }
+ 
++static void SetSafetyNetProps() {
++    // Check whether this is a normal boot, and whether the bootloader is actually locked
++    std::string boot_mode = android::base::GetProperty("ro.boot.mode", "normal");
++    // Do not spoof on eng build
++    std::string build_type = android::base::GetProperty("ro.build.type", "");
++    auto isNormalBoot = (boot_mode == "normal" || boot_mode == "reboot") && build_type != "eng";
++
++    // Bail out if this is recovery, fastbootd, or anything other than a normal boot.
++    // fastbootd, in particular, needs the real values so it can allow flashing on
++    // unlocked bootloaders.
++    if (!isNormalBoot) {
++        return;
++    }
++
++    // Weaken property override security to set safetynet props
++    weaken_prop_override_security = true;
++
++    // Spoof properties
++    InitPropertySet("ro.boot.flash.locked", "1");
++    InitPropertySet("ro.boot.verifiedbootstate", "green");
++    InitPropertySet("ro.boot.veritymode", "enforcing");
++    InitPropertySet("ro.boot.vbmeta.device_state", "locked");
++    InitPropertySet("vendor.boot.verifiedbootstate", "green");
++    InitPropertySet("vendor.boot.vbmeta.device_state", "locked");
++    InitPropertySet("ro.boot.warranty_bit", "0");
++    InitPropertySet("ro.warranty_bit", "0");
++    InitPropertySet("ro.vendor.warranty_bit", "0");
++    InitPropertySet("ro.vendor.boot.warranty_bit", "0");
++    InitPropertySet("ro.build.type", "user");
++    InitPropertySet("ro.system.build.type", "user");
++    InitPropertySet("ro.system_ext.build.type", "user");
++    InitPropertySet("ro.vendor.build.type", "user");
++    InitPropertySet("ro.product.build.type", "user");
++    InitPropertySet("ro.odm.build.type", "user");
++    InitPropertySet("ro.vendor_dlkm.build.type", "user");
++    InitPropertySet("ro.bootimage.build.type", "user");
++    InitPropertySet("ro.build.keys", "release-keys");
++    InitPropertySet("ro.build.tags", "release-keys");
++    InitPropertySet("ro.system.build.tags", "release-keys");
++    InitPropertySet("ro.system_ext.build.tags", "release-keys");
++    InitPropertySet("ro.bootimage.build.tags", "release-keys");
++    InitPropertySet("ro.product.build.tags", "release-keys");
++    InitPropertySet("ro.odm.build.tags", "release-keys");
++    InitPropertySet("ro.vendor.build.tags", "release-keys");
++    InitPropertySet("ro.vendor_dlkm.build.tags", "release-keys");
++
++    // Restore the normal property override security after safetynet props have
++    // been set
++    weaken_prop_override_security = false;
++}
++
+ void PropertyInit() {
+     selinux_callback cb;
+     cb.func_audit = PropertyAuditCallback;
+@@ -1271,6 +1324,9 @@ void PropertyInit() {
+     ProcessKernelCmdline();
+     ProcessBootconfig();
+ 
++    // Report valid verified boot chain to help pass Google SafetyNet integrity checks
++    SetSafetyNetProps();
++
+     // Propagate the kernel variables to internal variables
+     // used by init as well as the current required properties.
+     ExportKernelBootProps();
+-- 
+2.29.2
+

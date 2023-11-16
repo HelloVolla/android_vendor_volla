@@ -1,0 +1,27 @@
+From f9fe0925a20ad573e55aa751bb3e7de1ee1f14bf Mon Sep 17 00:00:00 2001
+From: timjosten <timjosten@gmail.com>
+Date: Wed, 15 Jun 2022 23:46:54 +0000
+Subject: [PATCH] WindowManager: Fix screen flickering on one-handed mode
+
+Signed-off-by: 7Soldier <reg.fm4@gmail.com>
+Change-Id: I15c91f5e6a10732fa69800eae39cfc0993e64031
+---
+ libs/WindowManager/Shell/res/layout/one_handed_tutorial.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libs/WindowManager/Shell/res/layout/one_handed_tutorial.xml b/libs/WindowManager/Shell/res/layout/one_handed_tutorial.xml
+index d29ed8b5a9ec..ae815008b98f 100644
+--- a/libs/WindowManager/Shell/res/layout/one_handed_tutorial.xml
++++ b/libs/WindowManager/Shell/res/layout/one_handed_tutorial.xml
+@@ -22,7 +22,7 @@
+         android:layout_height="wrap_content"
+         android:orientation="vertical"
+         android:gravity="center_horizontal | center_vertical"
+-        android:background="@android:color/transparent">
++        android:background="?android:attr/windowBackground">
+ 
+     <ImageView
+         android:id="@+id/one_handed_tutorial_image"
+-- 
+2.29.2
+

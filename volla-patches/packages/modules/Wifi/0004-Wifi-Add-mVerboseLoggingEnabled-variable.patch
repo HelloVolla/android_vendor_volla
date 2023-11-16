@@ -1,0 +1,30 @@
+From 6b3bf77463176359dbfe3ad1335c7d9657d77894 Mon Sep 17 00:00:00 2001
+From: Sarthak Roy <sarthakroy2002@gmail.com>
+Date: Sun, 10 Oct 2021 17:03:42 +0000
+Subject: [PATCH] Wifi: Add mVerboseLoggingEnabled variable
+
+* Required for MTK-IMS
+
+Signed-off-by: Sarthak Roy <sarthakroy2002@gmail.com>
+Change-Id: Ibd73cdbc727cb4611b646f66a4d3e5abfaa9769c
+Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+---
+ service/java/com/android/server/wifi/WifiServiceImpl.java | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/service/java/com/android/server/wifi/WifiServiceImpl.java b/service/java/com/android/server/wifi/WifiServiceImpl.java
+index 248ff5d13..75b9369b6 100644
+--- a/service/java/com/android/server/wifi/WifiServiceImpl.java
++++ b/service/java/com/android/server/wifi/WifiServiceImpl.java
+@@ -235,6 +235,8 @@ public class WifiServiceImpl extends BaseWifiService {
+ 
+     private final DefaultClientModeManager mDefaultClientModeManager;
+ 
++    private boolean mVerboseLoggingEnabled = false;
++
+     /**
+      * Callback for use with LocalOnlyHotspot to unregister requesting applications upon death.
+      */
+-- 
+2.29.2
+

@@ -1,32 +1,31 @@
-From 6d205fef76c376e882ebbb070774a1dd027b2b49 Mon Sep 17 00:00:00 2001
+From 049eff5b78fcd0a251c3043d72312689c402971c Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
-Date: Mon, 13 Dec 2021 19:35:43 +0330
-Subject: [PATCH] Revert "Settings: support black theme for dark mode [2/4]"
+Date: Sat, 11 Feb 2023 12:26:05 +0330
+Subject: [PATCH 2/4] Revert "Settings: support black theme for dark mode
+ [2/4]"
 
-This reverts commit ac41e8de44190837bfed4e6cb45cb0babadfda27.
+This reverts commit e8f3966279027482f5a82ee9952a5d41c6a94aac.
 
-Change-Id: I7505dd9da5d610011bfaabdc877c00194b771ce3
+Change-Id: Id6bbfbe5c38dfa6b23e65f4eee3410c1437af49b
 ---
  res/xml/dark_mode_settings.xml | 6 ------
  1 file changed, 6 deletions(-)
 
 diff --git a/res/xml/dark_mode_settings.xml b/res/xml/dark_mode_settings.xml
-index 54837950e9..0ebc044404 100644
+index f3229b07c8..41946c1c14 100644
 --- a/res/xml/dark_mode_settings.xml
 +++ b/res/xml/dark_mode_settings.xml
-@@ -55,12 +55,6 @@
-         settings:allowDividerBelow="true"
-         settings:controller="com.android.settings.display.darkmode.DarkModeActivationPreferenceController"/>
+@@ -55,10 +55,4 @@
+         android:title="@string/night_display_end_time_title"
+         settings:searchable="false"/>
  
 -    <lineageos.preference.LineageSystemSettingSwitchPreference
 -        android:key="berry_black_theme"
+-        android:dependency="dark_ui_activated"
 -        android:title="@string/berry_black_theme_title"
 -        android:summary="@string/berry_black_theme_summary"
 -        android:defaultValue="false" />
--
-     <com.android.settingslib.widget.FooterPreference
-             android:key="dark_ui_footer"
-             android:title="@string/dark_ui_text"
+ </PreferenceScreen>
 -- 
 2.29.2
 

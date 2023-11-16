@@ -1,4 +1,4 @@
-From 62c7c9ec2ca0671702bc8dec2fdc9ed960050c73 Mon Sep 17 00:00:00 2001
+From afc3c88a419c0c12b5df4bd65450625fe85f723c Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 5 Jun 2022 06:59:05 +0430
 Subject: [PATCH] Redesign firewall page
@@ -14,7 +14,7 @@ Change-Id: Idc032e9d8212e40272258e01e738566a17c1111c
  create mode 100644 lineage/res/res/values/volla_strings.xml
 
 diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
-index 1b79765c..ccd62aef 100644
+index 336842a3..528e286c 100644
 --- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
 +++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
 @@ -46,6 +46,7 @@ import org.xmlpull.v1.XmlPullParser;
@@ -50,7 +50,7 @@ index 1b79765c..ccd62aef 100644
      }
  
      @Override
-@@ -383,12 +388,23 @@ public class FirewallService extends LineageSystemService {
+@@ -386,12 +391,23 @@ public class FirewallService extends LineageSystemService {
      }
  
      private String getBlockedPage() {
@@ -150,10 +150,10 @@ index 00000000..cd5808b0
 +  </body>
 +</html>
 diff --git a/lineage/res/res/values/symbols.xml b/lineage/res/res/values/symbols.xml
-index 3de0b559..e3997acd 100644
+index 0fadacc4..3e23c1e3 100644
 --- a/lineage/res/res/values/symbols.xml
 +++ b/lineage/res/res/values/symbols.xml
-@@ -194,4 +194,8 @@
+@@ -180,4 +180,8 @@
  
      <!-- AppLocker. -->
      <java-symbol type="array" name="config_defaultLockedPackages" />

@@ -17,4 +17,6 @@
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="lineagelicense_title">Juridic VollaOS</string>
+
+    <string name="battery_charging_limit_title">Starea maximă de încărcare</string>
 </resources>

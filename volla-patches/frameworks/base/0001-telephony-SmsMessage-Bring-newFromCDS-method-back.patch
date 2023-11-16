@@ -1,0 +1,51 @@
+From 84ef86eafda92ba62378588a33b8d6d9cb2f964f Mon Sep 17 00:00:00 2001
+From: SamarV-121 <samarvispute121@pm.me>
+Date: Fri, 8 Apr 2022 17:25:58 +0530
+Subject: [PATCH] telephony: SmsMessage: Bring newFromCDS method back
+
+04-07 07:52:44.272  2200  2200 E AndroidRuntime: FATAL EXCEPTION: main
+04-07 07:52:44.272  2200  2200 E AndroidRuntime: Process: com.mediatek.ims, PID: 2200
+04-07 07:52:44.272  2200  2200 E AndroidRuntime: java.lang.NoSuchMethodError: No static method newFromCDS([B)Lcom/android/internal/telephony/gsm/SmsMessage; in class Lcom/android/internal/telephony/gsm/SmsMessage; or its super classes (declaration of 'com.android.internal.telephony.gsm.SmsMessage' appears in /system/framework/framework.jar!classes4.dex)
+04-07 07:52:44.272  2200  2200 E AndroidRuntime: 	at com.mediatek.ims.feature.MtkImsSmsImpl.newStatusReportInd(MtkImsSmsImpl.java:153)
+04-07 07:52:44.272  2200  2200 E AndroidRuntime: 	at com.mediatek.ims.feature.MtkMmTelFeature$1.newStatusReportInd(MtkMmTelFeature.java:173)
+04-07 07:52:44.272  2200  2200 E AndroidRuntime: 	at com.mediatek.ims.ImsService$MyHandler.handleMessage(ImsService.java:2606)
+04-07 07:52:44.272  2200  2200 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:106)
+04-07 07:52:44.272  2200  2200 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:201)
+04-07 07:52:44.272  2200  2200 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:288)
+04-07 07:52:44.272  2200  2200 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:7870)
+04-07 07:52:44.272  2200  2200 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+04-07 07:52:44.272  2200  2200 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:548)
+04-07 07:52:44.272  2200  2200 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1003)
+
+Change-Id: If37782879a9d9ddfac8283fa243858327ce78850
+Signed-off-by: SamarV-121 <samarvispute121@pm.me>
+Signed-off-by: 7Soldier <reg.fm4@gmail.com>
+---
+ .../android/internal/telephony/gsm/SmsMessage.java    | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/telephony/java/com/android/internal/telephony/gsm/SmsMessage.java b/telephony/java/com/android/internal/telephony/gsm/SmsMessage.java
+index b51e8d3d3c5d..dadcdb69c7dc 100644
+--- a/telephony/java/com/android/internal/telephony/gsm/SmsMessage.java
++++ b/telephony/java/com/android/internal/telephony/gsm/SmsMessage.java
+@@ -140,6 +140,17 @@ public class SmsMessage extends SmsMessageBase {
+         return (mProtocolIdentifier == 0x40);
+     }
+ 
++    public static SmsMessage newFromCDS(byte[] pdu) {
++        try {
++            SmsMessage msg = new SmsMessage();
++            msg.parsePdu(pdu);
++            return msg;
++        } catch (RuntimeException ex) {
++            Rlog.e(LOG_TAG, "CDS SMS PDU parsing failed: ", ex);
++            return null;
++        }
++    }
++
+     /**
+      * Creates an SmsMessage from an SMS EF record.
+      *
+-- 
+2.29.2
+

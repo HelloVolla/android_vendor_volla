@@ -1,4 +1,4 @@
-From ee121e1a8005845fcabadf5d9784f07257886958 Mon Sep 17 00:00:00 2001
+From fc282323dfa9974c120956c6b8ece478ac571b63 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Thu, 10 Feb 2022 10:50:10 +0330
 Subject: [PATCH] Implement ChildMode
@@ -7,34 +7,34 @@ Change-Id: I1d48248a381f4f47baea7443e9b4dfee4eb3a020
 ---
  Android.mk                                    |  2 +-
  api/lineage_current.txt                       | 11 +++
- .../platform/internal/ChildModeService.java   | 83 +++++++++++++++++
+ .../platform/internal/ChildModeService.java   | 81 +++++++++++++++++
  lineage/res/res/values/config.xml             |  1 +
  .../app/LineageContextConstants.java          |  7 ++
  .../lineageos/childmode/ChildModeManager.java | 91 +++++++++++++++++++
  .../childmode/IChildModeService.aidl          | 25 +++++
- 7 files changed, 219 insertions(+), 1 deletion(-)
+ 7 files changed, 217 insertions(+), 1 deletion(-)
  create mode 100644 lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
  create mode 100644 sdk/src/java/lineageos/childmode/ChildModeManager.java
  create mode 100644 sdk/src/java/lineageos/childmode/IChildModeService.aidl
 
 diff --git a/Android.mk b/Android.mk
-index 0319e0ad..18a224aa 100644
+index 135c697f..b84ea8ed 100644
 --- a/Android.mk
 +++ b/Android.mk
-@@ -27,7 +27,7 @@ include $(CLEAR_VARS)
+@@ -29,7 +29,7 @@ include $(CLEAR_VARS)
  lineage_platform_res := APPS/org.lineageos.platform-res_intermediates/aapt
  
  # List of packages used in lineage-api-stubs
--lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.power:lineageos.util:lineageos.weather:lineageos.weatherservice:lineageos.style:lineageos.trust:lineageos.applock:lineageos.firewall
-+lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.power:lineageos.util:lineageos.weather:lineageos.weatherservice:lineageos.style:lineageos.trust:lineageos.applock:lineageos.firewall:lineageos.childmode
+-lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.util:lineageos.trust:lineageos.applock:lineageos.firewall
++lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.util:lineageos.trust:lineageos.applock:lineageos.firewall:lineageos.childmode
  
  lineage_framework_module := $(LOCAL_INSTALLED_MODULE)
  
 diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index db0acfac..705f5303 100644
+index 6c9a7db4..a48bca78 100644
 --- a/api/lineage_current.txt
 +++ b/api/lineage_current.txt
-@@ -1223,3 +1223,14 @@ package lineageos.firewall {
+@@ -888,3 +888,14 @@ package lineageos.firewall {
    }
  
  }
@@ -51,10 +51,10 @@ index db0acfac..705f5303 100644
 +}
 diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java b/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
 new file mode 100644
-index 00000000..a76aea22
+index 00000000..a5fcef7f
 --- /dev/null
 +++ b/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
-@@ -0,0 +1,83 @@
+@@ -0,0 +1,81 @@
 +/**
 + * Copyright (C) 2022 Hallo Welt Systeme UG
 + *
@@ -115,8 +115,6 @@ index 00000000..a76aea22
 +        FirewallManager firewallManager = FirewallManager.getInstance(mContext);
 +        if (appLockManager.isActivate() != enable)
 +            appLockManager.activate(enable);
-+        if (appLockManager.isInstallLockerEnabled() != enable)
-+            appLockManager.enableInstallLocker(enable);
 +        if (firewallManager.isActivate() != enable)
 +            firewallManager.activate(enable);
 +        SystemProperties.set("persist.volla.childmode.enable", enable ? "true" : "false");
@@ -139,10 +137,10 @@ index 00000000..a76aea22
 +    };
 +}
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index 37c4a645..773c0bdd 100644
+index cdb4b6ee..d5d558a4 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
-@@ -111,6 +111,7 @@
+@@ -109,6 +109,7 @@
          <item>org.lineageos.platform.internal.LineageGlobalActionsService</item>
          <item>org.lineageos.platform.internal.AppLockService</item>
          <item>org.lineageos.platform.internal.FirewallService</item>
@@ -151,10 +149,10 @@ index 37c4a645..773c0bdd 100644
  
      <!-- The LineageSystemServer class that is invoked from Android's SystemServer -->
 diff --git a/sdk/src/java/lineageos/app/LineageContextConstants.java b/sdk/src/java/lineageos/app/LineageContextConstants.java
-index 603e0df7..ea5d66bd 100644
+index 20f99fbe..ee38fe84 100644
 --- a/sdk/src/java/lineageos/app/LineageContextConstants.java
 +++ b/sdk/src/java/lineageos/app/LineageContextConstants.java
-@@ -129,6 +129,13 @@ public final class LineageContextConstants {
+@@ -102,6 +102,13 @@ public final class LineageContextConstants {
       */
      public static final String VOLLA_FIREWALL_SERVICE = "vollafirewall";
  

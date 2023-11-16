@@ -1,0 +1,51 @@
+From 0d58fc959f432099165ce3aadd2d416592f2cd35 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sun, 18 Jul 2021 13:15:08 +0800
+Subject: [PATCH] PermissionController: Set volla launcher as default home
+
+Change-Id: I4fbdcb63fe0ead9f9932fca7ccc426054fa24e06
+---
+ .../role/model/HomeRoleBehavior.java          | 27 +------------------
+ 1 file changed, 1 insertion(+), 26 deletions(-)
+
+diff --git a/PermissionController/src/com/android/permissioncontroller/role/model/HomeRoleBehavior.java b/PermissionController/src/com/android/permissioncontroller/role/model/HomeRoleBehavior.java
+index a3cd3dc95..9b1b3716e 100644
+--- a/PermissionController/src/com/android/permissioncontroller/role/model/HomeRoleBehavior.java
++++ b/PermissionController/src/com/android/permissioncontroller/role/model/HomeRoleBehavior.java
+@@ -69,32 +69,7 @@ public class HomeRoleBehavior implements RoleBehavior {
+     @Nullable
+     @Override
+     public String getFallbackHolder(@NonNull Role role, @NonNull Context context) {
+-        PackageManager packageManager = context.getPackageManager();
+-        Intent intent = role.getRequiredComponents().get(0).getIntentFilterData().createIntent();
+-        List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(intent,
+-                PackageManager.MATCH_DEFAULT_ONLY | PackageManager.MATCH_DIRECT_BOOT_AWARE
+-                | PackageManager.MATCH_DIRECT_BOOT_UNAWARE);
+-
+-        String packageName = null;
+-        int priority = Integer.MIN_VALUE;
+-        int resolveInfosSize = resolveInfos.size();
+-        for (int i = 0; i < resolveInfosSize; i++) {
+-            ResolveInfo resolveInfo = resolveInfos.get(i);
+-
+-            // Leave the fallback to PackageManagerService if there is only the fallback home in
+-            // Settings, because if we fallback to it here, we cannot fallback to a normal home
+-            // later, and user cannot see the fallback home in the UI anyway.
+-            if (isSettingsApplication(resolveInfo.activityInfo.applicationInfo, context)) {
+-                continue;
+-            }
+-            if (resolveInfo.priority > priority) {
+-                packageName = resolveInfo.activityInfo.packageName;
+-                priority = resolveInfo.priority;
+-            } else if (resolveInfo.priority == priority) {
+-                packageName = null;
+-            }
+-        }
+-        return packageName;
++        return "com.volla.launcher";
+     }
+ 
+     @Override
+-- 
+2.29.2
+

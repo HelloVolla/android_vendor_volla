@@ -1,0 +1,48 @@
+From 3596a0642df62f5ed3fe5d8a545c924ae67334b4 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Wed, 28 Dec 2022 07:33:46 +0330
+Subject: [PATCH] childmode: Multiuser fixes
+
+Change-Id: Ibc15be99fc33487e07279b53a6b4d2cfbbdc293c
+---
+ .../java/org/lineageos/platform/internal/ChildModeService.java | 3 +++
+ .../java/org/lineageos/platform/internal/FirewallService.java  | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java b/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
+index 57af481b..7f88edeb 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
+@@ -21,6 +21,7 @@ import android.content.Context;
+ import android.os.Environment;
+ import android.os.SystemProperties;
+ import android.os.IBinder;
++import android.os.UserHandle;
+ import android.os.UserManager;
+ import android.util.Slog;
+ 
+@@ -122,6 +123,8 @@ public class ChildModeService extends LineageSystemService {
+         if (firewallManager.isActivate() != enable)
+             firewallManager.activate(enable);
+         SystemProperties.set("persist.volla.childmode.enable", enable ? "true" : "false");
++        UserManager.get(mContext).setUserRestriction(UserManager.DISALLOW_USER_SWITCH,
++            enable, UserHandle.of(mUserId));
+     }
+ 
+     public boolean isActivate() {
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index 130784fd..97711be5 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -295,7 +295,7 @@ public class FirewallService extends LineageSystemService {
+     private void resetDnsConf() {
+         ArrayList<String> confLines = new ArrayList<String>();
+         boolean blacklist = isBlacklistMode();
+-        File dnsmasqDir = new File(Environment.getDataSystemCeDirectory(mUserId), "dnsmasq");
++        File dnsmasqDir = new File(Environment.getDataSystemCeDirectory(0), "dnsmasq");
+         if (!dnsmasqDir.exists() && !dnsmasqDir.mkdirs())
+             Slog.e(TAG, "Error while creating dnsmasq directory: " + dnsmasqDir);
+         confLines.add("# Volla firewall fonfiguration file for dnsmasq.");
+-- 
+2.29.2
+

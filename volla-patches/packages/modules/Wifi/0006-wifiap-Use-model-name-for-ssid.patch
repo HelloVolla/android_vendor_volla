@@ -1,0 +1,27 @@
+From cf2471488696ad23d2ad217b2a03ae8440832ac0 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sat, 22 Apr 2023 17:22:52 +0330
+Subject: [PATCH] wifiap: Use model name for ssid
+
+Change-Id: Ib37d385ed7b27d50ba8ba855d0913a24a743a7c2
+---
+ service/java/com/android/server/wifi/WifiApConfigStore.java | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/service/java/com/android/server/wifi/WifiApConfigStore.java b/service/java/com/android/server/wifi/WifiApConfigStore.java
+index 17ebe5ff7..4fc896312 100644
+--- a/service/java/com/android/server/wifi/WifiApConfigStore.java
++++ b/service/java/com/android/server/wifi/WifiApConfigStore.java
+@@ -343,8 +343,7 @@ public class WifiApConfigStore {
+     private SoftApConfiguration getDefaultApConfiguration() {
+         SoftApConfiguration.Builder configBuilder = new SoftApConfiguration.Builder();
+         configBuilder.setBand(generateDefaultBand(mContext));
+-        configBuilder.setSsid(mContext.getResources().getString(
+-                R.string.wifi_tether_configure_ssid_default) + "_" + getRandomIntForDefaultSsid());
++        configBuilder.setSsid(android.os.Build.MODEL);
+         if (ApConfigUtil.isWpa3SaeSupported(mContext)) {
+             configBuilder.setPassphrase(generatePassword(),
+                     SoftApConfiguration.SECURITY_TYPE_WPA3_SAE_TRANSITION);
+-- 
+2.29.2
+

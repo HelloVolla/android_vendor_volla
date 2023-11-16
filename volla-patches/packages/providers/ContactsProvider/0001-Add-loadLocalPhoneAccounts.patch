@@ -1,4 +1,4 @@
-From 4e2547148d21dd9332b7e4402b3a5520fbc4d429 Mon Sep 17 00:00:00 2001
+From b4b7e6107b5b8c57623144cc62c2f1e5cab18723 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Mon, 16 Aug 2021 12:37:02 +0430
 Subject: [PATCH] Add loadLocalPhoneAccounts
@@ -10,10 +10,10 @@ Subject: [PATCH] Add loadLocalPhoneAccounts
  3 files changed, 80 insertions(+), 1 deletion(-)
 
 diff --git a/src/com/android/providers/contacts/AccountWithDataSet.java b/src/com/android/providers/contacts/AccountWithDataSet.java
-index 45b776c1..80b46785 100644
+index 75bf1db2..a20f5a3b 100644
 --- a/src/com/android/providers/contacts/AccountWithDataSet.java
 +++ b/src/com/android/providers/contacts/AccountWithDataSet.java
-@@ -62,7 +62,8 @@ public class AccountWithDataSet {
+@@ -66,7 +66,8 @@ public class AccountWithDataSet {
      }
  
      public boolean isLocalAccount() {
@@ -24,10 +24,10 @@ index 45b776c1..80b46785 100644
  
      @Override
 diff --git a/src/com/android/providers/contacts/ContactsDatabaseHelper.java b/src/com/android/providers/contacts/ContactsDatabaseHelper.java
-index 2e5cdacf..878e1c4e 100644
+index 7f4188d2..ffe388be 100644
 --- a/src/com/android/providers/contacts/ContactsDatabaseHelper.java
 +++ b/src/com/android/providers/contacts/ContactsDatabaseHelper.java
-@@ -232,6 +232,13 @@ public class ContactsDatabaseHelper extends SQLiteOpenHelper {
+@@ -230,6 +230,13 @@ public class ContactsDatabaseHelper extends SQLiteOpenHelper {
                  +   RawContactsColumns.CONCRETE_ACCOUNT_ID + "=" + AccountsColumns.CONCRETE_ID
                      + ")"
                  + "LEFT OUTER JOIN " + Tables.SETTINGS + " ON ("
@@ -42,11 +42,11 @@ index 2e5cdacf..878e1c4e 100644
                          + SettingsColumns.CONCRETE_ACCOUNT_NAME + " AND "
                      + AccountsColumns.CONCRETE_ACCOUNT_TYPE + "="
 diff --git a/src/com/android/providers/contacts/ContactsProvider2.java b/src/com/android/providers/contacts/ContactsProvider2.java
-index 3a0f7db8..f72c93a2 100644
+index 4b2b37ae..651bce5f 100644
 --- a/src/com/android/providers/contacts/ContactsProvider2.java
 +++ b/src/com/android/providers/contacts/ContactsProvider2.java
-@@ -63,9 +63,11 @@ import android.os.Bundle;
- import android.os.CancellationSignal;
+@@ -67,9 +67,11 @@ import android.os.CancellationSignal;
+ import android.os.Handler;
  import android.os.ParcelFileDescriptor;
  import android.os.ParcelFileDescriptor.AutoCloseInputStream;
 +import android.os.Process;
@@ -57,7 +57,7 @@ index 3a0f7db8..f72c93a2 100644
  import android.os.UserHandle;
  import android.preference.PreferenceManager;
  import android.provider.BaseColumns;
-@@ -1673,9 +1675,13 @@ public class ContactsProvider2 extends AbstractContactsProvider
+@@ -1681,9 +1683,13 @@ public class ContactsProvider2 extends AbstractContactsProvider
          switchToContactMode();
          switch (task) {
              case BACKGROUND_TASK_INITIALIZE: {
@@ -71,7 +71,7 @@ index 3a0f7db8..f72c93a2 100644
                  break;
              }
  
-@@ -9862,4 +9868,69 @@ public class ContactsProvider2 extends AbstractContactsProvider
+@@ -9925,4 +9931,69 @@ public class ContactsProvider2 extends AbstractContactsProvider
      public ProfileProvider getProfileProviderForTest() {
          return mProfileProvider;
      }

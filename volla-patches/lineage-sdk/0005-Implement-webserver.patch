@@ -1,4 +1,4 @@
-From 3f237834a68609e04a37c540065188e1b90718ec Mon Sep 17 00:00:00 2001
+From d688e40cff1609a89b8d3b097fda8e5b64478c83 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 26 Feb 2022 20:00:26 +0330
 Subject: [PATCH] Implement webserver
@@ -10,10 +10,10 @@ Change-Id: I607251474bed8896b43032dd45bd186301f1d88f
  2 files changed, 92 insertions(+), 2 deletions(-)
 
 diff --git a/Android.bp b/Android.bp
-index 41394bf5..348dbdeb 100644
+index 01488d3c..d588fc50 100644
 --- a/Android.bp
 +++ b/Android.bp
-@@ -79,7 +79,10 @@ java_library {
+@@ -94,7 +94,10 @@ java_library {
      name: "org.lineageos.platform",
      installable: true,
      sdk_version: "core_platform",
@@ -26,7 +26,7 @@ index 41394bf5..348dbdeb 100644
      libs: [
          "framework",
 diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
-index fbd4979d..1b79765c 100644
+index 4dee74d8..336842a3 100644
 --- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
 +++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
 @@ -51,6 +51,13 @@ import java.io.FileInputStream;
@@ -63,7 +63,7 @@ index fbd4979d..1b79765c 100644
      private final ArrayList<String> mDomainsList = new ArrayList<String>();
  
      public FirewallService(Context context) {
-@@ -125,8 +138,10 @@ public class FirewallService extends LineageSystemService {
+@@ -126,8 +139,10 @@ public class FirewallService extends LineageSystemService {
      public void onBootPhase(int phase) {
          if (phase == SystemService.PHASE_SYSTEM_SERVICES_READY) {
              if (DEBUG_FIREWALL) Slog.v(TAG, "onBootPhase PHASE_SYSTEM_SERVICES_READY");
@@ -75,7 +75,7 @@ index fbd4979d..1b79765c 100644
          }
      }
  
-@@ -149,6 +164,26 @@ public class FirewallService extends LineageSystemService {
+@@ -152,6 +167,26 @@ public class FirewallService extends LineageSystemService {
          }
      }
  
@@ -102,7 +102,7 @@ index fbd4979d..1b79765c 100644
      private void initLockedApps() {
          if (DEBUG_FIREWALL) Slog.v(TAG, "initLockedApps(" + mUserId + ")");
          mFile = new AtomicFile(getFile());
-@@ -283,6 +318,7 @@ public class FirewallService extends LineageSystemService {
+@@ -286,6 +321,7 @@ public class FirewallService extends LineageSystemService {
          } else {
              SystemProperties.set("ctl.stop", "volla.dnsmasq");
          }
@@ -110,7 +110,7 @@ index fbd4979d..1b79765c 100644
          ConnectivityManager connectivityManager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
          IDnsResolver resolver = IDnsResolver.Stub
                  .asInterface(ServiceManager.getService("dnsresolver"));
-@@ -346,6 +382,15 @@ public class FirewallService extends LineageSystemService {
+@@ -349,6 +385,15 @@ public class FirewallService extends LineageSystemService {
          return mDomainsList.size();
      }
  
@@ -126,7 +126,7 @@ index fbd4979d..1b79765c 100644
      private final IBinder mService = new IFirewallService.Stub() {
          @Override
          public void activate(boolean enable) {
-@@ -420,4 +465,46 @@ public class FirewallService extends LineageSystemService {
+@@ -423,4 +468,46 @@ public class FirewallService extends LineageSystemService {
              }
          }
      }

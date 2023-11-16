@@ -1,47 +1,51 @@
-From 565bb1e9164a78274753e4285eca58a46e3b4751 Mon Sep 17 00:00:00 2001
+From 9a9d6f63a7b174769c89c79c9548e8896abc0d65 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
-Date: Sat, 7 Aug 2021 00:36:50 +0430
-Subject: [PATCH] LegalSettings: Move legal_url to resources
+Date: Sat, 12 Nov 2022 12:20:03 +0330
+Subject: [PATCH 1/4] LegalSettings: Move legal_url to resources
 
 Change-Id: I1270ff984b2c4143c3c1477896004a775ca2d848
 ---
- res/values/cm_strings.xml                   | 3 +++
- src/com/android/settings/LegalSettings.java | 3 +--
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ res/values/cm_strings.xml                                    | 3 +++
+ .../deviceinfo/legal/LineageLicensePreferenceController.java | 5 ++---
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
-index 1c78816577..24ca321f96 100644
+index 3ea294b8d5..df7c7b4260 100644
 --- a/res/values/cm_strings.xml
 +++ b/res/values/cm_strings.xml
-@@ -172,4 +172,7 @@
+@@ -200,4 +200,7 @@
  
-     <!-- Display settings screen, peak refresh rate settings summary [CHAR LIMIT=NONE] -->
-     <string name="peak_refresh_rate_summary_custom">Automatically raises the refresh rate from 60 to %1$d Hz for some content. Increases battery usage.</string>
+     <!-- Warning message for the sd card setup -->
+     <string name="storage_warning_internal">Warning: This option may not work properly or lead to data loss and is therefore not recommended!</string>
 +
 +    <!-- Legal -->
 +    <string name="lineage_legal_url">https://lineageos.org/legal</string>
  </resources>
-diff --git a/src/com/android/settings/LegalSettings.java b/src/com/android/settings/LegalSettings.java
-index 93abf94256..cc6b1eb4ec 100644
---- a/src/com/android/settings/LegalSettings.java
-+++ b/src/com/android/settings/LegalSettings.java
-@@ -32,7 +32,6 @@ public class LegalSettings extends DashboardFragment {
+diff --git a/src/com/android/settings/deviceinfo/legal/LineageLicensePreferenceController.java b/src/com/android/settings/deviceinfo/legal/LineageLicensePreferenceController.java
+index a59f5cf116..c727899f16 100644
+--- a/src/com/android/settings/deviceinfo/legal/LineageLicensePreferenceController.java
++++ b/src/com/android/settings/deviceinfo/legal/LineageLicensePreferenceController.java
+@@ -25,11 +25,10 @@ import androidx.preference.Preference;
+ import androidx.preference.PreferenceScreen;
  
-     private static final String TAG = "LegalSettings";
+ import com.android.settings.core.BasePreferenceController;
++import com.android.settings.R;
  
--    private static final String PROPERTY_LINEAGELICENSE_URL = "ro.lineagelegal.url";
-     private static final String KEY_LINEAGE_LICENSE = "lineagelicense";
+ public class LineageLicensePreferenceController extends BasePreferenceController {
  
-     @Override
-@@ -48,7 +47,7 @@ public class LegalSettings extends DashboardFragment {
-     @Override
-     public boolean onPreferenceTreeClick(Preference preference) {
-         if (preference.getKey().equals(KEY_LINEAGE_LICENSE)) {
--            String userLineageLicenseUrl = SystemProperties.get(PROPERTY_LINEAGELICENSE_URL);
-+            String userLineageLicenseUrl = getContext().getString(R.string.lineage_legal_url);
-             final Intent intent = new Intent(Intent.ACTION_VIEW);
-             intent.addCategory(Intent.CATEGORY_DEFAULT);
-             intent.setData(Uri.parse(userLineageLicenseUrl));
+-    private static final String PROPERTY_LINEAGE_LICENSE_URL = "ro.lineagelegal.url";
+-
+     public LineageLicensePreferenceController(Context context, String key) {
+         super(context, key);
+     }
+@@ -58,6 +57,6 @@ public class LineageLicensePreferenceController extends BasePreferenceController
+ 
+     private Intent getIntent() {
+         return new Intent(Intent.ACTION_VIEW,
+-                Uri.parse(SystemProperties.get(PROPERTY_LINEAGE_LICENSE_URL)));
++                Uri.parse(mContext.getString(R.string.lineage_legal_url)));
+     }
+ }
 -- 
 2.29.2
 

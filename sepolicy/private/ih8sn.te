@@ -1,0 +1,18 @@
+type ih8sn, domain;
+type ih8sn_exec, exec_type, file_type;
+
+allow ih8sn devpts:chr_file { read write getattr };
+allow ih8sn toolbox_exec:file { entrypoint execute map read getattr };
+allow ih8sn vendor_toolbox_exec:file entrypoint;
+allow ih8sn file_contexts_file:file { getattr open read };
+allow ih8sn self:capability { dac_override dac_read_search };
+allow ih8sn system_file:file { entrypoint map read execute getattr open };
+allow ih8sn properties_serial:file write;
+allow ih8sn debug_prop:file write;
+allow ih8sn default_prop:file { read write open getattr map };
+allow ih8sn heapprofd_prop:file write;
+allow ih8sn vendor_socket_hook_prop:file write;
+allow ih8sn exported_default_prop:file write;
+allow ih8sn vendor_default_prop:file write;
+
+init_daemon_domain(ih8sn)

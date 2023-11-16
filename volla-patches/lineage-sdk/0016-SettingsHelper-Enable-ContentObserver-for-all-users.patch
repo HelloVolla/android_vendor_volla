@@ -1,0 +1,34 @@
+From 13ca66cfc0610a4faadbbec66ee76e19c5874541 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sat, 3 Dec 2022 20:19:53 +0330
+Subject: [PATCH] SettingsHelper: Enable ContentObserver for all users
+
+Change-Id: If811dd2efbd296e1be3cddad284f5f7f6ff5a1cb
+---
+ sdk/src/java/lineageos/preference/SettingsHelper.java | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/sdk/src/java/lineageos/preference/SettingsHelper.java b/sdk/src/java/lineageos/preference/SettingsHelper.java
+index cd9e56fc..5bc3c4e0 100644
+--- a/sdk/src/java/lineageos/preference/SettingsHelper.java
++++ b/sdk/src/java/lineageos/preference/SettingsHelper.java
+@@ -20,6 +20,7 @@ import android.content.Context;
+ import android.database.ContentObserver;
+ import android.net.Uri;
+ import android.os.Handler;
++import android.os.UserHandle;
+ import android.provider.Settings;
+ import android.util.ArrayMap;
+ import android.util.ArraySet;
+@@ -184,7 +185,7 @@ public class SettingsHelper {
+                 for (Uri contentUri : contentUris) {
+                     uris.add(contentUri);
+                     if (!mRefs.contains(contentUri)) {
+-                        mResolver.registerContentObserver(contentUri, false, this);
++                        mResolver.registerContentObserver(contentUri, false, this, UserHandle.USER_ALL);
+                         listener.onSettingsChanged(null);
+                     }
+                     mRefs.add(contentUri);
+-- 
+2.29.2
+

@@ -1,4 +1,4 @@
-From f692565dbb968549f5e4ef1db1ed605a4f0eb87e Mon Sep 17 00:00:00 2001
+From 38deb0946ae058521ce02db8c8264de63429f77f Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Fri, 11 Feb 2022 19:58:13 +0330
 Subject: [PATCH] Implement Firewall
@@ -7,34 +7,34 @@ Change-Id: I085ced3f4a31f6c182f957445cf0533f8cd71303
 ---
  Android.mk                                    |   2 +-
  api/lineage_current.txt                       |  18 +
- .../platform/internal/FirewallService.java    | 423 ++++++++++++++++++
+ .../platform/internal/FirewallService.java    | 426 ++++++++++++++++++
  lineage/res/res/values/config.xml             |   1 +
  .../app/LineageContextConstants.java          |   7 +
  .../lineageos/firewall/FirewallManager.java   | 147 ++++++
  .../lineageos/firewall/IFirewallService.aidl  |  39 ++
- 7 files changed, 636 insertions(+), 1 deletion(-)
+ 7 files changed, 639 insertions(+), 1 deletion(-)
  create mode 100644 lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
  create mode 100644 sdk/src/java/lineageos/firewall/FirewallManager.java
  create mode 100644 sdk/src/java/lineageos/firewall/IFirewallService.aidl
 
 diff --git a/Android.mk b/Android.mk
-index e0ed718d..0319e0ad 100644
+index 41d55d84..135c697f 100644
 --- a/Android.mk
 +++ b/Android.mk
-@@ -27,7 +27,7 @@ include $(CLEAR_VARS)
+@@ -29,7 +29,7 @@ include $(CLEAR_VARS)
  lineage_platform_res := APPS/org.lineageos.platform-res_intermediates/aapt
  
  # List of packages used in lineage-api-stubs
--lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.power:lineageos.util:lineageos.weather:lineageos.weatherservice:lineageos.style:lineageos.trust:lineageos.applock
-+lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.power:lineageos.util:lineageos.weather:lineageos.weatherservice:lineageos.style:lineageos.trust:lineageos.applock:lineageos.firewall
+-lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.util:lineageos.trust:lineageos.applock
++lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.util:lineageos.trust:lineageos.applock:lineageos.firewall
  
  lineage_framework_module := $(LOCAL_INSTALLED_MODULE)
  
 diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index 63e8c7be..db0acfac 100644
+index 8186e891..6c9a7db4 100644
 --- a/api/lineage_current.txt
 +++ b/api/lineage_current.txt
-@@ -1205,3 +1205,21 @@ package lineageos.applock {
+@@ -870,3 +870,21 @@ package lineageos.applock {
    }
  
  }
@@ -58,10 +58,10 @@ index 63e8c7be..db0acfac 100644
 +}
 diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
 new file mode 100644
-index 00000000..fbd4979d
+index 00000000..4dee74d8
 --- /dev/null
 +++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
-@@ -0,0 +1,423 @@
+@@ -0,0 +1,426 @@
 +/**
 + * Copyright (C) 2022 Hallo Welt Systeme UG
 + *
@@ -182,6 +182,7 @@ index 00000000..fbd4979d
 +            if (DEBUG_FIREWALL) Slog.v(TAG, "onUnlockUser() is NOT ManagedProfile");
 +            mUserId = userHandle;
 +            mHandler.sendEmptyMessage(FirewallHandler.MSG_INIT_APPS);
++            mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
 +        }
 +    }
 +
@@ -201,6 +202,7 @@ index 00000000..fbd4979d
 +            if (DEBUG_FIREWALL) Slog.v(TAG, "onSwitchUser() is NOT ManagedProfile");
 +            mUserId = userHandle;
 +            mHandler.sendEmptyMessage(FirewallHandler.MSG_INIT_APPS);
++            mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
 +        }
 +    }
 +
@@ -210,6 +212,7 @@ index 00000000..fbd4979d
 +        if (mUserId == userHandle) {
 +            mUserId = ActivityManager.getCurrentUser();
 +            mHandler.sendEmptyMessage(FirewallHandler.MSG_INIT_APPS);
++            mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
 +        }
 +    }
 +
@@ -316,6 +319,9 @@ index 00000000..fbd4979d
 +    private void resetDnsConf() {
 +        ArrayList<String> confLines = new ArrayList<String>();
 +        boolean blacklist = isBlacklistMode();
++        File dnsmasqDir = new File(Environment.getDataSystemCeDirectory(mUserId), "dnsmasq");
++        if (!dnsmasqDir.exists() && !dnsmasqDir.mkdirs())
++            Slog.e(TAG, "Error while creating dnsmasq directory: " + dnsmasqDir);
 +        if (mDomainsList.size() > 0) {
 +            for (String domain : mDomainsList) {
 +                if (blacklist)
@@ -325,9 +331,6 @@ index 00000000..fbd4979d
 +            }
 +            if (!blacklist)
 +                confLines.add("address=/#/127.0.0.1");
-+            File dnsmasqDir = new File(Environment.getDataSystemCeDirectory(mUserId), "dnsmasq");
-+            if (!dnsmasqDir.exists() && !dnsmasqDir.mkdirs())
-+                Slog.e(TAG, "Error while creating dnsmasq directory: " + dnsmasqDir);
 +            try {
 +                Files.write(Paths.get(dnsmasqDir.getAbsolutePath() + "/dns.conf"),
 +                  confLines, StandardCharsets.UTF_8);
@@ -486,10 +489,10 @@ index 00000000..fbd4979d
 +    }
 +}
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index 822b0d35..37c4a645 100644
+index 62ea4c11..cdb4b6ee 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
-@@ -110,6 +110,7 @@
+@@ -108,6 +108,7 @@
          <item>org.lineageos.platform.internal.LineageSettingsService</item>
          <item>org.lineageos.platform.internal.LineageGlobalActionsService</item>
          <item>org.lineageos.platform.internal.AppLockService</item>
@@ -498,10 +501,10 @@ index 822b0d35..37c4a645 100644
  
      <!-- The LineageSystemServer class that is invoked from Android's SystemServer -->
 diff --git a/sdk/src/java/lineageos/app/LineageContextConstants.java b/sdk/src/java/lineageos/app/LineageContextConstants.java
-index 0a5d9412..603e0df7 100644
+index eb956fa5..20f99fbe 100644
 --- a/sdk/src/java/lineageos/app/LineageContextConstants.java
 +++ b/sdk/src/java/lineageos/app/LineageContextConstants.java
-@@ -122,6 +122,13 @@ public final class LineageContextConstants {
+@@ -95,6 +95,13 @@ public final class LineageContextConstants {
       */
      public static final String VOLLA_APPLOCK_SERVICE = "vollaapplock";
  

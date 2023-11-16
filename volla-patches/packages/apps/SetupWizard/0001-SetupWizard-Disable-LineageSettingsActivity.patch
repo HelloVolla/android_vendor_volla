@@ -1,4 +1,4 @@
-From 899fb98ff754e1635f809e5d9dfebcecb45f609c Mon Sep 17 00:00:00 2001
+From 06f61182c5ae95aebc9f5b81460f37942e492531 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 10 Jul 2021 22:14:31 +0800
 Subject: [PATCH] SetupWizard: Disable LineageSettingsActivity
@@ -9,20 +9,20 @@ Change-Id: I9f0e6d1d25d6a83a0cb42d7fb914857418d037d5
  1 file changed, 2 insertions(+)
 
 diff --git a/src/org/lineageos/setupwizard/util/SetupWizardUtils.java b/src/org/lineageos/setupwizard/util/SetupWizardUtils.java
-index d29c916..4fb6c8e 100644
+index 4836984..fb89a05 100644
 --- a/src/org/lineageos/setupwizard/util/SetupWizardUtils.java
 +++ b/src/org/lineageos/setupwizard/util/SetupWizardUtils.java
-@@ -61,6 +61,7 @@ import org.lineageos.setupwizard.SetupWizardApp;
+@@ -59,6 +59,7 @@ import org.lineageos.setupwizard.NetworkSetupActivity;
+ import org.lineageos.setupwizard.SetupWizardApp;
  import org.lineageos.setupwizard.SimMissingActivity;
- import org.lineageos.setupwizard.WifiSetupActivity;
  import org.lineageos.setupwizard.wizardmanager.WizardManager;
 +import org.lineageos.setupwizard.LineageSettingsActivity;
  
  import java.io.File;
  import java.util.ArrayList;
-@@ -309,6 +310,7 @@ public class SetupWizardUtils {
-         if (!hasWifi(context) || isEthernetConnected(context)) {
-             disableComponent(context, WifiSetupActivity.class);
+@@ -295,6 +296,7 @@ public class SetupWizardUtils {
+         if ((!hasWifi(context) && !hasTelephony(context)) || isEthernetConnected(context)) {
+             disableComponent(context, NetworkSetupActivity.class);
          }
 +        disableComponent(context, LineageSettingsActivity.class);
      }

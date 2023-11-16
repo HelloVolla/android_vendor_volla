@@ -17,4 +17,6 @@
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="lineagelicense_title">VollaOS правна информация</string>
+
+    <string name="battery_charging_limit_title">Максимално състояние на зареждане</string>
 </resources>

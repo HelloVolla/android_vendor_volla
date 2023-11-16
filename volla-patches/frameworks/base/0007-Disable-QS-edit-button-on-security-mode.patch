@@ -1,0 +1,58 @@
+From 9c1a0fef223d4e1bb8a73a70ef1cc190f2a7c626 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Wed, 14 Dec 2022 20:50:15 +0100
+Subject: [PATCH] Disable QS edit button on security mode
+
+Change-Id: Iab1f1f09ec4199f25b13be3805e9d619d6bd4dd5
+---
+ .../src/com/android/systemui/qs/FooterActionsView.kt      | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/FooterActionsView.kt b/packages/SystemUI/src/com/android/systemui/qs/FooterActionsView.kt
+index f81f7bf73f64..c4228aefba6e 100644
+--- a/packages/SystemUI/src/com/android/systemui/qs/FooterActionsView.kt
++++ b/packages/SystemUI/src/com/android/systemui/qs/FooterActionsView.kt
+@@ -32,6 +32,8 @@ import com.android.systemui.R
+ import com.android.systemui.statusbar.phone.MultiUserSwitch
+ import com.android.systemui.statusbar.phone.SettingsButton
+ 
++import lineageos.childmode.ChildModeManager
++
+ /**
+  * Quick Settings bottom buttons placed in footer (aka utility bar) - always visible in expanded QS,
+  * in split shade mode visible also in collapsed state. May contain up to 5 buttons: settings,
+@@ -44,6 +46,7 @@ class FooterActionsView(context: Context?, attrs: AttributeSet?) : LinearLayout(
+     private lateinit var multiUserAvatar: ImageView
+     private lateinit var tunerIcon: View
+     private lateinit var editTilesButton: View
++    private lateinit var mChildModeManager: ChildModeManager
+ 
+     private var settingsCogAnimator: TouchAnimator? = null
+ 
+@@ -52,6 +55,8 @@ class FooterActionsView(context: Context?, attrs: AttributeSet?) : LinearLayout(
+ 
+     override fun onFinishInflate() {
+         super.onFinishInflate()
++        mChildModeManager = ChildModeManager.getInstance(mContext);
++
+         editTilesButton = requireViewById(android.R.id.edit)
+         settingsButton = findViewById(R.id.settings_button)
+         settingsContainer = findViewById(R.id.settings_button_container)
+@@ -143,6 +148,7 @@ class FooterActionsView(context: Context?, attrs: AttributeSet?) : LinearLayout(
+         multiUserSwitch.visibility = if (multiUserEnabled) VISIBLE else GONE
+         val isDemo = UserManager.isDeviceInDemoMode(context)
+         settingsButton.visibility = if (isDemo) INVISIBLE else VISIBLE
++        editTilesButton.visibility = if (mChildModeManager.isActivate()) GONE else VISIBLE
+     }
+ 
+     fun onUserInfoChanged(picture: Drawable?, isGuestUser: Boolean) {
+@@ -155,4 +161,4 @@ class FooterActionsView(context: Context?, attrs: AttributeSet?) : LinearLayout(
+         }
+         multiUserAvatar.setImageDrawable(pictureToSet)
+     }
+-}
+\ No newline at end of file
++}
+-- 
+2.29.2
+

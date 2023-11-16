@@ -1,0 +1,45 @@
+From f834714ab9968c1e4ae0aad35b5d6ecd366fe33d Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sun, 12 Feb 2023 05:22:08 +0330
+Subject: [PATCH] lineage: Drop audio props
+
+Change-Id: I095626eda237d5c527a0a2ac5fd99d3f9835fe27
+---
+ config/common_mobile.mk | 5 -----
+ config/telephony.mk     | 4 ----
+ 2 files changed, 9 deletions(-)
+
+diff --git a/config/common_mobile.mk b/config/common_mobile.mk
+index 5616c8c1..4409f4d9 100644
+--- a/config/common_mobile.mk
++++ b/config/common_mobile.mk
+@@ -7,11 +7,6 @@ include vendor/lineage/config/aosp_audio.mk
+ # Include Lineage audio files
+ include vendor/lineage/config/lineage_audio.mk
+ 
+-# Default notification/alarm sounds
+-PRODUCT_PRODUCT_PROPERTIES += \
+-    ro.config.notification_sound=Argon.ogg \
+-    ro.config.alarm_alert=Hassium.ogg
+-
+ # Apps
+ PRODUCT_PACKAGES += \
+     Backgrounds \
+diff --git a/config/telephony.mk b/config/telephony.mk
+index 6adf48d9..30056bb1 100644
+--- a/config/telephony.mk
++++ b/config/telephony.mk
+@@ -11,10 +11,6 @@ PRODUCT_PACKAGES += \
+     messaging \
+     Stk
+ 
+-# Default ringtone
+-PRODUCT_PRODUCT_PROPERTIES += \
+-    ro.config.ringtone=Orion.ogg
+-
+ # Tethering - allow without requiring a provisioning app
+ # (for devices that check this)
+ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+-- 
+2.29.2
+

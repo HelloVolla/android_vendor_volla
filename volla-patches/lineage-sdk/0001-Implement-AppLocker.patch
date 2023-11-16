@@ -1,4 +1,4 @@
-From 4c30645d18e6a7496c763cf194a6ccf90082b546 Mon Sep 17 00:00:00 2001
+From b2c5e7489df75020ef4dee9ec53e6faddbfb8722 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 6 Feb 2022 18:07:07 +0330
 Subject: [PATCH] Implement AppLocker
@@ -6,40 +6,41 @@ Subject: [PATCH] Implement AppLocker
 Change-Id: Iddf9e348be93367c34f6766cd73384d497fc3bef
 ---
  Android.mk                                    |   2 +-
- api/lineage_current.txt                       |  24 +
+ api/lineage_current.txt                       |  25 +
  .../platform/internal/AppLockService.java     | 497 ++++++++++++++++++
  lineage/res/res/values/config.xml             |   1 +
  .../app/LineageContextConstants.java          |   7 +
  .../lineageos/applock/AppLockManager.java     | 169 ++++++
  .../lineageos/applock/IAppLockCallback.aidl   |  22 +
  .../lineageos/applock/IAppLockService.aidl    |  47 ++
- 8 files changed, 768 insertions(+), 1 deletion(-)
+ 8 files changed, 769 insertions(+), 1 deletion(-)
  create mode 100644 lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
  create mode 100644 sdk/src/java/lineageos/applock/AppLockManager.java
  create mode 100644 sdk/src/java/lineageos/applock/IAppLockCallback.aidl
  create mode 100644 sdk/src/java/lineageos/applock/IAppLockService.aidl
 
 diff --git a/Android.mk b/Android.mk
-index a67b2c5c..e0ed718d 100644
+index d4247595..41d55d84 100644
 --- a/Android.mk
 +++ b/Android.mk
-@@ -27,7 +27,7 @@ include $(CLEAR_VARS)
+@@ -29,7 +29,7 @@ include $(CLEAR_VARS)
  lineage_platform_res := APPS/org.lineageos.platform-res_intermediates/aapt
  
  # List of packages used in lineage-api-stubs
--lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.power:lineageos.util:lineageos.weather:lineageos.weatherservice:lineageos.style:lineageos.trust
-+lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.power:lineageos.util:lineageos.weather:lineageos.weatherservice:lineageos.style:lineageos.trust:lineageos.applock
+-lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.util:lineageos.trust
++lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.util:lineageos.trust:lineageos.applock
  
  lineage_framework_module := $(LOCAL_INSTALLED_MODULE)
  
 diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index 60a92746..63e8c7be 100644
+index 03c9aeec..8186e891 100644
 --- a/api/lineage_current.txt
 +++ b/api/lineage_current.txt
-@@ -1181,3 +1181,27 @@ package lineageos.weatherservice {
+@@ -845,3 +845,28 @@ package lineageos.util {
+   }
  
  }
- 
++
 +package lineageos.applock {
 +
 +  public abstract static class IAppLockCallback {
@@ -568,10 +569,10 @@ index 00000000..8dbe5067
 +    }
 +}
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index bfd4ba70..822b0d35 100644
+index 6f5ae221..62ea4c11 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
-@@ -109,6 +109,7 @@
+@@ -107,6 +107,7 @@
          <item>org.lineageos.platform.internal.TrustInterfaceService</item>
          <item>org.lineageos.platform.internal.LineageSettingsService</item>
          <item>org.lineageos.platform.internal.LineageGlobalActionsService</item>
@@ -580,10 +581,10 @@ index bfd4ba70..822b0d35 100644
  
      <!-- The LineageSystemServer class that is invoked from Android's SystemServer -->
 diff --git a/sdk/src/java/lineageos/app/LineageContextConstants.java b/sdk/src/java/lineageos/app/LineageContextConstants.java
-index cd5ffd30..0a5d9412 100644
+index 9543e44b..eb956fa5 100644
 --- a/sdk/src/java/lineageos/app/LineageContextConstants.java
 +++ b/sdk/src/java/lineageos/app/LineageContextConstants.java
-@@ -115,6 +115,13 @@ public final class LineageContextConstants {
+@@ -88,6 +88,13 @@ public final class LineageContextConstants {
       */
      public static final String LINEAGE_GLOBAL_ACTIONS_SERVICE = "lineageglobalactions";
  
