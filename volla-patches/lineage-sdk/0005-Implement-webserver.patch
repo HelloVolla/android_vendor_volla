@@ -1,25 +1,24 @@
-From d688e40cff1609a89b8d3b097fda8e5b64478c83 Mon Sep 17 00:00:00 2001
+From 1003a7be23b06b32c7f723bed9bb5b6e907de8b1 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 26 Feb 2022 20:00:26 +0330
 Subject: [PATCH] Implement webserver
 
 Change-Id: I607251474bed8896b43032dd45bd186301f1d88f
 ---
- Android.bp                                    |  5 +-
+ Android.bp                                    |  4 +-
  .../platform/internal/FirewallService.java    | 89 ++++++++++++++++++-
- 2 files changed, 92 insertions(+), 2 deletions(-)
+ 2 files changed, 91 insertions(+), 2 deletions(-)
 
 diff --git a/Android.bp b/Android.bp
-index 01488d3c..d588fc50 100644
+index 9a35f3bb..3cb2f4fd 100644
 --- a/Android.bp
 +++ b/Android.bp
-@@ -94,7 +94,10 @@ java_library {
+@@ -88,7 +88,9 @@ java_library {
      name: "org.lineageos.platform",
      installable: true,
      sdk_version: "core_platform",
--    static_libs: lineage_sdk_LOCAL_STATIC_ANDROID_LIBRARIES + lineage_sdk_LOCAL_STATIC_JAVA_LIBRARIES,
+-    static_libs: lineage_sdk_LOCAL_STATIC_JAVA_LIBRARIES,
 +    static_libs:
-+        lineage_sdk_LOCAL_STATIC_ANDROID_LIBRARIES +
 +        lineage_sdk_LOCAL_STATIC_JAVA_LIBRARIES +
 +        [ "org.nanohttpd" ],
  

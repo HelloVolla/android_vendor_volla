@@ -1,0 +1,59 @@
+From 4f6d9362c6ba880f43706709a827c206ec8fea13 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Fri, 3 May 2024 20:16:44 +0330
+Subject: [PATCH] Fix security mode on tethering
+
+Change-Id: I08e8eb870a033d49eac5ec8eeb26b0a65f55f5b5
+---
+ server/TetherController.cpp | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/server/TetherController.cpp b/server/TetherController.cpp
+index 79193574..0345fa1b 100644
+--- a/server/TetherController.cpp
++++ b/server/TetherController.cpp
+@@ -40,6 +40,7 @@
+ #include <android-base/stringprintf.h>
+ #include <android-base/strings.h>
+ #include <android-base/unique_fd.h>
++#include <android-base/properties.h>
+ #include <cutils/properties.h>
+ #include <log/log.h>
+ #include <net/if.h>
+@@ -216,6 +217,10 @@ int TetherController::startTethering(bool usingLegacyDnsProxy, int num_addrs, ch
+ 
+     ALOGD("Starting tethering services");
+ 
++    if (android::base::GetBoolProperty("persist.volla.firewall.enable", false)) {
++        android::base::SetProperty("ctl.stop", "volla.dnsmasq");
++    }
++
+     unique_fd pipeRead, pipeWrite;
+     if (!Pipe(&pipeRead, &pipeWrite, O_CLOEXEC)) {
+         int res = errno;
+@@ -251,6 +256,10 @@ int TetherController::startTethering(bool usingLegacyDnsProxy, int num_addrs, ch
+         argVector.push_back("--port=0");
+     }
+ 
++    if (android::base::GetBoolProperty("persist.volla.firewall.enable", false)) {
++        argVector.push_back("--conf-file=/system/etc/volladns.conf");
++    }
++
+     // DHCP server will be disabled if num_addrs == 0 and no --dhcp-range is passed.
+     for (int addrIndex = 0; addrIndex < num_addrs; addrIndex += 2) {
+         argVector.push_back(StringPrintf("--dhcp-range=%s,%s,1h", dhcp_ranges[addrIndex],
+@@ -356,6 +365,11 @@ int TetherController::stopTethering() {
+     mDaemonFd = -1;
+     mDnsmasqState.clear();
+     ALOGD("Tethering services stopped");
++
++    if (android::base::GetBoolProperty("persist.volla.firewall.enable", false)) {
++        android::base::SetProperty("ctl.start", "volla.dnsmasq");
++    }
++
+     return 0;
+ }
+ 
+-- 
+2.29.2
+

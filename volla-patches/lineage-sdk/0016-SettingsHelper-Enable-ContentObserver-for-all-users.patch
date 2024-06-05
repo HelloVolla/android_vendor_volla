@@ -1,17 +1,17 @@
-From 13ca66cfc0610a4faadbbec66ee76e19c5874541 Mon Sep 17 00:00:00 2001
+From f56d0c600e710333fdbf794dd714ea952c29ab0c Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 3 Dec 2022 20:19:53 +0330
 Subject: [PATCH] SettingsHelper: Enable ContentObserver for all users
 
 Change-Id: If811dd2efbd296e1be3cddad284f5f7f6ff5a1cb
 ---
- sdk/src/java/lineageos/preference/SettingsHelper.java | 3 ++-
+ .../java/lineageos/preference/SettingsHelper.java              | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sdk/src/java/lineageos/preference/SettingsHelper.java b/sdk/src/java/lineageos/preference/SettingsHelper.java
+diff --git a/packages/LineagePreferenceLib/java/lineageos/preference/SettingsHelper.java b/packages/LineagePreferenceLib/java/lineageos/preference/SettingsHelper.java
 index cd9e56fc..5bc3c4e0 100644
---- a/sdk/src/java/lineageos/preference/SettingsHelper.java
-+++ b/sdk/src/java/lineageos/preference/SettingsHelper.java
+--- a/packages/LineagePreferenceLib/java/lineageos/preference/SettingsHelper.java
++++ b/packages/LineagePreferenceLib/java/lineageos/preference/SettingsHelper.java
 @@ -20,6 +20,7 @@ import android.content.Context;
  import android.database.ContentObserver;
  import android.net.Uri;

@@ -1,4 +1,4 @@
-From b94324891a9b4ee1a5463830f03e3e1f125f0478 Mon Sep 17 00:00:00 2001
+From 9fd9108655f5d740ac6f2f63a555a4ca86ba6d23 Mon Sep 17 00:00:00 2001
 From: Your Name <you@example.com>
 Date: Sun, 20 Feb 2022 10:05:50 +0100
 Subject: [PATCH] volla: Add local DNS

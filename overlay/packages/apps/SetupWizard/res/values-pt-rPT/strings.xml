@@ -21,6 +21,4 @@
     <string name="services_explanation" product="default">Estes serviços servem para ampliar os recursos do seu telefone. Os dados serão utilizados em conformidade com a <xliff:g id="name" example="Privacy Policy">%s</xliff:g> da VollaOS.</string>
     <string name="services_help_improve_cm">Ajude a melhorar a <xliff:g id="name" example="VollaOS">%s</xliff:g></string>
     <string name="services_metrics_label"><xliff:g id="name" example="Ajude a melhorar a VollaOS">%1$s</xliff:g> enviando automaticamente dados de diagnóstico e utilização para a VollaOS. Esta informação não pode ser usada para identificá-lo e ajuda as equipas de desenvolvimento a melhorarem coisas como a duração da bateria, o desempenho das aplicações e no desenvolvimento de novas funcionalidades para a <xliff:g id="name" example="VollaOS">%2$s</xliff:g>.</string>
-    <string name="intro_restore_subtitle" product="tablet">Se tiver uma cópia de segurança do seu anterior tablet com VollaOS, pode restaurá-la aqui.</string>
-    <string name="intro_restore_subtitle" product="default">Se tiver uma cópia de segurança do seu anterior telefone com VollaOS, pode restaurá-la aqui.</string>
 </resources>

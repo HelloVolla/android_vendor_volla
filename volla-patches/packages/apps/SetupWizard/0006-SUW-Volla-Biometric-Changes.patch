@@ -1,0 +1,150 @@
+From 768a6572796b59ca76d87ab8c637b312ec4844a1 Mon Sep 17 00:00:00 2001
+From: techyminati <techyminati@outlook.com>
+Date: Wed, 29 May 2024 08:24:46 +0000
+Subject: [PATCH] SUW: Volla Biometric Setup Changes
+
+Change-Id: I925d1355f72cefb1127be08f23baa9a96f503b4d
+Signed-off-by: techyminati <techyminati@outlook.com>
+---
+ res/values-de/strings.xml                            | 8 ++++----
+ res/values-en-rAU/strings.xml                        | 8 ++++----
+ res/values-en-rCA/strings.xml                        | 8 ++++----
+ res/values-en-rGB/strings.xml                        | 8 ++++----
+ res/values-en-rIN/strings.xml                        | 8 ++++----
+ res/values/strings.xml                               | 8 ++++----
+ src/org/lineageos/setupwizard/BiometricActivity.java | 5 +----
+ 7 files changed, 25 insertions(+), 28 deletions(-)
+
+diff --git a/res/values-de/strings.xml b/res/values-de/strings.xml
+index 4096973..7c96eea 100644
+--- a/res/values-de/strings.xml
++++ b/res/values-de/strings.xml
+@@ -62,10 +62,10 @@
+     <string name="fingerprint_setup_title">Fingerabdruck einrichten</string>
+     <string name="fingerprint_setup_summary">Wenn du deinen Fingerabdrucksensor zum Entsperren deines Bildschirms verwenden möchtest, gehe wie folgt vor:</string>
+     <string name="fingerprint_setup_add_fingerprint">Füge deinen Fingerabdruck hinzu</string>
+-    <string name="face_setup_title">Gesichtseinstellung</string>
+-    <string name="face_setup_summary">Um dein Gesicht zum Entsperren des Bildschirms verwenden zu können, musst du folgendes tun:</string>
+-    <string name="face_setup_add_face">Füge dein Gesicht hinzu</string>
+-    <string name="biometric_setup_backup_lock_method">Einrichtung einer sekundären Methode zum Entsperren</string>
++    <string name="face_setup_title">Biometrische Einrichtung</string>
++    <string name="face_setup_summary">Um Ihre Biometrie zum Entsperren Ihres Bildschirms zu verwenden, müssen Sie:</string>
++    <string name="face_setup_add_face">Gesichtserkennung einrichten</string>
++    <string name="biometric_setup_backup_lock_method">Fingerabdruckerkennung einrichten</string>
+     <string name="biometric_setup_screen_lock_setup">Bildschirmsperre einrichten</string>
+     <string name="sim_locale_changed">%1$s SIM-Karte erkannt</string>
+     <string name="settings_lockscreen_setup_title">Wähle einen Sperrbildschirm-Typ</string>
+diff --git a/res/values-en-rAU/strings.xml b/res/values-en-rAU/strings.xml
+index 7a455bc..2a463a7 100644
+--- a/res/values-en-rAU/strings.xml
++++ b/res/values-en-rAU/strings.xml
+@@ -62,10 +62,10 @@
+     <string name="fingerprint_setup_title">Fingerprint setup</string>
+     <string name="fingerprint_setup_summary">To use your fingerprint sensor to unlock your screen, you\'ll need to:</string>
+     <string name="fingerprint_setup_add_fingerprint">Add your fingerprint</string>
+-    <string name="face_setup_title">Face setup</string>
+-    <string name="face_setup_summary">To use your face to unlock your screen, you\'ll need to:</string>
+-    <string name="face_setup_add_face">Add your face</string>
+-    <string name="biometric_setup_backup_lock_method">Setup a secondary unlock method</string>
++    <string name="face_setup_title">Biometric setup</string>
++    <string name="face_setup_summary">To use your biometrics to unlock your screen, you\'ll need to:</string>
++    <string name="face_setup_add_face">Setup face unlock</string>
++    <string name="biometric_setup_backup_lock_method">Setup fingerprint unlock</string>
+     <string name="biometric_setup_screen_lock_setup">Setup screen lock</string>
+     <string name="sim_locale_changed">%1$s SIM detected</string>
+     <string name="settings_lockscreen_setup_title">Select screen lock type</string>
+diff --git a/res/values-en-rCA/strings.xml b/res/values-en-rCA/strings.xml
+index 1fa3ffd..a5dce58 100644
+--- a/res/values-en-rCA/strings.xml
++++ b/res/values-en-rCA/strings.xml
+@@ -62,10 +62,10 @@
+     <string name="fingerprint_setup_title">Fingerprint setup</string>
+     <string name="fingerprint_setup_summary">To use your fingerprint sensor to unlock your screen, you\'ll need to:</string>
+     <string name="fingerprint_setup_add_fingerprint">Add your fingerprint</string>
+-    <string name="face_setup_title">Face setup</string>
+-    <string name="face_setup_summary">To use your face to unlock your screen, you\'ll need to:</string>
+-    <string name="face_setup_add_face">Add your face</string>
+-    <string name="biometric_setup_backup_lock_method">Setup a secondary unlock method</string>
++    <string name="face_setup_title">Biometric setup</string>
++    <string name="face_setup_summary">To use your biometrics to unlock your screen, you\'ll need to:</string>
++    <string name="face_setup_add_face">Setup face unlock</string>
++    <string name="biometric_setup_backup_lock_method">Setup fingerprint unlock</string>
+     <string name="biometric_setup_screen_lock_setup">Setup screen lock</string>
+     <string name="sim_locale_changed">%1$s SIM detected</string>
+     <string name="settings_lockscreen_setup_title">Select screen lock type</string>
+diff --git a/res/values-en-rGB/strings.xml b/res/values-en-rGB/strings.xml
+index 781d935..527fcda 100644
+--- a/res/values-en-rGB/strings.xml
++++ b/res/values-en-rGB/strings.xml
+@@ -62,10 +62,10 @@
+     <string name="fingerprint_setup_title">Fingerprint setup</string>
+     <string name="fingerprint_setup_summary">To use your fingerprint sensor to unlock your screen, you\'ll need to:</string>
+     <string name="fingerprint_setup_add_fingerprint">Add your fingerprint</string>
+-    <string name="face_setup_title">Face setup</string>
+-    <string name="face_setup_summary">To use your face to unlock your screen, you\'ll need to:</string>
+-    <string name="face_setup_add_face">Add your face</string>
+-    <string name="biometric_setup_backup_lock_method">Set up a secondary unlock method</string>
++    <string name="face_setup_title">Biometric setup</string>
++    <string name="face_setup_summary">To use your biometrics to unlock your screen, you\'ll need to:</string>
++    <string name="face_setup_add_face">Setup face unlock</string>
++    <string name="biometric_setup_backup_lock_method">Setup fingerprint unlock</string>
+     <string name="biometric_setup_screen_lock_setup">Setup screen lock</string>
+     <string name="sim_locale_changed">%1$s SIM detected</string>
+     <string name="settings_lockscreen_setup_title">Select screen lock type</string>
+diff --git a/res/values-en-rIN/strings.xml b/res/values-en-rIN/strings.xml
+index 1fa3ffd..a5dce58 100644
+--- a/res/values-en-rIN/strings.xml
++++ b/res/values-en-rIN/strings.xml
+@@ -62,10 +62,10 @@
+     <string name="fingerprint_setup_title">Fingerprint setup</string>
+     <string name="fingerprint_setup_summary">To use your fingerprint sensor to unlock your screen, you\'ll need to:</string>
+     <string name="fingerprint_setup_add_fingerprint">Add your fingerprint</string>
+-    <string name="face_setup_title">Face setup</string>
+-    <string name="face_setup_summary">To use your face to unlock your screen, you\'ll need to:</string>
+-    <string name="face_setup_add_face">Add your face</string>
+-    <string name="biometric_setup_backup_lock_method">Setup a secondary unlock method</string>
++    <string name="face_setup_title">Biometric setup</string>
++    <string name="face_setup_summary">To use your biometrics to unlock your screen, you\'ll need to:</string>
++    <string name="face_setup_add_face">Setup face unlock</string>
++    <string name="biometric_setup_backup_lock_method">Setup fingerprint unlock</string>
+     <string name="biometric_setup_screen_lock_setup">Setup screen lock</string>
+     <string name="sim_locale_changed">%1$s SIM detected</string>
+     <string name="settings_lockscreen_setup_title">Select screen lock type</string>
+diff --git a/res/values/strings.xml b/res/values/strings.xml
+index 39beb6a..27e240f 100644
+--- a/res/values/strings.xml
++++ b/res/values/strings.xml
+@@ -81,10 +81,10 @@
+     <string name="fingerprint_setup_title">Fingerprint setup</string>
+     <string name="fingerprint_setup_summary">To use your fingerprint sensor to unlock your screen, you\'ll need to:</string>
+     <string name="fingerprint_setup_add_fingerprint">Add your fingerprint</string>
+-    <string name="face_setup_title">Face setup</string>
+-    <string name="face_setup_summary">To use your face to unlock your screen, you\'ll need to:</string>
+-    <string name="face_setup_add_face">Add your face</string>
+-    <string name="biometric_setup_backup_lock_method">Setup a secondary unlock method</string>
++    <string name="face_setup_title">Biometric setup</string>
++    <string name="face_setup_summary">To use your biometrics to unlock your screen, you\'ll need to:</string>
++    <string name="face_setup_add_face">Setup face unlock</string>
++    <string name="biometric_setup_backup_lock_method">Setup fingerprint unlock</string>
+     <string name="biometric_setup_screen_lock_setup">Setup screen lock</string>
+     <string name="sim_locale_changed">%1$s SIM detected</string>
+ 
+diff --git a/src/org/lineageos/setupwizard/BiometricActivity.java b/src/org/lineageos/setupwizard/BiometricActivity.java
+index c477fa4..e179f15 100644
+--- a/src/org/lineageos/setupwizard/BiometricActivity.java
++++ b/src/org/lineageos/setupwizard/BiometricActivity.java
+@@ -75,10 +75,7 @@ public class BiometricActivity extends SubBaseActivity {
+ 
+     @Override
+     protected int getIconResId() {
+-        if (SetupWizardUtils.hasFace(this)) {
+-            return R.drawable.ic_face;
+-        }
+-        return R.drawable.ic_fingerprint;
++        return R.drawable.ic_lock_screen;
+     }
+ 
+     private void launchBiometricSetup() {
+-- 
+2.34.1
+

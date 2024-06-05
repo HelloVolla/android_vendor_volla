@@ -18,6 +18,4 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="services_help_improve_cm">Aita parendada <xliff:g id="name" example="VollaOS">%s</xliff:g>i</string>
     <string name="services_metrics_label"><xliff:g id="name" example="Help improve VollaOS">%1$s</xliff:g> saates meile automatselt diagnostikat ja kasutusandmeid. Seda teavet ei saa kasutada sinu tuvastamiseks ning see aitab arendajatel muuhulgas parandada aku eluiga, rakenduste jõudlust ning arendada uusi <xliff:g id="name" example="VollaOS">%2$s</xliff:g>i võimalusi.</string>
-    <string name="intro_restore_subtitle" product="tablet">Kui sul on viimase VollaOSi tahvelarvuti varundus olemas, saad selle siin taastada.</string>
-    <string name="intro_restore_subtitle" product="default">Kui sul on viimase VollaOSi telefoni varundus olemas, saad selle siin taastada.</string>
 </resources>

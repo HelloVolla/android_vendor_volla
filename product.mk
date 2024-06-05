@@ -39,8 +39,13 @@ PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
 # Packages - Apps
 PRODUCT_PACKAGES += \
     ChildModeSettings \
+	VollaEthernetManager \
     F-DroidPrivilegedExtension
-    
+
+# Packages - Services
+PRODUCT_PACKAGES += \
+	VollaSmsHandlerService
+
 ifeq ($(filter %_gsi_arm64,$(TARGET_PRODUCT)),)
 PRODUCT_PACKAGES += \
     MtkCamera
@@ -84,6 +89,14 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/FDroidRepos/additional_repos.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/org.fdroid.fdroid/additional_repos.xml
 endif
 
+# FaceUnlock
+PRODUCT_PACKAGES += \
+    FaceUnlockSettingsOverlay \
+	LMOFaceUnlock
+
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.biometrics.face.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/android.hardware.biometrics.face.xml
+
 # Fonts
 PRODUCT_PACKAGES += \
     AOSPRobotoFont \
@@ -111,12 +124,16 @@ PRODUCT_PRODUCT_PROPERTIES += \
     ro.config.notification_sound=volla_notification.ogg \
     ro.config.alarm_alert=volla_alarm.ogg
 
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+	ro.config.vc_call_vol_steps=7
+
 # Remove unwanted packages
 PRODUCT_PACKAGES += \
     RemovePackages
 
 # NLP
 PRODUCT_PACKAGES += \
+    UnifiedNlpRRO \
     VollaNlp \
     VollaGSMNlp \
     VollaNlpRRO
@@ -146,15 +163,16 @@ PRODUCT_ARTIFACT_PATH_REQUIREMENT_ALLOWED_LIST += \
     system/app/com.google.android.gsf/com.google.android.gsf.apk \
     system/app/com.maxfour.music/com.maxfour.music.apk \
     system/app/com.simplemobiletools.calendar.pro/com.simplemobiletools.calendar.pro.apk \
-    system/app/com.simplemobiletools.clock/com.simplemobiletools.clock.apk \
-    system/app/com.simplemobiletools.contacts.pro/com.simplemobiletools.contacts.pro.apk \
-    system/app/com.simplemobiletools.dialer/com.simplemobiletools.dialer.apk \
-    system/app/com.simplemobiletools.filemanager.pro/com.simplemobiletools.filemanager.pro.apk \
-    system/app/com.simplemobiletools.gallery.pro/com.simplemobiletools.gallery.pro.apk \
+    system/app/org.fossify.clock/org.fossify.clock.apk \
+    system/app/org.fossify.contacts/org.fossify.contacts.apk \
+    system/app/org.fossify.phone/org.fossify.phone.apk \
+    system/app/org.fossify.filemanager/org.fossify.filemanager.apk \
+    system/app/org.fossify.gallery/org.fossify.gallery.apk \
     system/app/hideme.android.vpn.noPlayStore-Stub/hideme.android.vpn.noPlayStore-Stub.apk \
     system/app/net.osmand.plus/net.osmand.plus.apk \
     system/app/org.fdroid.fdroid/org.fdroid.fdroid.apk \
     system/app/org.mozilla.fennec_fdroid-Stub/org.mozilla.fennec_fdroid-Stub.apk \
+    system/app/com.volla.vollaboard/com.volla.vollaboard.apk \
     system/etc/com.volla.gsmnlp/lacells.db \
     system/etc/init/abm.rc \
     system/etc/init/dnsmasq.rc \

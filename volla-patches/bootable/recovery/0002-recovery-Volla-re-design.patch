@@ -1,4 +1,4 @@
-From 744f377b80c85125bc740456e128da8668950007 Mon Sep 17 00:00:00 2001
+From 906e1b8de73ceca16f29a8378c40c4a89b629d29 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Fri, 6 Aug 2021 23:52:00 +0430
 Subject: [PATCH] recovery: Volla re-design
@@ -28,12 +28,12 @@ Subject: [PATCH] recovery: Volla re-design
  21 files changed, 5 insertions(+), 14 deletions(-)
 
 diff --git a/recovery_ui/screen_ui.cpp b/recovery_ui/screen_ui.cpp
-index 668d47a4..cfd682bd 100644
+index 75797cee..598c336e 100644
 --- a/recovery_ui/screen_ui.cpp
 +++ b/recovery_ui/screen_ui.cpp
-@@ -565,16 +565,10 @@ void ScreenRecoveryUI::draw_foreground_locked() {
- void ScreenRecoveryUI::SetColor(UIElement e) const {
-   switch (e) {
+@@ -589,16 +589,10 @@ void ScreenRecoveryUI::SetColor(UIElement e) const {
+         gr_color(0xc7, 0x15, 0x85, 255);
+       break;
      case UIElement::INFO:
 -      if (fastbootd_logo_enabled_)
 -        gr_color(0xfd, 0xd8, 0x35, 255);
@@ -50,7 +50,7 @@ index 668d47a4..cfd682bd 100644
        break;
      case UIElement::MENU:
        gr_color(0xd8, 0xd8, 0xd8, 255);
-@@ -582,18 +576,15 @@ void ScreenRecoveryUI::SetColor(UIElement e) const {
+@@ -606,18 +600,15 @@ void ScreenRecoveryUI::SetColor(UIElement e) const {
      case UIElement::MENU_SEL_BG:
      case UIElement::SCROLLBAR:
        if (fastbootd_logo_enabled_)

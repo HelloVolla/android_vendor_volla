@@ -1,6 +1,6 @@
-From 7d94bd90b907157f670fee7327560ed5db44104c Mon Sep 17 00:00:00 2001
+From 75ca817aa20d28690df57778ae23d2d8338fbcb3 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
-Date: Tue, 20 Jul 2021 17:16:14 +0430
+Date: Sun, 12 Nov 2023 16:31:55 +0330
 Subject: [PATCH] LineageParts: Kill trust
 
 ---
@@ -9,28 +9,28 @@ Subject: [PATCH] LineageParts: Kill trust
  2 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/AndroidManifest.xml b/AndroidManifest.xml
-index cceda41..cdc26b5 100644
+index 75eaec9..fca55e9 100644
 --- a/AndroidManifest.xml
 +++ b/AndroidManifest.xml
-@@ -65,7 +65,7 @@
+@@ -52,7 +52,7 @@
                  android:value="org.lineageos.lineageparts.PartsUpdater" />
          </activity>
  
--        <activity android:name=".trust.TrustOnBoardingActivity"
-+        <!-- <activity android:name=".trust.TrustOnBoardingActivity"
-             android:label="@string/trust_title"
-             android:theme="@style/OnBoardingStyle"
-             android:exported="true"
-@@ -75,7 +75,7 @@
+-        <activity
++        <!-- <activity
+             android:name=".trust.TrustOnBoardingActivity"
+             android:enabled="true"
+             android:excludeFromRecents="true"
+@@ -63,7 +63,7 @@
                  <action android:name="org.lineageos.lineageparts.TRUST_HINT" />
                  <category android:name="android.intent.category.DEFAULT" />
              </intent-filter>
 -        </activity>
 +        </activity> -->
  
-         <receiver android:name=".BootReceiver" android:enabled="true">
-             <intent-filter android:priority="2147483647">
-@@ -184,7 +184,7 @@
+         <receiver
+             android:name=".BootReceiver"
+@@ -206,7 +206,7 @@
                  android:resource="@string/summary_empty" />
          </activity-alias>
  
@@ -38,21 +38,21 @@ index cceda41..cdc26b5 100644
 +        <!-- Trust interface (Privacy category)
          <activity-alias
              android:name=".trust.TrustPreferences"
-             android:label="@string/trust_title"
-@@ -203,7 +203,7 @@
+             android:exported="true"
+@@ -230,7 +230,7 @@
              <meta-data
                  android:name="com.android.settings.summary"
-                 android:resource="@string/summary_empty" />
+                 android:resource="@string/trust_summary" />
 -        </activity-alias>
 +        </activity-alias> -->
  
          <!-- Contributors Cloud (MyDeviceInfo category)
          <activity-alias
 diff --git a/res/xml/parts_catalog.xml b/res/xml/parts_catalog.xml
-index 803b214..237dd12 100644
+index d6b19c0..cb28621 100644
 --- a/res/xml/parts_catalog.xml
 +++ b/res/xml/parts_catalog.xml
-@@ -97,8 +97,8 @@
+@@ -91,8 +91,8 @@
            android:fragment="org.lineageos.lineageparts.gestures.TouchscreenGestureSettings"
            lineage:xmlRes="@xml/touchscreen_gesture_settings" />
  

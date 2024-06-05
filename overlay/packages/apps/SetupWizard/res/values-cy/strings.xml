@@ -20,6 +20,4 @@
     <string name="services_explanation" product="tablet">Mae\'r nodweddion hyn yn gweithio er mwyn ymestyn galluoedd dy lechen. Caiff data ei ddefnyddio yn ôl <xliff:g id="name" example="Privacy Policy">%s</xliff:g> VollaOS.</string>
     <string name="services_explanation" product="default">Mae\'r nodweddion hyn yn gweithio er mwyn ymestyn galluoedd dy ffôn. Caiff data ei ddefnyddio yn ôl <xliff:g id="name" example="Privacy Policy">%s</xliff:g> VollaOS.</string>
     <string name="services_metrics_label"><xliff:g id="name" example="Help improve CyanogenMod">%1$s</xliff:g> gan anfon gwybodaeth ddiagnostig a defnydd data at VollaOS. Ni fydd yn bosib defnyddio\'r wybodaeth i dy adnabod di ac mi fydd o help mawr i\'r timau sy\'n gweithio ar bethau fel gwella perfformiad apiau a bywyd batri a chreu nodweddion newydd yn <xliff:g id="name" example="CyanogenMod">%2$s</xliff:g>.</string>
-    <string name="intro_restore_subtitle" product="tablet">Os oes gennyt gopi data wrth gefn o dy lechen VollaOS diwethaf, gellir ei adfer yma.</string>
-    <string name="intro_restore_subtitle" product="default">Os oes gennyt gopi data wrth gefn o dy ffôn VollaOS diwethaf, gellir ei adfer yma.</string>
 </resources>

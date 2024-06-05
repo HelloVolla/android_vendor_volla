@@ -1,0 +1,102 @@
+From f923bc40e67b70d7cfeffa2e81f73a2902aacacd Mon Sep 17 00:00:00 2001
+From: Aryan Sinha <techyminati@outlook.com>
+Date: Fri, 29 Dec 2023 07:07:56 +0100
+Subject: [PATCH] SystemUI: Re-implement Volla Clock
+
+Change-Id: Id3e22aca9add3c9cff729752813995281c23dc54
+Signed-off-by: Aryan Sinha <techyminati@outlook.com>
+---
+ .../android/systemui/animation/TextInterpolator.kt    |  7 ++++++-
+ .../customization/res/layout/clock_default_large.xml  | 11 ++++++-----
+ .../customization/res/layout/clock_default_small.xml  |  7 ++++---
+ .../res-keyguard/layout/keyguard_clock_switch.xml     |  2 ++
+ 4 files changed, 18 insertions(+), 9 deletions(-)
+
+diff --git a/packages/SystemUI/animation/src/com/android/systemui/animation/TextInterpolator.kt b/packages/SystemUI/animation/src/com/android/systemui/animation/TextInterpolator.kt
+index 3eb7fd84dc49..bc48d46dbb2f 100644
+--- a/packages/SystemUI/animation/src/com/android/systemui/animation/TextInterpolator.kt
++++ b/packages/SystemUI/animation/src/com/android/systemui/animation/TextInterpolator.kt
+@@ -17,6 +17,7 @@ package com.android.systemui.animation
+ 
+ import android.graphics.Canvas
+ import android.graphics.Paint
++import android.graphics.Color
+ import android.graphics.fonts.Font
+ import android.graphics.text.PositionedGlyphs
+ import android.text.Layout
+@@ -234,10 +235,14 @@ class TextInterpolator(layout: Layout) {
+                     // Move to drawing origin.
+                     val origin = layout.getDrawOrigin(lineNo)
+                     canvas.translate(origin, layout.getLineBaseline(lineNo).toFloat())
+-
++                    var oldColor = tmpPaint.color
++                    if (lineNo == 1) {
++                        tmpPaint.setColor(Color.parseColor("#FF3615"))
++                    }
+                     run.fontRuns.forEach { fontRun ->
+                         drawFontRun(canvas, run, fontRun, lineNo, tmpPaint)
+                     }
++                    tmpPaint.setColor(oldColor)
+                 } finally {
+                     canvas.restore()
+                 }
+diff --git a/packages/SystemUI/customization/res/layout/clock_default_large.xml b/packages/SystemUI/customization/res/layout/clock_default_large.xml
+index 0139d50dcfba..a0b25a15939a 100644
+--- a/packages/SystemUI/customization/res/layout/clock_default_large.xml
++++ b/packages/SystemUI/customization/res/layout/clock_default_large.xml
+@@ -20,12 +20,13 @@
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+-    android:layout_gravity="center"
++    android:layout_gravity="center_vertical"
++    android:layout_marginStart="30dp"
+     android:gravity="center_horizontal"
+     android:textSize="@dimen/large_clock_text_size"
+-    android:fontFamily="@*android:string/config_clockFontFamily"
+-    android:typeface="monospace"
++    android:fontFamily="ibmplexsans"
++    android:textStyle="bold"
+     android:elegantTextHeight="false"
+     chargeAnimationDelay="200"
+-    dozeWeight="200"
+-    lockScreenWeight="400" />
++    dozeWeight="300"
++    lockScreenWeight="900" />
+diff --git a/packages/SystemUI/customization/res/layout/clock_default_small.xml b/packages/SystemUI/customization/res/layout/clock_default_small.xml
+index ff6d7f9e2240..5c1f11d472da 100644
+--- a/packages/SystemUI/customization/res/layout/clock_default_small.xml
++++ b/packages/SystemUI/customization/res/layout/clock_default_small.xml
+@@ -23,11 +23,12 @@
+     android:layout_gravity="start"
+     android:gravity="start"
+     android:textSize="@dimen/small_clock_text_size"
+-    android:fontFamily="@*android:string/config_clockFontFamily"
++    android:textStyle="bold"
++    android:fontFamily="ibmplexsans"
+     android:elegantTextHeight="false"
+     android:ellipsize="none"
+-    android:singleLine="true"
++    android:singleLine="false"
+     android:fontFeatureSettings="pnum"
+     chargeAnimationDelay="350"
+-    dozeWeight="200"
+-    lockScreenWeight="400" />
++    dozeWeight="300"
++    lockScreenWeight="900" />
+diff --git a/packages/SystemUI/res-keyguard/layout/keyguard_clock_switch.xml b/packages/SystemUI/res-keyguard/layout/keyguard_clock_switch.xml
+index b49afeef09f3..7c2b82334bbc 100644
+--- a/packages/SystemUI/res-keyguard/layout/keyguard_clock_switch.xml
++++ b/packages/SystemUI/res-keyguard/layout/keyguard_clock_switch.xml
+@@ -31,6 +31,8 @@
+         android:layout_height="wrap_content"
+         android:layout_alignParentStart="true"
+         android:layout_alignParentTop="true"
++        android:fontFamily="ibmplexsans"
++        android:textStyle="bold"
+         android:paddingStart="@dimen/clock_padding_start"
+         android:visibility="invisible" />
+     <FrameLayout
+-- 
+2.34.1
+

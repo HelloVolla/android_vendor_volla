@@ -1,0 +1,237 @@
+From 21febd038d6a9bb39378d2e57bf9edd46d429298 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sun, 31 Mar 2024 00:31:23 +0330
+Subject: [PATCH] Add microg tile
+
+Change-Id: I080d37b65c200c3f78ecc8fdf8019ff00537ef9e
+---
+ .../SystemUI/res/drawable/ic_qs_microg.xml    |  14 ++
+ packages/SystemUI/res/values/config.xml       |   2 +-
+ .../SystemUI/res/values/volla_strings.xml     |  24 ++++
+ .../android/systemui/lineage/LineageModule.kt |   7 +
+ .../android/systemui/qs/tiles/MicrogTile.java | 125 ++++++++++++++++++
+ 5 files changed, 171 insertions(+), 1 deletion(-)
+ create mode 100644 packages/SystemUI/res/drawable/ic_qs_microg.xml
+ create mode 100644 packages/SystemUI/res/values/volla_strings.xml
+ create mode 100644 packages/SystemUI/src/com/android/systemui/qs/tiles/MicrogTile.java
+
+diff --git a/packages/SystemUI/res/drawable/ic_qs_microg.xml b/packages/SystemUI/res/drawable/ic_qs_microg.xml
+new file mode 100644
+index 000000000000..ef24942e9a5d
+--- /dev/null
++++ b/packages/SystemUI/res/drawable/ic_qs_microg.xml
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="utf-8"?>
++
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:height="64dp"
++    android:viewportHeight="192"
++    android:viewportWidth="192"
++    android:width="64dp">
++
++    <path android:fillColor="#00000000"
++        android:pathData="M112.97,112.97a24,24 0,0 1,-33.94 0,24 24,0 0,1 0,-33.94 24,24 0,0 1,33.94 0"
++        android:strokeColor="#FFFFFFFF" android:strokeLineCap="round"
++        android:strokeLineJoin="round" android:strokeWidth="12"/>
++    <path android:fillColor="#FFFFFFFF" android:pathData="m80.16,29.05 l-5.96,-0.71 5.96,0.71zM111.84,29.05 L105.88,29.76 111.84,29.05zM146.06,48.81 L143.69,43.29 146.06,48.81zM156.14,52.16 L161.33,49.16 156.14,52.16zM164.03,65.84 L169.23,62.84 164.03,65.84zM161.9,76.24 L158.3,71.44 161.9,76.24zM161.9,115.75 L165.49,110.95 161.9,115.75zM164.03,126.16 L169.23,129.16 164.03,126.16zM156.14,139.84 L150.94,136.84 156.14,139.84zM146.06,143.19 L148.42,137.67 146.06,143.19zM111.84,162.94 L117.8,163.65 111.84,162.94zM80.16,162.94 L74.2,163.65 80.16,162.94zM45.94,143.19l-2.37,-5.51 2.37,5.51zM35.86,139.84 L30.67,142.84 35.86,139.84zM27.97,126.16 L33.16,123.16 27.97,126.16zM30.1,115.75 L33.7,120.56 30.1,115.75zM30.1,76.24L26.51,81.05l3.59,-4.81zM27.97,65.84 L33.16,68.84 27.97,65.84zM35.86,52.16 L30.67,49.16 35.86,52.16zM45.94,48.81 L43.58,54.32 45.94,48.81zM53.79,52.18 L51.43,57.69 53.79,52.18zM53.79,139.83 L56.16,145.34 53.79,139.83zM36.24,111.17l-3.59,-4.8 3.59,4.8zM113.06,152.71 L119.02,153.42 113.06,152.71zM152.91,82.96 L149.32,78.16 152.91,82.96zM136.54,52.89 L138.91,58.4 136.54,52.89zM113.06,39.3 L107.1,40 113.06,39.29zM88.1,16a14,14 0,0 0,-13.9 12.35l11.92,1.42A2,2 0,0 1,88.1 28L88.1,16zM103.89,16L88.1,16v12h15.79L103.89,16zM117.8,28.35A14,14 0,0 0,103.89 16v12a2,2 0,0 1,1.99 1.76l11.92,-1.42zM119.02,38.58 L117.8,28.34 105.88,29.76 107.1,40 119.02,38.58zM143.69,43.29 L134.18,47.37 138.91,58.4 148.42,54.32 143.69,43.29zM161.33,49.16a14,14 0,0 0,-17.64 -5.87l4.73,11.03a2,2 0,0 1,2.52 0.84l10.39,-6zM169.23,62.84 L161.33,49.16 150.94,55.16 158.84,68.84 169.23,62.84zM165.49,81.05a14,14 0,0 0,3.74 -18.21l-10.39,6a2,2 0,0 1,-0.54 2.6l7.19,9.61zM156.5,87.77 L165.49,81.05 158.3,71.44 149.32,78.16 156.5,87.77zM165.49,110.95 L156.5,104.23 149.32,113.84 158.3,120.56 165.49,110.95zM169.23,129.16a14,14 0,0 0,-3.74 -18.21l-7.19,9.61a2,2 0,0 1,0.54 2.6l10.39,6zM161.33,142.84 L169.23,129.16 158.84,123.16 150.94,136.84 161.33,142.84zM143.69,148.7a14,14 0,0 0,17.64 -5.87l-10.39,-6a2,2 0,0 1,-2.52 0.84l-4.73,11.03zM134.18,144.62 L143.69,148.7 148.42,137.67 138.91,133.6 134.18,144.62zM117.8,163.65 L119.02,153.41 107.1,151.99 105.88,162.23 117.8,163.65zM103.89,176a14,14 0,0 0,13.9 -12.35l-11.92,-1.42a2,2 0,0 1,-1.99 1.76v12zM88.1,176h15.79v-12L88.1,164v12zM74.2,163.65a14,14 0,0 0,13.9 12.35v-12a2,2 0,0 1,-1.99 -1.76l-11.92,1.42zM73.19,155.15 L74.2,163.65 86.12,162.23 85.1,153.73 73.19,155.15zM51.43,134.31 L43.58,137.67 48.31,148.7 56.16,145.34 51.43,134.31zM43.58,137.67a2,2 0,0 1,-2.52 -0.84l-10.39,6a14,14 0,0 0,17.64 5.87l-4.73,-11.03zM41.06,136.84 L33.16,123.16 22.77,129.16 30.66,142.84 41.06,136.84zM33.16,123.16a2,2 0,0 1,0.53 -2.6l-7.19,-9.61a14,14 0,0 0,-3.74 18.21l10.39,-6zM33.7,120.56 L39.83,115.97 32.64,106.36 26.51,110.95 33.7,120.56zM26.51,81.05 L32.64,85.63 39.83,76.02 33.7,71.44 26.51,81.05zM22.77,62.84a14,14 0,0 0,3.74 18.21l7.19,-9.61a2,2 0,0 1,-0.54 -2.6l-10.39,-6zM30.66,49.16 L22.77,62.84 33.16,68.84 41.06,55.16 30.66,49.16zM48.31,43.29a14,14 0,0 0,-17.64 5.87l10.39,6a2,2 0,0 1,2.52 -0.84l4.73,-11.03zM56.16,46.66 L48.31,43.29 43.58,54.32 51.43,57.69 56.16,46.66zM74.2,28.34 L73.19,36.85 85.1,38.27 86.12,29.76 74.2,28.34zM72.45,55.9c6.08,-3.43 11.69,-9.5 12.66,-17.63l-11.92,-1.42c-0.38,3.21 -2.77,6.41 -6.64,8.6l5.89,10.45zM51.43,57.69c7.28,3.12 15.06,1.57 21.02,-1.79l-5.89,-10.45c-3.7,2.09 -7.48,2.47 -10.4,1.22l-4.73,11.03zM49,96c0,-7.1 -2.55,-15.02 -9.17,-19.98l-7.19,9.61c2.72,2.03 4.36,5.8 4.36,10.36h12zM72.45,136.1c-5.97,-3.36 -13.74,-4.92 -21.02,-1.79l4.73,11.03c2.92,-1.25 6.69,-0.87 10.4,1.22l5.89,-10.45zM39.83,115.97C46.45,111.02 49,103.1 49,96L37,96c0,4.56 -1.64,8.33 -4.36,10.36l7.19,9.61zM118.51,135.55c-5.54,3.3 -10.52,8.98 -11.41,16.45l11.92,1.42c0.33,-2.77 2.32,-5.58 5.63,-7.56l-6.14,-10.31zM138.91,133.6c-7.09,-3.04 -14.67,-1.46 -20.4,1.95l6.14,10.31c3.38,-2.02 6.87,-2.37 9.53,-1.23l4.73,-11.03zM85.11,153.73c-0.97,-8.13 -6.58,-14.2 -12.66,-17.63l-5.89,10.45c3.87,2.18 6.25,5.39 6.64,8.59l11.92,-1.42zM141,96c0,6.39 2.4,13.41 8.32,17.84l7.19,-9.61c-2.13,-1.59 -3.51,-4.56 -3.51,-8.23h-12zM149.32,78.16C143.4,82.58 141,89.61 141,96h12c0,-3.67 1.37,-6.64 3.51,-8.23l-7.19,-9.61zM118.51,56.45c5.73,3.42 13.31,4.99 20.4,1.95l-4.73,-11.03c-2.66,1.14 -6.15,0.78 -9.53,-1.23l-6.14,10.31zM107.1,40c0.89,7.46 5.87,13.15 11.41,16.45l6.14,-10.31c-3.31,-1.97 -5.3,-4.79 -5.63,-7.55L107.1,40z"/>
++</vector>
+diff --git a/packages/SystemUI/res/values/config.xml b/packages/SystemUI/res/values/config.xml
+index 6eba723fb225..c7d06abf8869 100644
+--- a/packages/SystemUI/res/values/config.xml
++++ b/packages/SystemUI/res/values/config.xml
+@@ -81,7 +81,7 @@
+ 
+     <!-- Tiles native to System UI. Order should match "quick_settings_tiles_default" -->
+     <string name="quick_settings_tiles_stock" translatable="false">
+-        internet,wifi,cell,bt,flashlight,dnd,alarm,airplane,nfc,controls,wallet,rotation,battery,cast,screenrecord,mictoggle,cameratoggle,location,hotspot,inversion,saver,dark,work,night,reverse,reduce_brightness,qr_code_scanner,onehanded,color_correction,dream,font_scaling,ambient_display,aod,caffeine,heads_up,reading_mode,sync,powershare,profiles,usb_tether,vpn
++        internet,wifi,cell,bt,flashlight,dnd,alarm,airplane,nfc,controls,wallet,rotation,battery,cast,screenrecord,mictoggle,cameratoggle,location,hotspot,inversion,saver,dark,work,night,reverse,reduce_brightness,qr_code_scanner,onehanded,color_correction,dream,font_scaling,ambient_display,aod,caffeine,heads_up,reading_mode,sync,powershare,profiles,usb_tether,vpn,microg
+     </string>
+ 
+     <!-- The tiles to display in QuickSettings -->
+diff --git a/packages/SystemUI/res/values/volla_strings.xml b/packages/SystemUI/res/values/volla_strings.xml
+new file mode 100644
+index 000000000000..d933f13fdad4
+--- /dev/null
++++ b/packages/SystemUI/res/values/volla_strings.xml
+@@ -0,0 +1,24 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++/**
++ * Copyright (c) 2015, The CyanogenMod Project
++ * Copyright (c) 2017-2021 The LineageOS Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++-->
++<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
++    <!-- Microg QS tile -->
++    <string name="quick_settings_microg">MicroG</string>
++    
++</resources>
+diff --git a/packages/SystemUI/src/com/android/systemui/lineage/LineageModule.kt b/packages/SystemUI/src/com/android/systemui/lineage/LineageModule.kt
+index f301530733a0..fad44c5466a2 100644
+--- a/packages/SystemUI/src/com/android/systemui/lineage/LineageModule.kt
++++ b/packages/SystemUI/src/com/android/systemui/lineage/LineageModule.kt
+@@ -29,6 +29,7 @@ import com.android.systemui.qs.tiles.SyncTile
+ import com.android.systemui.qs.tiles.UsbTetherTile
+ import com.android.systemui.qs.tiles.VpnTile
+ import com.android.systemui.qs.tiles.WifiTile
++import com.android.systemui.qs.tiles.MicrogTile
+ 
+ import dagger.Binds
+ import dagger.Module
+@@ -108,4 +109,10 @@ interface LineageModule {
+     @IntoMap
+     @StringKey(WifiTile.TILE_SPEC)
+     fun bindWifiTile(wifiTile: WifiTile): QSTileImpl<*>
++
++    /** Inject MicrogTile into tileMap in QSModule */
++    @Binds
++    @IntoMap
++    @StringKey(MicrogTile.TILE_SPEC)
++    fun bindMicrogTile(microgTile: MicrogTile): QSTileImpl<*>
+ }
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/tiles/MicrogTile.java b/packages/SystemUI/src/com/android/systemui/qs/tiles/MicrogTile.java
+new file mode 100644
+index 000000000000..e3a4a453a67a
+--- /dev/null
++++ b/packages/SystemUI/src/com/android/systemui/qs/tiles/MicrogTile.java
+@@ -0,0 +1,125 @@
++/*
++ * Copyright (C) 2018-2020 The LineageOS Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.android.systemui.qs.tiles;
++
++import static com.android.internal.logging.MetricsLogger.VIEW_UNKNOWN;
++
++import android.content.Intent;
++import android.os.Handler;
++import android.os.Looper;
++import android.os.SystemProperties;
++import android.service.quicksettings.Tile;
++import android.view.View;
++
++import androidx.annotation.Nullable;
++
++import com.android.internal.logging.MetricsLogger;
++import com.android.systemui.R;
++import com.android.systemui.dagger.qualifiers.Background;
++import com.android.systemui.dagger.qualifiers.Main;
++import com.android.systemui.plugins.ActivityStarter;
++import com.android.systemui.plugins.FalsingManager;
++import com.android.systemui.plugins.qs.QSTile.BooleanState;
++import com.android.systemui.plugins.statusbar.StatusBarStateController;
++import com.android.systemui.qs.QSHost;
++import com.android.systemui.qs.logging.QSLogger;
++import com.android.systemui.qs.tileimpl.QSTileImpl;
++
++import lineageos.providers.LineageSettings;
++
++import javax.inject.Inject;
++
++public class MicrogTile extends QSTileImpl<BooleanState> {
++
++    public static final String TILE_SPEC = "microg";
++
++    private final Icon mIcon = ResourceIcon.get(R.drawable.ic_qs_microg);
++
++    @Inject
++    public MicrogTile(
++            QSHost host,
++            @Background Looper backgroundLooper,
++            @Main Handler mainHandler,
++            FalsingManager falsingManager,
++            MetricsLogger metricsLogger,
++            StatusBarStateController statusBarStateController,
++            ActivityStarter activityStarter,
++            QSLogger qsLogger
++    ) {
++        super(host, backgroundLooper, mainHandler, falsingManager, metricsLogger,
++                statusBarStateController, activityStarter, qsLogger);
++    }
++
++    @Override
++    public BooleanState newTileState() {
++        return new BooleanState();
++    }
++
++    @Override
++    protected void handleClick(@Nullable View view) {
++        boolean newStatus = !isMicrogEnabled();
++        LineageSettings.System.putInt(mContext.getContentResolver(),
++                LineageSettings.System.ENABLE_MICROG, newStatus ? 1 : 0);
++        refreshState();
++    }
++
++    @Override
++    public boolean isAvailable() {
++        boolean applock = SystemProperties.getBoolean("persist.volla.applock.enable", false);
++        boolean linkmicrog = SystemProperties.getBoolean("persist.volla.linkmicrog", false);
++
++        return !(applock && linkmicrog);
++    }
++
++    @Override
++    protected void handleUpdateState(BooleanState state, Object arg) {
++        state.value = isMicrogEnabled();
++        state.icon = mIcon;
++        if (state.value) {
++            state.state = Tile.STATE_ACTIVE;
++        } else {
++            state.state = Tile.STATE_INACTIVE;
++        }
++        state.label = getTileLabel();
++    }
++
++    @Override
++    public CharSequence getTileLabel() {
++        return mContext.getString(R.string.quick_settings_microg);
++    }
++
++    @Override
++    public int getMetricsCategory() {
++        return VIEW_UNKNOWN;
++    }
++
++    @Nullable
++    @Override
++    public Intent getLongClickIntent() {
++        return null;
++    }
++
++    @Override
++    public void handleSetListening(boolean listening) {
++        // Do nothing
++    }
++
++    private boolean isMicrogEnabled() {
++        return LineageSettings.System.getInt(mContext.getContentResolver(),
++                LineageSettings.System.ENABLE_MICROG, 0) == 1;
++    }
++}
+-- 
+2.29.2
+

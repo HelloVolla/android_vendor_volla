@@ -1,0 +1,50 @@
+From e689424e03ab362986e338cd62e4a675ef23b7ae Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Wed, 14 Dec 2022 20:50:15 +0100
+Subject: [PATCH] Disable QS edit button on security mode
+
+Change-Id: Iab1f1f09ec4199f25b13be3805e9d619d6bd4dd5
+---
+ .../src/com/android/systemui/qs/QSFooterViewController.java  | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/QSFooterViewController.java b/packages/SystemUI/src/com/android/systemui/qs/QSFooterViewController.java
+index 0d29a1abca9f..b4856aa980ef 100644
+--- a/packages/SystemUI/src/com/android/systemui/qs/QSFooterViewController.java
++++ b/packages/SystemUI/src/com/android/systemui/qs/QSFooterViewController.java
+@@ -32,6 +32,8 @@ import com.android.systemui.util.ViewController;
+ 
+ import javax.inject.Inject;
+ 
++import lineageos.childmode.ChildModeManager;
++
+ /**
+  * Controller for {@link QSFooterView}.
+  */
+@@ -45,6 +47,7 @@ public class QSFooterViewController extends ViewController<QSFooterView> impleme
+     private final View mEditButton;
+     private final FalsingManager mFalsingManager;
+     private final ActivityStarter mActivityStarter;
++    private final ChildModeManager mChildModeManager;
+ 
+     @Inject
+     QSFooterViewController(QSFooterView view,
+@@ -57,6 +60,7 @@ public class QSFooterViewController extends ViewController<QSFooterView> impleme
+         mQsPanelController = qsPanelController;
+         mFalsingManager = falsingManager;
+         mActivityStarter = activityStarter;
++        mChildModeManager = ChildModeManager.getInstance(getContext());
+ 
+         mBuildText = mView.findViewById(R.id.build);
+         mPageIndicator = mView.findViewById(R.id.footer_page_indicator);
+@@ -97,6 +101,7 @@ public class QSFooterViewController extends ViewController<QSFooterView> impleme
+     public void setVisibility(int visibility) {
+         mView.setVisibility(visibility);
+         mEditButton.setClickable(visibility == View.VISIBLE);
++        mEditButton.setVisibility(mChildModeManager.isActivate() ? View.GONE : View.VISIBLE);
+     }
+ 
+     @Override
+-- 
+2.29.2
+

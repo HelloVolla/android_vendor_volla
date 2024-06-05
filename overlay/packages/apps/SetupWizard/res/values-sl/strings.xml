@@ -21,6 +21,4 @@
     <string name="services_explanation" product="default">Te storitve vam omogočajo, da razširite zmogljivosti svojega telefona. Podatki se uporabijo v skladu s <xliff:g id="name" example="Privacy Policy">%s </xliff:g> VollaOS.</string>
     <string name="services_help_improve_cm">Pomagajte izboljšati <xliff:g id="name" example="VollaOS">%s</xliff:g></string>
     <string name="services_metrics_label"><xliff:g id="name" example="Help improve VollaOS">%1$s</xliff:g> s samodejnim pošiljanjem diagnostičnih podatkov in podatkov uporabe VollaOS-a. Ti podatki se ne uporabljajo za vaše prepoznavanje in ekipi pomagajo pri izboljšanju npr. življenjske dobe baterije, zmogljivosti aplikacij in novih značilnosti <xliff:g id="name" example="VollaOS">%2$s</xliff:g>.</string>
-    <string name="intro_restore_subtitle" product="tablet">Če imate varnostno kopijo iz vašega zadnjega VollaOS tabličnega računalnika, jo lahko obnovite tukaj.</string>
-    <string name="intro_restore_subtitle" product="default">Če imate varnostno kopijo iz vašega zadnjega VollaOS telefona, jo lahko obnovite tukaj.</string>
 </resources>

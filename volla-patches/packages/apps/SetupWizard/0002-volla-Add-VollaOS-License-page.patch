@@ -1,4 +1,4 @@
-From 6ce6f5d100129207ebd809cd2cebc862ea86ac88 Mon Sep 17 00:00:00 2001
+From 6c2faf856a5436143c7e4efac3cf6350f2f71016 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Wed, 11 Aug 2021 14:44:41 +0430
 Subject: [PATCH] volla: Add VollaOS License page
@@ -41,13 +41,13 @@ index d68f421..8645baf 100644
                    android:excludeFromRecents="true"
 diff --git a/res/layout/setup_volla_license.xml b/res/layout/setup_volla_license.xml
 new file mode 100644
-index 0000000..6a9a98e
+index 0000000..5a67b5e
 --- /dev/null
 +++ b/res/layout/setup_volla_license.xml
 @@ -0,0 +1,66 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<!--
-+     Copyright (C) 2023 Volla Systeme GmbH
++     Copyright (C) 2021 Hallo Welt Systeme UG
 +
 +     Licensed under the Apache License, Version 2.0 (the "License");
 +     you may not use this file except in compliance with the License.
@@ -94,7 +94,7 @@ index 0000000..6a9a98e
 +                        android:id="@+id/license"
 +                        android:layout_width="match_parent"
 +                        android:layout_height="wrap_content"
-+                        android:layout_marginBottom="@dimen/summary_margin_bottom"
++                        android:layout_marginBottom="30dp"
 +                        android:paddingLeft="@dimen/content_margin_left"
 +                        android:paddingRight="@dimen/content_margin_right"
 +                        style="@style/SudItemTitle"
@@ -119,7 +119,7 @@ index 0000000..97bc9d8
 @@ -0,0 +1,81 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<!--
-+     Copyright (C) 2023 Volla Systeme GmbH
++     Copyright (C) 2021 Hallo Welt Systeme UG
 +
 +     Licensed under the Apache License, Version 2.0 (the "License");
 +     you may not use this file except in compliance with the License.
@@ -141,7 +141,7 @@ index 0000000..97bc9d8
 +            <p>Das Volla OS enthält basiert auf das Android Open Source Project und enthält Open Source Android Apps. Ihre Befugnisse und Ansprüche hinsichtlich dieser Open-Source-Komponenten richten sich ausschließlich nach der jeweiligen Open-Source-Lizenz. Entgegenstehende Regelungen in diesem EULA finden keine Anwendung auf Open-Source-Komponenten.</p>
 +            <p>Hinsichtlich der Open-Source-Komponenten ist jegliche Haftung und Gewährleistung der Programmierer dieser Komponenten ausgeschlossen.</p>
 +            <p><strong>I. Vertragsgegenstand</strong></p>
-+            <p>Diese Vereinbarung regelt die Nutzung der Software iQser Instantli („Software“) zwischen Ihnen („Sie“ oder „Nutzer“) und der Volla Systeme GmbH, Kölner Straße 102, 42897 Remscheid, Deutschland („Lizenzgeber“) als Hersteller dieser Software.</p>
++            <p>Diese Vereinbarung regelt die Nutzung der Software iQser Instantli („Software“) zwischen Ihnen („Sie“ oder „Nutzer“) und der Hallo Welt Systeme UG (haftungsbeschränkt), Kölner Straße 102, 42897 Remscheid, Deutschland („Lizenzgeber“) als Hersteller dieser Software.</p>
 +            <p><strong>II. Einräumung von Nutzungsrechten</strong></p>
 +            <ol>
 +              <li>Der Lizenzgeber gewährt dem Nutzer, im Rahmen dieser Vereinbarung, eine nicht ausschließliche und nicht übertragbare Lizenz zur Nutzung der Software gewährt.</li>
@@ -206,7 +206,7 @@ index 0000000..c973a5a
 @@ -0,0 +1,88 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<!--
-+     Copyright (C) 2021 Volla Systeme GmbH
++     Copyright (C) 2021 Hallo Welt Systeme UG
 +
 +     Licensed under the Apache License, Version 2.0 (the "License");
 +     you may not use this file except in compliance with the License.
@@ -229,7 +229,7 @@ index 0000000..c973a5a
 +            <p>The Volla OS is based on the Android Open Source Project and contains open source Android apps. Your authority and claims regarding these open source components are exclusively based on the respective open source license. Conflicting provisions in this EULA do not apply to open source components.</p>
 +            <p>With regard to the open source components, any liability and warranty of the programmers of these components is excluded.</p>
 +            <p><strong>I. Contractual object</strong></p>
-+            <p>This agreement covers the usage of the iQser Instantli product („Software“) between you („you“ or „user“) and Volla Systeme GmbH, Kölner Straße 102, 42897 Remscheid, Germany („licence provider“) as the software’s manufacturer.</p>
++            <p>This agreement covers the usage of the iQser Instantli product („Software“) between you („you“ or „user“) and Hallo Welt Systeme UG (haftungsbeschränkt), Kölner Straße 102, 42897 Remscheid, Germany („licence provider“) as the software’s manufacturer.</p>
 +            <p><strong>II. Rights of use granted</strong></p>
 +            <ol>
 +              <li>
@@ -299,7 +299,7 @@ index 0000000..fec6e5c
 +++ b/src/org/lineageos/setupwizard/VollaLicenseActivity.java
 @@ -0,0 +1,93 @@
 +/*
-+ * Copyright (C) 2023 Volla Systeme GmbH
++ * Copyright (C) 2021 Hallo Welt Systeme UG
 + *
 + * Licensed under the Apache License, Version 2.0 (the "License");
 + * you may not use this file except in compliance with the License.

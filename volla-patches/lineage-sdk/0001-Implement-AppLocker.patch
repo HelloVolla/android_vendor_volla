@@ -1,4 +1,4 @@
-From b2c5e7489df75020ef4dee9ec53e6faddbfb8722 Mon Sep 17 00:00:00 2001
+From 80bd09cb11bb25afc2902ef5c66c217380ce7464 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 6 Feb 2022 18:07:07 +0330
 Subject: [PATCH] Implement AppLocker
@@ -20,7 +20,7 @@ Change-Id: Iddf9e348be93367c34f6766cd73384d497fc3bef
  create mode 100644 sdk/src/java/lineageos/applock/IAppLockService.aidl
 
 diff --git a/Android.mk b/Android.mk
-index d4247595..41d55d84 100644
+index 412ce301..5129c7cb 100644
 --- a/Android.mk
 +++ b/Android.mk
 @@ -29,7 +29,7 @@ include $(CLEAR_VARS)
@@ -33,10 +33,10 @@ index d4247595..41d55d84 100644
  lineage_framework_module := $(LOCAL_INSTALLED_MODULE)
  
 diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index 03c9aeec..8186e891 100644
+index 3b12335a..7e5e19aa 100644
 --- a/api/lineage_current.txt
 +++ b/api/lineage_current.txt
-@@ -845,3 +845,28 @@ package lineageos.util {
+@@ -844,3 +844,28 @@ package lineageos.util {
    }
  
  }
@@ -569,22 +569,22 @@ index 00000000..8dbe5067
 +    }
 +}
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index 6f5ae221..62ea4c11 100644
+index fc6e553e..9500a05e 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
-@@ -107,6 +107,7 @@
-         <item>org.lineageos.platform.internal.TrustInterfaceService</item>
+@@ -111,6 +111,7 @@
          <item>org.lineageos.platform.internal.LineageSettingsService</item>
          <item>org.lineageos.platform.internal.LineageGlobalActionsService</item>
+         <item>org.lineageos.platform.internal.health.HealthInterfaceService</item>
 +        <item>org.lineageos.platform.internal.AppLockService</item>
      </string-array>
  
      <!-- The LineageSystemServer class that is invoked from Android's SystemServer -->
 diff --git a/sdk/src/java/lineageos/app/LineageContextConstants.java b/sdk/src/java/lineageos/app/LineageContextConstants.java
-index 9543e44b..eb956fa5 100644
+index 26baa6ae..9cdf4826 100644
 --- a/sdk/src/java/lineageos/app/LineageContextConstants.java
 +++ b/sdk/src/java/lineageos/app/LineageContextConstants.java
-@@ -88,6 +88,13 @@ public final class LineageContextConstants {
+@@ -92,6 +92,13 @@ public final class LineageContextConstants {
       */
      public static final String LINEAGE_GLOBAL_ACTIONS_SERVICE = "lineageglobalactions";
  

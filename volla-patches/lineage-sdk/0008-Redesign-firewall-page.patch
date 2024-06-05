@@ -1,4 +1,4 @@
-From afc3c88a419c0c12b5df4bd65450625fe85f723c Mon Sep 17 00:00:00 2001
+From eda454b13daf0ec5b71a9ee66da2fc69bfd537f7 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 5 Jun 2022 06:59:05 +0430
 Subject: [PATCH] Redesign firewall page
@@ -150,10 +150,10 @@ index 00000000..cd5808b0
 +  </body>
 +</html>
 diff --git a/lineage/res/res/values/symbols.xml b/lineage/res/res/values/symbols.xml
-index 0fadacc4..3e23c1e3 100644
+index 2ffec7e4..61d86b16 100644
 --- a/lineage/res/res/values/symbols.xml
 +++ b/lineage/res/res/values/symbols.xml
-@@ -180,4 +180,8 @@
+@@ -214,4 +214,8 @@
  
      <!-- AppLocker. -->
      <java-symbol type="array" name="config_defaultLockedPackages" />

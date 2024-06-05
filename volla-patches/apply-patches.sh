@@ -25,6 +25,6 @@ else
     MBS=$(find . -name *.patch -exec dirname {} \; |sort -u)
     for mb in $MBS; do
         cd $OLD_WD/$mb
-        git am $LOCALDIR/$mb/*.patch
+        git am $LOCALDIR/$mb/*.patch -3
     done
 fi

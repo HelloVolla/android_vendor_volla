@@ -1,0 +1,3 @@
+set_prop(netd, ctl_restart_prop)
+set_prop(netd, ctl_start_prop)
+set_prop(netd, ctl_stop_prop)

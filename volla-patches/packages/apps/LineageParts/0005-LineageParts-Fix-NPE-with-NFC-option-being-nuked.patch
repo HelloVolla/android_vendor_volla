@@ -1,4 +1,4 @@
-From 0da4a22022e798fa8624662eefbc97534ad7080f Mon Sep 17 00:00:00 2001
+From d2343975b04e8b0709ba2402d2b925a9b4db8276 Mon Sep 17 00:00:00 2001
 From: techyminati <sinha.aryan03@gmail.com>
 Date: Mon, 4 Sep 2023 19:04:18 +0200
 Subject: [PATCH] LineageParts: Fix NPE with NFC option being nuked
@@ -103,11 +103,11 @@ Signed-off-by: techyminati <sinha.aryan03@gmail.com>
  2 files changed, 1 insertion(+), 8 deletions(-)
 
 diff --git a/src/org/lineageos/lineageparts/profiles/SetupActionsFragment.java b/src/org/lineageos/lineageparts/profiles/SetupActionsFragment.java
-index cc45ad3..4628d93 100644
+index 13d6ba5..57510cd 100644
 --- a/src/org/lineageos/lineageparts/profiles/SetupActionsFragment.java
 +++ b/src/org/lineageos/lineageparts/profiles/SetupActionsFragment.java
-@@ -197,9 +197,6 @@ public class SetupActionsFragment extends SettingsPreferenceFragment
-             if (DeviceUtils.deviceSupportsBluetooth()) {
+@@ -189,9 +189,6 @@ public class SetupActionsFragment extends SettingsPreferenceFragment
+             if (DeviceUtils.deviceSupportsBluetooth(context)) {
                  mItems.add(generateTriggerItem(TriggerItem.BLUETOOTH));
              }
 -            if (DeviceUtils.deviceSupportsNfc(context)) {
@@ -117,10 +117,10 @@ index cc45ad3..4628d93 100644
  
          // connection overrides
 diff --git a/src/org/lineageos/lineageparts/profiles/actions/item/TriggerItem.java b/src/org/lineageos/lineageparts/profiles/actions/item/TriggerItem.java
-index ae911a6..616ea73 100644
+index ed086bb..ff197f3 100644
 --- a/src/org/lineageos/lineageparts/profiles/actions/item/TriggerItem.java
 +++ b/src/org/lineageos/lineageparts/profiles/actions/item/TriggerItem.java
-@@ -29,7 +29,7 @@ public class TriggerItem extends Item {
+@@ -18,7 +18,7 @@ public class TriggerItem extends Item {
      public static final int WIFI = 0;
      public static final int BLUETOOTH = 1;
      // not in Profile.TriggerType, but we need it.
@@ -129,7 +129,7 @@ index ae911a6..616ea73 100644
  
      private final Profile mProfile;
      private final int mTriggerType;
-@@ -61,11 +61,7 @@ public class TriggerItem extends Item {
+@@ -50,11 +50,7 @@ public class TriggerItem extends Item {
          }
  
          if (sb.length() == 0) {
@@ -142,4 +142,5 @@ index ae911a6..616ea73 100644
  
          return sb.toString();
 -- 
-2.34.1
+2.29.2
+

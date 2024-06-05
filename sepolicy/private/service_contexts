@@ -4,3 +4,7 @@ vollachildmode                                   u:object_r:volla_service:s0
 vollazombifier                                   u:object_r:volla_service:s0
 
 vollawireguard                                   u:object_r:volla_wireguard_service:s0
+
+# FaceUnlock
+faceunlock                                    u:object_r:faceunlock_service:s0
+faceunlockhal                                 u:object_r:faceunlock_service:s0

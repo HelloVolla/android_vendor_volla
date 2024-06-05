@@ -1,18 +1,18 @@
-From 5445a6bb27ef301b8a4da9ef5dfcc9c5fa9e024c Mon Sep 17 00:00:00 2001
+From daa59e7b9cac95e6aa0904c04b0421d53d8dfe88 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Mon, 25 Apr 2022 21:36:44 +0200
 Subject: [PATCH] Updater: Allow major update
 
 Change-Id: I92f178a17536500e100d96133999356d1ea566f8
 ---
- src/org/lineageos/updater/misc/Utils.java | 4 +---
+ app/src/main/java/org/lineageos/updater/misc/Utils.java | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/src/org/lineageos/updater/misc/Utils.java b/src/org/lineageos/updater/misc/Utils.java
-index 25abedd..903409c 100644
---- a/src/org/lineageos/updater/misc/Utils.java
-+++ b/src/org/lineageos/updater/misc/Utils.java
-@@ -116,9 +116,7 @@ public class Utils {
+diff --git a/app/src/main/java/org/lineageos/updater/misc/Utils.java b/app/src/main/java/org/lineageos/updater/misc/Utils.java
+index 1550d41..71bf289 100644
+--- a/app/src/main/java/org/lineageos/updater/misc/Utils.java
++++ b/app/src/main/java/org/lineageos/updater/misc/Utils.java
+@@ -118,9 +118,7 @@ public class Utils {
  
      public static boolean canInstall(UpdateBaseInfo update) {
          return (SystemProperties.getBoolean(Constants.PROP_UPDATER_ALLOW_DOWNGRADING, false) ||

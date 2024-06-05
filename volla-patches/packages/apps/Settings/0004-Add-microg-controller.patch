@@ -1,0 +1,85 @@
+From 5227e4b251f0517eba9bfaeb81a691f906f4ee00 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Wed, 21 Feb 2024 05:11:04 +0330
+Subject: [PATCH] Add microg controller
+
+Change-Id: I0df284f5c4c30edd06a528e554970bc639a6b626
+---
+ res/xml/apps.xml                              |  3 +-
+ .../applications/MicrogController.java        | 50 +++++++++++++++++++
+ 2 files changed, 52 insertions(+), 1 deletion(-)
+ create mode 100644 src/com/android/settings/applications/MicrogController.java
+
+diff --git a/res/xml/apps.xml b/res/xml/apps.xml
+index d8f0632ef58..2ca2b36ce28 100644
+--- a/res/xml/apps.xml
++++ b/res/xml/apps.xml
+@@ -67,7 +67,8 @@
+         android:title="@string/enable_microg_title"
+         android:summary="@string/enable_microg_summary"
+         android:order="-994"
+-        android:defaultValue="false" />
++        android:defaultValue="false"
++        settings:controller="com.android.settings.applications.MicrogController" />
+ 
+     <PreferenceCategory
+         android:key="dashboard_tile_placeholder"
+diff --git a/src/com/android/settings/applications/MicrogController.java b/src/com/android/settings/applications/MicrogController.java
+new file mode 100644
+index 00000000000..52a65d0dc0f
+--- /dev/null
++++ b/src/com/android/settings/applications/MicrogController.java
+@@ -0,0 +1,50 @@
++/*
++ * Copyright (C) 2018 The VollaOS Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++ package com.android.settings.applications;
++
++import android.content.Context;
++import android.os.SystemProperties;
++
++import com.android.settings.core.BasePreferenceController;
++
++public class MicrogController extends BasePreferenceController {
++
++    public static final String KEY = "enable_microg";
++
++    private Context mContext;
++
++    public MicrogController(Context context, String key) {
++        super(context, key);
++
++        mContext = context;
++    }
++
++    public MicrogController(Context context) {
++        this(context, KEY);
++
++        mContext = context;
++    }
++
++    @Override
++    public int getAvailabilityStatus() {
++        boolean applock = SystemProperties.getBoolean("persist.volla.applock.enable", false);
++        boolean linkmicrog = SystemProperties.getBoolean("persist.volla.linkmicrog", false);
++
++        return ((applock && linkmicrog) ? DISABLED_DEPENDENT_SETTING : AVAILABLE);
++    }
++
++}
+-- 
+2.29.2
+

@@ -1,4 +1,4 @@
-From dd9227a7dfb85d91fd910fb20bdbedadb4ada766 Mon Sep 17 00:00:00 2001
+From 8c96c92bb8f97985c259310a484c7b5f04698927 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Mon, 13 Dec 2021 18:48:56 +0330
 Subject: [PATCH] Revert "applypatch: Update recovery only when enabled in

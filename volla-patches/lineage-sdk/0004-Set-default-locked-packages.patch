@@ -1,4 +1,4 @@
-From f7766d28246083b11094e50a2c5c69f8246ac191 Mon Sep 17 00:00:00 2001
+From cab1f4b8556de6d43ae559380b7da456033accfb Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 19 Feb 2022 12:43:04 +0330
 Subject: [PATCH] Set default locked packages
@@ -6,9 +6,9 @@ Subject: [PATCH] Set default locked packages
 Change-Id: I55c04b4ba7495841a9464ac605ec2f07037f86da
 ---
  .../org/lineageos/platform/internal/AppLockService.java   | 8 ++++++--
- lineage/res/res/values/config.xml                         | 5 +++++
+ lineage/res/res/values/config.xml                         | 6 ++++++
  lineage/res/res/values/symbols.xml                        | 3 +++
- 3 files changed, 14 insertions(+), 2 deletions(-)
+ 3 files changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java b/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
 index 8dbe5067..f7640c26 100644
@@ -30,27 +30,28 @@ index 8dbe5067..f7640c26 100644
              throw new IllegalStateException("Failed to parse locked-apps.xml: " + mFile, e);
          }
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index d5d558a4..f8935e98 100644
+index 3bf418b2..68d0104f 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
-@@ -304,4 +304,9 @@
-     <!-- The list of components which should be forced to be enabled. -->
-     <string-array name="config_forceEnabledComponents" translatable="false">
-     </string-array>
+@@ -356,4 +356,10 @@
+          recharge when the battery level is lower than a threshold. Set this so that the device
+          will be charged between (limit - val) and limit. -->
+     <integer name="config_chargingControlBatteryRechargeMargin">10</integer>
 +
 +    <!-- Array of packages to get locked by default. -->
 +    <string-array name="config_defaultLockedPackages">
 +        <item>org.fdroid.fdroid</item>
 +    </string-array>
++
  </resources>
 diff --git a/lineage/res/res/values/symbols.xml b/lineage/res/res/values/symbols.xml
-index 5adb8773..0fadacc4 100644
+index 9f9a6fbd..2ffec7e4 100644
 --- a/lineage/res/res/values/symbols.xml
 +++ b/lineage/res/res/values/symbols.xml
-@@ -177,4 +177,7 @@
-     <java-symbol type="array" name="config_deviceDisabledComponents" />
-     <java-symbol type="array" name="config_globallyDisabledComponents" />
-     <java-symbol type="array" name="config_forceEnabledComponents" />
+@@ -211,4 +211,7 @@
+     <java-symbol type="string" name="charging_control_notification_content_limit_reached" />
+     <java-symbol type="string" name="charging_control_notification_content_target" />
+     <java-symbol type="string" name="charging_control_notification_content_target_reached" />
 +
 +    <!-- AppLocker. -->
 +    <java-symbol type="array" name="config_defaultLockedPackages" />

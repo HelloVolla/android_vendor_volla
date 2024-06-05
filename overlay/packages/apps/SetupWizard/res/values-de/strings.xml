@@ -21,6 +21,4 @@
     <string name="services_explanation" product="default">Diese Dienste werden verwendet, um die Funktionen Ihres Telefons zu erweitern. Ihre Daten werden in Übereinstimmung mit der <xliff:g id="name" example="Datenschutzerklärung">%s</xliff:g> von VollaOS verwendet.</string>
     <string name="services_help_improve_cm">Hilf <xliff:g id="name" example="VollaOS">%s</xliff:g> zu verbessern</string>
     <string name="services_metrics_label"><xliff:g id="name" example="Hilf VollaOS zu verbessern">%1$s</xliff:g>, indem du automatisch Diagnose- und Nutzungsdaten an VollaOS sendest. Diese Informationen können nicht dazu verwendet werden, dich zu identifizieren. Vielmehr helfen sie unserem Team bei der Arbeit an Dingen wie der Akkulaufzeit, der App-Leistung und <xliff:g id="name" example="VollaOS">%2$s</xliff:g>-Funktionen.</string>
-    <string name="intro_restore_subtitle" product="tablet">Wenn du eine Datensicherung von deinem letzten VollaOS-Tablet hast, kannst du sie hier wiederherstellen.</string>
-    <string name="intro_restore_subtitle" product="default">Wenn du eine Datensicherung von deinem letzten VollaOS- Telefon hast, kannst du sie hier wiederherstellen.</string>
 </resources>

@@ -1,4 +1,4 @@
-From ab4f49fe62af35eddb94071d42c2201f37d2d49b Mon Sep 17 00:00:00 2001
+From bc780b5ced55f19b10e0b2aecd53f984e9172cc7 Mon Sep 17 00:00:00 2001
 From: Your Name <you@example.com>
 Date: Wed, 28 Sep 2022 08:55:50 +0200
 Subject: [PATCH] Add SystemSettingListPreference
@@ -7,13 +7,13 @@ Change-Id: I217954ccfe05113523dd1b5dc44733f1d68dad91
 ---
  .../SystemSettingListPreference.java          | 51 +++++++++++++++++++
  1 file changed, 51 insertions(+)
- create mode 100644 sdk/src/java/lineageos/preference/SystemSettingListPreference.java
+ create mode 100644 packages/LineagePreferenceLib/java/lineageos/preference/SystemSettingListPreference.java
 
-diff --git a/sdk/src/java/lineageos/preference/SystemSettingListPreference.java b/sdk/src/java/lineageos/preference/SystemSettingListPreference.java
+diff --git a/packages/LineagePreferenceLib/java/lineageos/preference/SystemSettingListPreference.java b/packages/LineagePreferenceLib/java/lineageos/preference/SystemSettingListPreference.java
 new file mode 100644
 index 00000000..5f2aa0b9
 --- /dev/null
-+++ b/sdk/src/java/lineageos/preference/SystemSettingListPreference.java
++++ b/packages/LineagePreferenceLib/java/lineageos/preference/SystemSettingListPreference.java
 @@ -0,0 +1,51 @@
 +/*
 + * Copyright (C) 2016 The CyanogenMod Project

@@ -1,4 +1,4 @@
-From 4a856c5f23df728c5747a3777b9f81f7d9235c74 Mon Sep 17 00:00:00 2001
+From 5095ffa40befb2fbfe7c2694178387e734072219 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Tue, 20 Sep 2022 19:02:12 +0430
 Subject: [PATCH] AppLock: Handle removed apps

@@ -1,4 +1,4 @@
-From fc282323dfa9974c120956c6b8ece478ac571b63 Mon Sep 17 00:00:00 2001
+From 55fdc603c31cab4bd7dd1d7a3ffc9bc43e0d7172 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Thu, 10 Feb 2022 10:50:10 +0330
 Subject: [PATCH] Implement ChildMode
@@ -18,7 +18,7 @@ Change-Id: I1d48248a381f4f47baea7443e9b4dfee4eb3a020
  create mode 100644 sdk/src/java/lineageos/childmode/IChildModeService.aidl
 
 diff --git a/Android.mk b/Android.mk
-index 135c697f..b84ea8ed 100644
+index 90e9b951..1591defe 100644
 --- a/Android.mk
 +++ b/Android.mk
 @@ -29,7 +29,7 @@ include $(CLEAR_VARS)
@@ -31,10 +31,10 @@ index 135c697f..b84ea8ed 100644
  lineage_framework_module := $(LOCAL_INSTALLED_MODULE)
  
 diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index 6c9a7db4..a48bca78 100644
+index 6a1c7956..a4b621c7 100644
 --- a/api/lineage_current.txt
 +++ b/api/lineage_current.txt
-@@ -888,3 +888,14 @@ package lineageos.firewall {
+@@ -887,3 +887,14 @@ package lineageos.firewall {
    }
  
  }
@@ -137,11 +137,11 @@ index 00000000..a5fcef7f
 +    };
 +}
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index cdb4b6ee..d5d558a4 100644
+index 3e006189..3bf418b2 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
-@@ -109,6 +109,7 @@
-         <item>org.lineageos.platform.internal.LineageGlobalActionsService</item>
+@@ -113,6 +113,7 @@
+         <item>org.lineageos.platform.internal.health.HealthInterfaceService</item>
          <item>org.lineageos.platform.internal.AppLockService</item>
          <item>org.lineageos.platform.internal.FirewallService</item>
 +        <item>org.lineageos.platform.internal.ChildModeService</item>
@@ -149,10 +149,10 @@ index cdb4b6ee..d5d558a4 100644
  
      <!-- The LineageSystemServer class that is invoked from Android's SystemServer -->
 diff --git a/sdk/src/java/lineageos/app/LineageContextConstants.java b/sdk/src/java/lineageos/app/LineageContextConstants.java
-index 20f99fbe..ee38fe84 100644
+index 1ac4682b..1af8f8a8 100644
 --- a/sdk/src/java/lineageos/app/LineageContextConstants.java
 +++ b/sdk/src/java/lineageos/app/LineageContextConstants.java
-@@ -102,6 +102,13 @@ public final class LineageContextConstants {
+@@ -106,6 +106,13 @@ public final class LineageContextConstants {
       */
      public static final String VOLLA_FIREWALL_SERVICE = "vollafirewall";
  

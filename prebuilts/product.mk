@@ -22,13 +22,14 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/etc/default-permissions/default_permissions_com.google.android.gms.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_com.google.android.gms.xml \
     $(LOCAL_PATH)/etc/default-permissions/default_permissions_com.maxfour.music.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_com.maxfour.music.xml \
     $(LOCAL_PATH)/etc/default-permissions/default_permissions_com.simplemobiletools.calendar.pro.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_com.simplemobiletools.calendar.pro.xml \
-    $(LOCAL_PATH)/etc/default-permissions/default_permissions_com.simplemobiletools.contacts.pro.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_com.simplemobiletools.contacts.pro.xml \
-    $(LOCAL_PATH)/etc/default-permissions/default_permissions_com.simplemobiletools.dialer.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_com.simplemobiletools.dialer.xml \
-    $(LOCAL_PATH)/etc/default-permissions/default_permissions_com.simplemobiletools.filemanager.pro.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_com.simplemobiletools.filemanager.pro.xml \
-    $(LOCAL_PATH)/etc/default-permissions/default_permissions_com.simplemobiletools.gallery.pro.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_com.simplemobiletools.gallery.pro.xml \
+    $(LOCAL_PATH)/etc/default-permissions/default_permissions_org.fossify.contacts.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_org.fossify.contacts.xml \
+    $(LOCAL_PATH)/etc/default-permissions/default_permissions_org.fossify.phone.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_org.fossify.phone.xml \
+    $(LOCAL_PATH)/etc/default-permissions/default_permissions_org.fossify.filemanager.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_org.fossify.filemanager.xml \
+    $(LOCAL_PATH)/etc/default-permissions/default_permissions_org.fossify.gallery.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_org.fossify.gallery.xml \
     $(LOCAL_PATH)/etc/default-permissions/default_permissions_com.volla.launcher.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_com.volla.launcher.xml \
     $(LOCAL_PATH)/etc/default-permissions/default_permissions_net.osmand.plus.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_net.osmand.plus.xml \
     $(LOCAL_PATH)/etc/default-permissions/default_permissions_org.fdroid.fdroid.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_org.fdroid.fdroid.xml \
+    $(LOCAL_PATH)/etc/default-permissions/default_permissions_com.volla.nlp.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_com.volla.nlp.xml \
     $(LOCAL_PATH)/etc/default-permissions/default_permissions_com.volla.gsmnlp.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default_permissions_com.volla.gsmnlp.xml
 
 # Permissions

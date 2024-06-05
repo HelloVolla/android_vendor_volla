@@ -1,4 +1,4 @@
-From 0d58fc959f432099165ce3aadd2d416592f2cd35 Mon Sep 17 00:00:00 2001
+From 60c9ae70d97e044429437d872d06dc2cd91983c5 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 18 Jul 2021 13:15:08 +0800
 Subject: [PATCH] PermissionController: Set volla launcher as default home
@@ -9,10 +9,10 @@ Change-Id: I4fbdcb63fe0ead9f9932fca7ccc426054fa24e06
  1 file changed, 1 insertion(+), 26 deletions(-)
 
 diff --git a/PermissionController/src/com/android/permissioncontroller/role/model/HomeRoleBehavior.java b/PermissionController/src/com/android/permissioncontroller/role/model/HomeRoleBehavior.java
-index a3cd3dc95..9b1b3716e 100644
+index af6acfeec..69a4da585 100644
 --- a/PermissionController/src/com/android/permissioncontroller/role/model/HomeRoleBehavior.java
 +++ b/PermissionController/src/com/android/permissioncontroller/role/model/HomeRoleBehavior.java
-@@ -69,32 +69,7 @@ public class HomeRoleBehavior implements RoleBehavior {
+@@ -72,32 +72,7 @@ public class HomeRoleBehavior implements RoleBehavior {
      @Nullable
      @Override
      public String getFallbackHolder(@NonNull Role role, @NonNull Context context) {

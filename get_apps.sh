@@ -98,15 +98,16 @@ downloadFromFdroid org.fdroid.fdroid
 downloadFromFdroid at.bitfire.davdroid
 downloadFromFdroid com.aurora.store
 downloadFromFdroid com.simplemobiletools.calendar.pro "Etar Calendar"
-downloadFromFdroid com.simplemobiletools.clock "DeskClock"
-downloadFromFdroid com.simplemobiletools.contacts.pro "Contacts"
-downloadFromFdroid com.simplemobiletools.dialer
-downloadFromFdroid com.simplemobiletools.filemanager.pro
-downloadFromFdroid com.simplemobiletools.gallery.pro "Gallery2 Gallery Gallery3D GalleryNew3D"
+downloadFromFdroid org.fossify.clock "DeskClock"
+downloadFromFdroid org.fossify.contacts "Contacts"
+downloadFromFdroid org.fossify.phone
+downloadFromFdroid org.fossify.filemanager
+downloadFromFdroid org.fossify.gallery "Gallery2 Gallery Gallery3D GalleryNew3D"
 downloadFromFdroid net.osmand.plus
 downloadFromFdroid org.mozilla.fennec_fdroid "Jelly" YES
 downloadFromFdroid com.maxfour.music "Eleven"
 downloadFromFdroid com.fsck.k9
+downloadFromFdroid com.android.talkback "" YES
 
 
 repo=https://fdroid.volla.tech/fdroid/repo/
@@ -118,6 +119,9 @@ repo=https://microg.org/fdroid/repo/
 downloadFromFdroid com.google.android.gms "" NO YES
 downloadFromFdroid com.google.android.gsf
 downloadFromFdroid com.android.vending "" NO YES
+
+repo=https://fdroid-nightly.volla.tech/fdroid/repo/
+downloadFromFdroid com.volla.vollaboard
 
 echo >> apps.mk
 

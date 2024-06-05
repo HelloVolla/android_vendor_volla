@@ -1,0 +1,41 @@
+From b4ebaab182d12989b773ed804d7a5e2dac26a959 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sat, 30 Sep 2023 17:23:02 +0330
+Subject: [PATCH] Enable RESTRICTED_NETWORKING_MODE
+
+Change-Id: I769e7a9329c6134b28d9afecde5fd41b4692b63e
+---
+ .../lineagesettings/LineageDatabaseHelper.java        | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/packages/LineageSettingsProvider/src/org/lineageos/lineagesettings/LineageDatabaseHelper.java b/packages/LineageSettingsProvider/src/org/lineageos/lineagesettings/LineageDatabaseHelper.java
+index 829a5e50..a4b09a79 100644
+--- a/packages/LineageSettingsProvider/src/org/lineageos/lineagesettings/LineageDatabaseHelper.java
++++ b/packages/LineageSettingsProvider/src/org/lineageos/lineagesettings/LineageDatabaseHelper.java
+@@ -274,15 +274,20 @@ public class LineageDatabaseHelper extends SQLiteOpenHelper{
+         }
+ 
+         if (upgradeVersion < 17) {
++            upgradeVersion = 17;
++        }
++
++        if (upgradeVersion < 18) {
++            // Enable RESTRICTED_NETWORKING_MODE
++            if (mUserHandle == UserHandle.USER_OWNER) {
++                loadRestrictedNetworkingModeSetting();
++            }
+             // Move berry_black_theme to secure
+             moveSettingsToNewTable(db, LineageTableNames.TABLE_SYSTEM,
+                     LineageTableNames.TABLE_SECURE, new String[] {
+                     LineageSettings.Secure.BERRY_BLACK_THEME
+             }, true);
+-            upgradeVersion = 17;
+-        }
+ 
+-        if (upgradeVersion < 18) {
+             Integer defaultValue = mContext.getResources().getBoolean(
+                     org.lineageos.platform.internal.R.bool.config_fingerprintWakeAndUnlock)
+                     ? 1 : 0; // Reversed since they're reversed again below
+-- 
+2.29.2
+

@@ -21,6 +21,4 @@
     <string name="services_explanation" product="default">Aceste servicii extind capacitățile telefonului dumneavoastră. Datele vor fi folosite în conformitate cu VollaOS <xliff:g id="name" example="Privacy Policy">%s</xliff:g>.</string>
     <string name="services_help_improve_cm">Ajutați la îmbunătățirea <xliff:g id="name" example="VollaOS">%s</xliff:g></string>
     <string name="services_metrics_label"><xliff:g id="name" example="Help improve VollaOS">%1$s</xliff:g> prin trimiterea automată a statisticilor se utilizare și de utilizare a datelor la VollaOS. Aceste informații nu pot fi utilizate pentru identificarea dvs., ci oferă o mână de ajutor echipei care lucrează la lucruri ca durata bateriei, performanța aplicațiilor și la noile caracteristici <xliff:g id="name" example="VollaOS">%2$s</xliff:g>.</string>
-    <string name="intro_restore_subtitle" product="tablet">Dacă aveţi o copie de rezervă de pe ultima dvs. tabletă VollaOS, o puteţi restaura aici.</string>
-    <string name="intro_restore_subtitle" product="default">Dacă aveţi o copie de rezervă de pe ultimul dvs. telefon VollaOS, o puteţi restaura aici.</string>
 </resources>

@@ -21,6 +21,4 @@
     <string name="services_explanation" product="default">Bu xidmətlər telefonunuzun qabiliyyətlərini artırar. Verilənlər VollaOS<xliff:g id="name" example="Gizlilik Siyasəti">%s</xliff:g> şərtlərinə uyğun olaraq istifadə ediləcək.</string>
     <string name="services_help_improve_cm"><xliff:g id="name" example="VollaOS">%s</xliff:g>u təkmilləşdirməyə kömək edin</string>
     <string name="services_metrics_label">VollaOS-a diaqnostikanı və istifadə verilənlərini avtomatik göndərərək <xliff:g id="name" example="Help improve VollaOS">%1$s</xliff:g>. Bu məlumatlarda kimliyiniz istifadə edilmir və batereya ömrü, tətbiq performansı və yeni <xliff:g id="name" example="VollaOS">%2$s</xliff:g> xüsusiyyətləri kimi işlərlə məşğul olan komandalara kömək edər.</string>
-    <string name="intro_restore_subtitle" product="tablet">Son VollaOS planşetinizdən bir nüsxəniz varsa, burada bərpa edə bilərsiniz.</string>
-    <string name="intro_restore_subtitle" product="default">Son VollaOS telefonunuzdan bir nüsxəniz varsa, burada bərpa edə bilərsiniz.</string>
 </resources>

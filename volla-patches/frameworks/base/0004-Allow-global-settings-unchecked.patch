@@ -1,0 +1,26 @@
+From f009ef134385c322e13ba52dc4ef9aa072c3aead Mon Sep 17 00:00:00 2001
+From: Your Name <you@example.com>
+Date: Wed, 22 Feb 2023 13:53:56 +0100
+Subject: [PATCH] Allow global settings unchecked
+
+Change-Id: I1176caf56f95e04fc3e380494d22eb52be3f2380
+---
+ .../src/com/android/providers/settings/SettingsProvider.java    | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/packages/SettingsProvider/src/com/android/providers/settings/SettingsProvider.java b/packages/SettingsProvider/src/com/android/providers/settings/SettingsProvider.java
+index 84a559391343..5696b5fd2605 100644
+--- a/packages/SettingsProvider/src/com/android/providers/settings/SettingsProvider.java
++++ b/packages/SettingsProvider/src/com/android/providers/settings/SettingsProvider.java
+@@ -1460,7 +1460,7 @@ public class SettingsProvider extends ContentProvider {
+             return false;
+         }
+ 
+-        final String callingPackage = getCallingPackage();
++        final String callingPackage = getCallingPackageUnchecked();
+ 
+         // Perform the mutation.
+         synchronized (mLock) {
+-- 
+2.29.2
+

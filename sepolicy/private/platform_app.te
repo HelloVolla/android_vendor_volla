@@ -11,3 +11,5 @@ allowxperm platform_app self:netlink_route_socket ioctl {
 };
 
 binder_call(platform_app, volla_wireguard)
+
+set_prop(platform_app, ctl_restart_prop)

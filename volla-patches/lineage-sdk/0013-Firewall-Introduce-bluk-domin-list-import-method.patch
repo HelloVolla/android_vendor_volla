@@ -1,4 +1,4 @@
-From ced677bcbe539f386b57f3bc2abab951ccea6d3d Mon Sep 17 00:00:00 2001
+From 2bd799e7f920dd8cfdeecc546599e812145a4ca4 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Tue, 20 Sep 2022 21:58:56 +0430
 Subject: [PATCH] Firewall: Introduce bluk domin list import method
@@ -12,10 +12,10 @@ Change-Id: Ifd8ca3daaf8d25820306e842bb57d3b46d31601b
  4 files changed, 24 insertions(+)
 
 diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index a7ade8e1..934bf56b 100644
+index 3d4ed576..21cfed46 100644
 --- a/api/lineage_current.txt
 +++ b/api/lineage_current.txt
-@@ -886,6 +886,7 @@ package lineageos.firewall {
+@@ -885,6 +885,7 @@ package lineageos.firewall {
      method public int getDomainsListCount();
      java.util.List<java.lang.String> getDomainsList();
      method public void clearDomainList();

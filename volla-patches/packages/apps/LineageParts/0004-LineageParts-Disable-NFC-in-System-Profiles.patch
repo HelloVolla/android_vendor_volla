@@ -1,4 +1,4 @@
-From 7ded61c627cb62cbd524c39214f587f3e9a3b763 Mon Sep 17 00:00:00 2001
+From 3b54367fc84a2b15f698ce85bbbab1f27e699f6a Mon Sep 17 00:00:00 2001
 From: techyminati <sinha.aryan03@gmail.com>
 Date: Thu, 31 Aug 2023 15:20:55 +0200
 Subject: [PATCH] LineageParts: Disable NFC in System Profiles
@@ -11,10 +11,10 @@ Signed-off-by: techyminati <sinha.aryan03@gmail.com>
  2 files changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/src/org/lineageos/lineageparts/profiles/TriggerPagerAdapter.java b/src/org/lineageos/lineageparts/profiles/TriggerPagerAdapter.java
-index 25dd1ae..c38065b 100644
+index 944863b..290db17 100644
 --- a/src/org/lineageos/lineageparts/profiles/TriggerPagerAdapter.java
 +++ b/src/org/lineageos/lineageparts/profiles/TriggerPagerAdapter.java
-@@ -177,11 +177,7 @@ public class TriggerPagerAdapter extends FragmentPagerAdapter {
+@@ -135,11 +135,7 @@ public class TriggerPagerAdapter extends FragmentPagerAdapter {
          /**
           * The album fragment
           */
@@ -28,10 +28,10 @@ index 25dd1ae..c38065b 100644
          private final Class<? extends Fragment> mFragmentClass;
          private final int mNameRes;
 diff --git a/src/org/lineageos/lineageparts/profiles/actions/item/TriggerItem.java b/src/org/lineageos/lineageparts/profiles/actions/item/TriggerItem.java
-index 8757b4d..ae911a6 100644
+index 25e45cf..ed086bb 100644
 --- a/src/org/lineageos/lineageparts/profiles/actions/item/TriggerItem.java
 +++ b/src/org/lineageos/lineageparts/profiles/actions/item/TriggerItem.java
-@@ -77,8 +77,6 @@ public class TriggerItem extends Item {
+@@ -66,8 +66,6 @@ public class TriggerItem extends Item {
                  return R.string.profile_tabs_wifi;
              case BLUETOOTH:
                  return R.string.profile_tabs_bluetooth;
@@ -41,4 +41,5 @@ index 8757b4d..ae911a6 100644
          }
      }
 -- 
-2.34.1
+2.29.2
+

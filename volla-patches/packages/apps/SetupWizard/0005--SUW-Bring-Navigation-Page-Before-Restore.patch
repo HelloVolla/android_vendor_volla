@@ -1,0 +1,61 @@
+From 363f2cc05b3bf5f7fae3515cf5dd42e18f13dc7c Mon Sep 17 00:00:00 2001
+From: techyminati <techyminati@outlook.com>
+Date: Wed, 13 Mar 2024 09:08:41 +0000
+Subject: [PATCH] SUW: Bring Navigation Page Before Restore
+
+Change-Id: I5cbb848eba789c4515da5b09f2b5b40389a913ed
+Signed-off-by: techyminati <techyminati@outlook.com>
+---
+ res/raw/lineage_wizard_script.xml      | 6 +++---
+ res/raw/lineage_wizard_script_user.xml | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/res/raw/lineage_wizard_script.xml b/res/raw/lineage_wizard_script.xml
+index ec2ab22..8a66d66 100644
+--- a/res/raw/lineage_wizard_script.xml
++++ b/res/raw/lineage_wizard_script.xml
+@@ -69,15 +69,15 @@
+     </WizardAction>
+ 
+     <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_BIOMETRIC_SETTINGS;end" id="biometric_settings">
+-        <result wizard:action="restore" />
++        <result wizard:action="navigation_settings" />
+     </WizardAction>
+ 
+     <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_RESTORE_BACKUP;end" id="restore">
+-        <result wizard:action="navigation_settings" />
++        <result wizard:action="finish" />
+     </WizardAction>
+ 
+     <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.NAVIGATION_SETTINGS;end" id="navigation_settings">
+-        <result wizard:action="finish" />
++        <result wizard:action="restore" />
+     </WizardAction>
+ 
+     <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_SETUP_COMPLETE;end" id="finish">
+diff --git a/res/raw/lineage_wizard_script_user.xml b/res/raw/lineage_wizard_script_user.xml
+index d480901..553da39 100644
+--- a/res/raw/lineage_wizard_script_user.xml
++++ b/res/raw/lineage_wizard_script_user.xml
+@@ -32,15 +32,15 @@
+     </WizardAction>
+ 
+     <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_BIOMETRIC_SETTINGS;end" id="biometric_settings">
+-        <result wizard:action="restore" />
++        <result wizard:action="navigation_settings" />
+     </WizardAction>
+ 
+     <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_RESTORE_BACKUP;end" id="restore">
+-        <result wizard:action="navigation_settings" />
++        <result wizard:action="finish" />
+     </WizardAction>
+ 
+     <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.NAVIGATION_SETTINGS;end" id="navigation_settings">
+-        <result wizard:action="finish" />
++        <result wizard:action="restore" />
+     </WizardAction>
+ 
+     <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_SETUP_COMPLETE;end" id="finish">
+-- 
+2.34.1
+

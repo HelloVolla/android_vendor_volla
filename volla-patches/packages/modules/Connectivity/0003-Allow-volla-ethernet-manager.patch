@@ -1,0 +1,25 @@
+From 8e8126376362ec23f71bd7ca24a0bbb8ce12040c Mon Sep 17 00:00:00 2001
+From: Volla BuildBot <build@volla.com>
+Date: Thu, 15 Feb 2024 00:55:48 +0100
+Subject: [PATCH] Allow volla ethernet manager
+
+Change-Id: Ib0b8bf3ac005c7115652241d08d23ab0a1b75a1a
+---
+ framework-t/Android.bp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/framework-t/Android.bp b/framework-t/Android.bp
+index 9c8b359..15cb653 100644
+--- a/framework-t/Android.bp
++++ b/framework-t/Android.bp
+@@ -119,6 +119,7 @@ java_sdk_library {
+         "//packages/modules/Connectivity/service-t",
+         "//packages/modules/Connectivity/nearby/service",
+         "//frameworks/base",
++        "//packages/apps/VollaEthernetManager/app/src/main",
+ 
+         // Tests using hidden APIs
+         "//cts/tests/netlegacy22.api",
+-- 
+2.34.1
+
