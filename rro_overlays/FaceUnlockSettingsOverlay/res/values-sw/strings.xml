@@ -43,11 +43,11 @@ Baada ya kufuta, utahitaji alama ya kidole chako, mchoro au nenosiri lako ili uf
     <string name="security_settings_face_enroll_introduction_consent_message_0">Ruhusu mtoto wako atumie uso wake kufungua simu yake</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Wewe na mtoto wako mnaweza kufuta muundo wa uso wake au kuzima kipengele cha Kufungua kwa Uso wakati wowote katika Mipangilio. Miundo ya uso inahifadhiwa kwenye simu hadi utakapoifuta.
 
-Pata maelezo zaidi kwenye forum.volla.online."</string>
+Pata maelezo zaidi kwenye g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Uamuzi ni wako na mtoto wako</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Unaweza kufuta muundo wa uso wako au uzime kipengele cha Kufungua kwa Uso wakati wowote katika Mipangilio. Miundo ya uso inahifadhiwa kwenye simu hadi utakapoifuta.
 
-Pata maelezo zaidi kwenye forum.volla.online."</string>
+Pata maelezo zaidi kwenye g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Uamuzi ni wako</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Kipengele cha Kufungua kwa Uso huunda muundo wa kipekee wa uso wa mtoto wako ili kuthibitisha kuwa ni yeye. Ili kuunda muundo huu wa uso wakati wa kuweka mipangilio, mtoto wako atapiga picha za uso wake kutoka pembe tofauti.
 

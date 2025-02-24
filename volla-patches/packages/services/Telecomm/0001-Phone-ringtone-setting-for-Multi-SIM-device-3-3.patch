@@ -1,4 +1,4 @@
-From 5a07095fb53800068a9bff93d61c631ab1de78da Mon Sep 17 00:00:00 2001
+From 2e7b8cd7f33d2b6d24611e97dd3daf9aa5e3349f Mon Sep 17 00:00:00 2001
 From: Ting Yu <ting.x.yu@sony.com>
 Date: Mon, 12 Nov 2018 16:03:04 +0800
 Subject: [PATCH] Phone ringtone setting for Multi SIM device [3/3]
@@ -10,23 +10,13 @@ Depends-On: I9c6ccff938122332d222853d469ad9a623c7d193
 Bug: 118735436
 Test: Manual
 Change-Id: I895996903593eac8e20968605f74bf2fa85000aa
-Signed-off-by: iKeramat <ikeramat80@gmail.com>
-
-fixup! Phone ringtone setting for Multi SIM device [3/3]
-
-Support getting incoming call ringtone for each SIM.
-
-Depends-On: I9c6ccff938122332d222853d469ad9a623c7d193
-
-Bug: 118735436
-Test: Manual
-Change-Id: Ife38121cd938e4f0c44b1147fceb0fe94bf08b22
+Signed-off-by: techyminati <techyminati@icloud.com>
 ---
  .../server/telecom/RingtoneFactory.java       | 21 +++++++++++++------
  1 file changed, 15 insertions(+), 6 deletions(-)
 
 diff --git a/src/com/android/server/telecom/RingtoneFactory.java b/src/com/android/server/telecom/RingtoneFactory.java
-index 5c469987f..85fc7c15f 100644
+index 16fa0c4cd..3dd2db62d 100644
 --- a/src/com/android/server/telecom/RingtoneFactory.java
 +++ b/src/com/android/server/telecom/RingtoneFactory.java
 @@ -30,6 +30,7 @@ import android.os.UserManager;
@@ -37,8 +27,8 @@ index 5c469987f..85fc7c15f 100644
  import android.text.TextUtils;
  
  import com.android.internal.annotations.VisibleForTesting;
-@@ -87,16 +88,22 @@ public class RingtoneFactory {
-         if(ringtone == null) {
+@@ -85,20 +86,26 @@ public class RingtoneFactory {
+         if (ringtone == null) {
              // Contact didn't specify ringtone or custom Ringtone creation failed. Get default
              // ringtone for user or profile.
 -            Context contextToUse = hasDefaultRingtoneForUser(userContext) ? userContext : mContext;
@@ -47,9 +37,13 @@ index 5c469987f..85fc7c15f 100644
 +            int phoneId = SubscriptionManager.getPhoneId(subId);
 +            Context contextToUse = hasDefaultRingtoneForUserBySlot(userContext, phoneId)
 +                    ? userContext : mContext;
+             UserManager um = contextToUse.getSystemService(UserManager.class);
+             boolean isUserUnlocked = mFeatureFlags.telecomResolveHiddenDependencies()
+                     ? um.isUserUnlocked(contextToUse.getUser())
+                     : um.isUserUnlocked(contextToUse.getUserId());
 +
              Uri defaultRingtoneUri;
-             if (UserManager.get(contextToUse).isUserUnlocked(contextToUse.getUserId())) {
+             if (isUserUnlocked) {
 -                defaultRingtoneUri = RingtoneManager.getActualDefaultRingtoneUri(contextToUse,
 -                        RingtoneManager.TYPE_RINGTONE);
 +                defaultRingtoneUri = RingtoneManager.getActualDefaultRingtoneUriBySlot(
@@ -64,7 +58,7 @@ index 5c469987f..85fc7c15f 100644
                  if (defaultRingtoneUri == null) {
                      Log.i(this, "getRingtone: Settings.System.DEFAULT_RINGTONE_URI is null.");
                  }
-@@ -174,12 +181,14 @@ public class RingtoneFactory {
+@@ -196,12 +203,14 @@ public class RingtoneFactory {
          return null;
      }
  
@@ -82,5 +76,5 @@ index 5c469987f..85fc7c15f 100644
  
      private boolean isWorkContact(Call incomingCall) {
 -- 
-2.29.2
+2.34.1
 

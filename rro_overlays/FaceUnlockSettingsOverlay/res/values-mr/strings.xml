@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">तुमच्या लहान मुलाला त्यांचा फोन अनलॉक करण्यासाठी त्यांचा चेहरा वापरण्याची अनुमती द्या</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"तुम्ही आणि तुमचे लहान मूल त्यांचे फेस मॉडेल हटवू शकते किंवा सेटिंग्ज मध्ये फेस अनलॉक कधीही बंद करू शकते. फेस मॉडेल हटवली जात नाहीत तोपर्यंत ती फोनवर स्टोअर केली जातात.
 
- forum.volla.online येथे अधिक जाणून घ्या."</string>
+ g.co/pixel/faceunlock येथे अधिक जाणून घ्या."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">तुम्ही आणि तुमच्या लहान मुलाकडे नियंत्रण आहे</string>
     <string name="security_settings_face_enroll_introduction_control_message">"तुम्ही सेटिंग्ज मध्ये कधीही तुमचे फेस मॉडेल हटवू शकता किंवा फेस अनलॉक बंद करू शकता. तुम्ही फेस मॉडेल हटवेपर्यंत ती फोनवर स्टोअर केली जातात.
 
-forum.volla.online येथे अधिक जाणून घ्या."</string>
+g.co/pixel/faceunlock येथे अधिक जाणून घ्या."</string>
     <string name="security_settings_face_enroll_introduction_control_title">तुम्ही नियंत्रक आहात</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"ते तुमचे लहान मूल आहे याची पडताळणी करण्यासाठी फेस अनलॉक हे त्यांच्या चेहऱ्याचे युनिक मॉडेल तयार करते. सेटअपदरम्यान हे फेस मॉडेल तयार करण्यासाठी, तुमचे लहान मूल त्यांच्या चेहऱ्याचे वेगवेगळ्या बाजूने फोटो काढेल.
 

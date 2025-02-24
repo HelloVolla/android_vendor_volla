@@ -1,4 +1,4 @@
-From 1fdcbcd2729a7d27b4729611eb906d4b381fec6b Mon Sep 17 00:00:00 2001
+From 06fbee5efa982df190fc0a336974c85b374e44bc Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Fri, 6 Aug 2021 23:24:14 +0430
 Subject: [PATCH] Revert "recovery: New install/progress animation"

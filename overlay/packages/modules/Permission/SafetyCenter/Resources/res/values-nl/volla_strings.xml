@@ -1,0 +1,6 @@
+<resources>
+    <!-- Algemeen -->
+    <string name="volla_securitymode_label">Veiligheidsmodus</string>
+    <string name="volla_securitymode_summary">Veiligheidsmodus configuratie</string>
+
+</resources>

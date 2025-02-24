@@ -1,4 +1,4 @@
-From f56d0c600e710333fdbf794dd714ea952c29ab0c Mon Sep 17 00:00:00 2001
+From 5d629ca9d089a1fb3237fa09ae30a4520035fcac Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 3 Dec 2022 20:19:53 +0330
 Subject: [PATCH] SettingsHelper: Enable ContentObserver for all users

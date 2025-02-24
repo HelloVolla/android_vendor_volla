@@ -30,8 +30,13 @@ PRODUCT_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += $(LOCAL_PATH)/overlay
 
 ifeq ($(strip $(VOLLA_BUILD_FLAVOR)),)
+ifneq ($(filter %_mimir,$(TARGET_PRODUCT)),)
+PRODUCT_PACKAGE_OVERLAYS += $(LOCAL_PATH)/wallpaper_tablet
+PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += $(LOCAL_PATH)/wallpaper_tablet
+else
 PRODUCT_PACKAGE_OVERLAYS += $(LOCAL_PATH)/wallpaper
 PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += $(LOCAL_PATH)/wallpaper
+endif
 endif
 
 PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
@@ -76,6 +81,18 @@ ifeq ($(filter %_yggdrasil %_yggdrasilx,$(TARGET_PRODUCT)),)
 PRODUCT_PACKAGES += AOSPEmailRemover
 endif
 
+ifneq ($(filter %_yggdrasil %_yggdrasilx %_vidofnir %_mimameid,$(TARGET_PRODUCT)),)
+PRODUCT_PACKAGES += FossifyCalendarRemover
+else
+PRODUCT_PACKAGES += SimpleCalendarRemover
+endif
+
+ifneq ($(filter %_yggdrasil %_yggdrasilx %_vidofnir %_mimameid %_algiz,$(TARGET_PRODUCT)),)
+PRODUCT_PACKAGES += FossifyMusicRemover
+else
+PRODUCT_PACKAGES += MaxfourRemover
+endif
+
 # Updater
 ifeq ($(strip $(VOLLA_BUILD_FLAVOR)),)
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
@@ -96,6 +113,10 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.biometrics.face.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/android.hardware.biometrics.face.xml
+
+# GameSpace
+PRODUCT_PACKAGES += \
+    GameSpace
 
 # Fonts
 PRODUCT_PACKAGES += \
@@ -141,10 +162,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.boot.vendor.overlay.theme=com.volla.overlay.nlp
 
-# DNS
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/dnsmasq/dnsmasq.rc:$(TARGET_COPY_OUT_SYSTEM)/etc/init/dnsmasq.rc \
-    $(LOCAL_PATH)/dnsmasq/volladns.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/volladns.conf
+# Volla dnsmasq
+PRODUCT_PACKAGES += \
+	vdnsmasq
 
 # imei_restore
 PRODUCT_COPY_FILES += \
@@ -175,7 +195,6 @@ PRODUCT_ARTIFACT_PATH_REQUIREMENT_ALLOWED_LIST += \
     system/app/com.volla.vollaboard/com.volla.vollaboard.apk \
     system/etc/com.volla.gsmnlp/lacells.db \
     system/etc/init/abm.rc \
-    system/etc/init/dnsmasq.rc \
     system/etc/init/imei_restore.rc \
     system/etc/localhost.bks \
     system/etc/org.fdroid.fdroid/additional_repos.xml \
@@ -184,7 +203,6 @@ PRODUCT_ARTIFACT_PATH_REQUIREMENT_ALLOWED_LIST += \
     system/etc/permissions/whitelist_com.google.android.gms.xml \
     system/etc/permissions/whitelist_com.volla.launcher.xml \
     system/etc/sysconfig/whitelist_com.google.android.gms.xml \
-    system/etc/volladns.conf \
     system/fonts/NotoSans-Black.ttf \
     system/fonts/NotoSans-BlackItalic.ttf \
     system/fonts/NotoSans-Bold.ttf \

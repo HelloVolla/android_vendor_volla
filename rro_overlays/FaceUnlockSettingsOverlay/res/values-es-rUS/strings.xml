@@ -43,11 +43,11 @@ Luego, deberás ingresar tu huella dactilar, PIN, patrón o contraseña para des
     <string name="security_settings_face_enroll_introduction_consent_message_0">Permite que tu hijo desbloquee su teléfono con el rostro</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Tu hijo y tú pueden borrar el modelo de rostro o desactivar la función Desbloqueo facial en cualquier momento desde Configuración. Los modelos de rostros se almacenan en el teléfono hasta que se borran.
 
-Obtén más información en forum.volla.online."</string>
+Obtén más información en g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Tanto tú como tu hijo tienen el control</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Puedes borrar el modelo de rostro o desactivar la función Desbloqueo facial en cualquier momento desde Configuración. Los modelos de rostros se almacenan en el teléfono hasta que los borras.
 
-Obtén más información en forum.volla.online."</string>
+Obtén más información en g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Tú tienes el control</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"La función de Desbloqueo facial crea un modelo único del rostro de tu hijo para verificar su identidad. A fin de crear el modelo durante la configuración, tu hijo deberá tomar fotos de su rostro desde distintos ángulos.
 

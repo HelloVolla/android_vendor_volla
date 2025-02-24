@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">Балаңыз өз телефонын ашуы үшін, оған Бет тану функциясын қолдануына рұқсат беріңіз.</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Балаңыз екеуіңіз кез келген уақытта \"Параметрлер\" бөлімінен оның бет үлгісін жоя аласыздар. Бет тану функциясын өшіріп қоюға да болады. Үлгілер өзіңіз жойғанша сақталып тұрады.
 
-Толығырақ: forum.volla.online."</string>
+Толығырақ: g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Бәрін балаңыз екеуіңіз басқарасыздар</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Кез келген уақытта \"Параметрлер\" бөлімінен бет үлгісін жоюға немесе Бет тану функциясын өшіруге болады. Бет үлгілері жойылғанша телефонда сақталып тұра береді.
 
-Толығырақ: forum.volla.online."</string>
+Толығырақ: g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Барлығы өз қолыңызда</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Балаңыздың жеке басын растау үшін Бет тану функциясы оның бетінің қайталанбас үлгісін жасайды. Реттеу кезінде бет үлгісін жасау үшін, балаңыз бетін жан-жағынан суретке түсіреді.
 

@@ -43,11 +43,11 @@ Oʻchirib tashlangandan keyin telefoningiz qulfini ochish yoki ilovalarda autent
     <string name="security_settings_face_enroll_introduction_consent_message_0">Farzandingiz yuzi bilan telefonni qulfdan chiqarishiga ruxsat bering</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Siz va farzandingiz istalgan vaqt Sozlamalar orqali yuz modelini oʻchirib tashlashingiz yoki yuz bilan ochishni faolsizlantirishingiz mumkin. Yuz modellari telefonda oʻchirilmaguncha saqlanadi.
 
-Batafsil: forum.volla.online."</string>
+Batafsil: g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Siz va farzandingiz boshqarasiz</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Istalgan vaqt Sozlamalar orqali yuz modelini oʻchirib tashlashingiz yoki yuz bilan ochishni faolsizlantirishingiz mumkin. Yuz modellari telefonda oʻchirilmaguncha saqlanadi.
 
-Batafsil: forum.volla.online."</string>
+Batafsil: g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Boshqaruv oʻz qoʻlingizda</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Yuz bilan ochish autentifikatsiya paytida shaxsni tanish uchun uning farzandingiz yuzi unikal modelini yaratadi. Sozlash davomida farzandingiz yuzi modelini yaratish uchun uning yuzi turli burchak ostida rasmga olinadi.
 

@@ -1,4 +1,4 @@
-From a71b263635576e9ed69c3bd97c79ca63dd57c9c3 Mon Sep 17 00:00:00 2001
+From 944bf0335f9c436dd5ceda292421fc757ba44c19 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 12 Feb 2023 05:22:08 +0330
 Subject: [PATCH] lineage: Drop audio props
@@ -10,10 +10,10 @@ Change-Id: I095626eda237d5c527a0a2ac5fd99d3f9835fe27
  2 files changed, 9 deletions(-)
 
 diff --git a/config/common_mobile.mk b/config/common_mobile.mk
-index a9a66ee2..0b3bee87 100644
+index 4e898b4b..c7bd78da 100644
 --- a/config/common_mobile.mk
 +++ b/config/common_mobile.mk
-@@ -7,11 +7,6 @@ include vendor/lineage/config/aosp_audio.mk
+@@ -8,11 +8,6 @@ include vendor/lineage/config/aosp_audio.mk
  # Include Lineage audio files
  include vendor/lineage/config/lineage_audio.mk
  
@@ -26,7 +26,7 @@ index a9a66ee2..0b3bee87 100644
  PRODUCT_PACKAGES += \
      Backgrounds \
 diff --git a/config/telephony.mk b/config/telephony.mk
-index be414ed5..bdaa02b2 100644
+index 0c6ebba8..80c8876e 100644
 --- a/config/telephony.mk
 +++ b/config/telephony.mk
 @@ -16,10 +16,6 @@ PRODUCT_PACKAGES += \

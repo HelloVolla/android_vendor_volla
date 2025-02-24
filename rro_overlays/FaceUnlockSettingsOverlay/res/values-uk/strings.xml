@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">Дозвольте дитині розблоковувати телефон за допомогою фейсконтролю</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Ви та дитина будь-коли можете видалити модель обличчя або вимкнути фейсконтроль у налаштуваннях. Моделі облич зберігаються на телефоні, доки ви їх не видалите.
 
-Докладніше читайте на сторінці forum.volla.online."</string>
+Докладніше читайте на сторінці g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Ви та дитина керуєте налаштуваннями</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Ви будь-коли можете видалити свою модель обличчя або вимкнути фейсконтроль у налаштуваннях. Моделі облич зберігаються на телефоні, доки ви їх не видалите.
 
-Докладніше читайте на сторінці forum.volla.online."</string>
+Докладніше читайте на сторінці g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Усе під вашим контролем</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Фейсконтроль створює унікальну модель обличчя вашої дитини, щоб підтверджувати її особу. Для цього дитині потрібно сфотографувати своє обличчя під різними кутами.
 

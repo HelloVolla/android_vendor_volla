@@ -1,4 +1,4 @@
-From eb1358e7fa8da9a511169f174a018c7ecafbe1a2 Mon Sep 17 00:00:00 2001
+From e5358e5b0d6ef41ac93a794cd48bb64d69e2e763 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Wed, 21 Feb 2024 02:18:05 +0330
 Subject: [PATCH] Add LinkMicroG support
@@ -12,10 +12,10 @@ Change-Id: Icc9142ee541f1c6d429bc36ec068ef887e46cfbf
  4 files changed, 47 insertions(+)
 
 diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index 21cfed46..b4bb5c41 100644
+index ae332dfe..9259ffa6 100644
 --- a/api/lineage_current.txt
 +++ b/api/lineage_current.txt
-@@ -866,6 +866,8 @@ package lineageos.applock {
+@@ -865,6 +865,8 @@ package lineageos.applock {
      java.util.List<java.lang.String> getLockedPackages();
      method public void addAppLockCallback(lineageos.applock.IAppLockCallback);
      method public void removeAppLockCallback(lineageos.applock.IAppLockCallback);
@@ -25,7 +25,7 @@ index 21cfed46..b4bb5c41 100644
  
  }
 diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java b/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
-index c848e8c1..4bbb5172 100644
+index c848e8c1..acd612cf 100644
 --- a/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
 +++ b/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
 @@ -34,6 +34,7 @@ import android.os.Looper;

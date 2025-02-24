@@ -1,0 +1,6 @@
+<resources>
+    <!-- Обща информация -->
+    <string name="volla_securitymode_label">Режим на сигурност</string>
+    <string name="volla_securitymode_summary">Конфигурация на режима на сигурност</string>
+
+</resources>

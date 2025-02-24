@@ -1,0 +1,49 @@
+From f3a8c8eb945ff7b16af00a6895ac64c24077bd77 Mon Sep 17 00:00:00 2001
+From: Aryan Sinha <aryan.sinha@volla.online>
+Date: Sun, 5 Jan 2025 17:53:46 +0000
+Subject: [PATCH] Fix MicroG Spoofing
+
+Change-Id: I516b26e5fb5ddb7d19ead15b0a979ab394a91aea
+Signed-off-by: Aryan Sinha <aryan.sinha@volla.online>
+---
+ .../com/android/server/pm/ComputerEngine.java   | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/services/core/java/com/android/server/pm/ComputerEngine.java b/services/core/java/com/android/server/pm/ComputerEngine.java
+index 30f206e94ab4..7ec87fa9caa5 100644
+--- a/services/core/java/com/android/server/pm/ComputerEngine.java
++++ b/services/core/java/com/android/server/pm/ComputerEngine.java
+@@ -158,7 +158,7 @@ import com.android.server.utils.WatchedLongSparseArray;
+ import com.android.server.utils.WatchedSparseBooleanArray;
+ import com.android.server.utils.WatchedSparseIntArray;
+ import com.android.server.wm.ActivityTaskManagerInternal;
+-
++import java.security.cert.CertificateException;
+ import libcore.util.EmptyArray;
+ 
+ import java.io.BufferedOutputStream;
+@@ -1532,6 +1532,21 @@ public class ComputerEngine implements Computer {
+                 return null;
+             }
+ 
++            if (isMicroG) {
++                try {
++                    packageInfo.signingInfo = new SigningInfo(
++                            new SigningDetails(
++                                    packageInfo.signatures,
++                                    SigningDetails.SignatureSchemeVersion.SIGNING_BLOCK_V3,
++                                    SigningDetails.toSigningKeys(packageInfo.signatures),
++                                    null
++                            )
++                    );
++                } catch (CertificateException e) {
++                    Slog.e(TAG, "Caught an exception when creating signing keys: ", e);
++                }
++            }
++
+             packageInfo.packageName = packageInfo.applicationInfo.packageName =
+                     resolveExternalPackageName(p);
+ 
+-- 
+2.34.1
+

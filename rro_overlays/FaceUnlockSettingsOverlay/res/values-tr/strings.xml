@@ -43,11 +43,11 @@ Silme işleminden sonra, telefonunuzun kilidini açmak veya uygulamalarda kimli�
     <string name="security_settings_face_enroll_introduction_consent_message_0">Çocuğunuzun, telefonunu açmak için yüzünü kullanmasına izin verin</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Siz ve çocuğunuz, istediğiniz zaman Ayarlar'dan Yüz Tanıma Kilidi'ni devre dışı bırakabilir veya çocuğunuzun yüz modelini silebilirsiniz. Yüz modelleri, silinene kadar telefonda saklanır.
 
-Daha fazla bilgiyi forum.volla.online adresinde bulabilirsiniz."</string>
+Daha fazla bilgiyi g.co/pixel/faceunlock adresinde bulabilirsiniz."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Kontrol sizde ve çocuğunuzdadır</string>
     <string name="security_settings_face_enroll_introduction_control_message">"İstediğiniz zaman Ayarlar'dan Yüz Tanıma Kilidi'ni devre dışı bırakabilir veya yüz modelinizi silebilirsiniz. Yüz modelleri, siz silene kadar telefonda saklanır.
 
-Daha fazla bilgiyi forum.volla.online adresinde bulabilirsiniz."</string>
+Daha fazla bilgiyi g.co/pixel/faceunlock adresinde bulabilirsiniz."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Kontrol sizde</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Yüz Tanıma Kilidi, çocuğunuzun kimliğini doğrulamak için yüzünün benzersiz bir modelini oluşturur. Çocuğunuz, kurulum sırasında bu yüz modelini oluşturmak için yüzünün farklı açılardan resimlerini çeker.
 

@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">Балаңызга телефонунун кулпусун ачуу үчүн жүзүн колдонууга уруксат бериңиз</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Балаңыз жүзүнүн үлгүсүн же Жүзүнөн таанып ачуу функциясын Жөндөөлөрдөн каалаган убакта өчүрө алат. Жүздүн үлгүлөрү өчүрүлмөйүнчө телефондо сакталат.
 
-Кененирээк малымат: forum.volla.online."</string>
+Кененирээк малымат: g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Баарын өзүңүз жана балаңыз көзөмөлдөйт</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Жүзүңүздүн үлгүсүн же Жүзүнөн таанып ачуу функциясын Жөндөөлөрдөн каалаган убакта өчүрсөңүз болот. Жүздүн үлгүлөрү өчүрүлмөйүнчө телефонуңузда сакталат.
 
-Кененирээк малымат: forum.volla.online."</string>
+Кененирээк малымат: g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Баары өзүңүздүн колуңузда</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Жүзүнөн таанып ачуу функциясы балаңызды таануу үчүн жүзүнүн өзгөчө үлгүсүн түзөт. Жүзүнүн үлгүсүн түзүү үчүн балаңыз жүзүн ар тараптан сүрөткө тартышы керек.
 

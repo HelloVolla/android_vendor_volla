@@ -1,4 +1,4 @@
-From 9c44bf816b668aa6af360a362bb1ec7fec89bcad Mon Sep 17 00:00:00 2001
+From 193ad4d9b39854eb33b3e92514ff1e4a26216223 Mon Sep 17 00:00:00 2001
 From: Volla BuildBot <build@volla.com>
 Date: Sun, 24 Mar 2024 11:45:25 +0000
 Subject: [PATCH] Use OSS talkback
@@ -9,10 +9,10 @@ Change-Id: Ic3ee8417638cbf83a6f81a3e53318bd75a77d4b3
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/com/android/settings/accessibility/AccessibilitySettingsForSetupWizard.java b/src/com/android/settings/accessibility/AccessibilitySettingsForSetupWizard.java
-index 5e9f807..5695032 100644
+index fdf75924785..a0d8ebe422a 100644
 --- a/src/com/android/settings/accessibility/AccessibilitySettingsForSetupWizard.java
 +++ b/src/com/android/settings/accessibility/AccessibilitySettingsForSetupWizard.java
-@@ -64,7 +64,7 @@ public class AccessibilitySettingsForSetupWizard extends DashboardFragment
+@@ -62,7 +62,7 @@ public class AccessibilitySettingsForSetupWizard extends DashboardFragment
  
      // Package names and service names used to identify screen reader and SelectToSpeak services.
      @VisibleForTesting
@@ -22,5 +22,5 @@ index 5e9f807..5695032 100644
      static final String SCREEN_READER_SERVICE_NAME =
              "com.google.android.marvin.talkback.TalkBackService";
 -- 
-2.34.1
+2.29.2
 

@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">নিজের ফোন আনলক করার জন্য আপনার সন্তানকে তার মুখ ব্যবহার করার অনুমতি দেওয়া</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"আপনি এবং আপনার সন্তান যেকোনও সময় ফেস মডেল মুছে ফেলতে পারেন বা সেটিংস থেকে 'ফেস আনলক' ফিচারটি বন্ধ করে দিতে পারেন। মুছে না ফেলা পর্যন্ত ফেস মডেল ফোনে সেভ করা থাকে।
 
-forum.volla.online লিঙ্ক থেকে আরও জানুন।"</string>
+g.co/pixel/faceunlock লিঙ্ক থেকে আরও জানুন।"</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">আপনি ও আপনার সন্তান এটি নিয়ন্ত্রণ করছেন</string>
     <string name="security_settings_face_enroll_introduction_control_message">"আপনি যেকোনও সময় ফেস মডেল মুছে ফেলতে পারেন বা সেটিংস থেকে 'ফেস আনলক' ফিচার বন্ধ করে দিতে পারেন। আপনি মুছে না ফেলা পর্যন্ত ফেস মডেল ফোনে সেভ করা থাকে
 
-forum.volla.online লিঙ্ক থেকে আরও জানুন।"</string>
+g.co/pixel/faceunlock লিঙ্ক থেকে আরও জানুন।"</string>
     <string name="security_settings_face_enroll_introduction_control_title">নিয়ন্ত্রণ আপনার হাতেই রয়েছে</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"'ফেস আনলক' আপনার সন্তানের পরিচয় যাচাই করার জন্য মুখের একটি অনন্য মডেল তৈরি করে। সেটআপ করার সময় এই ফেস মডেল তৈরি করতে, আপনার সন্তানকে বিভিন্ন দিক থেকে তার মুখের ছবি নিতে হবে।
 

@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">הרשאה לילד או לילדה להשתמש בזיהוי פנים כדי לבטל את הנעילה של הטלפון</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"‏האפשרות למחוק את התבנית לזיהוי הפנים, או להשבית את הפיצ'ר 'פתיחה ע\"י זיהוי הפנים', זמינה לך ולילד או לילדה שלך בכל שלב בהגדרות. התבניות לזיהוי פנים נשמרות בטלפון עד שהן נמחקות.
 
-מידע נוסף זמין בכתובת forum.volla.online."</string>
+מידע נוסף זמין בכתובת g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">השליטה נמצאת בידיים שלך ושל הילד או הילדה</string>
     <string name="security_settings_face_enroll_introduction_control_message">"‏בכל שלב אפשר למחוק את התבנית לזיהוי הפנים או להשבית את הפיצ'ר 'פתיחה ע\"י זיהוי הפנים' בהגדרות. התבניות לזיהוי הפנים נשמרות בטלפון עד שהן נמחקות.
 
-מידע נוסף זמין בכתובת forum.volla.online"</string>
+מידע נוסף זמין בכתובת g.co/pixel/faceunlock"</string>
     <string name="security_settings_face_enroll_introduction_control_title">השליטה בידיים שלך</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"הפיצ'ר 'פתיחה ע\"י זיהוי הפנים' יוצר תבנית ייחודית של הפנים של הילד או הילדה כדי לאמת את זהותם. כדי ליצור את התבנית הזו לזיהוי הפנים במהלך ההגדרה, יהיה על הילד או הילדה לצלם את פניהם מזוויות שונות.
 

@@ -1,0 +1,22 @@
+cc_prebuilt_binary {
+    name: "vdnsmasq",
+    system_ext_specific: true,
+    strip: {
+        none: true,
+    },
+    target: {
+        android_arm64: {
+            srcs: ["vdnsmasq"],
+        },
+    },
+    check_elf_files: false,
+    init_rc: ["vdnsmasq.rc"],
+    required: ["volladns.conf"],
+}
+
+prebuilt_etc {
+    name: "volladns.conf",
+    system_ext_specific: true,
+    src: "volladns.conf",
+}
+

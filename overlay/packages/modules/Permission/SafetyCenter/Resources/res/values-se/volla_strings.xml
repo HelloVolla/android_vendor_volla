@@ -1,0 +1,6 @@
+<resources>
+    <!-- Allmänt -->
+    <string name="volla_securitymode_label">Säkerhetsläge för läge</string>
+    <string name="volla_securitymode_summary">Konfiguration av säkerhetsläget</string>
+
+</resources>

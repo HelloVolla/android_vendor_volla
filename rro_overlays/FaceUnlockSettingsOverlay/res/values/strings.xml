@@ -58,12 +58,11 @@ After deletion, you will need your fingerprint, PIN, pattern, or password to unl
     <string name="security_settings_face_enroll_introduction_consent_message">Using your child’s face to unlock their phone may be less secure than a strong pattern or PIN.</string>
     <string name="security_settings_face_enroll_introduction_consent_message_0">Allow your child to use their face to unlock their phone</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"You and your child can delete their face model or turn off Face Unlock at any time in Settings. Face models are stored on the phone until they’re deleted.
-
-Learn more at forum.volla.online."</string>
+</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">You and your child are in control</string>
     <string name="security_settings_face_enroll_introduction_control_message">"You can delete your face model or turn off Face Unlock at any time in Settings. Face models are stored on the phone until you delete them.
 
-Learn more at forum.volla.online."</string>
+</string>
     <string name="security_settings_face_enroll_introduction_control_title">You’re in control</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Face Unlock creates a unique model of your child’s face to verify it’s them. To create this face model during setup, your child will take images of their face from different angles.
 

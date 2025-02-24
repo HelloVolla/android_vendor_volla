@@ -43,11 +43,11 @@ Efter sletningen skal du bruge dit fingeraftryk, din pinkode, dit mønster eller
     <string name="security_settings_face_enroll_introduction_consent_message_0">Tillad, at dit barn bruger ansigtet til at låse sin telefon op</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Du og dit barn kan til enhver tid slette barnets ansigtsmodel eller deaktivere ansigtslås i Indstillinger. Ansigtsmodeller gemmes på telefonen, indtil de slettes.
 
-Få flere oplysninger på forum.volla.online."</string>
+Få flere oplysninger på g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Du og dit barn har kontrollen</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Du kan til enhver tid slette din ansigtsmodel eller deaktivere ansigtslås i Indstillinger. Ansigtsmodeller gemmes på telefonen, indtil du sletter dem.
 
-Få flere oplysninger på forum.volla.online."</string>
+Få flere oplysninger på g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Du bestemmer</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Ansigtslåsen opretter en unik model af dit barns ansigt, så dit barns identitet kan bekræftes. For at oprette denne ansigtsmodel under konfigurationen skal dit barn tage billeder af sit ansigt fra forskellige vinkler.
 

@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">允许您的孩子使用脸部解锁手机</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"您和您的孩子可以随时在“设置”部分删除其脸部模型或关闭人脸解锁功能。脸部模型会存储在手机上，直到被删除为止。
 
-如需了解详情，请访问 forum.volla.online。"</string>
+如需了解详情，请访问 g.co/pixel/faceunlock。"</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">一切由您和您的孩子掌握</string>
     <string name="security_settings_face_enroll_introduction_control_message">"您可以随时在“设置”部分删除自己的脸部模型或关闭人脸解锁功能。脸部模型会存储在手机上，直到您将其删除为止。
 
-如需了解详情，请访问 forum.volla.online。"</string>
+如需了解详情，请访问 g.co/pixel/faceunlock。"</string>
     <string name="security_settings_face_enroll_introduction_control_title">一切由您掌控</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"人脸解锁功能会为您的孩子创建一个具有唯一性的脸部模型，用于验证其身份。为了在设置过程中创建脸部模型，您的孩子需要拍摄不同角度的脸部图片。
 

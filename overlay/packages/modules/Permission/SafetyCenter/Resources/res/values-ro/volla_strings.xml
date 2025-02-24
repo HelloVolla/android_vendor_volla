@@ -1,0 +1,6 @@
+<resources>
+    <!-- Generalități -->
+    <string name="volla_securitymode_label">Modul de securitate</string>
+    <string name="volla_securitymode_summary">Configurarea modului de securitate</string>
+
+</resources>

@@ -1,4 +1,4 @@
-From b346a4bcd591ef7f501178514c21c7cf5a7d4f77 Mon Sep 17 00:00:00 2001
+From 4f4d768b41cbd112fc032f123cb18f5b565b5580 Mon Sep 17 00:00:00 2001
 From: Your Name <you@example.com>
 Date: Sat, 10 Jun 2023 16:48:02 +0200
 Subject: [PATCH] Full black color on lockscreen text
@@ -9,10 +9,10 @@ Change-Id: I7da612d4d99603e0051e4b4389968adcf76b947b
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/packages/SystemUI/res/values/styles.xml b/packages/SystemUI/res/values/styles.xml
-index 892c2f4caa39..74e674d005a7 100644
+index ce08ca3e43af..ff52cf344d6b 100644
 --- a/packages/SystemUI/res/values/styles.xml
 +++ b/packages/SystemUI/res/values/styles.xml
-@@ -324,7 +324,7 @@
+@@ -370,7 +370,7 @@
      <style name="Theme.SystemUI.LightWallpaper">
          <item name="wallpaperTextColor">@*android:color/primary_text_material_light</item>
          <item name="wallpaperTextColorSecondary">@*android:color/secondary_text_material_light</item>

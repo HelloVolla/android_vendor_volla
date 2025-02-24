@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">Хүүхдэдээ царайгаа ашиглан утасныхаа түгжээг тайлахыг зөвшөөрнө үү</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Та болон таны хүүхэд хүссэн үедээ Тохиргоо хэсэгт түүний нүүрний загварыг устгах эсвэл Царайгаар түгжээ тайлах онцлогийг унтраах боломжтой. Нүүрний загваруудыг устгах хүртэл утсанд хадгална.
 
-Та forum.volla.online дээрээс нэмэлт мэдээлэл авна уу."</string>
+Та g.co/pixel/faceunlock дээрээс нэмэлт мэдээлэл авна уу."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Хяналт танд болон таны хүүхдэд байна</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Та хүссэн үедээ Тохиргоо хэсэгт нүүрний загвараа устгах эсвэл Царайгаар түгжээ тайлах онцлогийг унтраах боломжтой. Нүүрний загваруудыг таныг устгах хүртэл утсанд хадгална.
 
-Tа forum.volla.online дээрээс нэмэлт мэдээлэл авна уу."</string>
+Tа g.co/pixel/faceunlock дээрээс нэмэлт мэдээлэл авна уу."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Хяналт таны гарт</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Царайгаар түгжээ тайлах онцлог нь таны хүүхдийг мөн болохыг баталгаажуулахын тулд түүний нүүрний өвөрмөц загварыг үүсгэдэг. Тохируулгын үед энэ нүүрний загварыг үүсгэхийн тулд таны хүүхэд нүүрнийхээ зургийг өөр өөр өнцгөөс авна.
 

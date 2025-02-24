@@ -1,0 +1,6 @@
+<resources>
+    <!-- Général -->
+    <string name="volla_securitymode_label">Mode de sécurité</string>
+    <string name="volla_securitymode_summary">Configuration du mode de sécurité</string>
+
+</resources>

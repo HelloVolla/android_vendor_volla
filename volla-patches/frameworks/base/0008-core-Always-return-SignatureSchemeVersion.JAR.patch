@@ -1,0 +1,28 @@
+From 6aa08a9bbaf7871537810a70f4ac168b8c6b61fc Mon Sep 17 00:00:00 2001
+From: Aryan Sinha <techyminati@outlook.com>
+Date: Sun, 10 Mar 2024 14:51:57 +0000
+Subject: [PATCH] core: Always return SignatureSchemeVersion.JAR
+
+Change-Id: I3094cfe63d78538472f00e3656dc2c55872438ff
+Signed-off-by: Volla BuildBot <build@volla.com>
+---
+ core/java/android/util/apk/ApkSignatureVerifier.java | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/core/java/android/util/apk/ApkSignatureVerifier.java b/core/java/android/util/apk/ApkSignatureVerifier.java
+index a6724da02bf2..884a2a439432 100644
+--- a/core/java/android/util/apk/ApkSignatureVerifier.java
++++ b/core/java/android/util/apk/ApkSignatureVerifier.java
+@@ -513,9 +513,6 @@ public class ApkSignatureVerifier {
+      * {@code targetSdk}.
+      */
+     public static int getMinimumSignatureSchemeVersionForTargetSdk(int targetSdk) {
+-        if (targetSdk >= Build.VERSION_CODES.R) {
+-            return SignatureSchemeVersion.SIGNING_BLOCK_V2;
+-        }
+         return SignatureSchemeVersion.JAR;
+     }
+ 
+-- 
+2.29.2
+

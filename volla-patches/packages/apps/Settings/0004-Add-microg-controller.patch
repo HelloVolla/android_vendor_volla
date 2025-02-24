@@ -1,4 +1,4 @@
-From 5227e4b251f0517eba9bfaeb81a691f906f4ee00 Mon Sep 17 00:00:00 2001
+From 13f57ca70d4095977c7bc8b2f0b5ad7da4135ee3 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Wed, 21 Feb 2024 05:11:04 +0330
 Subject: [PATCH] Add microg controller
@@ -11,10 +11,10 @@ Change-Id: I0df284f5c4c30edd06a528e554970bc639a6b626
  create mode 100644 src/com/android/settings/applications/MicrogController.java
 
 diff --git a/res/xml/apps.xml b/res/xml/apps.xml
-index d8f0632ef58..2ca2b36ce28 100644
+index 10526cbfd9d..2557f914663 100644
 --- a/res/xml/apps.xml
 +++ b/res/xml/apps.xml
-@@ -67,7 +67,8 @@
+@@ -80,7 +80,8 @@
          android:title="@string/enable_microg_title"
          android:summary="@string/enable_microg_summary"
          android:order="-994"

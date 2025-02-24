@@ -43,11 +43,11 @@ Dopo l'eliminazione dovrai usare l'impronta, il PIN, la sequenza o la password p
     <string name="security_settings_face_enroll_introduction_consent_message_0">Consenti a tuo figlio di usare il suo volto per sbloccare il suo telefono</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Tu e tuo figlio potete eliminare il modello del volto o disattivare lo sblocco con il volto in qualsiasi momento nelle Impostazioni. I modelli del volto rimangono memorizzati sul telefono finché non vengono eliminati.
 
-Scopri di più all'indirizzo forum.volla.online."</string>
+Scopri di più all'indirizzo g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Tu e tuo figlio avete il controllo</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Puoi eliminare il modello del volto o disattivare lo sblocco con il volto in qualsiasi momento nelle Impostazioni. I modelli del volto rimangono memorizzati sul telefono finché non li elimini.
 
-Scopri di più all'indirizzo forum.volla.online."</string>
+Scopri di più all'indirizzo g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Sei tu ad avere il controllo</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Sblocco con il volto crea un modello univoco del volto di tuo figlio per verificare la sua identità. Per creare il modello del volto durante la configurazione, tuo figlio dovrà acquisire immagini del suo volto da diverse angolazioni.
 

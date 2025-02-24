@@ -43,11 +43,11 @@ Unha vez eliminado, terás que usar a impresión dixital, o PIN, o padrón ou o 
     <string name="security_settings_face_enroll_introduction_consent_message_0">Permite que o teu fillo ou filla utilice a cara para desbloquear o seu teléfono</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"A túa filla ou fillo e mais ti podedes eliminar o seu modelo facial ou desactivar o desbloqueo facial cando queirades en Configuración. Os modelos faciais almacenaranse no teléfono ata que se eliminen.
 
-Obtén máis información en forum.volla.online."</string>
+Obtén máis información en g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">A túa filla ou fillo e mais ti tedes o control</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Podes eliminar o teu modelo facial ou desactivar o desbloqueo facial cando queiras en Configuración. Os modelos faciais almacenaranse no teléfono ata que os elimines.
 
-Obtén máis información en forum.volla.online."</string>
+Obtén máis información en g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Ti tes o control</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Co desbloqueo facial, créase un modelo único da cara da túa filla ou fillo para verificar a súa identidade. Para crear este modelo facial durante a configuración, a túa filla ou fillo deberá facer fotos da cara desde distintos ángulos.
 

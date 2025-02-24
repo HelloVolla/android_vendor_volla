@@ -1,4 +1,4 @@
-From 55fdc603c31cab4bd7dd1d7a3ffc9bc43e0d7172 Mon Sep 17 00:00:00 2001
+From 79461951a0a8c5bbce0f42ecac3e2f15b0dc3ddc Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Thu, 10 Feb 2022 10:50:10 +0330
 Subject: [PATCH] Implement ChildMode
@@ -31,10 +31,10 @@ index 90e9b951..1591defe 100644
  lineage_framework_module := $(LOCAL_INSTALLED_MODULE)
  
 diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index 6a1c7956..a4b621c7 100644
+index 814660d3..1f7527f8 100644
 --- a/api/lineage_current.txt
 +++ b/api/lineage_current.txt
-@@ -887,3 +887,14 @@ package lineageos.firewall {
+@@ -886,3 +886,14 @@ package lineageos.firewall {
    }
  
  }
@@ -137,7 +137,7 @@ index 00000000..a5fcef7f
 +    };
 +}
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index 3e006189..3bf418b2 100644
+index d7deb2d8..d4ccc369 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
 @@ -113,6 +113,7 @@

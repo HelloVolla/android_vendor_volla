@@ -43,11 +43,11 @@ Setelah dihapus, Anda akan memerlukan sidik jari, PIN, pola, atau sandi untuk me
     <string name="security_settings_face_enroll_introduction_consent_message_0">Izinkan anak Anda menggunakan wajah untuk membuka kunci ponselnya</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Anda dan anak Anda dapat menghapus model wajahnya atau menonaktifkan Face Unlock kapan pun di Setelan. Model wajah akan disimpan di ponsel hingga dihapus.
 
-Pelajari lebih lanjut di forum.volla.online."</string>
+Pelajari lebih lanjut di g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Anda dan anak Anda memegang kendali</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Anda dapat menghapus model wajah atau menonaktifkan Face Unlock kapan saja di Setelan. Model wajah disimpan di ponsel hingga Anda menghapusnya.
 
-Pelajari lebih lanjut di forum.volla.online."</string>
+Pelajari lebih lanjut di g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Anda memegang kendali</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Face Unlock membuat model unik dari wajah anak Anda untuk memverifikasi dirinya. Untuk membuat model wajah ini selama penyiapan, anak Anda perlu mengambil gambar wajah dari berbagai sudut.
 

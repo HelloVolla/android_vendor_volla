@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">Дозволите детету да користи откључавање телефона лицем</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Ви и дете можете да избришете модел лица или да искључите откључавање лицем у било ком тренутку у Подешавањима. Модели лица се чувају на телефону док их не избришете.
 
-Сазнајте више на forum.volla.online."</string>
+Сазнајте више на g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Ви и дете имате контролу</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Можете да избришете модел лица или да искључите откључавање лицем у било ком тренутку у Подешавањима. Модели лица се чувају на телефону док их не избришете.
 
-Сазнајте више на forum.volla.online."</string>
+Сазнајте више на g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Ви имате контролу</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Откључавање лицем прави јединствени модел дететовог лица ради потврде идентитета. Да би направило овај модел лица током подешавања, дете треба да слика лице из различитих углова.
 

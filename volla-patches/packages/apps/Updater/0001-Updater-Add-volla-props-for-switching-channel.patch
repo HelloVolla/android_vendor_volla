@@ -1,4 +1,4 @@
-From 2ac718c45f405e5a2664582470403a06417d026c Mon Sep 17 00:00:00 2001
+From 9d7622d4205fc37b56ed14100a744a673b408594 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 25 Jun 2022 16:11:04 +0430
 Subject: [PATCH] Updater: Add volla props for switching channel

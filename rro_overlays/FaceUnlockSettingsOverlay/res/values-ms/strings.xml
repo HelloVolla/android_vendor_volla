@@ -43,11 +43,11 @@ Selepas pemadaman, anda akan memerlukan cap jari, PIN, corak atau kata laluan an
     <string name="security_settings_face_enroll_introduction_consent_message_0">Benarkan anak anda menggunakan wajah mereka untuk membuka kunci telefon mereka</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Anda dan anak anda boleh memadamkan model wajah mereka atau mematikan Buka Kunci Wajah pada bila-bila masa dalam Tetapan. Model wajah disimpan pada telefon sehingga ia dipadamkan.
 
-Ketahui lebih lanjut melalui forum.volla.online."</string>
+Ketahui lebih lanjut melalui g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Anda dan anak anda berada dalam kawalan</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Anda boleh memadamkan model wajah anda atau mematikan Buka Kunci Wajah pada bila-bila masa dalam Tetapan. Model wajah disimpan pada telefon sehingga anda memadamkan model itu.
 
-Ketahui lebih lanjut melalui forum.volla.online."</string>
+Ketahui lebih lanjut melalui g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Kawalan di tangan anda</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Buka Kunci Wajah menghasilkan model unik wajah anak anda untuk mengesahkan identiti anak anda. Untuk menghasilkan model wajah semasa persediaan, anak anda akan mengambil imej wajah mereka daripada sudut yang berbeza.
 

@@ -1,4 +1,4 @@
-From 140c31dcf2676aacad25810573c2f0f31d116a38 Mon Sep 17 00:00:00 2001
+From 3e9e8cf169d6f91d3f53a2b891df6a33d4b9c4dd Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 25 Oct 2020 08:06:58 +0330
 Subject: [PATCH] overlay: Drop default wallpapers

@@ -43,11 +43,11 @@ Pas fshirjes do të të duhet gjurma jote e gishtit, kodi PIN, motivi ose fjalë
     <string name="security_settings_face_enroll_introduction_consent_message_0">Lejo fëmijën të përdorë fytyrën për të shkyçur telefonin e tij</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Ti dhe fëmija yt mund ta fshini modelin e fytyrës së tij ose ta çaktivizoni \"Shkyçjen me fytyrë\" në çdo kohë te \"Cilësimet\". Modelet e fytyrës ruhen në telefon deri kur të fshihen.
 
-Mëso më shumë te forum.volla.online."</string>
+Mëso më shumë te g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Kontrollin e ke ti dhe fëmija yt</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Mund ta fshish modelin e fytyrës sate ose ta çaktivizosh \"Shkyçjen me fytyrë\" në çdo kohë te \"Cilësimet\". Modelet e fytyrës ruhen në telefon derisa t'i fshish.
 
-Mëso më shumë te forum.volla.online."</string>
+Mëso më shumë te g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Kontrolli është në duart e tua</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"\"Shkyçja me fytyrë\" krijon një model unik të fytyrës së fëmijës tënd për të verifikuar që është ai. Për ta krijuar këtë model të fytyrës gjatë konfigurimit, fëmija nxjerr imazhe të fytyrës së tij nga kënde të ndryshme.
 

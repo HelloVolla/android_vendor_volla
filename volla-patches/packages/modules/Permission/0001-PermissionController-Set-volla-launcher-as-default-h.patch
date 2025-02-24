@@ -1,24 +1,25 @@
-From 60c9ae70d97e044429437d872d06dc2cd91983c5 Mon Sep 17 00:00:00 2001
+From 85f6aae25eb72b090e0a9cd6a9258f2401082124 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 18 Jul 2021 13:15:08 +0800
 Subject: [PATCH] PermissionController: Set volla launcher as default home
 
 Change-Id: I4fbdcb63fe0ead9f9932fca7ccc426054fa24e06
 ---
- .../role/model/HomeRoleBehavior.java          | 27 +------------------
- 1 file changed, 1 insertion(+), 26 deletions(-)
+ .../controller/behavior/HomeRoleBehavior.java | 29 +------------------
+ 1 file changed, 1 insertion(+), 28 deletions(-)
 
-diff --git a/PermissionController/src/com/android/permissioncontroller/role/model/HomeRoleBehavior.java b/PermissionController/src/com/android/permissioncontroller/role/model/HomeRoleBehavior.java
-index af6acfeec..69a4da585 100644
---- a/PermissionController/src/com/android/permissioncontroller/role/model/HomeRoleBehavior.java
-+++ b/PermissionController/src/com/android/permissioncontroller/role/model/HomeRoleBehavior.java
-@@ -72,32 +72,7 @@ public class HomeRoleBehavior implements RoleBehavior {
-     @Nullable
+diff --git a/PermissionController/role-controller/java/com/android/role/controller/behavior/HomeRoleBehavior.java b/PermissionController/role-controller/java/com/android/role/controller/behavior/HomeRoleBehavior.java
+index 8c1446b50..1055bb125 100644
+--- a/PermissionController/role-controller/java/com/android/role/controller/behavior/HomeRoleBehavior.java
++++ b/PermissionController/role-controller/java/com/android/role/controller/behavior/HomeRoleBehavior.java
+@@ -80,34 +80,7 @@ public class HomeRoleBehavior implements RoleBehavior {
      @Override
-     public String getFallbackHolder(@NonNull Role role, @NonNull Context context) {
--        PackageManager packageManager = context.getPackageManager();
+     public String getFallbackHolderAsUser(@NonNull Role role, @NonNull UserHandle user,
+             @NonNull Context context) {
+-        Context userContext = UserUtils.getUserContext(context, user);
+-        PackageManager userPackageManager = userContext.getPackageManager();
 -        Intent intent = role.getRequiredComponents().get(0).getIntentFilterData().createIntent();
--        List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(intent,
+-        List<ResolveInfo> resolveInfos = userPackageManager.queryIntentActivities(intent,
 -                PackageManager.MATCH_DEFAULT_ONLY | PackageManager.MATCH_DIRECT_BOOT_AWARE
 -                | PackageManager.MATCH_DIRECT_BOOT_UNAWARE);
 -
@@ -31,7 +32,8 @@ index af6acfeec..69a4da585 100644
 -            // Leave the fallback to PackageManagerService if there is only the fallback home in
 -            // Settings, because if we fallback to it here, we cannot fallback to a normal home
 -            // later, and user cannot see the fallback home in the UI anyway.
--            if (isSettingsApplication(resolveInfo.activityInfo.applicationInfo, context)) {
+-            if (isSettingsApplicationAsUser(resolveInfo.activityInfo.applicationInfo, user,
+-                    context)) {
 -                continue;
 -            }
 -            if (resolveInfo.priority > priority) {
@@ -45,7 +47,7 @@ index af6acfeec..69a4da585 100644
 +        return "com.volla.launcher";
      }
  
-     @Override
+     /**
 -- 
 2.29.2
 

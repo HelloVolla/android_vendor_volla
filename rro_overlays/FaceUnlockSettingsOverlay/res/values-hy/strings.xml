@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">Թույլ տվեք ձեր երեխային ապակողպել հեռախոսն իր դեմքով</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Դուք և ձեր երեխան ցանկացած պահի կարող եք ջնջել նրա դեմքի նմուշը կամ անջատել դեմքով ապակողպումը սարքի կարգավորումներում։ Դեմքի նմուշները պահվում են հեռախոսում այնքան ժամանակ, մինչև որ ջնջեք դրանք։
 
-Իմացեք ավելին forum.volla.online էջում։"</string>
+Իմացեք ավելին g.co/pixel/faceunlock էջում։"</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Դուք և երեխան եք կառավարում կարգավորումները</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Դուք ցանկացած պահի կարող եք ջնջել ձեր դեմքի նմուշը կամ անջատել դեմքով ապակողպումը սարքի կարգավորումներում։ Դեմքի նմուշները պահվում են հեռախոսում, մինչև որ ջնջեք դրանք։
 
-Իմացեք ավելին forum.volla.online էջում։"</string>
+Իմացեք ավելին g.co/pixel/faceunlock էջում։"</string>
     <string name="security_settings_face_enroll_introduction_control_title">Ամեն ինչ դուք եք վերահսկում</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Դեմքով ապակողպումը ստեղծում է ձեր երեխայի դեմքի եզակի նմուշը՝ նույնականացման ժամանակ նրան ճանաչելու համար։ Կարգավորման ժամանակ դեմքի նմուշը ստեղծելու համար երեխան պետք է լուսանկարի իր դեմքը մի քանի անկյուններից։
 

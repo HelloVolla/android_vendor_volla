@@ -43,11 +43,11 @@ Andlitslíkaninu þínu verður eytt varanlega á öruggan hátt.
     <string name="security_settings_face_enroll_introduction_consent_message_0">Leyfa barninu að nota andlitið til að opna símann</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Þú og barnið þitt getið eytt andlitslíkaninu eða slökkt á andlitslás hvenær sem er í stillingum. Andlitslíkön eru geymd í símanum þar til þeim er eytt.
 
-Nánar á forum.volla.online."</string>
+Nánar á g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Þú og barnið þitt stjórnið ferðinni</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Þú getur eytt andlitslíkaninu eða slökkt á andlitslás hvenær sem er í stillingum. Andlitslíkön eru geymd í símanum þar til þú eyðir þeim.
 
-Nánar á forum.volla.online."</string>
+Nánar á g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Þú ert við stjórnvölinn</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Andlitskenni býr til einkvæmt líkan af andliti barnsins þíns til að staðfesta hver það er. Til að búa andlitslíkanið til við uppsetningu tekur barnið þitt myndir af andlitinu á sér frá nokkrum sjónarhornum.
 

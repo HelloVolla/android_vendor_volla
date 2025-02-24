@@ -1,28 +1,29 @@
-From 72842b2676007905ca9104bcaa9aea2b2100655d Mon Sep 17 00:00:00 2001
+From 59847e6bb1c983d33ac30d819b6ff29cb903dad5 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
-Date: Sat, 12 Nov 2022 12:20:03 +0330
+Date: Fri, 19 Jul 2024 17:19:34 +0330
 Subject: [PATCH] LegalSettings: Move legal_url to resources
 
 Change-Id: I1270ff984b2c4143c3c1477896004a775ca2d848
 ---
- res/values/cm_strings.xml                                    | 3 +++
- .../deviceinfo/legal/LineageLicensePreferenceController.java | 5 ++---
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ res/values/volla_strings.xml                                | 6 ++++++
+ .../legal/LineageLicensePreferenceController.java           | 5 ++---
+ 2 files changed, 8 insertions(+), 3 deletions(-)
+ create mode 100644 res/values/volla_strings.xml
 
-diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
-index 9cda169ed0..7255f4ccfc 100644
---- a/res/values/cm_strings.xml
-+++ b/res/values/cm_strings.xml
-@@ -189,4 +189,7 @@
- 
-     <!-- Location settings screen, setting summary for Assisted GPS switch -->
-     <string name="assisted_gps_summary">Download satellite assistance data from the internet which can greatly improve the GPS startup performance. For emergency calls, assisted GPS is always allowed.</string>
-+
+diff --git a/res/values/volla_strings.xml b/res/values/volla_strings.xml
+new file mode 100644
+index 00000000000..543d1a5f581
+--- /dev/null
++++ b/res/values/volla_strings.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 +    <!-- Legal -->
 +    <string name="lineage_legal_url">https://lineageos.org/legal</string>
- </resources>
++
++</resources>
 diff --git a/src/com/android/settings/deviceinfo/legal/LineageLicensePreferenceController.java b/src/com/android/settings/deviceinfo/legal/LineageLicensePreferenceController.java
-index a59f5cf116..c727899f16 100644
+index a59f5cf1164..c727899f16f 100644
 --- a/src/com/android/settings/deviceinfo/legal/LineageLicensePreferenceController.java
 +++ b/src/com/android/settings/deviceinfo/legal/LineageLicensePreferenceController.java
 @@ -25,11 +25,10 @@ import androidx.preference.Preference;

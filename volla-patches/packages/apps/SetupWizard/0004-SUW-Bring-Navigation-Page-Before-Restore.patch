@@ -1,0 +1,75 @@
+From 7f09a451a3084df5ce54be1b97dba7b15e36a2a2 Mon Sep 17 00:00:00 2001
+From: techyminati <techyminati@outlook.com>
+Date: Wed, 13 Mar 2024 09:08:41 +0000
+Subject: [PATCH] SUW: Bring Navigation Page Before Restore
+
+Change-Id: I5cbb848eba789c4515da5b09f2b5b40389a913ed
+Signed-off-by: techyminati <techyminati@outlook.com>
+---
+ res/raw/lineage_wizard_script.xml      | 12 ++++++------
+ res/raw/lineage_wizard_script_user.xml | 12 ++++++------
+ 2 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/res/raw/lineage_wizard_script.xml b/res/raw/lineage_wizard_script.xml
+index 5d90f88..8a34d5b 100644
+--- a/res/raw/lineage_wizard_script.xml
++++ b/res/raw/lineage_wizard_script.xml
+@@ -41,6 +41,12 @@
+     <WizardAction
+         wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_DATETIME;end"
+         id="datetime">
++        <result wizard:action="navigation_settings" />
++    </WizardAction>
++
++    <WizardAction
++        wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.NAVIGATION_SETTINGS;end"
++        id="navigation_settings">
+         <result wizard:action="restore" />
+     </WizardAction>
+ 
+@@ -93,12 +99,6 @@
+     <WizardAction
+         wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.THEME_SETTINGS;end"
+         id="theme_settings">
+-        <result wizard:action="navigation_settings" />
+-    </WizardAction>
+-
+-    <WizardAction
+-        wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.NAVIGATION_SETTINGS;end"
+-        id="navigation_settings">
+         <result wizard:action="finish" />
+     </WizardAction>
+ 
+diff --git a/res/raw/lineage_wizard_script_user.xml b/res/raw/lineage_wizard_script_user.xml
+index 15325c6..c3042a9 100644
+--- a/res/raw/lineage_wizard_script_user.xml
++++ b/res/raw/lineage_wizard_script_user.xml
+@@ -11,6 +11,12 @@
+         wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_WELCOME;end"
+         id="welcome">
+         <result wizard:name="skip" wizard:resultCode="1" />
++        <result wizard:action="navigation_settings" />
++    </WizardAction>
++
++    <WizardAction
++        wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.NAVIGATION_SETTINGS;end"
++        id="navigation_settings">
+         <result wizard:action="restore" />
+     </WizardAction>
+ 
+@@ -41,12 +47,6 @@
+     <WizardAction
+         wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.THEME_SETTINGS;end"
+         id="theme_settings">
+-        <result wizard:action="navigation_settings" />
+-    </WizardAction>
+-
+-    <WizardAction
+-        wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.NAVIGATION_SETTINGS;end"
+-        id="navigation_settings">
+         <result wizard:action="finish" />
+     </WizardAction>
+ 
+-- 
+2.29.2
+

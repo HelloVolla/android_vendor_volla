@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">允許子女使用面孔解鎖手機</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"您和子女可隨時前往「設定」刪除面部模型或停用「面孔解鎖」功能。面部模型會儲存在手機上，直至其刪除為止。
 
-詳情請參閱 forum.volla.online。"</string>
+詳情請參閱 g.co/pixel/faceunlock。"</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">一切由您和子女做主</string>
     <string name="security_settings_face_enroll_introduction_control_message">"您可隨時前往「設定」刪除面部模型或停用「面孔解鎖」功能。面部模型會儲存在手機上，直到您刪除為止。
 
-詳情請瀏覽 forum.volla.online。"</string>
+詳情請瀏覽 g.co/pixel/faceunlock。"</string>
     <string name="security_settings_face_enroll_introduction_control_title">一切由您掌控</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"「面孔解鎖」功能會為您的子女建立獨一無二的面部模型，以便系統驗證其身分。如要在設定過程中建立此面部模型，您的子女需要從不同角度拍攝面孔。
 

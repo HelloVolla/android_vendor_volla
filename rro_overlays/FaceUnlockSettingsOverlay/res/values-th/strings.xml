@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">อนุญาตให้บุตรหลานใช้ใบหน้าเพื่อปลดล็อกโทรศัพท์</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"คุณและบุตรหลานลบรูปแบบใบหน้า หรือปิดการปลดล็อกด้วยใบหน้าได้ทุกเมื่อในการตั้งค่า ระบบจะเก็บรูปแบบใบหน้าไว้ในโทรศัพท์จนกว่าจะมีการลบออก
 
-ดูข้อมูลเพิ่มเติมที่ forum.volla.online"</string>
+ดูข้อมูลเพิ่มเติมที่ g.co/pixel/faceunlock"</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">คุณและบุตรหลานจะเป็นผู้ควบคุม</string>
     <string name="security_settings_face_enroll_introduction_control_message">"คุณลบรูปแบบใบหน้าหรือปิดการปลดล็อกด้วยใบหน้าได้ทุกเมื่อในการตั้งค่า ระบบจะเก็บรูปแบบใบหน้าไว้ในโทรศัพท์จนกว่าคุณจะลบออก
 
-ดูข้อมูลเพิ่มเติมที่ forum.volla.online"</string>
+ดูข้อมูลเพิ่มเติมที่ g.co/pixel/faceunlock"</string>
     <string name="security_settings_face_enroll_introduction_control_title">คุณควบคุมได้</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"การปลดล็อกด้วยใบหน้าจะสร้างรูปแบบใบหน้าที่เป็นเอกลักษณ์ของบุตรหลานเพื่อยืนยันว่าเป็นตนเอง ในการสร้างรูปแบบใบหน้านี้ระหว่างการตั้งค่า บุตรหลานจะถ่ายภาพใบหน้าจากมุมต่างๆ ที่ไม่ซ้ำกัน
 

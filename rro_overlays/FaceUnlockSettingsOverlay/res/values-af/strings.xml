@@ -43,11 +43,11 @@ Nadat dit uitgevee is, sal jy jou vingerafdruk, PIN, patroon of wagwoord moet h√
     <string name="security_settings_face_enroll_introduction_consent_message_0">Laat jou kind toe om hul gesig te gebruik om hul foon te ontsluit</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Jy en jou kind kan enige tyd in Instellings sy of haar gesigmodel uitvee of Gesigslot afskakel. Gesigmodelle word op die foon geberg totdat hulle uitgevee word.
 
-Kom meer te wete by forum.volla.online."</string>
+Kom meer te wete by g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Jy en jou kind is in beheer</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Jy kan enige tyd in Instellings jou gesigmodel uitvee of Gesigslot afskakel. Gesigmodelle word op die foon geberg totdat jy hulle uitvee.
 
-Kom meer te wete by forum.volla.online."</string>
+Kom meer te wete by g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Jy is in beheer</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Gesigslot skep 'n unieke model van jou kind se gesig om te verifieer dis hy of sy. Jou kind sal sy of haar gesig uit verskillende hoeke afneem om hierdie gesigmodel tydens die opstelling te skep.
 

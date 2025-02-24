@@ -1,4 +1,4 @@
-From 6b551df798ef3c0d4ffdbc06365619dbbcd11834 Mon Sep 17 00:00:00 2001
+From e21adac4e3e5dd02f552d00d7955f046f9395929 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 7 Aug 2021 00:46:47 +0430
 Subject: [PATCH] build: Rebrand to VollaOS
@@ -13,10 +13,10 @@ Change-Id: I5a1466d3d4880d9852e146047c3f7474c84185ab
  4 files changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/build/envsetup.sh b/build/envsetup.sh
-index 92c15ab6..e939b655 100644
+index 1306df2b..3bd5684a 100644
 --- a/build/envsetup.sh
 +++ b/build/envsetup.sh
-@@ -94,7 +94,7 @@ alias bib=breakfast
+@@ -95,7 +95,7 @@ alias bib=breakfast
  function eat()
  {
      if [ "$OUT" ] ; then
@@ -26,7 +26,7 @@ index 92c15ab6..e939b655 100644
              echo "Nothing to eat"
              return 1
 diff --git a/build/tasks/bacon.mk b/build/tasks/bacon.mk
-index 4f8bedc9..ce529a1d 100644
+index 2b90f261..65e89ed4 100644
 --- a/build/tasks/bacon.mk
 +++ b/build/tasks/bacon.mk
 @@ -16,7 +16,7 @@
@@ -39,7 +39,7 @@ index 4f8bedc9..ce529a1d 100644
  SHA256 := prebuilts/build-tools/path/$(HOST_PREBUILT_TAG)/sha256sum
  
 diff --git a/config/common.mk b/config/common.mk
-index 79478544..54618e2a 100644
+index ca58f4ad..00339579 100644
 --- a/config/common.mk
 +++ b/config/common.mk
 @@ -1,7 +1,7 @@
@@ -52,12 +52,12 @@ index 79478544..54618e2a 100644
  PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
  
 diff --git a/config/version.mk b/config/version.mk
-index 0d15a03e..60d06fc4 100644
+index 9fb74174..9b3af280 100644
 --- a/config/version.mk
 +++ b/config/version.mk
 @@ -1,4 +1,4 @@
--PRODUCT_VERSION_MAJOR = 20
-+PRODUCT_VERSION_MAJOR = 13
+-PRODUCT_VERSION_MAJOR = 21
++PRODUCT_VERSION_MAJOR = 14
  PRODUCT_VERSION_MINOR = 0
  
  ifeq ($(LINEAGE_VERSION_APPEND_TIME_OF_DAY),true)

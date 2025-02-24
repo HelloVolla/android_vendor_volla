@@ -43,11 +43,11 @@ Po usunięciu tych danych będziesz potrzebować odcisku palca, kodu PIN, wzoru 
     <string name="security_settings_face_enroll_introduction_consent_message_0">Zezwalaj na odblokowywanie telefonu przez dziecko za pomocą rozpoznawania twarzy</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Ty i Twoje dziecko w dowolnej chwili możecie usunąć model twarzy i wyłączyć rozpoznawanie twarzy w Ustawieniach. Modele twarzy są przechowywane na telefonie, dopóki nie zostaną usunięte.
 
-Więcej informacji znajdziesz na stronie forum.volla.online."</string>
+Więcej informacji znajdziesz na stronie g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">To Ty i Twoje dziecko macie nad wszystkim kontrolę</string>
     <string name="security_settings_face_enroll_introduction_control_message">"W dowolnej chwili możesz usunąć model twarzy i wyłączyć rozpoznawanie twarzy w ustawieniach. Modele twarzy są przechowywane na telefonie, dopóki ich nie usuniesz.
 
-Więcej informacji znajdziesz na stronie forum.volla.online"</string>
+Więcej informacji znajdziesz na stronie g.co/pixel/faceunlock"</string>
     <string name="security_settings_face_enroll_introduction_control_title">Masz wszystko pod kontrolą</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Rozpoznawanie twarzy tworzy unikalny model twarzy Twojego dziecka, na podstawie którego rozpoznaje je podczas weryfikacji tożsamości. Aby utworzyć taki model podczas konfiguracji, Twoje dziecko musi zrobić zdjęcia twarzy pod różnymi kątami.
 

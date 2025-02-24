@@ -43,11 +43,11 @@ Az eltávolítás után ujjlenyomatra, PIN-kódra, mintára vagy jelszóra lesz 
     <string name="security_settings_face_enroll_introduction_consent_message_0">Engedélyezheti gyermekének, hogy az arcával oldja fel a telefonja zárolását.</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"A Beállításokban Ön és gyermeke bármikor törölheti gyermeke arcmodelljét, illetve kikapcsolhatja az Arcalapú feloldást. A telefon addig tárolja az arcmodelleket, amíg Ön vagy gyermeke nem törli őket.
 
-További információ: forum.volla.online."</string>
+További információ: g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Az irányítás az Ön és gyermeke kezében van</string>
     <string name="security_settings_face_enroll_introduction_control_message">"A Beállításokban bármikor törölheti az arcmodelljét, illetve kikapcsolhatja az Arcalapú feloldást. A telefon addig tárolja az arcmodelleket, amíg Ön nem törli őket.
 
-További információ: forum.volla.online."</string>
+További információ: g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Az irányítás az Ön kezében van</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Az Arcalapú feloldás egyéni modellt hoz létre az Ön gyermekének arcáról a személyazonossága ellenőrzéséhez. Az arcmodellnek a beállítás során való létrehozásához gyermekének képeket kell készítenie az arcáról különböző szögekből.
 

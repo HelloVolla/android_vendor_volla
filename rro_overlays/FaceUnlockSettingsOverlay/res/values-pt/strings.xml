@@ -43,11 +43,11 @@ Após a remoção, você precisará da impressão digital, do PIN, padrão ou se
     <string name="security_settings_face_enroll_introduction_consent_message_0">Permita que a criança use o rosto para desbloquear o smartphone</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Você e a criança podem excluir o modelo de rosto dela ou desativar o Desbloqueio facial a qualquer momento nas Configurações. Os modelos de rosto ficam armazenados no smartphone até serem excluídos.
 
-Saiba mais em forum.volla.online."</string>
+Saiba mais em g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Você e a criança estão no controle</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Você pode excluir seu modelo de rosto ou desativar o Desbloqueio facial a qualquer momento nas Configurações. Os modelos de rosto ficam armazenados no smartphone até serem excluídos manualmente.
 
-Saiba mais em forum.volla.online."</string>
+Saiba mais em g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Você no controle</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"O Desbloqueio facial cria um modelo único do rosto da criança para verificar a identidade dela. Para criar esse modelo durante a configuração, é necessário tirar fotos de vários ângulos do rosto da criança.
 

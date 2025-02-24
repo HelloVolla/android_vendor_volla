@@ -43,11 +43,11 @@ După ștergere, vei avea nevoie de amprentă, de codul PIN, de model sau de par
     <string name="security_settings_face_enroll_introduction_consent_message_0">Permite-i copilului să-și folosească fața pentru a debloca telefonul</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Tu și copilul tău puteți să ștergeți modelul său facial sau să dezactivați Deblocarea facială oricând din Setări. Modelele faciale sunt stocate pe telefon până când le ștergi.
 
-Află mai multe la forum.volla.online."</string>
+Află mai multe la g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Tu și copilul tău dețineți controlul</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Poți să ștergi modelul facial sau să dezactivezi Deblocarea facială oricând din Setări. Modelele faciale sunt stocate pe telefon până când le ștergi.
 
-Află mai multe la forum.volla.online."</string>
+Află mai multe la g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Tu deții controlul</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Deblocarea facială creează un model unic al feței copilului tău pentru a-i confirma identitatea. Pentru a crea acest model facial în timpul configurării, copilul își va fotografia fața din diferite unghiuri.
 

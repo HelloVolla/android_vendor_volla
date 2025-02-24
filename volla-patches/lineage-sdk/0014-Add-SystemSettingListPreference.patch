@@ -1,4 +1,4 @@
-From bc780b5ced55f19b10e0b2aecd53f984e9172cc7 Mon Sep 17 00:00:00 2001
+From 7e8d57bccd8875f44d87116740f38e90a97eeacb Mon Sep 17 00:00:00 2001
 From: Your Name <you@example.com>
 Date: Wed, 28 Sep 2022 08:55:50 +0200
 Subject: [PATCH] Add SystemSettingListPreference

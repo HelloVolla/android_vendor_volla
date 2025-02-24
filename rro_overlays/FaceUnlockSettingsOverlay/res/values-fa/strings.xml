@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">به فرزندتان اجازه دهید از چهره‌اش برای باز کردن قفل تلفن خود استفاده کند</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"‏شما و فرزندتان هرزمان بخواهید می‌توانید مدل چهره را حذف کنید، یا «قفل‌گشایی با چهره» را در «تنظیمات» خاموش کنید. تا وقتی مدل‌های چهره را حذف نکنید، در تلفن ذخیره می‌مانند.
 
-در forum.volla.online بیشتر بدانید."</string>
+در g.co/pixel/faceunlock بیشتر بدانید."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">کنترل دراختیار شما و فرزندتان است</string>
     <string name="security_settings_face_enroll_introduction_control_message">"‏هر زمان بخواهید می‌توانید مدل چهره‌تان را حذف کنید، یا «قفل‌گشایی با چهره» را در «تنظیمات» خاموش کنید. تا وقتی مدل‌های چهره را حذف نکنید، در تلفن ذخیره می‌مانند.
 
-در forum.volla.online بیشتر بدانید."</string>
+در g.co/pixel/faceunlock بیشتر بدانید."</string>
     <string name="security_settings_face_enroll_introduction_control_title">کنترل در دست شماست</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"«قفل‌گشایی با چهره» مدلی بی‌همتا از چهره فرزندتان ایجاد می‌کند که برای تأیید هویت او استفاده می‌شود. برای ایجاد این مدل چهره درحین راه‌اندازی، فرزندتان چند تصویر از زاویه‌های مختلف از چهره‌اش می‌گیرد.
 

@@ -1,4 +1,4 @@
-From ae80da07dcf63d3418b287fae5ddf3a6d8ccb478 Mon Sep 17 00:00:00 2001
+From d8ff1614e3ec49863f7fe8a846f61adc090c07fa Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Fri, 11 Feb 2022 19:58:13 +0330
 Subject: [PATCH] Implement Firewall
@@ -31,10 +31,10 @@ index 5129c7cb..90e9b951 100644
  lineage_framework_module := $(LOCAL_INSTALLED_MODULE)
  
 diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index 7e5e19aa..6a1c7956 100644
+index c12ac1d8..814660d3 100644
 --- a/api/lineage_current.txt
 +++ b/api/lineage_current.txt
-@@ -869,3 +869,21 @@ package lineageos.applock {
+@@ -868,3 +868,21 @@ package lineageos.applock {
    }
  
  }
@@ -489,7 +489,7 @@ index 00000000..4dee74d8
 +    }
 +}
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index 9500a05e..3e006189 100644
+index 7830f16b..d7deb2d8 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
 @@ -112,6 +112,7 @@

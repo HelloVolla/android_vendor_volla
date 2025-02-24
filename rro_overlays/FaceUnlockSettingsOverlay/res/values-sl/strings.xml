@@ -43,11 +43,11 @@ Po izbrisu boste za odklepanje telefona ali preverjanje pristnosti v aplikacijah
     <string name="security_settings_face_enroll_introduction_consent_message_0">Otroku dovolite odklepanje telefona z obrazom.</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Vi in otrok lahko v nastavitvah kadar koli izbrišete model obraza ali izklopite odklepanje z obrazom. Modeli obraza so shranjeni v telefonu, dokler niso izbrisani.
 
-Preberite več o tem na forum.volla.online."</string>
+Preberite več o tem na g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Vi in otrok imate nadzor</string>
     <string name="security_settings_face_enroll_introduction_control_message">"V nastavitvah lahko kadar koli izbrišete model obraza ali izklopite odklepanje z obrazom. Modeli obraza so shranjeni v telefonu, dokler jih ne izbrišete.
 
-Preberite več o tem na forum.volla.online."</string>
+Preberite več o tem na g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Vse imate pod nadzorom</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Odklepanje z obrazom ustvari edinstven model otrokovega obraza, s katerim potrdi svojo identiteto. Za ustvarjanje modela obraza med postopkom nastavitve mora otrok posneti svoj obraz iz različnih kotov.
 

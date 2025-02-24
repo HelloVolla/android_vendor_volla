@@ -1,4 +1,4 @@
-From b6f4a9a65017dcbdacf6e49b3f43a7761de9abc0 Mon Sep 17 00:00:00 2001
+From 33ad9d3be468e3bc7d476c873680462526a11568 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Tue, 20 Jul 2021 17:11:41 +0430
 Subject: [PATCH] sdk: Kill trust

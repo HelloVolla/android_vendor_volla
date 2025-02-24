@@ -43,11 +43,11 @@ Pärast kustutamist tuleb teil telefoni avamiseks või rakendustes autentimiseks
     <string name="security_settings_face_enroll_introduction_consent_message_0">Lubage lapsel telefon näo abil avada</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Seadetes saate (või saab laps) näomudeli alati kustutada või näoga avamise funktsiooni välja lülitada. Näomudelid salvestatakse telefoni, kuni need kustutatakse.
 
-Lisateave: forum.volla.online."</string>
+Lisateave: g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Kontroll on teie ja teie lapse käes</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Seadetes saate oma näomudeli alati kustutada või näoga avamise funktsiooni välja lülitada. Näomudelid salvestatakse telefoni, kuni need kustutate.
 
-Lisateave: forum.volla.online."</string>
+Lisateave: g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Teie juhite toimuvat</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Näoga avamise funktsioon loob teie lapse näost kordumatu mudeli, mille abil tema isik kinnitada. Näomudeli loomiseks jäädvustatakse seadistamise ajal kujutised tema näost eri nurkade all.
 

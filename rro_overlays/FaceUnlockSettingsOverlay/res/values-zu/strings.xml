@@ -43,11 +43,11 @@ Ngemva kokusulwa, uzodinga izigxivizo zakho zeminwe, iphinikhodi, iphethini, nom
     <string name="security_settings_face_enroll_introduction_consent_message_0">Vumela ingane yakho ukusebenzisa ubuso bayo ukuvula ifoni yakhe</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Wena nengane yakho ningasusa imodeli yobuso bayo noma nivale Ukuvula Ngobuso noma kunini Kumasethingi. Amamodeli wobuso agcinwa efonini aze asulwe.
 
-Funda kabanzi ku-forum.volla.online."</string>
+Funda kabanzi ku-g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Wena nengane yakho niyalawula</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Ungasusa imodeli yobuso bakho noma uvale Ukuvula ngobuso noma nini Kumasethingi. Amamodeli wobuso agcinwa efonini uze uwasuse.
 
-Funda kabanzi ku- forum.volla.online."</string>
+Funda kabanzi ku- g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Uwena olawulayo</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Ukuvula ngobuso kudala imodeli ehlukile yobuso bengane yakho ukuqinisekisa ukuthi yiyona. Ukuze yenze le modeli yobuso ngesikhathi sokusetha, ingane yakho izothatha izithombe zobuso bayo ngezindlela ezihlukile.
 

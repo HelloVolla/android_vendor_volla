@@ -43,11 +43,11 @@ Vous devrez ensuite utiliser votre empreinte digitale, code, schéma ou mot de p
     <string name="security_settings_face_enroll_introduction_consent_message_0">Autorisez votre enfant à utiliser son visage pour déverrouiller son téléphone</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"À tout moment dans les paramètres, vous et votre enfant pouvez supprimer votre empreinte faciale, ou désactiver le déverrouillage par reconnaissance faciale. Les empreintes faciales sont stockées sur le téléphone jusqu'à ce que vous les supprimiez.
 
-En savoir plus : forum.volla.online."</string>
+En savoir plus : g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Gardez le contrôle, vous et votre enfant</string>
     <string name="security_settings_face_enroll_introduction_control_message">"À tout moment dans les paramètres, vous pouvez supprimer votre empreinte faciale ou désactiver le déverrouillage par reconnaissance faciale. Les empreintes faciales sont stockées sur le téléphone jusqu'à ce que vous les supprimiez.
 
-En savoir plus : forum.volla.online."</string>
+En savoir plus : g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Vous avez le contrôle</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Le déverrouillage par reconnaissance faciale crée une empreinte unique du visage de votre enfant pour valider son identité. Pour générer cette empreinte faciale lors de la configuration, votre enfant prendra des photos de son visage sous différents angles.
 

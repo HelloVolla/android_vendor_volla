@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">Επιτρέψτε στο παιδί σας να χρησιμοποιεί το πρόσωπό του για να ξεκλειδώνει το τηλέφωνό του</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Εσείς και το παιδί σας μπορείτε να διαγράψετε το μοντέλο προσώπου του ή να απενεργοποιήσετε το Ξεκλείδωμα με το πρόσωπο ανά πάσα στιγμή στις Ρυθμίσεις. Τα μοντέλα προσώπων αποθηκεύονται στο τηλέφωνο μέχρι να διαγραφούν.
 
-Μάθετε περισσότερα στο forum.volla.online."</string>
+Μάθετε περισσότερα στο g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Εσείς και το παιδί σας έχετε τον έλεγχο</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Μπορείτε να διαγράψετε το μοντέλο προσώπου σας ή να απενεργοποιήσετε το Ξεκλείδωμα με το πρόσωπο ανά πάσα στιγμή στις Ρυθμίσεις. Τα μοντέλα προσώπων αποθηκεύονται στο τηλέφωνο μέχρι να τα διαγράψετε.
 
-Μάθετε περισσότερα στο forum.volla.online."</string>
+Μάθετε περισσότερα στο g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Έχετε τον έλεγχο</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Το Ξεκλείδωμα με το πρόσωπο δημιουργεί ένα μοναδικό μοντέλο του προσώπου του παιδιού σας για να επαληθεύει την ταυτότητά του. Για τη δημιουργία αυτού του μοντέλου προσώπου κατά τη ρύθμιση, θα πρέπει να ληφθούν εικόνες του προσώπου του παιδιού σας από διαφορετικές γωνίες.
 

@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">მიეცით უფლება თქვენს ბავშვს, სახის მეშვეობით განბლოკოს თავისი ტელეფონი</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"თქვენ და თქვენ ბავშვს შეგიძლიათ სახის მოდელის წაშლა ან სახით განბლოკვის ნებისმიერ დროს გამორთვა პარამეტრებიდან. სახის მოდელები მანამ ინახება ტელეფონში, სანამ მათ არ წაშლით.
 
-შეიტყვეთ მეტი ბმულზე forum.volla.online."</string>
+შეიტყვეთ მეტი ბმულზე g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">თქვენ და თქვენი ბავშვი აკონტროლებთ ყველაფერს</string>
     <string name="security_settings_face_enroll_introduction_control_message">"თქვენი სახის მოდელის წაშლა ან სახით განბლოკვის გამორთვა ნებისმიერ დროს შეგიძლიათ პარამეტრებიდან. სახის მოდელები მანამ ინახება ტელეფონში, სანამ მათ არ წაშლით.
 
-შეიტყვეთ მეტი ბმულზე forum.volla.online."</string>
+შეიტყვეთ მეტი ბმულზე g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">ამას თქვენ აკონტროლებთ</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"სახით განბლოკვის ფუნქცია თქვენი ბავშვის სახის უნიკალურ მოდელს ქმნის მისი ვინაობის დადასტურების მიზნით. დაყენებისას სახის ამ მოდელის შესაქმნელად თქვენმა ბავშვმა უნდა გადაიღოს სახის სურათები სხვადასხვა რაკურსიდან.
 

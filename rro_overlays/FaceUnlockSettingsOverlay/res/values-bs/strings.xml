@@ -43,11 +43,11 @@ Nakon brisanja, za otključavanje telefona ili autentifikaciju u aplikacijama ć
     <string name="security_settings_face_enroll_introduction_consent_message_0">Dozvolite djetetu da svojim lice otključava telefon</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Vi i vaše dijete možete bilo kada u Postavkama izbrisati model lica djeteta ili isključiti otključavanje licem. Modeli lica će biti pohranjeni na telefonu dok ih ne izbrišete.
 
-Saznajte više na forum.volla.online."</string>
+Saznajte više na g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Vi i vaše dijete imate kontrolu</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Možete izbrisati model lica ili isključiti otključavanje licem bilo kada u Postavkama. Modeli lica će biti pohranjeni na telefonu dok ih ne izbrišete.
 
-Saznajte više na forum.volla.online."</string>
+Saznajte više na g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Vi upravljate svime</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Otključavanje licem kreira jedinstveni model lica vašeg djeteta radi potvrde vašeg identiteta. Da se kreira ovaj model lica tokom postavljanja, vaše dijete će trebati snimiti slike lica iz različitih uglova.
 

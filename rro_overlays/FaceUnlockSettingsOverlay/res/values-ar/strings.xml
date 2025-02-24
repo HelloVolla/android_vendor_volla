@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">السماح لطفلك باستخدام وجهه لفتح قفل هاتفه</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"‏يمكنك أنت وطفلك حذف نموذج وجهه أو إيقاف ميزة \"فتح الجهاز بالتعرف على الوجه\" في أي وقت في \"الإعدادات\". يتم تخزين نماذج الوجوه على الهاتف حتى يتم حذفها.
 
-تعرّف على مزيد من المعلومات على الرابط forum.volla.online."</string>
+تعرّف على مزيد من المعلومات على الرابط g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">ستتحكّم في هذه الميزة أنت وطفلك</string>
     <string name="security_settings_face_enroll_introduction_control_message">"‏يمكنك حذف نموذج الوجه أو إيقاف ميزة \"فتح الجهاز بالتعرف على الوجه\" في أي وقت في \"الإعدادات\". يتم تخزين نماذج الوجوه على هاتفك حتى تحذفها.
 
-تعرّف على مزيد من المعلومات على الرابط forum.volla.online."</string>
+تعرّف على مزيد من المعلومات على الرابط g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">القرار لك</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"تنشئ ميزة \"فتح الجهاز بالتعرف على الوجه\" نموذجًا فريدًا من وجه طفلك لإثبات هويته. لإنشاء نموذج الوجه هذا أثناء عملية الإعداد، سيلتقط طفلك صورًا لوجهه من زوايا مختلفة.
 

@@ -1,4 +1,4 @@
-From 22f32615df8f160cc33dcac0c97d2a0507c37ffe Mon Sep 17 00:00:00 2001
+From 984efa1267c2b6b637cf171d8f96f3d50caa8b41 Mon Sep 17 00:00:00 2001
 From: Luca Stefani <luca.stefani.ge1@gmail.com>
 Date: Thu, 20 Jan 2022 18:43:00 +0530
 Subject: [PATCH] Delay FCM registration until it's actually required
@@ -7,8 +7,6 @@ Most users / carriers don't need this, so let's avoid registering it for everyon
 
 Change-Id: I3f57ce0a1184a510d09638c703236989f8596c5f
 ---
- .../fcm/FcmRegistrationService.java                      | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/src/com/android/imsserviceentitlement/fcm/FcmRegistrationService.java b/src/com/android/imsserviceentitlement/fcm/FcmRegistrationService.java
 index 184740d..cb777a3 100644
@@ -17,12 +15,12 @@ index 184740d..cb777a3 100644
 @@ -30,6 +30,7 @@
  import com.android.imsserviceentitlement.job.JobManager;
  import com.android.imsserviceentitlement.utils.TelephonyUtils;
- 
+
 +import com.google.common.collect.ImmutableSet;
  import com.google.firebase.FirebaseApp;
  import com.google.firebase.FirebaseOptions;
  import com.google.firebase.iid.FirebaseInstanceId;
-@@ -110,8 +111,14 @@ public boolean onStopJob(JobParameters params) {
+@@ -110,8 +111,14 @@
       * The token changes when the InstanceID becomes invalid (e.g. app data is deleted).
       */
      protected void onHandleWork(JobParameters params) {

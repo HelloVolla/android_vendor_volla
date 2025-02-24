@@ -43,11 +43,11 @@ Pagkatapos mag-delete, kakailanganin mo ang fingerprint, PIN, pattern, o passwor
     <string name="security_settings_face_enroll_introduction_consent_message_0">Payagan ang iyong anak na gamitin ang kanyang mukha para i-unlock ang telepono niya</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Magagawa mo at ng iyong anak na i-delete ang kanyang face model o i-off ang Pag-unlock Gamit ang Mukha anumang oras sa Mga Setting. Sino-store ang mga face model sa telepono hanggang sa i-delete ang mga ito.
 
-Matuto pa sa forum.volla.online."</string>
+Matuto pa sa g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Ikaw at ang iyong anak ang may kontrol</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Puwede mong i-delete ang iyong face model o i-off ang Pag-unlock Gamit ang Mukha anumang oras sa Mga Setting. Naka-store ang mga face model sa telepono hanggang sa i-delete ang mga ito.
 
-Matuto pa sa forum.volla.online."</string>
+Matuto pa sa g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Ikaw ang may kontrol</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Gumagawa ang Pag-unlock Gamit ang Mukha ng natatanging modelo ng mukha ng iyong anak para i-verify na siya iyon. Para magawa ang face model na ito habang nagse-set up, kukuha ang iyong anak ng mga larawan ng kanyang mukha mula sa iba't ibang anggulo.
 

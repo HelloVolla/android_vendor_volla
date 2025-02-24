@@ -43,11 +43,11 @@ Na verwijdering heb je je vingerafdruk, pincode, patroon of wachtwoord nodig om 
     <string name="security_settings_face_enroll_introduction_consent_message_0">Toestaan dat je kind het gezicht gebruikt om de telefoon te ontgrendelen</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Jij en je kind kunnen op elk moment het gezichtsmodel van het kind verwijderen of ontgrendelen via gezichtsherkenning uitzetten in Instellingen. Gezichtsmodellen worden opgeslagen op de telefoon totdat ze worden verwijderd.
 
-Bekijk meer informatie op forum.volla.online."</string>
+Bekijk meer informatie op g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Jij en je kind hebben de controle</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Je kunt op elk moment je gezichtsmodel verwijderen of ontgrendelen via gezichtsherkenning uitzetten in Instellingen. Gezichtsmodellen worden opgeslagen op de telefoon totdat je ze verwijdert.
 
-Bekijk meer informatie op forum.volla.online."</string>
+Bekijk meer informatie op g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Jij hebt het voor het zeggen</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Ontgrendelen via gezichtsherkenning maakt een uniek model van het gezicht van je kind voor verificatie. Dit gezichtsmodel wordt tijdens het instellen gemaakt door vanuit verschillende hoeken foto's van het gezicht van je kind te maken.
 

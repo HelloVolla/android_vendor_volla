@@ -1,4 +1,4 @@
-From 75ca817aa20d28690df57778ae23d2d8338fbcb3 Mon Sep 17 00:00:00 2001
+From 5d323b4022eaac5f2bd1f7bb15cb048555a808e5 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 12 Nov 2023 16:31:55 +0330
 Subject: [PATCH] LineageParts: Kill trust
@@ -9,7 +9,7 @@ Subject: [PATCH] LineageParts: Kill trust
  2 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/AndroidManifest.xml b/AndroidManifest.xml
-index 75eaec9..fca55e9 100644
+index 73651de..38b820e 100644
 --- a/AndroidManifest.xml
 +++ b/AndroidManifest.xml
 @@ -52,7 +52,7 @@
@@ -30,7 +30,7 @@ index 75eaec9..fca55e9 100644
  
          <receiver
              android:name=".BootReceiver"
-@@ -206,7 +206,7 @@
+@@ -217,7 +217,7 @@
                  android:resource="@string/summary_empty" />
          </activity-alias>
  
@@ -39,7 +39,7 @@ index 75eaec9..fca55e9 100644
          <activity-alias
              android:name=".trust.TrustPreferences"
              android:exported="true"
-@@ -230,7 +230,7 @@
+@@ -241,7 +241,7 @@
              <meta-data
                  android:name="com.android.settings.summary"
                  android:resource="@string/trust_summary" />

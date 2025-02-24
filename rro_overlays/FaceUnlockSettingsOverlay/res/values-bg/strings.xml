@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">Разрешете на детето си да използва лицето си, за да отключва телефона си</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Вие и детето ви можете по всяко време да изтриете модела на лицето му или да изключите функцията за отключване с лице от настройките. Моделите на лицата се съхраняват на телефона, докато не бъдат изтрити.
 
-Научете повече на адрес forum.volla.online."</string>
+Научете повече на адрес g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Контролът е във ваши ръце и в ръцете на детето ви</string>
     <string name="security_settings_face_enroll_introduction_control_message">"По всяко време можете да изтриете модела на лицето си или да изключите функцията за отключване с лице от настройките. Моделите на лицата се съхраняват на телефона, докато не ги изтриете.
 
-Научете повече на адрес forum.volla.online."</string>
+Научете повече на адрес g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Контролът е във ваши ръце</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Функцията за отключване с лице изгражда уникален модел на лицето на детето ви с цел потвърждаване на самоличността му. За да създаде такъв модел по време на настройването, то ще трябва да заснеме лицето си под различни ъгли.
 

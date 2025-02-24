@@ -43,11 +43,11 @@ Etter slettingen trenger du fingeravtrykk, PIN-kode, mønster eller passord når
     <string name="security_settings_face_enroll_introduction_consent_message_0">Gi barnet ditt tillatelse til å bruke ansiktet til å låse opp telefonen sin</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Du og barnet ditt kan når som helst slette ansiktsmodellen til barnet eller slå av ansiktslås i innstillingene. Ansiktsmodeller lagres på telefonen til de slettes.
 
-Finn ut mer på forum.volla.online."</string>
+Finn ut mer på g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Du og barnet ditt har kontrollen</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Du kan når som helst slette ansiktsmodellen din eller slå av ansiktslås i innstillingene. Ansiktsmodellene lagres på telefonen til du sletter dem.
 
-Finn ut mer på forum.volla.online."</string>
+Finn ut mer på g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Du har kontrollen</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Ansiktslås lager en unik modell av ansiktet til barnet for å bekrefte barnets identitet. For å lage denne ansiktsmodellen under konfigureringen tar barnet bilder av ansiktet sitt fra forskjellige vinkler.
 

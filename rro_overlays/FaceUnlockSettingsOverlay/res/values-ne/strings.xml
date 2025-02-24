@@ -43,11 +43,11 @@ Face Unlock ले पर्याप्त प्रकाश उपलब्�
     <string name="security_settings_face_enroll_introduction_consent_message_0">तपाईंका बच्चालाई उनको अनुहार प्रयोग गरी उनको फोन अनलक गर्न दिनुहोस्</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"तपाईं र तपाईंका बच्चा सेटिङमा गई जुनसुकै बेला उनको फेस मोडेल मेटाउन वा फेस अनलक अफ गर्न सक्नुहुन्छ। फेस मोडेल नमेटाइन्जेल ती मोडेल फोनमा भण्डारण गरिन्छन्।
 
-forum.volla.online मा गई थप जान्नुहोस्।"</string>
+g.co/pixel/faceunlock मा गई थप जान्नुहोस्।"</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">यी सेटिङ तपाईं र तपाईंका बच्चाको नियन्त्रणमा हुन्छन्</string>
     <string name="security_settings_face_enroll_introduction_control_message">"तपाईं सेटिङमा गई जुनसुकै बेला आफ्नो फेस मोडेल मेटाउन वा फेस अनलक अफ गर्न सक्नुहुन्छ। तपाईंले फेस मोडेल नमेटाउन्जेल ती मोडेल फोनमा भण्डारण गरिन्छन्।
 
-forum.volla.online मा गई थप जान्नुहोस्।"</string>
+g.co/pixel/faceunlock मा गई थप जान्नुहोस्।"</string>
     <string name="security_settings_face_enroll_introduction_control_title">यो सुविधा कसरी नियन्त्रण गर्ने भन्ने कुरा तपाईंको हातमा हुन्छ</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"फेस अनलक सुविधाले तपाईंका बच्चालाई चिन्ने प्रयोजनका लागि उनको अनुहारको अद्वितीय मोडेल बनाउँछ। सेटअप गर्ने क्रममा यो फेस मोडेल बनाउन तपाईंका बच्चाले विभिन्न कोणबाट आफ्नो अनुहारका फोटोहरू खिच्नु पर्ने हुन्छ।
 

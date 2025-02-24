@@ -43,11 +43,11 @@ Po smazání budete k odemykání telefonu a ověřování v aplikacích pou�
     <string name="security_settings_face_enroll_introduction_consent_message_0">Povolte dítěti používat obličej k odemykání telefonu</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"V Nastavení můžete vy nebo vaše dítě model obličeje kdykoli smazat, případně odemknutí obličejem vypnout. Modely obličeje jsou v telefonu uloženy, dokud je nesmažete.
 
-Další informace: forum.volla.online."</string>
+Další informace: g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Vy a dítě máte vše pod kontrolou</string>
     <string name="security_settings_face_enroll_introduction_control_message">"V Nastavení můžete model obličeje kdykoli smazat nebo odemknutí obličejem vypnout. Modely obličeje jsou v telefonu uloženy, dokud je nesmažete.
 
-Další informace: forum.volla.online."</string>
+Další informace: g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Vše máte ve svých rukou</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Odemknutí obličejem vytváří jedinečný model obličeje dítěte, podle kterého ho při ověření poznáme. Model obličeje vytvoříme při nastavování na základě snímků obličeje dítěte z různých úhlů.
 

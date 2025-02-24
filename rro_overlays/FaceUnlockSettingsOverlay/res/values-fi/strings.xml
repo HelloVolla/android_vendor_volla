@@ -43,11 +43,11 @@ Poistamisen jälkeen tarvitset sormenjälkesi, PIN-koodia, kuviota tai salasanaa
     <string name="security_settings_face_enroll_introduction_consent_message_0">Anna lapselle lupa käyttää kasvojaan puhelimen lukituksen avaamiseen</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Sinä ja lapsesi voitte poistaa kasvomallin tai laittaa Face Unlockin pois päältä milloin tahansa asetuksista. Kasvomalleja säilytetään puhelimella, kunnes ne poistetaan.
 
-Lue lisää: forum.volla.online."</string>
+Lue lisää: g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Sinä ja lapsesi päätätte</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Voit poistaa kasvomallisi tai laittaa kasvojentunnistusavauksen pois päältä milloin tahansa asetuksista. Kasvomallit säilytetään puhelimella, kunnes poistat ne.
 
-Lue lisää: forum.volla.online."</string>
+Lue lisää: g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Sinä päätät</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Face Unlock luo lapsesi kasvoista yksilöllisen mallin, jonka avulla hänen henkilöllisyytensä voidaan todentaa. Lapsesi voi luoda kasvomallin käyttöönoton aikana ottamalla kasvoistaan kuvia eri kuvakulmista.
 

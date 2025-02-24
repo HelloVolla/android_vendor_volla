@@ -43,11 +43,11 @@ Silindikdən sonra telefonunuzun kilidini açmaq, yaxud tətbiqlərdə əsllik y
     <string name="security_settings_face_enroll_introduction_consent_message_0">Övladınızın telefonunu kiliddən çıxarmaq üçün üzündən istifadə etməsinə icazə verin</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Siz və övladınız ayarlarda istənilən vaxt üz modeli silə, yaxud Üz ilə kiliddən çıxarmanı deaktiv edə bilərsiniz. Üz modelləri silinənə qədər telefonda saxlanılır.
 
-Ətraflı məlumat: forum.volla.online."</string>
+Ətraflı məlumat: g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Siz və övladınız nəzarət edirsiniz</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Ayarlarda istənilən vaxt üz modelinizi silə, yaxud Üz ilə Kiliddən Çıxarmanı deaktiv edə bilərsiniz. Üz modelləri silinənə qədər telefonda saxlanılır.
 
-Ətraflı məlumat: forum.volla.online."</string>
+Ətraflı məlumat: g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Hər şey nəzarətinizdədir</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Üz ilə kiliddən çıxarma övladınızı doğrulamaq üçün onun üzünün unikal modelini yaradır. Ayarlama zamanı bu üz modelini yaratmaq üçün övladınız müxtəlif bucaqlardan üzünün şəkillərini çəkəcək.
 

@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">अपने बच्चे को अनुमति दें कि वह फ़ोन को अनलॉक करने के लिए, अपना चेहरा इस्तेमाल कर सके</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"आपके और आपके बच्चे के पास किसी भी समय, सेटिंग में जाकर चेहरे के मॉडल को मिटाने या फ़ेस अनलॉक की सुविधा को बंद करने का विकल्प है. चेहरे के मॉडल फ़ोन में तब तक सेव रहते हैं, जब तक उन्हें नहीं मिटाया जाता.
 
-ज़्यादा जानने के लिए, forum.volla.online पर जाएं."</string>
+ज़्यादा जानने के लिए, g.co/pixel/faceunlock पर जाएं."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">आपका बच्चा और आप, इन सेटिंग को कंट्रोल कर सकते हैं</string>
     <string name="security_settings_face_enroll_introduction_control_message">"आपके पास, किसी भी समय सेटिंग में जाकर अपने चेहरे का मॉडल मिटाने या फ़ेस अनलॉक की सुविधा बंद करने का विकल्प है. चेहरे के मॉडल, फ़ोन में तब तक सेव रहते हैं, जब तक उन्हें मिटाया नहीं जाता.
 
-ज़्यादा जानने के लिए, forum.volla.online पर जाएं."</string>
+ज़्यादा जानने के लिए, g.co/pixel/faceunlock पर जाएं."</string>
     <string name="security_settings_face_enroll_introduction_control_title">इस सुविधा का कंट्रोल आपके पास है</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"फ़ेस अनलॉक की सुविधा की मदद से, आपके बच्चे के चेहरे का एक खास मॉडल बनाया जाता है. इससे, पुष्टि करते समय उसके चेहरे की पहचान करने में मदद मिलती है. फ़ेस अनलॉक की सुविधा सेट अप करते समय, चेहरे का यह मॉडल बनाने के लिए आपके बच्चे को अलग-अलग ऐंगल से अपने चेहरे की इमेज कैप्चर करनी होंगी.
 

@@ -43,11 +43,11 @@ Po jeho odstránení budete na odomknutie telefónu alebo overovanie v aplikác
     <string name="security_settings_face_enroll_introduction_consent_message_0">Povoľte svojmu dieťaťu odomykať telefón tvárou</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Vy a vaše dieťa môžete kedykoľvek v Nastaveniach model tváre odstrániť alebo odomknutie tvárou vypnúť. Modely tváre sú uložené v telefóne, kým ich neodstránite.
 
-Viac sa dozviete na forum.volla.online."</string>
+Viac sa dozviete na g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Vy a vaše dieťa máte všetko pod kontrolou</string>
     <string name="security_settings_face_enroll_introduction_control_message">"V Nastaveniach môžete kedykoľvek model tváre odstrániť alebo odomknutie tvárou vypnúť. Modely tváre sú uložené v telefóne, kým ich neodstránite.
 
-Viac sa dozviete na forum.volla.online."</string>
+Viac sa dozviete na g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Všetko máte pod kontrolou</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Odomknutie tvárou vytvorí jedinečný model tváre vášho dieťaťa, ktorým overí svoju totožnosť. Počas nastavovania musí vaše dieťa nasnímať svoju tvár z rôznych uhlov, aby bolo možné tento model tváre vytvoriť.
 

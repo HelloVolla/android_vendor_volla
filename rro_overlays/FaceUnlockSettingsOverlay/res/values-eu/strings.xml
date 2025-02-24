@@ -43,11 +43,11 @@ Ezabatu ondoren, hatz-marka, PINa, eredua edo pasahitza beharko duzu telefonoa d
     <string name="security_settings_face_enroll_introduction_consent_message_0">Eman haurrari aurpegia erabilita telefonoa desblokeatzeko baimena</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Haurrak eta zuk haren aurpegi-eredua ezabatu nahi baduzue edo aurpegi bidez desblokeatzeko eginbidea desaktibatu nahi baduzue, joan Ezarpenak atalera. Ezabatzen dituzuen arte, telefonoan gordeko dira aurpegi-ereduak.
 
-Lortu informazio gehiago forum.volla.online helbidean."</string>
+Lortu informazio gehiago g.co/pixel/faceunlock helbidean."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Haurrak eta zeuk duzue kontrola</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Aurpegi-eredua ezabatzeko edo aurpegi bidez desblokeatzeko eginbidea desaktibatzeko, joan Ezarpenak atalera. Ezabatzen dituzun arte, telefonoan gordeko dira aurpegi-ereduak.
 
-Lortu informazio gehiago forum.volla.online helbidean."</string>
+Lortu informazio gehiago g.co/pixel/faceunlock helbidean."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Zure esku dago</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Aurpegi bidez desblokeatzeko eginbideak haurraren aurpegiaren eredu esklusibo bat sortzen du hura dela egiaztatzeko. Konfigurazio-prozesuan zehar aurpegi-eredu hori sortzeko, aurpegiaren argazkiak aterako ditu haurrak, hainbat ikuspegitatik.
 

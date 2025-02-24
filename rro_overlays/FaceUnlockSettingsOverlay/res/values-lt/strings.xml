@@ -43,11 +43,11 @@ Ištrynus, kad galėtumėte atrakinti telefoną ir nustatyti tapatybę programos
     <string name="security_settings_face_enroll_introduction_consent_message_0">Leiskite vaikui atrakinti telefoną veidu</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Jūs ir jūsų vaikas galite bet kada ištrinti veido modelį arba išjungti atrakinimą pagal veidą „Nustatymų“ skiltyje. Veido modeliai saugomi telefone, kol ištrinami.
 
-Sužinokite daugiau adresu forum.volla.online."</string>
+Sužinokite daugiau adresu g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Viską valdote jūs ir jūsų vaikas</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Galite bet kada ištrinti veido modelį ar išjungti atrakinimą pagal veidą skiltyje „Nustatymai“. Veido modeliai saugomi telefone, kol juos ištrinate.
 
-Sužinokite daugiau adresu forum.volla.online."</string>
+Sužinokite daugiau adresu g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Jūs viską valdote</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Naudojant atrakinimą pagal veidą kuriamas unikalus jūsų vaiko veido modelis, kad būtų galima patvirtinti vaiko tapatybę. Norint sukurti šį veido modelį nustatant, reikia sukurti vaiko veido vaizdų iš skirtingų kampų.
 

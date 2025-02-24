@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">Дозволете му на вашето дете да го користи своето лице за да го отклучи својот телефон</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Вие и вашето дете може да го избришете моделот од неговото лице или да го исклучите „Отклучувањето со лик“ во секое време во „Поставки“. Моделите на лицето се складираат во телефонот додека не се избришат.
 
-Дознајте повеќе на forum.volla.online."</string>
+Дознајте повеќе на g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Вие и вашето дете сте во контрола</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Може да го избришете моделот на лик или да го исклучите „Отклучувањето со лик“ во секое време во „Поставки“. Моделите на лик се складираат во телефонот додека не ги избришете.
 
-Дознајте повеќе на forum.volla.online."</string>
+Дознајте повеќе на g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Вие сте главни</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"„Отклучувањето со лик“ создава уникатен модел од лицето на вашето дете за да потврди дека е тоа. За да го создаде моделов на лице при поставувањето, детето ќе направи слики од своето лице од различни агли.
 

@@ -1,4 +1,4 @@
-From 029a6039336769c23b31baa130d8430dc4fedfd5 Mon Sep 17 00:00:00 2001
+From a19626900cb16aa6d4b2bf06dd71bb288bd749de Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 12 Nov 2023 16:36:28 +0330
 Subject: [PATCH] Revert "Settings: support black theme for dark mode [2/4]"
@@ -11,7 +11,7 @@ Change-Id: Id6bbfbe5c38dfa6b23e65f4eee3410c1437af49b
  1 file changed, 7 deletions(-)
 
 diff --git a/res/xml/dark_mode_settings.xml b/res/xml/dark_mode_settings.xml
-index c21af34cfc..7f13659480 100644
+index c21af34cfc3..7f136594807 100644
 --- a/res/xml/dark_mode_settings.xml
 +++ b/res/xml/dark_mode_settings.xml
 @@ -62,11 +62,4 @@

@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">អនុញ្ញាតឱ្យកូនរបស់អ្នកប្រើប្រាស់មុខរបស់គាត់ ដើម្បីដោះសោទូរសព្ទរបស់គាត់</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"អ្នក និងកូនរបស់អ្នកអាច​លុបគំរូមុខ​របស់គាត់ ឬបិទ​ការដោះសោ​តាមទម្រង់មុខ​បានគ្រប់ពេល​នៅក្នុង​ការកំណត់។ គំរូមុខត្រូវបានរក្សាទុក​នៅលើទូរសព្ទ រហូតទាល់តែគំរូមុខទាំងនោះ​ត្រូវបានលុប។
 
-ស្វែងយល់បន្ថែម​តាមរយៈ forum.volla.online។"</string>
+ស្វែងយល់បន្ថែម​តាមរយៈ g.co/pixel/faceunlock។"</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">ការគ្រប់គ្រង​ស្ថិតក្នុងដៃអ្នក និងកូនរបស់អ្នក</string>
     <string name="security_settings_face_enroll_introduction_control_message">"អ្នកអាច​លុបគំរូមុខ​របស់អ្នក ឬបិទ​ការដោះសោ​តាមទម្រង់មុខ​បានគ្រប់ពេល​នៅក្នុង​ការកំណត់​។ គំរូមុខត្រូវបានរក្សាទុក​នៅលើទូរសព្ទ រហូតទាល់តែអ្នកលុបវា។
 
-ស្វែងយល់បន្ថែម​តាមរយៈ forum.volla.online។"</string>
+ស្វែងយល់បន្ថែម​តាមរយៈ g.co/pixel/faceunlock។"</string>
     <string name="security_settings_face_enroll_introduction_control_title">ការគ្រប់គ្រង​ស្ថិតក្នុង​ដៃអ្នក</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"ការដោះសោ​តាមទម្រង់មុខ​បង្កើតគំរូមុខរបស់កូនអ្នក​ខុសប្លែកពីគេ ដើម្បីផ្ទៀងផ្ទាត់​ថាជាគាត់។ ដើម្បីបង្កើត​គំរូមុខនេះ​ក្នុងអំឡុងពេល​រៀបចំ កូនរបស់អ្នកនឹងត្រូវ​ថតរូបមុខ​របស់គាត់​ពីជ្រុងខុសៗគ្នា។
 

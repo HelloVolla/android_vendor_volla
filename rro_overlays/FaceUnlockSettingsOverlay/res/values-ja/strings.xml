@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">お子様に、顔認証を使ってスマートフォンのロック解除を行うことを許可します</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"あなたとお子様はいつでも [設定] で顔モデルを削除したり、顔認証を OFF にしたりできます。顔モデルは、削除するまでスマートフォンに保存されたままになります。
 
-詳しくは、forum.volla.online をご覧ください。"</string>
+詳しくは、g.co/pixel/faceunlock をご覧ください。"</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">あなたとお子様が管理できます</string>
     <string name="security_settings_face_enroll_introduction_control_message">"いつでも [設定] で顔モデルを削除したり、顔認証を OFF にしたりできます。顔モデルは、削除するまでスマートフォンに保存されたままになります。
 
-詳しくは、forum.volla.online をご覧ください。"</string>
+詳しくは、g.co/pixel/faceunlock をご覧ください。"</string>
     <string name="security_settings_face_enroll_introduction_control_title">データはデバイス内だけに保存</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"顔認証を設定する際に、本人確認に使うお子様の顔の一意のモデルを作成します。この顔モデルを作成するため、さまざまな角度からお子様の顔の画像を撮影します。
 

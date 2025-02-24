@@ -1,4 +1,4 @@
-From d2343975b04e8b0709ba2402d2b925a9b4db8276 Mon Sep 17 00:00:00 2001
+From b71d782cdc03dcb00a395a4358f38464fccc17e7 Mon Sep 17 00:00:00 2001
 From: techyminati <sinha.aryan03@gmail.com>
 Date: Mon, 4 Sep 2023 19:04:18 +0200
 Subject: [PATCH] LineageParts: Fix NPE with NFC option being nuked

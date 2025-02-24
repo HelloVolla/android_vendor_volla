@@ -1,4 +1,4 @@
-From daa59e7b9cac95e6aa0904c04b0421d53d8dfe88 Mon Sep 17 00:00:00 2001
+From 703cf24646ec27a865cad23deead86d2e762a4a9 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Mon, 25 Apr 2022 21:36:44 +0200
 Subject: [PATCH] Updater: Allow major update

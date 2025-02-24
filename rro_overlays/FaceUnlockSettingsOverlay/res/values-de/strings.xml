@@ -42,12 +42,9 @@ Danach benötigst du zum Entsperren deines Smartphones oder zur Authentifizierun
     <string name="security_settings_face_enroll_introduction_consent_message">Das Entsperren des Smartphones deines Kindes mit seinem Gesicht kann weniger sicher sein als ein starkes Muster oder eine starke PIN.</string>
     <string name="security_settings_face_enroll_introduction_consent_message_0">Du kannst deinem Kind erlauben, sein Gesicht zum Entsperren des Smartphones zu verwenden</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Du und dein Kind könnt jederzeit das Gesichtsmodell löschen oder die Funktion „Entsperrung per Gesichtserkennung“ in den Einstellungen deaktivieren. Gesichtsmodelle bleiben auf dem Smartphone gespeichert, bis sie gelöscht werden.
-
-Weitere Informationen findest du unter forum.volla.online"</string>
+</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Du und dein Kind habt die Kontrolle</string>
-    <string name="security_settings_face_enroll_introduction_control_message">"Du kannst jederzeit dein Gesichtsmodell löschen oder die Funktion „Entsperrung per Gesichtserkennung“ in den Einstellungen deaktivieren. Gesichtsmodelle bleiben auf dem Smartphone gespeichert, bis du sie löschst.
-
-Weitere Informationen findest du unter forum.volla.online"</string>
+    <string name="security_settings_face_enroll_introduction_control_message">"Du kannst jederzeit dein Gesichtsmodell löschen oder die Funktion „Entsperrung per Gesichtserkennung“ in den Einstellungen deaktivieren. Gesichtsmodelle bleiben auf dem Smartphone gespeichert, bis du sie löschst.</string>
     <string name="security_settings_face_enroll_introduction_control_title">Du hast die Kontrolle</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Die Funktion „Entsperrung per Gesichtserkennung“ erstellt ein eindeutiges Modell des Gesichts deines Kindes, mit dem seine Identität bestätigt werden kann. Bei der Einrichtung macht dein Kind aus verschiedenen Blickwinkeln Fotos von seinem Gesicht. Daraus wird das Gesichtsmodell erstellt.
 

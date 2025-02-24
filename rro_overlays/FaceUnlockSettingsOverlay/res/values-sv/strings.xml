@@ -43,11 +43,11 @@ Efter borttagningen behöver du fingeravtryck, pinkod, lösenord eller mönster 
     <string name="security_settings_face_enroll_introduction_consent_message_0">Tillåt att ditt barn använder sitt ansikte för att låsa upp telefonen</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Du och ditt barn kan radera ansiktsmodellen eller inaktivera ansiktslås när som helst i inställningarna Ansiktsmodeller lagras på telefonen tills du raderar dem.
 
-Läs mer på forum.volla.online."</string>
+Läs mer på g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Det är du och ditt barn som har kontrollen</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Du kan radera ansiktsmodellen eller inaktivera ansiktslås när du vill i inställningarna. Ansiktsmodeller lagras på telefonen tills du raderar dem.
 
-Läs mer på forum.volla.online."</string>
+Läs mer på g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Du bestämmer själv</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Med ansiktslås skapas en unik modell av ditt barns ansikte så att barnet kan verifiera sin identitet. Ansiktsmodellen skapas under konfigureringen genom att bilder tas av ansiktet från olika vinklar.
 

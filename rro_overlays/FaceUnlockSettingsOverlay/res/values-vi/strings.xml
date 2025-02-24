@@ -43,11 +43,11 @@ Sau khi xóa, bạn sẽ cần nhập vân tay, mã PIN, hình mở khóa hoặc
     <string name="security_settings_face_enroll_introduction_consent_message_0">Cho phép con bạn dùng khuôn mặt để mở khóa điện thoại</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Bạn và con bạn có thể xóa mẫu khuôn mặt của con hoặc tắt tính năng Mở khóa bằng khuôn mặt bất cứ lúc nào trong phần Cài đặt. Các mẫu khuôn mặt sẽ được lưu trữ trên điện thoại này cho đến khi bạn hoặc con bạn xóa đi.
 
-Tìm hiểu thêm tại forum.volla.online."</string>
+Tìm hiểu thêm tại g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Bạn và con bạn nắm quyền kiểm soát</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Bạn có thể xóa mẫu khuôn mặt hoặc tắt tính năng Mở khóa bằng khuôn mặt bất cứ lúc nào trong phần Cài đặt. Các mẫu khuôn mặt sẽ được lưu trữ trên điện thoại này cho đến khi bạn xóa đi.
 
-Tìm hiểu thêm tại forum.volla.online."</string>
+Tìm hiểu thêm tại g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Bạn nắm quyền kiểm soát</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Tính năng Mở khóa bằng khuôn mặt sẽ tạo một mẫu khuôn mặt duy nhất để xác minh danh tính của con bạn. Để tạo mẫu khuôn mặt này trong khi thiết lập, con bạn cần chụp ảnh khuôn mặt mình ở nhiều góc độ.
 

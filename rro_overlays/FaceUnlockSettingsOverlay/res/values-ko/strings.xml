@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">자녀가 얼굴 인식을 사용하여 휴대전화를 잠금 해제할 수 있도록 허용합니다.</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"부모와 자녀가 언제든지 설정에서 자녀의 얼굴 모델을 삭제하거나 얼굴 인식 잠금 해제를 사용 중지할 수 있습니다. 얼굴 모델은 삭제하기 전까지 휴대전화에 저장됩니다.
 
-forum.volla.online에서 자세히 알아보세요."</string>
+g.co/pixel/faceunlock에서 자세히 알아보세요."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">부모와 자녀가 함께 설정</string>
     <string name="security_settings_face_enroll_introduction_control_message">"언제든지 설정에서 얼굴 모델을 삭제하거나 얼굴 인식 잠금 해제를 사용 중지할 수 있습니다. 얼굴 모델은 삭제하기 전까지 휴대전화에 저장됩니다.
 
-forum.volla.online에서 자세히 알아보세요."</string>
+g.co/pixel/faceunlock에서 자세히 알아보세요."</string>
     <string name="security_settings_face_enroll_introduction_control_title">사용자가 직접 관리 가능</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"얼굴 인식 잠금 해제를 사용하면 자녀의 본인 인증을 위한 고유한 얼굴 모델이 생성됩니다. 설정 중 얼굴 모델을 만들기 위해 다양한 각도에서 얼굴을 촬영하게 됩니다.
 

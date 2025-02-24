@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">Дазвольце свайму дзіцяці выкарыстоўваць твар для разблакіроўкі тэлефона</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Вы і ваша дзіця можаце ў любы час выдаліць мадэль твару ці выключыць распазнаванне твару ў Наладах. Мадэлі твару будуць захоўвацца на тэлефоне, пакуль іх не выдаляць.
 
-Даведайцеся больш на старонцы forum.volla.online."</string>
+Даведайцеся больш на старонцы g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Доступ ёсць у вас і вашага дзіцяці</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Вы можаце ў любы час выдаліць мадэль твару ці выключыць распазнаванне твару ў Наладах. Мадэлі твару будуць захоўвацца на тэлефоне, пакуль вы іх не выдаліце.
 
-Даведайцеся больш на старонцы forum.volla.online."</string>
+Даведайцеся больш на старонцы g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Усё пад кантролем</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Каб спраўджваць асобу дзіцяці, функцыя распазнавання твару стварае ўнікальную мадэль яго твару. Для стварэння мадэлі трэба зрабіць здымкі твару дзіцяці з розных ракурсаў.
 

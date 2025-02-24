@@ -1,0 +1,6 @@
+<resources>
+    <!-- Yleistä -->
+    <string name="volla_securitymode_label">Turvatilan tila</string>
+    <string name="volla_securitymode_summary">Turvatilan asetukset</string>
+
+</resources>

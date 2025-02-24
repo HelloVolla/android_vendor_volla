@@ -1,4 +1,4 @@
-From 906e1b8de73ceca16f29a8378c40c4a89b629d29 Mon Sep 17 00:00:00 2001
+From 7499ba5793e88db26e464826498b46449b9be346 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Fri, 6 Aug 2021 23:52:00 +0430
 Subject: [PATCH] recovery: Volla re-design
@@ -28,7 +28,7 @@ Subject: [PATCH] recovery: Volla re-design
  21 files changed, 5 insertions(+), 14 deletions(-)
 
 diff --git a/recovery_ui/screen_ui.cpp b/recovery_ui/screen_ui.cpp
-index 75797cee..598c336e 100644
+index 5d713d6f..7f8435d3 100644
 --- a/recovery_ui/screen_ui.cpp
 +++ b/recovery_ui/screen_ui.cpp
 @@ -589,16 +589,10 @@ void ScreenRecoveryUI::SetColor(UIElement e) const {

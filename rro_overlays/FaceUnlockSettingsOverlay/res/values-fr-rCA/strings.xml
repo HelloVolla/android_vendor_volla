@@ -43,11 +43,11 @@ Pour déverrouiller votre téléphone ou vous authentifier dans les applis, vous
     <string name="security_settings_face_enroll_introduction_consent_message_0">Autoriser votre enfant à utiliser son visage pour déverrouiller son téléphone</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Vous et votre enfant pouvez supprimer son modèle facial ou désactiver le déverrouillage par reconnaissance faciale en tout temps dans Paramètres. Les modèles faciaux sont stockés sur le téléphone jusqu'à ce qu'ils soient supprimés.
 
-Apprenez-en plus à la page forum.volla.online."</string>
+Apprenez-en plus à la page g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Vous et votre enfant êtes aux commandes</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Vous pouvez supprimer votre modèle facial ou désactiver le déverrouillage par reconnaissance faciale en tout temps dans Paramètres. Les modèles faciaux sont stockés sur le téléphone jusqu'à ce que vous les supprimiez.
 
-Apprenez-en plus à la page forum.volla.online."</string>
+Apprenez-en plus à la page g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Vous êtes aux commandes</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Le déverrouillage par reconnaissance faciale crée un modèle unique du visage de votre enfant pour vérifier qu'il s'agit bien de lui. Pour créer ce modèle durant la configuration, l'appareil demandera à votre enfant de capturer des images de son visage sous différents angles.
 

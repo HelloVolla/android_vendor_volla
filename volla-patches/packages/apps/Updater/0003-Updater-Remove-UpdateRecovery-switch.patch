@@ -1,4 +1,4 @@
-From aa96dd414f01b20814d87e6c05f449d66deb8486 Mon Sep 17 00:00:00 2001
+From d8c9690229b0ef275b4b41dfbc654621ec71eb7b Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Mon, 13 Dec 2021 19:22:50 +0330
 Subject: [PATCH] Updater: Remove UpdateRecovery switch

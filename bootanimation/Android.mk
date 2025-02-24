@@ -19,10 +19,21 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE := bootanimation.zip
 LOCAL_MODULE_CLASS := ETC
-LOCAL_MODULE_PATH := $(TARGET_OUT)/media
+LOCAL_MODULE_PATH := $(TARGET_OUT_PRODUCT)/media
 ifeq ($(shell test $(TARGET_SCREEN_WIDTH) -gt 720; echo $$?),0)
+ifeq ($(shell test $(TARGET_SCREEN_WIDTH) -gt 1080; echo $$?),0)
+LOCAL_SRC_FILES := bootanimation_2560.zip
+else
 LOCAL_SRC_FILES := bootanimation.zip
+endif
 else
 LOCAL_SRC_FILES := bootanimation_720.zip
 endif
 include $(BUILD_PREBUILT)
+
+BOOTANIMATION_SYMLINK := $(TARGET_OUT_PRODUCT)/media/bootanimation-dark.zip
+$(BOOTANIMATION_SYMLINK): $(LOCAL_INSTALLED_MODULE)
+	@mkdir -p $(dir $@)
+	$(hide) ln -sf bootanimation.zip $@
+
+ALL_DEFAULT_INSTALLED_MODULES += $(BOOTANIMATION_SYMLINK)

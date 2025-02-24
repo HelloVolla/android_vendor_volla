@@ -1,0 +1,6 @@
+<resources>
+    <!-- Všeobecné -->
+    <string name="volla_securitymode_label">Režim bezpečnostného režimu</string>
+    <string name="volla_securitymode_summary">Konfigurácia bezpečnostného režimu</string>
+
+</resources>

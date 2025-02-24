@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">ອະນຸຍາດໃຫ້ເດັກນ້ອຍຂອງທ່ານໃຊ້ໜ້າຂອງເຂົາເຈົ້າເພື່ອປົດລັອກໂທລະສັບເຂົາເຈົ້າໄດ້</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"ທ່ານ ແລະ ລູກຂອງທ່ານສາມາດລຶບຮູບແບບໃບໜ້າຂອງເຂົາເຈົ້າ ຫຼື ປິດການປົດລັອກດ້ວຍໜ້າຕອນໃດກໍໄດ້ໃນການຕັ້ງຄ່າ. ຮູບແບບໃບໜ້າແມ່ນຖືກຈັດເກັບໄວ້ຢູ່ໂທລະສັບຈົນກວ່າພວກມັນຈະຖືກລຶບອອກ.
 
-ສຶກສາເພີ່ມເຕີມໄດ້ຢູ່ forum.volla.online."</string>
+ສຶກສາເພີ່ມເຕີມໄດ້ຢູ່ g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">ທ່ານ ແລະ ລູກຂອງທ່ານຄວບຄຸມໄດ້</string>
     <string name="security_settings_face_enroll_introduction_control_message">"ທ່ານສາມາດລຶບຮູບແບບໃບໜ້າຂອງທ່ານ ຫຼື ປິດການປົດລັອກດ້ວຍໜ້າຕອນໃດກໍໄດ້ໃນການຕັ້ງຄ່າ. ຮູບແບບໃບໜ້າແມ່ນຖືກຈັດເກັບໄວ້ຢູ່ໂທລະສັບຈົນກວ່າຈະລຶບພວກມັນອອກ.
 
-ສຶກສາເພີ່ມເຕີມໄດ້ຢູ່ forum.volla.online."</string>
+ສຶກສາເພີ່ມເຕີມໄດ້ຢູ່ g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">ທ່ານຄວບຄຸມໄດ້</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"ການປົດລັອກດ້ວຍໜ້າຈະສ້າງຮູບແບບທີ່ບໍ່ຊ້ຳກັນຂອງໜ້າລູກຂອງທ່ານເພື່ອຢັ້ງຢືນວ່າແມ່ນເຂົາເຈົ້າແທ້. ເພື່ອສ້າງຮູບແບບໃບໜ້ານີ້ໃນລະຫວ່າງການຕັ້ງຄ່າ, ລູກຂອງທ່ານຈະຖ່າຍຮູບໃບໜ້າຂອງເຂົາເຈົ້າຈາກຫຼາຍໆມຸມ.
 

@@ -1,4 +1,4 @@
-From b4ebaab182d12989b773ed804d7a5e2dac26a959 Mon Sep 17 00:00:00 2001
+From 12b84ebcd742a6ccb7819e65d33e56e2ede4c3f7 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 30 Sep 2023 17:23:02 +0330
 Subject: [PATCH] Enable RESTRICTED_NETWORKING_MODE
@@ -9,7 +9,7 @@ Change-Id: I769e7a9329c6134b28d9afecde5fd41b4692b63e
  1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/packages/LineageSettingsProvider/src/org/lineageos/lineagesettings/LineageDatabaseHelper.java b/packages/LineageSettingsProvider/src/org/lineageos/lineagesettings/LineageDatabaseHelper.java
-index 829a5e50..a4b09a79 100644
+index 3fc669c9..0aacf73a 100644
 --- a/packages/LineageSettingsProvider/src/org/lineageos/lineagesettings/LineageDatabaseHelper.java
 +++ b/packages/LineageSettingsProvider/src/org/lineageos/lineagesettings/LineageDatabaseHelper.java
 @@ -274,15 +274,20 @@ public class LineageDatabaseHelper extends SQLiteOpenHelper{

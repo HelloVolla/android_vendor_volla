@@ -43,11 +43,11 @@ Pēc izdzēšanas jums būs jāizmanto pirksta nospiedums, PIN, kombinācija vai
     <string name="security_settings_face_enroll_introduction_consent_message_0">Atļaujiet bērnam izmantot seju, lai atbloķētu savu tālruni.</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Iestatījumos jūs un jūsu bērns varat jebkurā laikā dzēst sejas modeli vai izslēgt autorizāciju pēc sejas. Sejas modeļi tiek glabāti tālrunī, līdz tie tiek izdzēsti.
 
-Uzziniet vairāk vietnē forum.volla.online."</string>
+Uzziniet vairāk vietnē g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Visu nosakāt jūs un jūsu bērns</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Iestatījumos varat jebkurā laikā dzēst sejas modeli vai izslēgt autorizāciju pēc sejas. Sejas modeļi tiek glabāti tālrunī, līdz tie tiek izdzēsti.
 
-Uzziniet vairāk vietnē forum.volla.online."</string>
+Uzziniet vairāk vietnē g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Viss ir jūsu pārziņā</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Iestatot autorizāciju pēc sejas, tiek izveidots unikāls jūsu bērna sejas modelis viņa identitātes apstiprināšanai. Lai iestatīšanas laikā izveidotu šo sejas modeli, jūsu bērns uzņems savas sejas attēlus no dažādiem leņķiem.
 

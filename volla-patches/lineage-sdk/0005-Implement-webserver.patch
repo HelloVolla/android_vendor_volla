@@ -1,4 +1,4 @@
-From 1003a7be23b06b32c7f723bed9bb5b6e907de8b1 Mon Sep 17 00:00:00 2001
+From 70c214bbab04a61d1bc004a43add1397364fb6a7 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 26 Feb 2022 20:00:26 +0330
 Subject: [PATCH] Implement webserver
@@ -10,10 +10,10 @@ Change-Id: I607251474bed8896b43032dd45bd186301f1d88f
  2 files changed, 91 insertions(+), 2 deletions(-)
 
 diff --git a/Android.bp b/Android.bp
-index 9a35f3bb..3cb2f4fd 100644
+index a263dcde..ca25879a 100644
 --- a/Android.bp
 +++ b/Android.bp
-@@ -88,7 +88,9 @@ java_library {
+@@ -87,7 +87,9 @@ java_library {
      name: "org.lineageos.platform",
      installable: true,
      sdk_version: "core_platform",

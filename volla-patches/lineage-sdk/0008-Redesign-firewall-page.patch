@@ -1,4 +1,4 @@
-From eda454b13daf0ec5b71a9ee66da2fc69bfd537f7 Mon Sep 17 00:00:00 2001
+From 611fd68ba87568b8a6f5eb944f2f8a8ebf9b5726 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 5 Jun 2022 06:59:05 +0430
 Subject: [PATCH] Redesign firewall page
@@ -150,17 +150,18 @@ index 00000000..cd5808b0
 +  </body>
 +</html>
 diff --git a/lineage/res/res/values/symbols.xml b/lineage/res/res/values/symbols.xml
-index 2ffec7e4..61d86b16 100644
+index f1d0269f..ec407b54 100644
 --- a/lineage/res/res/values/symbols.xml
 +++ b/lineage/res/res/values/symbols.xml
-@@ -214,4 +214,8 @@
- 
+@@ -216,5 +216,9 @@
+     
      <!-- AppLocker. -->
      <java-symbol type="array" name="config_defaultLockedPackages" />
 +
 +    <!-- Firewall -->
 +    <java-symbol type="string" name="firewall_text" />
 +    <java-symbol type="raw" name="firewall" />
+     
  </resources>
 diff --git a/lineage/res/res/values/volla_strings.xml b/lineage/res/res/values/volla_strings.xml
 new file mode 100644

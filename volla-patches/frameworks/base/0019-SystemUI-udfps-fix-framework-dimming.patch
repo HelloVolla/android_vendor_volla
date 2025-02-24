@@ -1,0 +1,208 @@
+From f8a3168f6bcd8774c895a3b461e0f73007b59925 Mon Sep 17 00:00:00 2001
+From: nift4 <nift4@protonmail.com>
+Date: Sat, 16 Sep 2023 16:29:21 +0200
+Subject: [PATCH] SystemUI: udfps: fix framework dimming
+
+Change-Id: I8719d1d3b86403266c2055ddb38f34b3a27ef6fb
+---
+ .../systemui/biometrics/UdfpsController.java  | 39 ++++++++-------
+ .../biometrics/UdfpsControllerOverlay.kt      | 48 +++++++++++++++----
+ 2 files changed, 62 insertions(+), 25 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
+index 48ecbe29e8a6..909b7ac0cddb 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
+@@ -116,6 +116,7 @@ import java.util.ArrayList;
+ import java.util.HashSet;
+ import java.util.Set;
+ import java.util.concurrent.Executor;
++import java.util.concurrent.atomic.AtomicInteger;
+ 
+ import javax.inject.Inject;
+ 
+@@ -1023,8 +1024,8 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+         return brightness;
+     }
+ 
+-    private void updateViewDimAmount() {
+-        if (mOverlay == null || !mUseFrameworkDimming) {
++    private void updateViewDimAmount(UdfpsControllerOverlay overlay) {
++        if (overlay == null || !mUseFrameworkDimming) {
+             return;
+         } else if (isFingerDown()) {
+             int curBrightness = getBrightness();
+@@ -1041,9 +1042,9 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+                         mBrightnessAlphaArray[i][0], mBrightnessAlphaArray[i-1][0],
+                         mBrightnessAlphaArray[i][1], mBrightnessAlphaArray[i-1][1]);
+             }
+-            mOverlay.setDimAmount(dimAmount / 255.0f);
++            overlay.setDimAmount(dimAmount / 255.0f);
+         } else {
+-            mOverlay.setDimAmount(0.0f);
++            overlay.setDimAmount(0.0f);
+         }
+     }
+ 
+@@ -1055,7 +1056,7 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+         mFingerprintManager.onUdfpsUiEvent(FingerprintManager.UDFPS_UI_READY, requestId,
+                 mSensorProps.sensorId);
+         mLatencyTracker.onActionEnd(LatencyTracker.ACTION_UDFPS_ILLUMINATE);
+-        updateViewDimAmount();
++        updateViewDimAmount(mOverlay);
+     }
+ 
+     private void onFingerDown(
+@@ -1181,19 +1182,25 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+         // Add a delay to ensure that the dim amount is updated after the display has had chance
+         // to switch out of HBM mode. The delay, in ms is stored in config_udfpsDimmingDisableDelay.
+         // If the delay is 0, the dim amount will be updated immediately.
+-        final int delay = mContext.getResources().getInteger(
++        int delay = mContext.getResources().getInteger(
+                 com.android.systemui.res.R.integer.config_udfpsDimmingDisableDelay);
+-        if (delay > 0) {
+-            mFgExecutor.executeDelayed(() -> {
+-                // A race condition exists where the overlay is destroyed before the dim amount
+-                // is updated. This check ensures that the overlay is still valid.
+-                if (mOverlay != null && mOverlay.matchesRequestId(requestId)) {
+-                    updateViewDimAmount();
++        final AtomicInteger delayCounter = new AtomicInteger(delay);
++
++        UdfpsControllerOverlay overlay = mOverlay;
++        final Runnable dimmingDisableRunnable = new Runnable() {
++            @Override
++            public void run() {
++                if (delayCounter.getAndDecrement() <= 0) {
++                    updateViewDimAmount(overlay);
++                } else {
++                    View view = overlay.getFrame();
++                    if (view != null) {
++                        view.postOnAnimation(this);
++                    }
+                 }
+-            }, delay);
+-        } else {
+-            updateViewDimAmount();
+-        }
++            }
++        };
++        dimmingDisableRunnable.run();
+     }
+ 
+     /**
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsControllerOverlay.kt b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsControllerOverlay.kt
+index d6ec5192bcbd..5d63c4eda72e 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsControllerOverlay.kt
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsControllerOverlay.kt
+@@ -126,6 +126,11 @@ class UdfpsControllerOverlay @JvmOverloads constructor(
+         private val powerInteractor: PowerInteractor,
+         @Application private val scope: CoroutineScope,
+ ) {
++    var frame: View? = null
++        private set
++    private var isDimmed = false
++    private var hideOnUndim = false
++
+     private val currentStateUpdatedToOffAodOrDozing: Flow<Unit> =
+         transitionInteractor.currentKeyguardState
+             .filter {
+@@ -171,23 +176,36 @@ class UdfpsControllerOverlay @JvmOverloads constructor(
+         layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+         flags = (Utils.FINGERPRINT_OVERLAY_LAYOUT_PARAM_FLAGS or
+                 WindowManager.LayoutParams.FLAG_SPLIT_TOUCH)
+-        if (frameworkDimming) {
+-            flags = flags or WindowManager.LayoutParams.FLAG_DIM_BEHIND
+-        }
+         privateFlags = WindowManager.LayoutParams.PRIVATE_FLAG_TRUSTED_OVERLAY
+-        dimAmount = 0.0f
+         // Avoid announcing window title.
+         accessibilityTitle = " "
+         inputFeatures = WindowManager.LayoutParams.INPUT_FEATURE_SPY
+     }
+ 
+-    var dimAmount
+-        get() = coreLayoutParams.dimAmount
++    var dimAmount: Float = 0f
+         set(value) {
+-            coreLayoutParams.dimAmount = value
+-            windowManager.updateViewLayout(getTouchOverlay(), coreLayoutParams)
++            frame?.setBackgroundColor((value * 255).toInt() shl 24)
++            isDimmed = value > 0
++            if (hideOnUndim) {
++                hideFrame()
++            }
+         }
+ 
++    private val frameLayoutParams = WindowManager.LayoutParams(
++        WindowManager.LayoutParams.TYPE_NAVIGATION_BAR_PANEL,
++        Utils.FINGERPRINT_OVERLAY_LAYOUT_PARAM_FLAGS
++            or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
++            or WindowManager.LayoutParams.FLAG_FULLSCREEN,
++        PixelFormat.TRANSLUCENT
++    ).apply {
++        fitInsetsTypes = 0
++        gravity = android.view.Gravity.TOP or android.view.Gravity.LEFT
++        layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
++        privateFlags = WindowManager.LayoutParams.PRIVATE_FLAG_TRUSTED_OVERLAY
++        // Avoid announcing window title.
++        accessibilityTitle = " "
++    }
++
+     /** If the overlay is currently showing. */
+     val isShowing: Boolean
+         get() = getTouchOverlay() != null
+@@ -220,6 +238,8 @@ class UdfpsControllerOverlay @JvmOverloads constructor(
+             overlayParams = params
+             sensorBounds = Rect(params.sensorBounds)
+             try {
++                frame = View(context)
++                dimAmount = 0f
+                 if (DeviceEntryUdfpsRefactor.isEnabled) {
+                     overlayTouchView = (inflater.inflate(
+                             R.layout.udfps_touch_overlay, null, false
+@@ -229,7 +249,7 @@ class UdfpsControllerOverlay @JvmOverloads constructor(
+                         if (requestReason.isImportantForAccessibility()) {
+                             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+                         }
+-
++                        windowManager.addView(frame, frameLayoutParams)
+                         addViewNowOrLater(this, null)
+                         when (requestReason) {
+                             REASON_AUTH_KEYGUARD ->
+@@ -263,6 +283,7 @@ class UdfpsControllerOverlay @JvmOverloads constructor(
+                             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+                         }
+ 
++                        windowManager.addView(frame, frameLayoutParams)
+                         addViewNowOrLater(this, animation)
+                         sensorRect = sensorBounds
+                     }
+@@ -420,6 +441,7 @@ class UdfpsControllerOverlay @JvmOverloads constructor(
+     /** Hide the overlay or return false and do nothing if it is already hidden. */
+     fun hide(): Boolean {
+         val wasShowing = isShowing
++        hideOnUndim = isDimmed
+ 
+         overlayViewLegacy?.apply {
+             if (isDisplayConfigured) {
+@@ -451,9 +473,17 @@ class UdfpsControllerOverlay @JvmOverloads constructor(
+         overlayTouchListener = null
+         listenForCurrentKeyguardState?.cancel()
+ 
++        if (!hideOnUndim) hideFrame()
+         return wasShowing
+     }
+ 
++    private fun hideFrame() {
++        frame?.apply {
++            windowManager.removeView(this)
++        }
++        frame = null
++    }
++
+     /** Cancel this request. */
+     fun cancel() {
+         try {
+-- 
+2.29.2
+

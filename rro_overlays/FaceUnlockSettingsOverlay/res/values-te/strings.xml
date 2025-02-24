@@ -43,11 +43,11 @@
     <string name="security_settings_face_enroll_introduction_consent_message_0">మీ పిల్లలు వారి ఫోన్‌ను అన్‌లాక్ చేయడానికి వారి ముఖాన్ని ఉపయోగించడానికి అనుమతించండి</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"మీరు, మీ చిన్నారి వారి పేస్ మోడల్‌ను తొలగించవచ్చు లేదా సెట్టింగ్‌లలో ఎప్పుడైనా ఫేస్ అన్‌లాక్ ఆఫ్ చేయవచ్చు. ఫేస్ మోడల్స్ తొలగించబడే వరకు ఫోన్‌లో స్టోర్ చేయబడతాయి.
 
-forum.volla.onlineలో మరింత తెలుసుకోండి."</string>
+g.co/pixel/faceunlockలో మరింత తెలుసుకోండి."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">మీరు అలాగే మీ చిన్నారి కంట్రోల్‌లో ఉన్నారు</string>
     <string name="security_settings_face_enroll_introduction_control_message">"మీరు సెట్టింగ్‌ల్లో ఎప్పుడైనా మీ ఫేస్ మోడల్‌ను తొలగించవచ్చు లేదా ఫేస్ అన్‌లాక్‌ను ఆఫ్ చేయవచ్చు. మీరు తొలగించే వరకు ఫేస్ మోడల్స్ ఫోన్‌లో స్టోర్ చేయబడతాయి
 
-forum.volla.onlineలో మరింత తెలుసుకోండి."</string>
+g.co/pixel/faceunlockలో మరింత తెలుసుకోండి."</string>
     <string name="security_settings_face_enroll_introduction_control_title">మీరు కంట్రోల్ చేయవచ్చు</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"ఫేస్ అన్‌లాక్, మీ చిన్నారి ముఖం యొక్క ఒక ప్రత్యేకమైన మోడల్‌ను క్రియేట్ చేస్తుంది, తద్వారా మీ చిన్నారి ముఖాన్ని వెరిఫై చేయవచ్చు. సెటప్ సమయంలో ఈ ఫేస్ మోడల్‌ను క్రియేట్ చేయడానికి, మీ చిన్నారి వేర్వేరు కోణాలలో వారి ముఖం యొక్క ఇమేజ్‌లను క్యాప్చర్ చేస్తారు.
 

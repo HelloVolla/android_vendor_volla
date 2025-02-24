@@ -1,4 +1,4 @@
-From a87314111763032be6b6c4372276250ee796c51a Mon Sep 17 00:00:00 2001
+From 349b3ddfca37c3f2198fcf99590baf9326065715 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 9 Mar 2024 15:53:48 +0330
 Subject: [PATCH] Add app restriction support
@@ -12,10 +12,10 @@ Change-Id: I6ff252d8e28fc358d330926da7b973bf7ae49051
  4 files changed, 292 insertions(+), 35 deletions(-)
 
 diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index b4bb5c41..350df87f 100644
+index 9259ffa6..5eaed749 100644
 --- a/api/lineage_current.txt
 +++ b/api/lineage_current.txt
-@@ -888,6 +888,10 @@ package lineageos.firewall {
+@@ -887,6 +887,10 @@ package lineageos.firewall {
      java.util.List<java.lang.String> getDomainsList();
      method public void clearDomainList();
      method public void addDomainListToList(java.util.List<java.lang.String>);

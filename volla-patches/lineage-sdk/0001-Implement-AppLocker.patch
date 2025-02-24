@@ -1,4 +1,4 @@
-From 80bd09cb11bb25afc2902ef5c66c217380ce7464 Mon Sep 17 00:00:00 2001
+From 0daaa9348cd8a5de67b37f73b792f2e5080ccc47 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 6 Feb 2022 18:07:07 +0330
 Subject: [PATCH] Implement AppLocker
@@ -33,10 +33,10 @@ index 412ce301..5129c7cb 100644
  lineage_framework_module := $(LOCAL_INSTALLED_MODULE)
  
 diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index 3b12335a..7e5e19aa 100644
+index a69bfa56..c12ac1d8 100644
 --- a/api/lineage_current.txt
 +++ b/api/lineage_current.txt
-@@ -844,3 +844,28 @@ package lineageos.util {
+@@ -843,3 +843,28 @@ package lineageos.util {
    }
  
  }
@@ -569,7 +569,7 @@ index 00000000..8dbe5067
 +    }
 +}
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index fc6e553e..9500a05e 100644
+index dcd8a02f..7830f16b 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
 @@ -111,6 +111,7 @@

@@ -43,11 +43,11 @@ Un cop suprimit, necessitaràs l'empremta digital, el PIN, el patró o la contra
     <string name="security_settings_face_enroll_introduction_consent_message_0">Permet que el teu fill o filla utilitzi la cara per desbloquejar el telèfon</string>
     <string name="security_settings_face_enroll_introduction_control_consent_message">"Tu i el teu fill podeu suprimir les imatges i el seu model facial o desactivar Desbloqueig facial en qualsevol moment a Configuració. Els models facials s'emmagatzemen al telèfon fins que se suprimeixin.
 
-Obtén més informació a forum.volla.online."</string>
+Obtén més informació a g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_consent_title">Tu i el teu fill teniu el control</string>
     <string name="security_settings_face_enroll_introduction_control_message">"Pots suprimir el teu model facial o desactivar Desbloqueig facial en qualsevol moment a Configuració. Els models facials s'emmagatzemen al telèfon fins que els suprimeixes.
 
-Obtén més informació a forum.volla.online."</string>
+Obtén més informació a g.co/pixel/faceunlock."</string>
     <string name="security_settings_face_enroll_introduction_control_title">Ets tu qui té el control</string>
     <string name="security_settings_face_enroll_introduction_how_consent_message">"Desbloqueig facial crea un model únic de la cara del teu fill o filla per verificar la seva identitat. Per crear-lo durant la configuració, es farà fotos de la cara des de diversos angles.
 
