@@ -1,4 +1,4 @@
-From 611fd68ba87568b8a6f5eb944f2f8a8ebf9b5726 Mon Sep 17 00:00:00 2001
+From 61d64beba9f95012cb29428d9808bd0f70695070 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 5 Jun 2022 06:59:05 +0430
 Subject: [PATCH] Redesign firewall page
@@ -7,8 +7,8 @@ Change-Id: Idc032e9d8212e40272258e01e738566a17c1111c
 ---
  .../platform/internal/FirewallService.java    | 28 +++++++--
  lineage/res/res/raw/firewall.html             | 63 +++++++++++++++++++
- lineage/res/res/values/symbols.xml            |  4 ++
  lineage/res/res/values/volla_strings.xml      |  5 ++
+ lineage/res/res/values/volla_symbols.xml      |  4 ++
  4 files changed, 94 insertions(+), 6 deletions(-)
  create mode 100644 lineage/res/res/raw/firewall.html
  create mode 100644 lineage/res/res/values/volla_strings.xml
@@ -149,20 +149,6 @@ index 00000000..cd5808b0
 +    </div>
 +  </body>
 +</html>
-diff --git a/lineage/res/res/values/symbols.xml b/lineage/res/res/values/symbols.xml
-index f1d0269f..ec407b54 100644
---- a/lineage/res/res/values/symbols.xml
-+++ b/lineage/res/res/values/symbols.xml
-@@ -216,5 +216,9 @@
-     
-     <!-- AppLocker. -->
-     <java-symbol type="array" name="config_defaultLockedPackages" />
-+
-+    <!-- Firewall -->
-+    <java-symbol type="string" name="firewall_text" />
-+    <java-symbol type="raw" name="firewall" />
-     
- </resources>
 diff --git a/lineage/res/res/values/volla_strings.xml b/lineage/res/res/values/volla_strings.xml
 new file mode 100644
 index 00000000..509ab03f
@@ -174,6 +160,19 @@ index 00000000..509ab03f
 +    <string name="firewall_text">This website cannot be accessed while Parental Control is on.</string>
 +
 +</resources>
+diff --git a/lineage/res/res/values/volla_symbols.xml b/lineage/res/res/values/volla_symbols.xml
+index 326feab5..de9b390a 100644
+--- a/lineage/res/res/values/volla_symbols.xml
++++ b/lineage/res/res/values/volla_symbols.xml
+@@ -7,4 +7,8 @@
+     <!-- AppLocker. -->
+     <java-symbol type="array" name="config_defaultLockedPackages" />
+ 
++    <!-- Firewall -->
++    <java-symbol type="string" name="firewall_text" />
++    <java-symbol type="raw" name="firewall" />
++
+ </resources>
 -- 
-2.29.2
+2.49.0
 

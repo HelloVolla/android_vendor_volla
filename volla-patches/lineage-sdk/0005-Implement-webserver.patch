@@ -1,29 +1,26 @@
-From 70c214bbab04a61d1bc004a43add1397364fb6a7 Mon Sep 17 00:00:00 2001
+From 9d3f895f02e1904e2d3ed0fbe96e957a1a7aef69 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 26 Feb 2022 20:00:26 +0330
 Subject: [PATCH] Implement webserver
 
 Change-Id: I607251474bed8896b43032dd45bd186301f1d88f
 ---
- Android.bp                                    |  4 +-
+ Android.bp                                    |  1 +
  .../platform/internal/FirewallService.java    | 89 ++++++++++++++++++-
- 2 files changed, 91 insertions(+), 2 deletions(-)
+ 2 files changed, 89 insertions(+), 1 deletion(-)
 
 diff --git a/Android.bp b/Android.bp
-index a263dcde..ca25879a 100644
+index 76f0f3d4..8f4456ce 100644
 --- a/Android.bp
 +++ b/Android.bp
-@@ -87,7 +87,9 @@ java_library {
-     name: "org.lineageos.platform",
-     installable: true,
-     sdk_version: "core_platform",
--    static_libs: lineage_sdk_LOCAL_STATIC_JAVA_LIBRARIES,
-+    static_libs:
-+        lineage_sdk_LOCAL_STATIC_JAVA_LIBRARIES +
-+        [ "org.nanohttpd" ],
+@@ -93,6 +93,7 @@ java_defaults {
+         "vendor.lineage.livedisplay-V2.1-java",
+         "vendor.lineage.touch-V1-java",
+         "vendor.lineage.touch-V1.0-java",
++        "org.nanohttpd",
+     ],
+ }
  
-     libs: [
-         "framework",
 diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
 index 4dee74d8..336842a3 100644
 --- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
@@ -173,5 +170,5 @@ index 4dee74d8..336842a3 100644
 +    }
  }
 -- 
-2.29.2
+2.49.0
 

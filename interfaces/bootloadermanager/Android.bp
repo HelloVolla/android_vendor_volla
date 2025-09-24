@@ -1,0 +1,20 @@
+aidl_interface {
+    name: "vendor.volla.bootloadermanager",
+    system_ext_specific: true,
+    srcs: [ "vendor/volla/bootloadermanager/*.aidl" ],
+
+    unstable: true,
+    owner: "volla",
+    backend: {
+        java: {
+            enabled: true,
+            platform_apis: true,
+        },
+        cpp: {
+            enabled: false,
+        },
+        ndk: {
+            enabled: true,
+        },
+    },
+}

@@ -1,28 +1,15 @@
-From 8e29bc474d73b8b58c1bf9525088d150541c3b50 Mon Sep 17 00:00:00 2001
+From 28955c925abe39930e0d74494bf327609ab84f7e Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 9 Jun 2024 15:30:27 +0330
 Subject: [PATCH] ChildMode: Disable secondary user
 
 Change-Id: I9698ebb25d414291cb9f7e05c9eeb5d21f7359a9
 ---
- api/lineage_current.txt                       |  1 +
  .../platform/internal/ChildModeService.java   | 26 +++++++++++++++----
  .../lineageos/childmode/ChildModeManager.java |  8 ++++++
  .../childmode/IChildModeService.aidl          |  2 ++
- 4 files changed, 32 insertions(+), 5 deletions(-)
+ 3 files changed, 31 insertions(+), 5 deletions(-)
 
-diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index 5eaed749..81374780 100644
---- a/api/lineage_current.txt
-+++ b/api/lineage_current.txt
-@@ -905,6 +905,7 @@ package lineageos.childmode {
-     method public boolean setPassword(java.lang.String);
-     method public boolean validatePassword(java.lang.String);
-     method public boolean isPasswortSet();
-+    method public boolean isAvailable();
-   }
- 
- }
 diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java b/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
 index 7b581e60..b000d2dc 100644
 --- a/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
@@ -118,5 +105,5 @@ index 9f81df68..68aa7cb3 100644
 +    boolean isAvailable();
  }
 -- 
-2.29.2
+2.49.0
 

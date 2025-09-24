@@ -1,0 +1,24 @@
+From f411de9522923eebf4bdc731b51d901b12fbd0f9 Mon Sep 17 00:00:00 2001
+From: Aryan Sinha <techyminati@outlook.com>
+Date: Sun, 17 Mar 2024 15:25:39 +0530
+Subject: [PATCH 7/7] LatinIME: Enable Phrase Gesture
+
+* Gboard also supports it, so why not?
+---
+ java/res/values/config-additional-features.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/java/res/values/config-additional-features.xml b/java/res/values/config-additional-features.xml
+index 47eb7724c4..cbce9dfcdb 100644
+--- a/java/res/values/config-additional-features.xml
++++ b/java/res/values/config-additional-features.xml
+@@ -20,5 +20,5 @@
+ 
+ <resources>
+     <!-- Whether phrase gestures are enabled by default -->
+-    <bool name="config_default_phrase_gesture_enabled">false</bool>
++    <bool name="config_default_phrase_gesture_enabled">true</bool>
+ </resources>
+-- 
+2.34.1
+

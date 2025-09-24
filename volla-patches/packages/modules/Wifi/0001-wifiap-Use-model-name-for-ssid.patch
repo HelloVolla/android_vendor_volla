@@ -1,4 +1,4 @@
-From 6c46676757b6deeb767aa723d5d3574bb35a01eb Mon Sep 17 00:00:00 2001
+From d7ce2005dd8ddc4562d521c1d883b6d74999e7af Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 22 Apr 2023 17:22:52 +0330
 Subject: [PATCH] wifiap: Use model name for ssid
@@ -9,19 +9,19 @@ Change-Id: Ib37d385ed7b27d50ba8ba855d0913a24a743a7c2
  1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/service/java/com/android/server/wifi/WifiApConfigStore.java b/service/java/com/android/server/wifi/WifiApConfigStore.java
-index b5546a234c..209f458b6f 100644
+index d5167ac57a..a8d52c3428 100644
 --- a/service/java/com/android/server/wifi/WifiApConfigStore.java
 +++ b/service/java/com/android/server/wifi/WifiApConfigStore.java
-@@ -402,8 +402,7 @@ public class WifiApConfigStore {
+@@ -430,8 +430,7 @@ public class WifiApConfigStore {
      private SoftApConfiguration getDefaultApConfiguration() {
          SoftApConfiguration.Builder configBuilder = new SoftApConfiguration.Builder();
          configBuilder.setBand(generateDefaultBand(mContext));
--        configBuilder.setSsid(mContext.getResources().getString(
+-        configBuilder.setSsid(mResourceCache.getString(
 -                R.string.wifi_tether_configure_ssid_default) + "_" + getRandomIntForDefaultSsid());
 +        configBuilder.setSsid(android.os.Build.MODEL);
          try {
              if (ApConfigUtil.isWpa3SaeSupported(mContext)) {
                  configBuilder.setPassphrase(generatePassword(),
 -- 
-2.29.2
+2.49.0
 

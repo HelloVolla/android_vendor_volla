@@ -1,0 +1,24 @@
+From 946e44f8be79dab206b07efbf08066001026791c Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Mon, 13 Dec 2021 19:22:50 +0330
+Subject: [PATCH] Updater: Remove UpdateRecovery switch
+
+---
+ app/src/main/java/org/lineageos/updater/misc/Utils.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/app/src/main/java/org/lineageos/updater/misc/Utils.java b/app/src/main/java/org/lineageos/updater/misc/Utils.java
+index e2ba314..5eff806 100644
+--- a/app/src/main/java/org/lineageos/updater/misc/Utils.java
++++ b/app/src/main/java/org/lineageos/updater/misc/Utils.java
+@@ -431,6 +431,6 @@ public class Utils {
+     }
+ 
+     public static boolean isRecoveryUpdateExecPresent() {
+-        return new File(Constants.UPDATE_RECOVERY_EXEC).exists();
++        return false;
+     }
+ }
+-- 
+2.49.0
+

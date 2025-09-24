@@ -1,4 +1,4 @@
-From 0dc115537e28f390a8cd0bf35d0faa7cfe237128 Mon Sep 17 00:00:00 2001
+From f1baf695f0decc2d387b081d5b8c1c22b1e9f6a8 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Wed, 28 Dec 2022 07:33:46 +0330
 Subject: [PATCH] childmode: Multiuser fixes
@@ -44,5 +44,5 @@ index 130784fd..97711be5 100644
              Slog.e(TAG, "Error while creating dnsmasq directory: " + dnsmasqDir);
          confLines.add("# Volla firewall fonfiguration file for dnsmasq.");
 -- 
-2.29.2
+2.49.0
 

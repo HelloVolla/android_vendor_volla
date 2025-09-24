@@ -1,29 +1,15 @@
-From e5358e5b0d6ef41ac93a794cd48bb64d69e2e763 Mon Sep 17 00:00:00 2001
+From fd27b4edd4009cfb924ce31090a788824b190064 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Wed, 21 Feb 2024 02:18:05 +0330
 Subject: [PATCH] Add LinkMicroG support
 
 Change-Id: Icc9142ee541f1c6d429bc36ec068ef887e46cfbf
 ---
- api/lineage_current.txt                       |  2 ++
  .../platform/internal/AppLockService.java     | 25 +++++++++++++++++++
  .../lineageos/applock/AppLockManager.java     | 16 ++++++++++++
  .../lineageos/applock/IAppLockService.aidl    |  4 +++
- 4 files changed, 47 insertions(+)
+ 3 files changed, 45 insertions(+)
 
-diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index ae332dfe..9259ffa6 100644
---- a/api/lineage_current.txt
-+++ b/api/lineage_current.txt
-@@ -865,6 +865,8 @@ package lineageos.applock {
-     java.util.List<java.lang.String> getLockedPackages();
-     method public void addAppLockCallback(lineageos.applock.IAppLockCallback);
-     method public void removeAppLockCallback(lineageos.applock.IAppLockCallback);
-+    method public void enableLinkMicroG(boolean);
-+    method public boolean isLinkMicroGEnabled();
-   }
- 
- }
 diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java b/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
 index c848e8c1..acd612cf 100644
 --- a/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
@@ -137,5 +123,5 @@ index 85d04f85..0e5bfef1 100644
 +
  }
 -- 
-2.29.2
+2.49.0
 

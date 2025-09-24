@@ -1,28 +1,15 @@
-From 2af6e4fae77179ee649409bb82e3c56e3e6c2408 Mon Sep 17 00:00:00 2001
+From a54934c2392f50194919e86b017e1c0e705f1bd3 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Tue, 20 Sep 2022 21:58:56 +0430
 Subject: [PATCH] Firewall: Introduce bluk domin list import method
 
 Change-Id: Ifd8ca3daaf8d25820306e842bb57d3b46d31601b
 ---
- api/lineage_current.txt                             |  1 +
  .../platform/internal/FirewallService.java          | 13 +++++++++++++
  .../java/lineageos/firewall/FirewallManager.java    |  8 ++++++++
  .../java/lineageos/firewall/IFirewallService.aidl   |  2 ++
- 4 files changed, 24 insertions(+)
+ 3 files changed, 23 insertions(+)
 
-diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index e4ad0516..ae332dfe 100644
---- a/api/lineage_current.txt
-+++ b/api/lineage_current.txt
-@@ -884,6 +884,7 @@ package lineageos.firewall {
-     method public int getDomainsListCount();
-     java.util.List<java.lang.String> getDomainsList();
-     method public void clearDomainList();
-+    method public void addDomainListToList(java.util.List<java.lang.String>);
-   }
- 
- }
 diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
 index 80659464..130784fd 100644
 --- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
@@ -83,5 +70,5 @@ index d5588e81..a2697a09 100644
 +    void addDomainListToList(in List<String> domains);
  }
 -- 
-2.29.2
+2.49.0
 

@@ -1,0 +1,2 @@
+# Wireguard
+/vendor/bin/vollasngen-service  u:object_r:vollasngen_exec:s0

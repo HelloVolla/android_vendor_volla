@@ -1,44 +1,22 @@
-From 586d75468e6a6163cf67ffb3b6a9b3fad8f6acbb Mon Sep 17 00:00:00 2001
+From d073c9e6da0fa81d9d39696297435bb7ea454ed1 Mon Sep 17 00:00:00 2001
 From: Ting Yu <ting.x.yu@sony.com>
-Date: Tue, 22 Dec 2020 09:31:38 +0200
-Subject: [PATCH] Settings: Phone ringtone setting for Multi SIM device [2/3]
+Date: Thu, 18 Oct 2018 16:56:22 +0800
+Subject: [PATCH 06/10] Settings: Phone ringtone setting for Multi SIM device
+ [2/3]
 
-Support displaying phone ringtone setting for each PhoneAccountHandle.
-1. When only insert one SIM, which creates only one PhoneAccountHandle,
-ringtone setting should display:
-"Phone ringtone"
-2. When insert two SIM, which creates two PhoneAccountHandle, ringtone
-setting for each SIM should display:
-"Phone ringtone - operator name"
+Support displaying phone ringtone setting for each slot as follows:
+"Phone ringtone - SIM 1"
+"Phone ringtone - SIM 2"
 
-The purpose is to distinguish incoming call from each SIM by ringtone.
+The purpose is to distinguish incoming call from each slot by ringtone.
 
 Depends-On: I9c6ccff938122332d222853d469ad9a623c7d193
 
 Bug: 118735436
-Test: Manual, Unit Test, Robot Test
-
-    From: Ting Yu <ting.x.yu@sony.com>
-    Date: Wed, 5 Apr 2023 14:16:20 +0200
-    Subject: [PATCH] fixup! Settings: Phone ringtone setting for Multi SIM device
-    [2/3]
-
-    Support displaying phone ringtone setting for each slot as follows:
-    "Phone ringtone - SIM 1"
-    "Phone ringtone - SIM 2"
-
-    The purpose is to distinguish incoming call from each slot by ringtone.
-
-    Depends-On: I9c6ccff938122332d222853d469ad9a623c7d193
-
-    Bug: 118735436
-    Test: Manual
-    Change-Id: I79603d772e981603b4cb349132eb4e7ddb56eaaf
-
-Change-Id: I1cb02223f33c89619ad7174f8953319896978b5b
-Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+Test: Manual
+Change-Id: I06c59016e9b6da51ed8a4678a66674fc48c20e40
 ---
- res/values/volla_strings.xml                  |  5 +
+ res/values/strings.xml                        |  6 ++
  res/xml/sound_settings.xml                    | 10 ++
  .../settings/DefaultRingtonePreference.java   |  6 +-
  .../android/settings/RingtonePreference.java  | 25 ++++-
@@ -49,26 +27,29 @@ Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
  ...honeRingtone2PreferenceControllerTest.java | 98 +++++++++++++++++++
  ...PhoneRingtonePreferenceControllerTest.java | 19 ++++
  .../settings/ui/SoundSettingsTest.java        | 41 ++++++--
- 11 files changed, 281 insertions(+), 12 deletions(-)
+ 11 files changed, 282 insertions(+), 12 deletions(-)
  create mode 100644 src/com/android/settings/notification/PhoneRingtone2PreferenceController.java
  create mode 100644 tests/robotests/src/com/android/settings/notification/PhoneRingtone2PreferenceControllerTest.java
 
-diff --git a/res/values/volla_strings.xml b/res/values/volla_strings.xml
-index 21d817fac2d..7128d134f84 100644
---- a/res/values/volla_strings.xml
-+++ b/res/values/volla_strings.xml
-@@ -6,4 +6,9 @@
-     <string name="enable_microg_title">Manage MicroG</string>
-     <string name="enable_microg_summary">Enable or disable MicroG</string>
+diff --git a/res/values/strings.xml b/res/values/strings.xml
+index 2e44c013a96..56f57baed70 100644
+--- a/res/values/strings.xml
++++ b/res/values/strings.xml
+@@ -8081,6 +8081,12 @@
+     <!-- Sound: Title for the option defining the phone ringtone. [CHAR LIMIT=30] -->
+     <string name="ringtone_title">Phone ringtone</string>
  
 +    <!-- Sound: Title for the option defining the phone ringtone for slot1 on Muilti SIM device. [CHAR LIMIT=50] -->
 +    <string name="ringtone1_title">Phone ringtone - SIM 1</string>
++
 +    <!-- Sound: Title for the option defining the phone ringtone for slot2 on Muilti SIM device. [CHAR LIMIT=50] -->
 +    <string name="ringtone2_title">Phone ringtone - SIM 2</string>
 +
- </resources>
+     <!-- Sound: Title for the option defining the default notification sound. [CHAR LIMIT=30] -->
+     <string name="notification_ringtone_title">Default notification sound</string>
+ 
 diff --git a/res/xml/sound_settings.xml b/res/xml/sound_settings.xml
-index b49345d698e..140a6a4d4fd 100644
+index 6f932a7e699..9f6229c36c2 100644
 --- a/res/xml/sound_settings.xml
 +++ b/res/xml/sound_settings.xml
 @@ -115,6 +115,16 @@
@@ -82,8 +63,8 @@ index b49345d698e..140a6a4d4fd 100644
 +        android:dialogTitle="@string/ringtone_title"
 +        android:summary="@string/summary_placeholder"
 +        android:ringtoneType="ringtone"
-+        android:order="-119"
-+        settings:keywords="@string/sound_settings"/>
++        settings:allowDividerAbove="false"
++        android:order="-119"/>
 +
      <!-- Live Caption -110 and Now Playing -105-->
  
@@ -110,7 +91,7 @@ index 4c654887227..e6d5ced14b8 100644
  
  }
 diff --git a/src/com/android/settings/RingtonePreference.java b/src/com/android/settings/RingtonePreference.java
-index de5b7c39f76..cdabaab210a 100644
+index 6b9dad7ffbf..43600c28f6b 100644
 --- a/src/com/android/settings/RingtonePreference.java
 +++ b/src/com/android/settings/RingtonePreference.java
 @@ -40,6 +40,7 @@ import androidx.preference.PreferenceManager;
@@ -131,7 +112,7 @@ index de5b7c39f76..cdabaab210a 100644
      private int mRingtoneType;
      private boolean mShowDefault;
      private boolean mShowSilent;
-@@ -88,6 +92,25 @@ public class RingtonePreference extends Preference {
+@@ -89,6 +93,25 @@ public class RingtonePreference extends Preference {
          return mUserId;
      }
  
@@ -157,7 +138,7 @@ index de5b7c39f76..cdabaab210a 100644
      /**
       * Returns the sound type(s) that are shown in the picker.
       *
-@@ -166,7 +189,7 @@ public class RingtonePreference extends Preference {
+@@ -167,7 +190,7 @@ public class RingtonePreference extends Preference {
          ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, mShowDefault);
          if (mShowDefault) {
              ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI,
@@ -235,12 +216,12 @@ index 00000000000..6215936d3af
 +    }
 +}
 diff --git a/src/com/android/settings/notification/PhoneRingtonePreferenceController.java b/src/com/android/settings/notification/PhoneRingtonePreferenceController.java
-index 7bd78feeb3c..d525aa2d504 100644
+index 2944b7da459..c8611b437c7 100644
 --- a/src/com/android/settings/notification/PhoneRingtonePreferenceController.java
 +++ b/src/com/android/settings/notification/PhoneRingtonePreferenceController.java
-@@ -19,6 +19,13 @@ package com.android.settings.notification;
- import android.content.Context;
+@@ -20,6 +20,13 @@ import android.content.Context;
  import android.media.RingtoneManager;
+ import android.media.audio.Flags;
  
 +import android.telephony.TelephonyManager;
 +
@@ -252,7 +233,7 @@ index 7bd78feeb3c..d525aa2d504 100644
  import com.android.settings.Utils;
  
  public class PhoneRingtonePreferenceController extends RingtonePreferenceControllerBase {
-@@ -29,6 +36,20 @@ public class PhoneRingtonePreferenceController extends RingtonePreferenceControl
+@@ -30,6 +37,20 @@ public class PhoneRingtonePreferenceController extends RingtonePreferenceControl
          super(context);
      }
  
@@ -297,10 +278,10 @@ index 29b9266335d..359ea71abdf 100644
          final CharSequence summary;
          try {
 diff --git a/src/com/android/settings/notification/SoundSettings.java b/src/com/android/settings/notification/SoundSettings.java
-index 4575708bbbd..d92686a376c 100644
+index fffb7849bbc..7ae9e22ded7 100644
 --- a/src/com/android/settings/notification/SoundSettings.java
 +++ b/src/com/android/settings/notification/SoundSettings.java
-@@ -256,6 +256,7 @@ public class SoundSettings extends DashboardFragment implements OnActivityResult
+@@ -266,6 +266,7 @@ public class SoundSettings extends DashboardFragment implements OnActivityResult
  
          // === Phone & notification ringtone ===
          controllers.add(new PhoneRingtonePreferenceController(context));
@@ -413,10 +394,10 @@ index 00000000000..87fa6a5038c
 +    }
 +}
 diff --git a/tests/robotests/src/com/android/settings/notification/PhoneRingtonePreferenceControllerTest.java b/tests/robotests/src/com/android/settings/notification/PhoneRingtonePreferenceControllerTest.java
-index 24e845851a4..3b9894203e6 100644
+index 9e49653c233..f8baad50f1c 100644
 --- a/tests/robotests/src/com/android/settings/notification/PhoneRingtonePreferenceControllerTest.java
 +++ b/tests/robotests/src/com/android/settings/notification/PhoneRingtonePreferenceControllerTest.java
-@@ -18,12 +18,17 @@ package com.android.settings.notification;
+@@ -18,6 +18,7 @@ package com.android.settings.notification;
  
  import static com.google.common.truth.Truth.assertThat;
  
@@ -424,17 +405,18 @@ index 24e845851a4..3b9894203e6 100644
  import static org.mockito.Mockito.when;
  
  import android.content.Context;
- import android.media.RingtoneManager;
+@@ -29,6 +30,10 @@ import android.platform.test.annotations.EnableFlags;
+ import android.platform.test.flag.junit.SetFlagsRule;
  import android.telephony.TelephonyManager;
  
 +import androidx.preference.PreferenceScreen;
-+
++ 
 +import com.android.settings.DefaultRingtonePreference;
-+import com.android.settings.R;
++import com.android.settings.R; 
+ 
  import org.junit.Before;
- import org.junit.Test;
- import org.junit.runner.RunWith;
-@@ -38,6 +43,10 @@ public class PhoneRingtonePreferenceControllerTest {
+ import org.junit.Rule;
+@@ -43,6 +48,10 @@ public class PhoneRingtonePreferenceControllerTest {
  
      @Mock
      private TelephonyManager mTelephonyManager;
@@ -443,10 +425,10 @@ index 24e845851a4..3b9894203e6 100644
 +    @Mock
 +    private DefaultRingtonePreference mPreference;
  
-     private Context mContext;
-     private PhoneRingtonePreferenceController mController;
-@@ -51,6 +60,16 @@ public class PhoneRingtonePreferenceControllerTest {
-         mController = new PhoneRingtonePreferenceController(mContext);
+     @Mock
+     private Context mMockContext;
+@@ -64,6 +73,16 @@ public class PhoneRingtonePreferenceControllerTest {
+         mController = new PhoneRingtonePreferenceController(mMockContext);
      }
  
 +    @Test
@@ -457,11 +439,11 @@ index 24e845851a4..3b9894203e6 100644
 +        mController.displayPreference(mPreferenceScreen);
 +
 +        verify(mPreference).setTitle(mContext.getString(R.string.ringtone1_title));
-+    
++    }
 +
      @Test
+     @DisableFlags(Flags.FLAG_ENABLE_RINGTONE_HAPTICS_CUSTOMIZATION)
      public void isAvailable_notVoiceCapable_shouldReturnFalse() {
-         when(mTelephonyManager.isVoiceCapable()).thenReturn(false);
 diff --git a/tests/uitests/src/com/android/settings/ui/SoundSettingsTest.java b/tests/uitests/src/com/android/settings/ui/SoundSettingsTest.java
 index f981f7fe73e..72d4a1140d7 100644
 --- a/tests/uitests/src/com/android/settings/ui/SoundSettingsTest.java
@@ -549,5 +531,5 @@ index f981f7fe73e..72d4a1140d7 100644
  
      @MediumTest
 -- 
-2.29.2
+2.34.1
 

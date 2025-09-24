@@ -1,31 +1,15 @@
-From 349b3ddfca37c3f2198fcf99590baf9326065715 Mon Sep 17 00:00:00 2001
+From a5a81d4024747875672f0a9c43ea60156abd2bc9 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 9 Mar 2024 15:53:48 +0330
 Subject: [PATCH] Add app restriction support
 
 Change-Id: I6ff252d8e28fc358d330926da7b973bf7ae49051
 ---
- api/lineage_current.txt                       |   4 +
  .../platform/internal/FirewallService.java    | 272 +++++++++++++++---
  .../lineageos/firewall/FirewallManager.java   |  40 +++
  .../lineageos/firewall/IFirewallService.aidl  |  11 +
- 4 files changed, 292 insertions(+), 35 deletions(-)
+ 3 files changed, 288 insertions(+), 35 deletions(-)
 
-diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index 9259ffa6..5eaed749 100644
---- a/api/lineage_current.txt
-+++ b/api/lineage_current.txt
-@@ -887,6 +887,10 @@ package lineageos.firewall {
-     java.util.List<java.lang.String> getDomainsList();
-     method public void clearDomainList();
-     method public void addDomainListToList(java.util.List<java.lang.String>);
-+    method public void addAppToList(java.lang.String);
-+    method public void removeAppFromList(java.lang.String);
-+    method public boolean isAppOnList(java.lang.String);
-+    method public int getAppsListCount();
-   }
- 
- }
 diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
 index 9d81af83..0e2158e7 100644
 --- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
@@ -566,5 +550,5 @@ index a2697a09..46187cd9 100644
 +
  }
 -- 
-2.29.2
+2.49.0
 

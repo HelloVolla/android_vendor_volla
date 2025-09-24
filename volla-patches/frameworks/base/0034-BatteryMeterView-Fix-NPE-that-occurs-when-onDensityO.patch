@@ -1,0 +1,40 @@
+From ff3fe7535a2c0d7b8df4795730cc0d5f80df585c Mon Sep 17 00:00:00 2001
+From: spezi77 <spezi7713@gmx.net>
+Date: Fri, 7 Jan 2022 21:32:19 +0100
+Subject: [PATCH 34/35] BatteryMeterView: Fix NPE that occurs when
+ onDensityOrFontScaleChanged() is called.
+
+Otherwise SysUI will crash.
+
+Tested with "Network traffic indicator".
+
+01-07 22:27:19.805  3347  3347 E AndroidRuntime: FATAL EXCEPTION: main
+01-07 22:27:19.805  3347  3347 E AndroidRuntime: Process: com.android.systemui, PID: 3347
+01-07 22:27:19.805  3347  3347 E AndroidRuntime: java.lang.NullPointerException: Attempt to invoke virtual method 'void android.widget.ImageView.setLayoutParams(android.view.ViewGroup$LayoutParams)' on a null object reference
+01-07 22:27:19.805  3347  3347 E AndroidRuntime: 	at com.android.systemui.BatteryMeterView.scaleBatteryMeterViews(BatteryMeterView.java:497)
+01-07 22:27:19.805  3347  3347 E AndroidRuntime: 	at com.android.systemui.BatteryMeterView.onDensityOrFontScaleChanged(BatteryMeterView.java:437)
+
+Signed-off-by: spezi77 <spezi7713@gmx.net>
+Change-Id: Ic9378d1177a3ab8e80e1e6d6c9a064b4d626a3e2
+---
+ .../src/com/android/systemui/battery/BatteryMeterView.java    | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/battery/BatteryMeterView.java b/packages/SystemUI/src/com/android/systemui/battery/BatteryMeterView.java
+index 2b858f58b819..8df29e20aa73 100644
+--- a/packages/SystemUI/src/com/android/systemui/battery/BatteryMeterView.java
++++ b/packages/SystemUI/src/com/android/systemui/battery/BatteryMeterView.java
+@@ -724,7 +724,9 @@ public class BatteryMeterView extends LinearLayout implements DarkReceiver {
+         scaledLayoutParams.setMargins(0, marginTop, 0, marginBottom);
+ 
+         mAccessorizedDrawable.setDisplayShield(displayShield);
+-        mBatteryIconView.setLayoutParams(scaledLayoutParams);
++        if (mBatteryIconView != null) {
++            mBatteryIconView.setLayoutParams(scaledLayoutParams);
++        }
+         mBatteryIconView.invalidateDrawable(mAccessorizedDrawable);
+     }
+ 
+-- 
+2.49.0
+

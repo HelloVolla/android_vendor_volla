@@ -1,89 +1,90 @@
-From 4cb9d39e48f3a73b83bf6fc8c3535fbbbda587f7 Mon Sep 17 00:00:00 2001
+From 3b67518f2ae7f242fe12013d627f649ff1fc51e0 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 12 Nov 2023 16:48:28 +0330
 Subject: [PATCH] volla: Move bootanimation to volla vendor
 
 Change-Id: Ide5217d84e10a15a62a7cd33869df079a72cdddf
 ---
- bootanimation/Android.mk        |  63 --------------------------------
- bootanimation/CleanSpec.mk      |  17 ---------
- bootanimation/bootanimation.tar | Bin 6430720 -> 0 bytes
- bootanimation/desc.txt          |   3 --
- 4 files changed, 83 deletions(-)
- delete mode 100644 bootanimation/Android.mk
+ bootanimation/Android.bp           |  61 -----------------------------
+ bootanimation/CleanSpec.mk         |  17 --------
+ bootanimation/bootanimation.tar    | Bin 6430720 -> 0 bytes
+ bootanimation/desc.txt             |   3 --
+ bootanimation/gen-bootanimation.sh |  56 --------------------------
+ config/common.mk                   |   3 +-
+ 6 files changed, 1 insertion(+), 139 deletions(-)
+ delete mode 100644 bootanimation/Android.bp
  delete mode 100644 bootanimation/CleanSpec.mk
  delete mode 100644 bootanimation/bootanimation.tar
  delete mode 100644 bootanimation/desc.txt
+ delete mode 100755 bootanimation/gen-bootanimation.sh
 
-diff --git a/bootanimation/Android.mk b/bootanimation/Android.mk
+diff --git a/bootanimation/Android.bp b/bootanimation/Android.bp
 deleted file mode 100644
-index 97948f38..00000000
---- a/bootanimation/Android.mk
+index bcd8e3fa..00000000
+--- a/bootanimation/Android.bp
 +++ /dev/null
-@@ -1,63 +0,0 @@
--#
--# Copyright (C) 2016 The CyanogenMod Project
--#               2017-2024 The LineageOS Project
--#
--# Licensed under the Apache License, Version 2.0 (the "License");
--# you may not use this file except in compliance with the License.
--# You may obtain a copy of the License at
--#
--#      http://www.apache.org/licenses/LICENSE-2.0
--#
--# Unless required by applicable law or agreed to in writing, software
--# distributed under the License is distributed on an "AS IS" BASIS,
--# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
--# See the License for the specific language governing permissions and
--# limitations under the License.
--#
+@@ -1,61 +0,0 @@
+-//
+-// SPDX-FileCopyrightText: The LineageOS Project
+-// SPDX-License-Identifier: Apache-2.0
+-//
 -
--TARGET_GENERATED_BOOTANIMATION := $(TARGET_OUT_INTERMEDIATES)/BOOTANIMATION/bootanimation.zip
--$(TARGET_GENERATED_BOOTANIMATION): INTERMEDIATES := $(call intermediates-dir-for,BOOTANIMATION,bootanimation)
--$(TARGET_GENERATED_BOOTANIMATION): $(SOONG_ZIP)
--	@echo "Building bootanimation.zip"
--	@rm -rf $(dir $@)
--	@mkdir -p $(INTERMEDIATES)
--	$(hide) tar xfp vendor/lineage/bootanimation/bootanimation.tar -C $(INTERMEDIATES)
--	$(hide) if [ $(TARGET_SCREEN_HEIGHT) -lt $(TARGET_SCREEN_WIDTH) ]; then \
--	    IMAGEWIDTH=$(TARGET_SCREEN_HEIGHT); \
--	else \
--	    IMAGEWIDTH=$(TARGET_SCREEN_WIDTH); \
--	fi; \
--	IMAGESCALEWIDTH=$$IMAGEWIDTH; \
--	IMAGESCALEHEIGHT=$$(expr $$IMAGESCALEWIDTH / 3); \
--	if [ "$(TARGET_BOOTANIMATION_HALF_RES)" = "true" ]; then \
--	    IMAGEWIDTH="$$(expr "$$IMAGEWIDTH" / 2)"; \
--	fi; \
--	IMAGEHEIGHT=$$(expr $$IMAGEWIDTH / 3); \
--	RESOLUTION="$$IMAGEWIDTH"x"$$IMAGEHEIGHT"; \
--	prebuilts/tools-lineage/${HOST_OS}-x86/bin/mogrify -resize $$RESOLUTION -colors 256 $(INTERMEDIATES)/*/*.png; \
--	echo "$$IMAGESCALEWIDTH $$IMAGESCALEHEIGHT 60" > $(INTERMEDIATES)/desc.txt; \
--	cat vendor/lineage/bootanimation/desc.txt >> $(INTERMEDIATES)/desc.txt
--	$(hide) $(SOONG_ZIP) -L 0 -o $@ -C $(INTERMEDIATES) -D $(INTERMEDIATES)
+-genrule {
+-    name: "gen-bootanimation.zip",
+-    tools: [
+-        "mogrify",
+-        "soong_zip",
+-    ],
+-    tool_files: [
+-        "bootanimation.tar",
+-        "desc.txt",
+-        "gen-bootanimation.sh",
+-    ],
+-    out: ["bootanimation.zip"],
 -
--ifeq ($(TARGET_BOOTANIMATION),)
--    TARGET_BOOTANIMATION := $(TARGET_GENERATED_BOOTANIMATION)
--endif
+-    cmd: select((soong_config_variable("lineage_bootanimation", "height"),
+-                 soong_config_variable("lineage_bootanimation", "width"),
+-                 soong_config_variable("lineage_bootanimation", "half_res"),
+-                 soong_config_variable("lineage_bootanimation", "prebuilt_file")), {
+-        (any @ height, any @ width, any @ half_res, any @ prebuilt_file):
+-            "cp ../../../../../" + prebuilt_file + " $(out)",
+-        (any @ height, any @ width, any @ half_res, default):
+-            "$(location gen-bootanimation.sh)" +
+-            " $(out)" +
+-            " $(genDir)" +
+-            " $(location bootanimation.tar)" +
+-            " $(location desc.txt)" +
+-            " $(location mogrify)" +
+-            " $(location soong_zip)" +
+-            " " + height +
+-            " " + width +
+-            " " + half_res,
+-        (default, default, default, default):
+-            "$(location gen-bootanimation.sh)" +
+-            " $(out)" +
+-            " $(genDir)" +
+-            " $(location bootanimation.tar)" +
+-            " $(location desc.txt)" +
+-            " $(location mogrify)" +
+-            " $(location soong_zip)" +
+-            " 600" +
+-            " 600" +
+-            " false",
+-    }),
+-}
 -
--include $(CLEAR_VARS)
--LOCAL_MODULE := bootanimation.zip
--LOCAL_MODULE_CLASS := ETC
--LOCAL_MODULE_PATH := $(TARGET_OUT_PRODUCT)/media
+-prebuilt_media {
+-    name: "bootanimation.zip",
+-    src: ":gen-bootanimation.zip",
+-    product_specific: true,
+-}
 -
--include $(BUILD_SYSTEM)/base_rules.mk
--
--$(LOCAL_BUILT_MODULE): $(TARGET_BOOTANIMATION)
--	@cp $(TARGET_BOOTANIMATION) $@
--
--include $(CLEAR_VARS)
--
--BOOTANIMATION_SYMLINK := $(TARGET_OUT_PRODUCT)/media/bootanimation-dark.zip
--$(BOOTANIMATION_SYMLINK): $(LOCAL_INSTALLED_MODULE)
--	@mkdir -p $(dir $@)
--	$(hide) ln -sf bootanimation.zip $@
--
--ALL_DEFAULT_INSTALLED_MODULES += $(BOOTANIMATION_SYMLINK)
+-install_symlink {
+-    name: "bootanimation-dark.zip",
+-    product_specific: true,
+-    installed_location: "media/bootanimation-dark.zip",
+-    symlink_target: "bootanimation.zip",
+-}
 diff --git a/bootanimation/CleanSpec.mk b/bootanimation/CleanSpec.mk
 deleted file mode 100644
 index a32a8837..00000000
@@ -88295,6 +88296,82 @@ index 4aecc8ed..00000000
 -c 1 0 part0
 -c 0 0 part1
 -c 1 0 part2
+diff --git a/bootanimation/gen-bootanimation.sh b/bootanimation/gen-bootanimation.sh
+deleted file mode 100755
+index 8c2ba50e..00000000
+--- a/bootanimation/gen-bootanimation.sh
++++ /dev/null
+@@ -1,56 +0,0 @@
+-#!/bin/bash -e
+-#
+-# Copyright (C) 2016 The CyanogenMod Project
+-#               2017-2024 The LineageOS Project
+-#
+-# Licensed under the Apache License, Version 2.0 (the "License");
+-# you may not use this file except in compliance with the License.
+-# You may obtain a copy of the License at
+-#
+-#      http://www.apache.org/licenses/LICENSE-2.0
+-#
+-# Unless required by applicable law or agreed to in writing, software
+-# distributed under the License is distributed on an "AS IS" BASIS,
+-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-# See the License for the specific language governing permissions and
+-# limitations under the License.
+-#
+-
+-PARAM_OUT=$1
+-PARAM_GENDIR=$2
+-PARAM_BOOTANIMATION_TAR=$3
+-PARAM_DESC_TXT=$4
+-PARAM_MOGRIFY=$5
+-PARAM_SOONG_ZIP=$6
+-PARAM_TARGET_SCREEN_HEIGHT=$7
+-PARAM_TARGET_SCREEN_WIDTH=$8
+-PARAM_TARGET_BOOTANIMATION_HALF_RES=$9
+-
+-INTERMEDIATES=$PARAM_GENDIR/intermediates
+-
+-mkdir -p $INTERMEDIATES
+-
+-tar xfp $PARAM_BOOTANIMATION_TAR -C $INTERMEDIATES
+-
+-if [ $PARAM_TARGET_SCREEN_HEIGHT -lt $PARAM_TARGET_SCREEN_WIDTH ]; then
+-    IMAGEWIDTH=$PARAM_TARGET_SCREEN_HEIGHT
+-else
+-    IMAGEWIDTH=$PARAM_TARGET_SCREEN_WIDTH
+-fi
+-
+-IMAGESCALEWIDTH=$IMAGEWIDTH
+-IMAGESCALEHEIGHT=$(expr $IMAGESCALEWIDTH / 3);
+-
+-if [ "$PARAM_TARGET_BOOTANIMATION_HALF_RES" = "true" ]; then
+-    IMAGEWIDTH="$(expr "$IMAGEWIDTH" / 2)"
+-fi
+-
+-IMAGEHEIGHT=$(expr $IMAGEWIDTH / 3);
+-RESOLUTION="$IMAGEWIDTH"x"$IMAGEHEIGHT";
+-
+-$PARAM_MOGRIFY -resize $RESOLUTION -colors 256 $INTERMEDIATES/*/*.png;
+-
+-echo "$IMAGESCALEWIDTH $IMAGESCALEHEIGHT 60" > $INTERMEDIATES/desc.txt;
+-cat $PARAM_DESC_TXT >> $INTERMEDIATES/desc.txt
+-
+-$PARAM_SOONG_ZIP -L 0 -o $PARAM_OUT -C $INTERMEDIATES -D $INTERMEDIATES
+diff --git a/config/common.mk b/config/common.mk
+index 9f7697a1..fda3a05d 100644
+--- a/config/common.mk
++++ b/config/common.mk
+@@ -123,8 +123,7 @@ endif
+ TARGET_SCREEN_WIDTH ?= 1080
+ TARGET_SCREEN_HEIGHT ?= 1920
+ PRODUCT_PACKAGES += \
+-    bootanimation.zip \
+-    bootanimation-dark.zip
++    bootanimation.zip
+ 
+ # Build Manifest
+ PRODUCT_PACKAGES += \
 -- 
-2.29.2
+2.49.0
 

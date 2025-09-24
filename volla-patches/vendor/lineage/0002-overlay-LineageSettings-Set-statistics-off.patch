@@ -1,4 +1,4 @@
-From 87be71efd06de621f93fe817bbbc1fa2344113b7 Mon Sep 17 00:00:00 2001
+From 4685de81bd39b48a97032ea4ee1260dd941f245c Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Fri, 9 Jul 2021 17:30:29 +0430
 Subject: [PATCH] overlay: LineageSettings: Set statistics off
@@ -20,5 +20,5 @@ index 56031b7f..5c17b840 100644
 +    <bool name="def_stats_collection">false</bool>
  </resources>
 -- 
-2.29.2
+2.49.0
 

@@ -1,0 +1,57 @@
+From 8529d61e998717d99b1bc5ed8dda5a5338590c63 Mon Sep 17 00:00:00 2001
+From: techyminati <sinha.aryan03@gmail.com>
+Date: Wed, 13 Mar 2024 22:47:48 +0530
+Subject: [PATCH 2/7] LatinIME: Cipher Colors
+
+Change-Id: I652d5e20ebf854dbdea49a4936e3df0cc9f244f1
+Signed-off-by: techyminati <sinha.aryan03@gmail.com>
+---
+ java/res/drawable/ic_launcher_background.xml | 4 ++--
+ java/res/drawable/ic_launcher_foreground.xml | 2 +-
+ java/res/values/colors.xml                   | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/java/res/drawable/ic_launcher_background.xml b/java/res/drawable/ic_launcher_background.xml
+index 4c5c90e767..600c133edf 100644
+--- a/java/res/drawable/ic_launcher_background.xml
++++ b/java/res/drawable/ic_launcher_background.xml
+@@ -13,8 +13,8 @@
+       android:fillColor="#ffffff"/>
+   <path
+       android:pathData="M30,61C30,60.448 30.448,60 31,60H37C37.552,60 38,60.448 38,61V67C38,67.552 37.552,68 37,68H32C30.895,68 30,67.105 30,66V61Z"
+-      android:fillColor="#359944"/>
++      android:fillColor="#7e7ef7"/>
+   <path
+       android:pathData="M70,61C70,60.448 70.448,60 71,60H77C77.552,60 78,60.448 78,61V66C78,67.105 77.105,68 76,68H71C70.448,68 70,67.552 70,67V61Z"
+-      android:fillColor="#1F6C37"/>
++      android:fillColor="#7e7ef7"/>
+ </vector>
+diff --git a/java/res/drawable/ic_launcher_foreground.xml b/java/res/drawable/ic_launcher_foreground.xml
+index 133977b77c..3633e5ece1 100644
+--- a/java/res/drawable/ic_launcher_foreground.xml
++++ b/java/res/drawable/ic_launcher_foreground.xml
+@@ -14,7 +14,7 @@
+         android:pathData="M0,0h108v108h-108z"/>
+     <path
+         android:pathData="M30,42C30,40.895 30.895,40 32,40H37C37.552,40 38,40.448 38,41V47C38,47.552 37.552,48 37,48H31C30.448,48 30,47.552 30,47V42ZM40,51C40,50.448 40.448,50 41,50H47C47.552,50 48,50.448 48,51V57C48,57.552 47.552,58 47,58H41C40.448,58 40,57.552 40,57V51ZM41,40C40.448,40 40,40.448 40,41V47C40,47.552 40.448,48 41,48H47C47.552,48 48,47.552 48,47V41C48,40.448 47.552,40 47,40H41ZM50,51C50,50.448 50.448,50 51,50H57C57.552,50 58,50.448 58,51V57C58,57.552 57.552,58 57,58H51C50.448,58 50,57.552 50,57V51ZM51,40C50.448,40 50,40.448 50,41V47C50,47.552 50.448,48 51,48H57C57.552,48 58,47.552 58,47V41C58,40.448 57.552,40 57,40H51ZM40,61C40,60.448 40.448,60 41,60H67C67.552,60 68,60.448 68,61V67C68,67.552 67.552,68 67,68H41C40.448,68 40,67.552 40,67V61ZM61,50C60.448,50 60,50.448 60,51V57C60,57.552 60.448,58 61,58H67C67.552,58 68,57.552 68,57V51C68,50.448 67.552,50 67,50H61ZM60,41C60,40.448 60.448,40 61,40H67C67.552,40 68,40.448 68,41V47C68,47.552 67.552,48 67,48H61C60.448,48 60,47.552 60,47V41ZM71,40C70.448,40 70,40.448 70,41V47C70,47.552 70.448,48 71,48H77C77.552,48 78,47.552 78,47V42C78,40.895 77.105,40 76,40H71Z"
+-        android:fillColor="#87BF7B"
++        android:fillColor="#7e7ef7"
+         android:fillType="evenOdd"/>
+     <path
+         android:pathData="M28.54,28.54m-72,0a72,72 0,1 1,144 0a72,72 0,1 1,-144 0"
+diff --git a/java/res/values/colors.xml b/java/res/values/colors.xml
+index 03619d28ee..bf7bff1fb0 100644
+--- a/java/res/values/colors.xml
++++ b/java/res/values/colors.xml
+@@ -58,7 +58,7 @@
+     <!-- Color resources for setup wizard and tutorial -->
+     <color name="setup_background">#FFEBEBEB</color>
+     <color name="setup_text_dark">#FF707070</color>
+-    <color name="setup_text_action">@android:color/holo_blue_light</color>
++    <color name="setup_text_action">#7e7ef7</color>
+     <color name="setup_step_background">@android:color/background_light</color>
+     <color name="setup_welcome_video_margin_color">#FFCCCCCC</color>
+     <!-- Accent color for the notification. We need to match this to the OS build -->
+-- 
+2.34.1
+

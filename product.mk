@@ -56,9 +56,15 @@ PRODUCT_PACKAGES += \
     MtkCamera
 endif
 
-ifeq ($(filter %_yggdrasil,$(TARGET_PRODUCT)),)
+ifeq ($(filter %_yggdrasil %_algiz %_mimir,$(TARGET_PRODUCT)),)
 PRODUCT_PACKAGES += BootloaderManager
 endif
+
+ifneq ($(filter %_algiz %_mimir,$(TARGET_PRODUCT)),)
+PRODUCT_PACKAGES += BootloaderManager-new bootloadermanager
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/bootloadermanager/dmsetupaa64:$(TARGET_COPY_OUT_SYSTEM_EXT)/bin/dmsetup
+endif
+
 
 ifneq ($(filter %_vidofnir,$(TARGET_PRODUCT)),)
 PRODUCT_PACKAGES += \
@@ -94,6 +100,9 @@ PRODUCT_PACKAGES += MaxfourRemover
 endif
 
 # Updater
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    lineage.updater.allow_major_upgrades=true
+
 ifeq ($(strip $(VOLLA_BUILD_FLAVOR)),)
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     lineage.updater.uri=https://ota.volla.tech/api/v1/{device}/{type}/{incr} \
@@ -227,3 +236,23 @@ PRODUCT_ARTIFACT_PATH_REQUIREMENT_ALLOWED_LIST += \
     system/priv-app/com.android.vending/com.android.vending.apk \
     system/priv-app/com.google.android.gms/com.google.android.gms.apk \
     system/priv-app/com.volla.launcher-Stub/com.volla.launcher-Stub.apk
+
+# Enable whole-program R8 Java optimizations for SystemUI and system_server,
+# but also allow explicit overriding for testing and development.
+SYSTEM_OPTIMIZE_JAVA ?= true
+SYSTEMUI_OPTIMIZE_JAVA ?= true
+
+# Dex speed apps
+PRODUCT_DEXPREOPT_SPEED_APPS += \
+    Launcher3QuickStep \
+    Settings \
+    CarSystemUI \
+    SystemUI
+
+
+# Volla Specific Properties (to be used in About Phone & Later Customisation, also adds our branding to build)
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    ro.volla.version=$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR) \
+    ro.volla.build.version=$(LINEAGE_VERSION) \
+    ro.volla.display.version=$(LINEAGE_DISPLAY_VERSION) \
+    ro.volla.releasetype=$(LINEAGE_BUILDTYPE)

@@ -1,0 +1,49 @@
+From 37e6782c0d019be1b26180b9119136d8f25f9654 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Mon, 29 Jul 2024 15:52:22 +0330
+Subject: [PATCH 6/8] SetupWizard: Disable LineageSettingsActivity
+
+Change-Id: I9f0e6d1d25d6a83a0cb42d7fb914857418d037d5
+---
+ src/org/lineageos/setupwizard/SetupWizardApp.java        | 1 +
+ src/org/lineageos/setupwizard/util/SetupWizardUtils.java | 5 +++++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/src/org/lineageos/setupwizard/SetupWizardApp.java b/src/org/lineageos/setupwizard/SetupWizardApp.java
+index 32b43b1..eeec26f 100644
+--- a/src/org/lineageos/setupwizard/SetupWizardApp.java
++++ b/src/org/lineageos/setupwizard/SetupWizardApp.java
+@@ -63,6 +63,7 @@ public class SetupWizardApp extends Application {
+         if (LOGV) {
+             Log.v(TAG, "onCreate()");
+         }
++        SetupWizardUtils.disableComponentsForMissingFeatures(this);
+         sStatusBarManager = SetupWizardUtils.disableStatusBar(this);
+         mHandler.postDelayed(mRadioTimeoutRunnable, SetupWizardApp.RADIO_READY_TIMEOUT);
+         if (SetupWizardUtils.hasGMS(this)) {
+diff --git a/src/org/lineageos/setupwizard/util/SetupWizardUtils.java b/src/org/lineageos/setupwizard/util/SetupWizardUtils.java
+index 60864be..5f7d2d8 100644
+--- a/src/org/lineageos/setupwizard/util/SetupWizardUtils.java
++++ b/src/org/lineageos/setupwizard/util/SetupWizardUtils.java
+@@ -56,6 +56,7 @@ import lineageos.providers.LineageSettings;
+ 
+ import org.lineageos.setupwizard.BaseSetupWizardActivity;
+ import org.lineageos.setupwizard.SetupWizardApp;
++import org.lineageos.setupwizard.LineageSettingsActivity;
+ 
+ import java.io.File;
+ import java.util.List;
+@@ -220,6 +221,10 @@ public class SetupWizardUtils {
+         };
+     }
+ 
++    public static void disableComponentsForMissingFeatures(Context context) {
++        disableComponent(context, LineageSettingsActivity.class);
++    }
++
+     /**
+      * Disable the Home component, which is presumably SetupWizardActivity at this time.
+      */
+-- 
+2.34.1
+

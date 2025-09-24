@@ -1,0 +1,4 @@
+service bootloadermanager /system_ext/bin/bootloadermanager
+    class late_start
+    user root
+    group root system

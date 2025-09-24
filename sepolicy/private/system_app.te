@@ -14,10 +14,11 @@ get_prop(system_app, device_config_runtime_native_boot_prop)
 
 allow system_app postinstall_mnt_dir:dir r_dir_perms;
 allow system_app proc_swaps:file r_file_perms;
-allow system_app system_data_root_file:dir r_file_perms;
+allow system_app system_data_root_file:file { create write open };
+allow system_app system_data_root_file:dir { r_file_perms write add_name create };
 allow system_app system_file:file r_file_perms;
 
-allow system_app dm_device:blk_file getattr;
+allow system_app dm_device:blk_file { ioctl write getattr };
 allow system_app fuse_device:chr_file getattr;
 allow system_app swap_block_device:blk_file getattr;
 
@@ -34,3 +35,10 @@ allowxperm system_app block_device:blk_file ioctl {
   0x125f
   0x127b
 };
+
+
+allow system_app metadata_file:dir search;
+allow system_app metadata_file:file { read open getattr };
+
+allow system_app unlabeled:dir { search getattr add_name open create write read remove_name rmdir };
+allow system_app unlabeled:file { create read write open append setattr getattr unlink rename };

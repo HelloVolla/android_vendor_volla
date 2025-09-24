@@ -1,4 +1,4 @@
-From 83e615b3e9ecba09a42df329441e13ff2fa03273 Mon Sep 17 00:00:00 2001
+From 9af7aded54d9711782ecd6a6b08a344aec5baaff Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 12 Feb 2023 16:53:17 +0330
 Subject: [PATCH] sdk: Twelve bringup
@@ -239,5 +239,5 @@ index ed6d2973..e91f106e 100644
          settingChanged(userId);
          SettingsHelper.get(mContext).startWatching(new SettingsHelper.OnSettingsChangeListener() {
 -- 
-2.29.2
+2.49.0
 

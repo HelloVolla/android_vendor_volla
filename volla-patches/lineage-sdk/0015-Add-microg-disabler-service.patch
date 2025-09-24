@@ -1,4 +1,4 @@
-From 4794baee0ccbba3e01112c88e3af46f1b3b441b8 Mon Sep 17 00:00:00 2001
+From c91bf265c0b53a2589d966d2af5229dcb5b98de2 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Thu, 2 Feb 2023 06:29:46 +0330
 Subject: [PATCH] Add microg disabler service
@@ -113,10 +113,10 @@ index 00000000..ed6d2973
 +    }
 +}
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index 9c1df4d9..1a3a7fe7 100644
+index 129f6168..8c611c86 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
-@@ -114,6 +114,7 @@
+@@ -106,6 +106,7 @@
          <item>org.lineageos.platform.internal.AppLockService</item>
          <item>org.lineageos.platform.internal.FirewallService</item>
          <item>org.lineageos.platform.internal.ChildModeService</item>
@@ -125,10 +125,10 @@ index 9c1df4d9..1a3a7fe7 100644
  
      <!-- The LineageSystemServer class that is invoked from Android's SystemServer -->
 diff --git a/sdk/src/java/lineageos/providers/LineageSettings.java b/sdk/src/java/lineageos/providers/LineageSettings.java
-index 62092f15..c92b17a6 100644
+index 4b9403eb..4c610fe9 100644
 --- a/sdk/src/java/lineageos/providers/LineageSettings.java
 +++ b/sdk/src/java/lineageos/providers/LineageSettings.java
-@@ -2077,6 +2077,15 @@ public final class LineageSettings {
+@@ -2079,6 +2079,15 @@ public final class LineageSettings {
          public static final Validator ENABLE_TASKBAR_VALIDATOR =
                  sBooleanValidator;
  
@@ -144,7 +144,7 @@ index 62092f15..c92b17a6 100644
          /**
           * I can haz more bukkits
           * @hide
-@@ -2252,6 +2261,8 @@ public final class LineageSettings {
+@@ -2255,6 +2264,8 @@ public final class LineageSettings {
                      CLICK_PARTIAL_SCREENSHOT_VALIDATOR);
              VALIDATORS.put(ENABLE_TASKBAR,
                      ENABLE_TASKBAR_VALIDATOR);
@@ -154,5 +154,5 @@ index 62092f15..c92b17a6 100644
                      __MAGICAL_TEST_PASSING_ENABLER_VALIDATOR);
          };
 -- 
-2.29.2
+2.49.0
 

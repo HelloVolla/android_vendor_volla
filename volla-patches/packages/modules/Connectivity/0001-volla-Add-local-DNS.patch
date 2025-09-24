@@ -1,18 +1,18 @@
-From 965e4cc94d67cfcd3115d1f5ad94f77490b1ec6d Mon Sep 17 00:00:00 2001
+From bd90605a80ff334f82279dd4e95e501547d04431 Mon Sep 17 00:00:00 2001
 From: Your Name <you@example.com>
 Date: Sun, 20 Feb 2022 10:05:50 +0100
 Subject: [PATCH] volla: Add local DNS
 
 Change-Id: I353dc2f92a9c2a231e81e0888935ba8f1f1cdcef
 ---
- .../com/android/server/connectivity/DnsManager.java  | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ .../com/android/server/connectivity/DnsManager.java   | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/service/src/com/android/server/connectivity/DnsManager.java b/service/src/com/android/server/connectivity/DnsManager.java
-index 8e6854ae50..e8147bbc03 100644
+index c940eecd46..d385d9fcb3 100644
 --- a/service/src/com/android/server/connectivity/DnsManager.java
 +++ b/service/src/com/android/server/connectivity/DnsManager.java
-@@ -45,6 +45,7 @@ import android.net.shared.PrivateDnsConfig;
+@@ -47,6 +47,7 @@ import android.net.shared.PrivateDnsConfig;
  import android.os.Binder;
  import android.os.RemoteException;
  import android.os.ServiceSpecificException;
@@ -20,7 +20,7 @@ index 8e6854ae50..e8147bbc03 100644
  import android.os.UserHandle;
  import android.provider.Settings;
  import android.text.TextUtils;
-@@ -370,7 +371,7 @@ public class DnsManager {
+@@ -373,7 +374,7 @@ public class DnsManager {
          // networks like IMS.
          final PrivateDnsConfig privateDnsCfg = mPrivateDnsMap.getOrDefault(netId,
                  PRIVATE_DNS_OFF);
@@ -29,11 +29,10 @@ index 8e6854ae50..e8147bbc03 100644
          final boolean strictMode = privateDnsCfg.inStrictMode();
  
          paramsParcel.netId = netId;
-@@ -390,6 +391,15 @@ public class DnsManager {
-                 : new String[0];            // Off
-         paramsParcel.transportTypes = nc.getTransportTypes();
-         paramsParcel.meteredNetwork = nc.isMetered();
-+
+@@ -393,6 +394,14 @@ public class DnsManager {
+         paramsParcel.interfaceNames = lp.getAllInterfaceNames().toArray(new String[0]);
+         paramsParcel.dohParams = makeDohParamsParcel(privateDnsCfg, lp);
+ 
 +        if (SystemProperties.getBoolean("persist.volla.firewall.enable", false)) {
 +            useTls = false;
 +            paramsParcel.tlsServers = new String[0];
@@ -46,5 +45,5 @@ index 8e6854ae50..e8147bbc03 100644
          // resolver config when private DNS is in opportunistic or strict mode.
          if (useTls) {
 -- 
-2.29.2
+2.49.0
 

@@ -1,0 +1,63 @@
+From 763deacf2caa4ff5c43945ffd5e07f33a4510ea4 Mon Sep 17 00:00:00 2001
+From: Jyotiraditya Panda <jyotiraditya@aospa.co>
+Date: Tue, 20 Feb 2024 10:00:44 +0900
+Subject: [PATCH 09/10] Settings: Make all user apps cloneable [2/2]
+
+ * Except system apps and overlays.
+
+Co-authored-by: someone5678 <someone5678@users.noreply.github.com>
+Change-Id: Ie6cb29778698de173b3abf5dc303688d0468cf04
+Signed-off-by: Jyotiraditya Panda <jyotiraditya@aospa.co>
+---
+ .../settings/applications/AppStateClonedAppsBridge.java      | 4 ++--
+ .../applications/ClonedAppsPreferenceController.java         | 5 ++---
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/src/com/android/settings/applications/AppStateClonedAppsBridge.java b/src/com/android/settings/applications/AppStateClonedAppsBridge.java
+index de0251dfffb..d01446d69a6 100644
+--- a/src/com/android/settings/applications/AppStateClonedAppsBridge.java
++++ b/src/com/android/settings/applications/AppStateClonedAppsBridge.java
+@@ -26,6 +26,7 @@ import android.util.Log;
+ 
+ import com.android.settings.Utils;
+ import com.android.settingslib.applications.ApplicationsState;
++import com.android.settingslib.applications.AppUtils;
+ 
+ import java.util.ArrayList;
+ import java.util.Arrays;
+@@ -47,8 +48,7 @@ public class AppStateClonedAppsBridge extends AppStateBaseBridge{
+             Callback callback) {
+         super(appState, callback);
+         mContext = context;
+-        mAllowedApps = Arrays.asList(mContext.getResources()
+-                .getStringArray(com.android.internal.R.array.cloneable_apps));
++        mAllowedApps = AppUtils.getCloneableAppList(mContext);
+     }
+ 
+     @Override
+diff --git a/src/com/android/settings/applications/ClonedAppsPreferenceController.java b/src/com/android/settings/applications/ClonedAppsPreferenceController.java
+index d134ceccd88..e340981f32b 100644
+--- a/src/com/android/settings/applications/ClonedAppsPreferenceController.java
++++ b/src/com/android/settings/applications/ClonedAppsPreferenceController.java
+@@ -34,6 +34,7 @@ import com.android.settings.R;
+ import com.android.settings.Utils;
+ import com.android.settings.core.BasePreferenceController;
+ import com.android.settings.dashboard.profileselector.ProfileSelectFragment;
++import com.android.settingslib.applications.AppUtils;
+ 
+ import java.util.Arrays;
+ import java.util.List;
+@@ -81,9 +82,7 @@ public class ClonedAppsPreferenceController extends BasePreferenceController
+             @Override
+             protected Integer[] doInBackground(Void... unused) {
+                 // Get list of allowlisted cloneable apps.
+-                List<String> cloneableApps = Arrays.asList(
+-                        mContext.getResources().getStringArray(
+-                                com.android.internal.R.array.cloneable_apps));
++                List<String> cloneableApps = AppUtils.getCloneableAppList(mContext);
+                 List<String> primaryUserApps = mContext.getPackageManager()
+                         .getInstalledPackagesAsUser(/* flags*/ 0, UserHandle.myUserId()).stream()
+                         .map(x -> x.packageName).toList();
+-- 
+2.34.1
+

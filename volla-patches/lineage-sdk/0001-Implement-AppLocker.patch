@@ -1,70 +1,22 @@
-From 0daaa9348cd8a5de67b37f73b792f2e5080ccc47 Mon Sep 17 00:00:00 2001
+From a07b2ede8bddc7c36ad5580b79052726b1a70d67 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 6 Feb 2022 18:07:07 +0330
 Subject: [PATCH] Implement AppLocker
 
 Change-Id: Iddf9e348be93367c34f6766cd73384d497fc3bef
 ---
- Android.mk                                    |   2 +-
- api/lineage_current.txt                       |  25 +
  .../platform/internal/AppLockService.java     | 497 ++++++++++++++++++
  lineage/res/res/values/config.xml             |   1 +
  .../app/LineageContextConstants.java          |   7 +
  .../lineageos/applock/AppLockManager.java     | 169 ++++++
  .../lineageos/applock/IAppLockCallback.aidl   |  22 +
  .../lineageos/applock/IAppLockService.aidl    |  47 ++
- 8 files changed, 769 insertions(+), 1 deletion(-)
+ 6 files changed, 743 insertions(+)
  create mode 100644 lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
  create mode 100644 sdk/src/java/lineageos/applock/AppLockManager.java
  create mode 100644 sdk/src/java/lineageos/applock/IAppLockCallback.aidl
  create mode 100644 sdk/src/java/lineageos/applock/IAppLockService.aidl
 
-diff --git a/Android.mk b/Android.mk
-index 412ce301..5129c7cb 100644
---- a/Android.mk
-+++ b/Android.mk
-@@ -29,7 +29,7 @@ include $(CLEAR_VARS)
- lineage_platform_res := APPS/org.lineageos.platform-res_intermediates/aapt
- 
- # List of packages used in lineage-api-stubs
--lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.util:lineageos.trust
-+lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.util:lineageos.trust:lineageos.applock
- 
- lineage_framework_module := $(LOCAL_INSTALLED_MODULE)
- 
-diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index a69bfa56..c12ac1d8 100644
---- a/api/lineage_current.txt
-+++ b/api/lineage_current.txt
-@@ -843,3 +843,28 @@ package lineageos.util {
-   }
- 
- }
-+
-+package lineageos.applock {
-+
-+  public abstract static class IAppLockCallback {
-+    ctor public IAppLockCallback();
-+    method public abstract void onAppStateChanged(java.lang.String);
-+  }
-+
-+  public class AppLockManager {
-+    method public static lineageos.applock.AppLockManager getInstance(android.content.Context);
-+    method public static lineageos.applock.AppLockManager getService();
-+    method public void activate(boolean);
-+    method public boolean isActivate();
-+    method public void enableInstallLocker(boolean);
-+    method public boolean isInstallLockerEnabled();
-+    method public void addAppToList(java.lang.String);
-+    method public void removeAppFromList(java.lang.String);
-+    method public boolean isAppLocked(java.lang.String);
-+    method public int getLockedAppsCount();
-+    java.util.List<java.lang.String> getLockedPackages();
-+    method public void addAppLockCallback(lineageos.applock.IAppLockCallback);
-+    method public void removeAppLockCallback(lineageos.applock.IAppLockCallback);
-+  }
-+
-+}
 diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java b/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
 new file mode 100644
 index 00000000..8dbe5067
@@ -569,10 +521,10 @@ index 00000000..8dbe5067
 +    }
 +}
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index dcd8a02f..7830f16b 100644
+index 46c12131..88fbc29c 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
-@@ -111,6 +111,7 @@
+@@ -103,6 +103,7 @@
          <item>org.lineageos.platform.internal.LineageSettingsService</item>
          <item>org.lineageos.platform.internal.LineageGlobalActionsService</item>
          <item>org.lineageos.platform.internal.health.HealthInterfaceService</item>
@@ -581,10 +533,10 @@ index dcd8a02f..7830f16b 100644
  
      <!-- The LineageSystemServer class that is invoked from Android's SystemServer -->
 diff --git a/sdk/src/java/lineageos/app/LineageContextConstants.java b/sdk/src/java/lineageos/app/LineageContextConstants.java
-index 26baa6ae..9cdf4826 100644
+index 07dbc1b4..b3021cfd 100644
 --- a/sdk/src/java/lineageos/app/LineageContextConstants.java
 +++ b/sdk/src/java/lineageos/app/LineageContextConstants.java
-@@ -92,6 +92,13 @@ public final class LineageContextConstants {
+@@ -81,6 +81,13 @@ public final class LineageContextConstants {
       */
      public static final String LINEAGE_GLOBAL_ACTIONS_SERVICE = "lineageglobalactions";
  
@@ -855,5 +807,5 @@ index 00000000..85d04f85
 +
 +}
 -- 
-2.29.2
+2.49.0
 

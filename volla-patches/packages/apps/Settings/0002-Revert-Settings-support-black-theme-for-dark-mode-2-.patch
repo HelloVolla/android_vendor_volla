@@ -1,22 +1,37 @@
-From a19626900cb16aa6d4b2bf06dd71bb288bd749de Mon Sep 17 00:00:00 2001
-From: Erfan Abdi <erfangplus@gmail.com>
-Date: Sun, 12 Nov 2023 16:36:28 +0330
-Subject: [PATCH] Revert "Settings: support black theme for dark mode [2/4]"
+From 3a12a6a24c992c7b5a4fefacefcdf2f2dd853d3b Mon Sep 17 00:00:00 2001
+From: Volla BuildBot <build@volla.com>
+Date: Sat, 28 Jun 2025 06:56:08 +0000
+Subject: [PATCH 02/10] Revert "Settings: support black theme for dark mode
+ [2/4]"
 
-This reverts commit e8f3966279027482f5a82ee9952a5d41c6a94aac.
-
-Change-Id: Id6bbfbe5c38dfa6b23e65f4eee3410c1437af49b
+This reverts commit 01d72328e81d7bb27ce22f876dc16b828e4d6711.
 ---
+ res/values/cm_strings.xml      | 4 ----
  res/xml/dark_mode_settings.xml | 7 -------
- 1 file changed, 7 deletions(-)
+ 2 files changed, 11 deletions(-)
 
+diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
+index b3e7df2a079..05fe56eedda 100644
+--- a/res/values/cm_strings.xml
++++ b/res/values/cm_strings.xml
+@@ -32,10 +32,6 @@
+     <string name="backup_transport_setting_label">Change backup provider</string>
+     <string name="backup_transport_title">Select backup provider</string>
+ 
+-    <!-- Black theme for dark mode -->
+-    <string name="berry_black_theme_title">Pure black</string>
+-    <string name="berry_black_theme_summary">Pure black background for dark theme</string>
+-
+     <!-- Device Info screen. LineageOS legal. -->
+     <string name="lineagelicense_title">LineageOS legal</string>
+ 
 diff --git a/res/xml/dark_mode_settings.xml b/res/xml/dark_mode_settings.xml
-index c21af34cfc3..7f136594807 100644
+index e2a44f3ebf0..67095575763 100644
 --- a/res/xml/dark_mode_settings.xml
 +++ b/res/xml/dark_mode_settings.xml
 @@ -62,11 +62,4 @@
          settings:searchable="false"
-         settings:controller="com.android.settings.display.darkmode.DarkModeCustomBedtimePreferenceController" />
+         settings:controller="com.android.settings.display.darkmode.DarkModeCustomModesPreferenceController" />
  
 -    <lineageos.preference.LineageSecureSettingSwitchPreference
 -        android:key="berry_black_theme"
@@ -27,5 +42,5 @@ index c21af34cfc3..7f136594807 100644
 -        settings:requiresPackage="org.lineageos.overlay.customization.blacktheme" />
  </PreferenceScreen>
 -- 
-2.29.2
+2.34.1
 

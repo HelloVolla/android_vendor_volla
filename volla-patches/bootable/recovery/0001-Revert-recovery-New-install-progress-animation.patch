@@ -1,4 +1,4 @@
-From 06fbee5efa982df190fc0a336974c85b374e44bc Mon Sep 17 00:00:00 2001
+From ed3a133a877f2a31b8c6e8c153cd41f29ebc37f3 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Fri, 6 Aug 2021 23:24:14 +0430
 Subject: [PATCH] Revert "recovery: New install/progress animation"
@@ -112899,5 +112899,5 @@ literal 0
 HcmV?d00001
 
 -- 
-2.29.2
+2.49.0
 

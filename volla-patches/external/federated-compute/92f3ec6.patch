@@ -1,0 +1,28 @@
+From 92f3ec6a03f1b9701058c628d794b6e47950c467 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sun, 31 Mar 2024 07:46:08 +0000
+Subject: [PATCH] bp: Add flatbuffers dependency
+
+We added flatbuffers dependency in tensorflow and
+that caused linker errors in packages/modules/OnDevicePersonalization
+
+OnDevicePersonalization (lib)
+  |----> federated-compute (this)
+           |----> tensorflow
+                    |----> flatbuffers (we added)
+
+Change-Id: Ic9ed9a8ec3737a476b939815112c2de77c3f795a
+---
+
+diff --git a/Android.bp b/Android.bp
+index 2afe5a6..0d5f0ae 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -125,6 +125,7 @@
+     ],
+     whole_static_libs: [
+         "libtflite_flex_delegate",
++        "libflatbuffers-cpp",
+     ],
+     export_include_dirs: ["."],
+     header_libs: [

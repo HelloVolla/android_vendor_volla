@@ -1,7 +1,7 @@
-From 59847e6bb1c983d33ac30d819b6ff29cb903dad5 Mon Sep 17 00:00:00 2001
+From e7fdf0a8118e5b98c025d385c559dd3a61a6505a Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Fri, 19 Jul 2024 17:19:34 +0330
-Subject: [PATCH] LegalSettings: Move legal_url to resources
+Subject: [PATCH 01/10] LegalSettings: Move legal_url to resources
 
 Change-Id: I1270ff984b2c4143c3c1477896004a775ca2d848
 ---
@@ -48,5 +48,5 @@ index a59f5cf1164..c727899f16f 100644
      }
  }
 -- 
-2.29.2
+2.34.1
 

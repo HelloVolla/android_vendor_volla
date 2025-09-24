@@ -1,0 +1,35 @@
+From 1c1c694354fba6037bafb40e68fa1efe698a3923 Mon Sep 17 00:00:00 2001
+From: Dhina17 <dhinalogu@gmail.com>
+Date: Thu, 11 Jul 2024 18:50:34 +0530
+Subject: [PATCH 17/35] services: Register lmo face unlock as weak biometric
+
+Our face unlock doesn't meet the requirements for
+Class 3 (Strong) biometric so whenever third party apps
+tries to access the keystore with face auth, it crashes.
+
+Hence, mark it as weak authenticator and so it can't be
+used in third party apps that requires strong authentication.
+
+Also we don't recommend to use face auth for those usecases.
+
+Change-Id: I66afd0126582f008c18c3f504094837f062b9b44
+---
+ .../java/com/android/server/libremobileos/FaceUnlockHelper.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/services/core/java/com/android/server/libremobileos/FaceUnlockHelper.java b/services/core/java/com/android/server/libremobileos/FaceUnlockHelper.java
+index d9ae8d454734..ace641942b02 100644
+--- a/services/core/java/com/android/server/libremobileos/FaceUnlockHelper.java
++++ b/services/core/java/com/android/server/libremobileos/FaceUnlockHelper.java
+@@ -123,7 +123,7 @@ public class FaceUnlockHelper {
+     private FaceSensorConfigurations getFaceSensorConfigurations(Context context, int sensorId) {
+         final FaceSensorConfigurations faceSensorConfigurations =
+                     new FaceSensorConfigurations(true /*  resetLockoutRequiresChallenge */);
+-        String sensorConfig = sensorId + ":" + TYPE_FACE + ":" + Authenticators.BIOMETRIC_STRONG;
++        String sensorConfig = sensorId + ":" + TYPE_FACE + ":" + Authenticators.BIOMETRIC_WEAK;
+         String[] hidlConfigStrings = { sensorConfig };
+         faceSensorConfigurations.addHidlConfigs(hidlConfigStrings, context);
+         return faceSensorConfigurations;
+-- 
+2.49.0
+

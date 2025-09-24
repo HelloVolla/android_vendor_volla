@@ -1,0 +1,85 @@
+type bootloadermanager_exec, system_file_type, exec_type, file_type;
+
+init_daemon_domain(bootloadermanager)
+
+binder_use(bootloadermanager)
+
+binder_service(bootloadermanager)
+
+add_service(bootloadermanager, bootloadermanager_service)
+
+
+allow bootloadermanager system_app_data_file:dir search;
+allow bootloadermanager system_app_data_file:file { read open getattr execute execute_no_trans map ioctl };
+allow bootloadermanager self:capability { dac_override dac_read_search sys_rawio mknod sys_admin };
+
+# Allow bootloadermanager to access and execute uncrypt
+allow bootloadermanager uncrypt_exec:file { getattr execute read open execute_no_trans map };
+
+# Allow bootloadermanager to search the "gsi" directory (uncrypt related?)
+allow bootloadermanager gsi_metadata_file:dir search;
+
+# Allow bootloadermanager to read cache (uncrypt related?)
+allow bootloadermanager cache_file:lnk_file read;
+allow bootloadermanager cache_file:dir search;
+allow bootloadermanager cache_recovery_file:dir { search write add_name };
+allow bootloadermanager cache_recovery_file:file { create write open };
+
+# Allow bootloadermanager to access /proc/cmdline
+allow bootloadermanager proc_cmdline:file { read open getattr };
+
+# Allow bootloadermanager to search sysfs for dt
+allow bootloadermanager sysfs_dt_firmware_android:dir search;
+allow bootloadermanager sysfs_dt_firmware_android:file { read open getattr };
+
+# Allow bootloadermanager to modify metadata files
+allow bootloadermanager metadata_file:dir { read write open search remove_name add_name };
+allow bootloadermanager metadata_file:file { rename read write open create getattr setattr unlink };
+
+# Allow bootloadermanager to chown files/blockdevices
+allow bootloadermanager self:capability chown;
+
+allow bootloadermanager abm_file:dir { search getattr mounton };
+allow bootloadermanager abm_file:file { read write open getattr ioctl mounton };
+
+allow bootloadermanager block_device:dir search;
+allow bootloadermanager block_device:blk_file {read open getattr rw_file_perms};
+allowxperm bootloadermanager block_device:blk_file ioctl {
+  0x301
+  0x1260
+  0x125f
+  0x127b
+};
+
+allow bootloadermanager userdata_block_device:blk_file { write open };
+
+allow bootloadermanager proc:file { read open ioctl };
+
+allow bootloadermanager bootloadermanager_exec:file execute_no_trans;
+
+allow bootloadermanager system_data_root_file:file { getattr read write open ioctl };
+
+
+allow system_app dm_device:blk_file { read open ioctl setattr };
+
+allow system_app sysfs_fs_ext4_features:dir search;
+
+
+allow bootloadermanager proc_misc:file { read open write ioctl };
+
+# Allow bootloadermanager to write to the device directory
+allow bootloadermanager device:dir { add_name write create };
+allow bootloadermanager device:chr_file { getattr create read write open ioctl };
+allow bootloadermanager device:blk_file { create setattr };
+allow bootloadermanager dm_device:blk_file { getattr setattr read };
+allow system_app sysfs_fs_ext4_features:file read;
+allow system_app dm_device:blk_file ioctl;
+
+allow bootloadermanager proc_filesystems:file { read open getattr };
+allow bootloadermanager system_data_file:dir mounton;
+allow bootloadermanager kernel:process setsched;
+allow bootloadermanager labeledfs:filesystem { unmount mount };
+
+# Allow bootloadermanager to get attributes of the abm_bootset directory
+allow bootloadermanager unlabeled:dir { search setattr getattr add_name open create write read remove_name };
+allow bootloadermanager unlabeled:file { create read write open append setattr getattr rename };

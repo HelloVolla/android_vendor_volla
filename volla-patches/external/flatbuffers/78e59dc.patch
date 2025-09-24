@@ -1,0 +1,28 @@
+From 78e59dcc62e14aede8a757a02c52aaee96378f54 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sun, 31 Mar 2024 07:52:15 +0000
+Subject: [PATCH] bp: Make it visible for OnDevicePersonalization
+
+We added flatbuffers dependency in tensorflow and
+that caused linker errors in packages/modules/OnDevicePersonalization.
+
+OnDevicePersonalization (lib)
+  |----> federated-compute
+           |----> tensorflow
+                    |----> flatbuffers (we added and need to be visible to the target)
+
+Change-Id: I8bbf550b7d6041bc962c0ecac613cbed1ee65636
+---
+
+diff --git a/Android.bp b/Android.bp
+index 5f63853..3821a76 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -130,6 +130,7 @@
+         "//apex_available:platform",
+         "com.android.btservices",
+         "com.android.extservices",
++        "com.android.ondevicepersonalization",
+     ],
+     min_sdk_version: "30",
+ }

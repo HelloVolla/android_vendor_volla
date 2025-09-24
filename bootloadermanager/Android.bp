@@ -1,0 +1,21 @@
+cc_binary {
+    name: "bootloadermanager",
+    system_ext_specific: true,
+    init_rc: ["bootloadermanager.rc"],
+
+    srcs: [
+        "BootloadermanagerService.cpp",
+        "BootloaderManager.cpp",
+    ],
+
+    cflags: ["-DLOG_TAG=\"bootloadermanager\""],
+
+    shared_libs: [
+        "libhardware_legacy",
+        "liblog",
+        "libbinder",
+        "libutils",
+        "libbinder_ndk",
+        "vendor.volla.bootloadermanager-ndk",
+    ],
+}

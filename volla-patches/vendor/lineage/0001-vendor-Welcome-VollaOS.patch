@@ -1,0 +1,78 @@
+From f9cd52829d23bbbb26c845c24b1cd804fbd12b5a Mon Sep 17 00:00:00 2001
+From: techyminati <techyminati@outlook.com>
+Date: Fri, 4 Apr 2025 16:23:21 +0000
+Subject: [PATCH] vendor: Welcome VollaOS
+
+Change-Id: Ibde121692ee683547bd1ff18c8b92aa5624d10ab
+---
+ build/envsetup.sh    | 2 +-
+ build/tasks/bacon.mk | 2 +-
+ config/common.mk     | 2 +-
+ config/version.mk    | 8 ++++++--
+ 4 files changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/build/envsetup.sh b/build/envsetup.sh
+index 7cc8f665..0d1f200e 100644
+--- a/build/envsetup.sh
++++ b/build/envsetup.sh
+@@ -67,7 +67,7 @@ alias bib=breakfast
+ function eat()
+ {
+     if [ "$OUT" ] ; then
+-        ZIPPATH=`ls -tr "$OUT"/lineage-*.zip | tail -1`
++        ZIPPATH=`ls -tr "$OUT"/volla-*.zip | tail -1`
+         if [ ! -f $ZIPPATH ] ; then
+             echo "Nothing to eat"
+             return 1
+diff --git a/build/tasks/bacon.mk b/build/tasks/bacon.mk
+index 272a4b8e..994f9290 100644
+--- a/build/tasks/bacon.mk
++++ b/build/tasks/bacon.mk
+@@ -16,7 +16,7 @@
+ # -----------------------------------------------------------------
+ # Lineage OTA update package
+ 
+-LINEAGE_TARGET_PACKAGE := $(PRODUCT_OUT)/lineage-$(LINEAGE_VERSION).zip
++LINEAGE_TARGET_PACKAGE := $(PRODUCT_OUT)/volla-$(LINEAGE_VERSION).zip
+ 
+ SHA256 := prebuilts/build-tools/path/$(HOST_PREBUILT_TAG)/sha256sum
+ 
+diff --git a/config/common.mk b/config/common.mk
+index cafc9355..9f7697a1 100644
+--- a/config/common.mk
++++ b/config/common.mk
+@@ -4,7 +4,7 @@ $(call inherit-product-if-exists, vendor/extra/product.mk)
+ # Allow vendor prebuilt repos to exclude themselves from bp scanning
+ -include $(sort $(wildcard vendor/*/*/exclude-bp.mk))
+ 
+-PRODUCT_BRAND ?= LineageOS
++PRODUCT_BRAND ?= VollaOS
+ 
+ ifeq ($(PRODUCT_GMS_CLIENTID_BASE),)
+ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+diff --git a/config/version.mk b/config/version.mk
+index a142fdb2..1af9ed6c 100644
+--- a/config/version.mk
++++ b/config/version.mk
+@@ -1,5 +1,5 @@
+-PRODUCT_VERSION_MAJOR = 22
+-PRODUCT_VERSION_MINOR = 2
++PRODUCT_VERSION_MAJOR = 15
++PRODUCT_VERSION_MINOR = 0
+ 
+ ifeq ($(LINEAGE_VERSION_APPEND_TIME_OF_DAY),true)
+     LINEAGE_BUILD_DATE := $(shell date -u +%Y%m%d_%H%M%S)
+@@ -29,6 +29,10 @@ ifeq ($(LINEAGE_BUILDTYPE), UNOFFICIAL)
+     endif
+ endif
+ 
++# Set VOLLA_BUILDTYPE from env
++LINEAGE_BUILDTYPE := $(VOLLA_BUILDTYPE)
++
++
+ LINEAGE_VERSION_SUFFIX := $(LINEAGE_BUILD_DATE)-$(LINEAGE_BUILDTYPE)$(LINEAGE_EXTRAVERSION)-$(LINEAGE_BUILD)
+ 
+ # Internal version
+-- 
+2.49.0
+

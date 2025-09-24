@@ -1,0 +1,41 @@
+From f6ae88b4aad01ddb132dfab898c347a34f9e42e3 Mon Sep 17 00:00:00 2001
+From: techyminati <sinha.aryan03@gmail.com>
+Date: Thu, 14 Mar 2024 21:47:52 +0530
+Subject: [PATCH 5/7] LatinIME: Add-In Entries of missed files in
+ NativeFileList makefile
+
+* Fixes Standalone building
+
+Change-Id: I7ae625cbea5ab172037dcd88b66ef111257ab740
+Signed-off-by: techyminati <sinha.aryan03@gmail.com>
+---
+ native/jni/NativeFileList.mk | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/native/jni/NativeFileList.mk b/native/jni/NativeFileList.mk
+index dbe1d809a6..a84fa3f327 100644
+--- a/native/jni/NativeFileList.mk
++++ b/native/jni/NativeFileList.mk
+@@ -87,7 +87,11 @@ LATIN_IME_CORE_SRC_FILES := \
+     $(addprefix suggest/core/result/, \
+         suggestion_results.cpp \
+         suggestions_output_utils.cpp) \
+-    suggest/policyimpl/gesture/gesture_suggest_policy_factory.cpp \
++   suggest/policyimpl/gesture/gesture_scoring.cpp \
++   suggest/policyimpl/gesture/gesture_suggest_policy.cpp \
++   suggest/policyimpl/gesture/gesture_traversal.cpp \
++   suggest/policyimpl/gesture/gesture_weighting.cpp \
++   suggest/policyimpl/gesture/scoring_params_g.cpp \
+     $(addprefix suggest/policyimpl/typing/, \
+         scoring_params.cpp \
+         typing_scoring.cpp \
+@@ -143,4 +147,4 @@ LATIN_IME_CORE_TEST_FILES := \
+     utils/autocorrection_threshold_utils_test.cpp \
+     utils/char_utils_test.cpp \
+     utils/int_array_view_test.cpp \
+-    utils/time_keeper_test.cpp
+\ No newline at end of file
++    utils/time_keeper_test.cpp
+-- 
+2.34.1
+

@@ -1,4 +1,4 @@
-From 9d7622d4205fc37b56ed14100a744a673b408594 Mon Sep 17 00:00:00 2001
+From 94caf2a091b5bf0b9aecd1c36456cc3b4b93348d Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 25 Jun 2022 16:11:04 +0430
 Subject: [PATCH] Updater: Add volla props for switching channel
@@ -10,10 +10,10 @@ Change-Id: I3117fdcbf68cee0927af6eed7e9c6005ce68d842
  2 files changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/app/src/main/java/org/lineageos/updater/misc/Constants.java b/app/src/main/java/org/lineageos/updater/misc/Constants.java
-index beb9423..f893ba1 100644
+index dfff5af..74a585f 100644
 --- a/app/src/main/java/org/lineageos/updater/misc/Constants.java
 +++ b/app/src/main/java/org/lineageos/updater/misc/Constants.java
-@@ -47,6 +47,9 @@ public final class Constants {
+@@ -48,6 +48,9 @@ public final class Constants {
      public static final String PROP_RELEASE_TYPE = "ro.lineage.releasetype";
      public static final String PROP_UPDATER_ALLOW_DOWNGRADING = "lineage.updater.allow_downgrading";
      public static final String PROP_UPDATER_URI = "lineage.updater.uri";
@@ -24,10 +24,10 @@ index beb9423..f893ba1 100644
      public static final String PREF_INSTALL_OLD_TIMESTAMP = "install_old_timestamp";
      public static final String PREF_INSTALL_NEW_TIMESTAMP = "install_new_timestamp";
 diff --git a/app/src/main/java/org/lineageos/updater/misc/Utils.java b/app/src/main/java/org/lineageos/updater/misc/Utils.java
-index b7ba720..1550d41 100644
+index 518c8e7..e2ba314 100644
 --- a/app/src/main/java/org/lineageos/updater/misc/Utils.java
 +++ b/app/src/main/java/org/lineageos/updater/misc/Utils.java
-@@ -105,7 +105,11 @@ public class Utils {
+@@ -94,7 +94,11 @@ public class Utils {
              Log.d(TAG, update.getName() + " is older than/equal to the current build");
              return false;
          }
@@ -40,7 +40,7 @@ index b7ba720..1550d41 100644
              Log.d(TAG, update.getName() + " has type " + update.getType());
              return false;
          }
-@@ -156,8 +160,13 @@ public class Utils {
+@@ -166,8 +170,13 @@ public class Utils {
          String device = SystemProperties.get(Constants.PROP_NEXT_DEVICE,
                  SystemProperties.get(Constants.PROP_DEVICE));
          String type = SystemProperties.get(Constants.PROP_RELEASE_TYPE).toLowerCase(Locale.ROOT);
@@ -55,5 +55,5 @@ index b7ba720..1550d41 100644
              serverUrl = context.getString(R.string.updater_server_url);
          }
 -- 
-2.29.2
+2.49.0
 

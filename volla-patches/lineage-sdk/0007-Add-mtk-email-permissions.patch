@@ -1,4 +1,4 @@
-From 40924cb9fbdeae7ee8190d6dc7c0ce8875dd2777 Mon Sep 17 00:00:00 2001
+From ab99fc345809b037006bb011d59cdfbe991fcaa3 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Thu, 7 Apr 2022 04:37:14 +0430
 Subject: [PATCH] Add mtk email permissions
@@ -13,10 +13,10 @@ Change-Id: Ia7dc8acb5f89af715ae0c2725b59ddfa921e0e8f
  create mode 100644 lineage/res/res/values/mtk_strings.xml
 
 diff --git a/lineage/res/AndroidManifest.xml b/lineage/res/AndroidManifest.xml
-index 7e8b1382..d7852393 100644
+index d5ebef05..23076cd0 100644
 --- a/lineage/res/AndroidManifest.xml
 +++ b/lineage/res/AndroidManifest.xml
-@@ -94,4 +94,20 @@
+@@ -81,4 +81,20 @@
                  android:description="@string/permdesc_manageRemotePrefs"
                  android:protectionLevel="signature|privileged" />
  
@@ -88,5 +88,5 @@ index 00000000..3f47ec37
 +
 +</resources>
 -- 
-2.29.2
+2.49.0
 

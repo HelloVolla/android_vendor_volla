@@ -1,16 +1,17 @@
-From 944bf0335f9c436dd5ceda292421fc757ba44c19 Mon Sep 17 00:00:00 2001
+From 53984c3dbbffe94fa29d3aa8b54da1323fa0526e Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
-Date: Sun, 12 Feb 2023 05:22:08 +0330
+Date: Fri, 4 Apr 2025 16:28:34 +0000
 Subject: [PATCH] lineage: Drop audio props
 
-Change-Id: I095626eda237d5c527a0a2ac5fd99d3f9835fe27
+Change-Id: Iad5973a57bdbd1f9e60885461cb5ef03bff90990
+Signed-off-by: techyminati <techyminati@outlook.com>
 ---
  config/common_mobile.mk | 5 -----
  config/telephony.mk     | 4 ----
  2 files changed, 9 deletions(-)
 
 diff --git a/config/common_mobile.mk b/config/common_mobile.mk
-index 4e898b4b..c7bd78da 100644
+index 08619d9d..ec224069 100644
 --- a/config/common_mobile.mk
 +++ b/config/common_mobile.mk
 @@ -8,11 +8,6 @@ include vendor/lineage/config/aosp_audio.mk
@@ -24,7 +25,7 @@ index 4e898b4b..c7bd78da 100644
 -
  # Apps
  PRODUCT_PACKAGES += \
-     Backgrounds \
+     AvatarPicker \
 diff --git a/config/telephony.mk b/config/telephony.mk
 index 0c6ebba8..80c8876e 100644
 --- a/config/telephony.mk
@@ -41,5 +42,5 @@ index 0c6ebba8..80c8876e 100644
  # (for devices that check this)
  PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
 -- 
-2.29.2
+2.49.0
 

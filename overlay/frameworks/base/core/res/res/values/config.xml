@@ -7,7 +7,7 @@
          0: 3 button mode (back, home, overview buttons)
          1: 2 button mode (back, home buttons + swipe up for overview)
          2: gestures only for back, home and overview -->
-    <integer name="config_navBarInteractionMode">1</integer>
+    <integer name="config_navBarInteractionMode">2</integer>
 
     <!-- Whether or not swipe up gesture's opt-in setting is available on this device -->
     <bool name="config_swipe_up_gesture_setting_available">true</bool>
@@ -39,4 +39,9 @@
     <string name="config_rawContactsLocalAccountName" translatable="false">Phone</string>
     <string name="config_rawContactsLocalAccountType" translatable="false">Local Phone Account</string>
 
+    <!-- Whether safe headphone volume is enabled or not (country specific). -->
+    <bool name="config_safe_media_volume_enabled">false</bool>
+
+        <!-- If true, the display will be shifted around in ambient mode. -->
+    <bool name="config_enableBurnInProtection">true</bool>
 </resources>

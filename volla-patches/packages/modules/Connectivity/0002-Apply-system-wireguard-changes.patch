@@ -1,4 +1,4 @@
-From 98eda67485e90b1c4168ab974cc9c708cf952b77 Mon Sep 17 00:00:00 2001
+From 0977105200e5cdc963a559bc545d9dd76d85c3fe Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 7 Oct 2023 17:33:50 +0330
 Subject: [PATCH] Apply system wireguard changes
@@ -12,7 +12,7 @@ Change-Id: Ia527559adf26dfb519ba6ef9ca65d623862f6f68
  4 files changed, 53 insertions(+), 5 deletions(-)
 
 diff --git a/Tethering/src/com/android/networkstack/tethering/Tethering.java b/Tethering/src/com/android/networkstack/tethering/Tethering.java
-index c44a0def8f..b7f4b2aa0a 100644
+index 4c2103e875..a980f1485d 100644
 --- a/Tethering/src/com/android/networkstack/tethering/Tethering.java
 +++ b/Tethering/src/com/android/networkstack/tethering/Tethering.java
 @@ -115,6 +115,7 @@ import android.os.RemoteCallbackList;
@@ -23,7 +23,7 @@ index c44a0def8f..b7f4b2aa0a 100644
  import android.os.UserHandle;
  import android.os.UserManager;
  import android.provider.Settings;
-@@ -1910,7 +1911,7 @@ public class Tethering {
+@@ -1926,7 +1927,7 @@ public class Tethering {
              // TODO: Set v4 and/or v6 DNS per available connectivity.
              final Collection<InetAddress> dnses = lp.getDnsServers();
              // TODO: Properly support the absence of DNS servers.
@@ -32,7 +32,7 @@ index c44a0def8f..b7f4b2aa0a 100644
              if (dnses != null && !dnses.isEmpty()) {
                  dnsServers = new String[dnses.size()];
                  int i = 0;
-@@ -1920,6 +1921,10 @@ public class Tethering {
+@@ -1936,6 +1937,10 @@ public class Tethering {
              } else {
                  dnsServers = mConfig.defaultIPv4DNS;
              }
@@ -43,7 +43,7 @@ index c44a0def8f..b7f4b2aa0a 100644
              final int netId = (network != null) ? network.getNetId() : NETID_UNSET;
              try {
                  mNetd.tetherDnsSet(netId, dnsServers);
-@@ -1932,6 +1937,17 @@ public class Tethering {
+@@ -1948,6 +1953,17 @@ public class Tethering {
                  mLog.e("setting DNS forwarders failed, " + e);
                  transitionTo(mSetDnsForwardersErrorState);
              }
@@ -102,7 +102,7 @@ index 3974fa54ae..5873905bd8 100644
          return (ri != null) ? ri.getInterface() : null;
      }
 diff --git a/service-t/src/com/android/server/ethernet/EthernetTracker.java b/service-t/src/com/android/server/ethernet/EthernetTracker.java
-index 458d64f36f..af9f0bb38e 100644
+index 5228aab74d..40e5d46d6e 100644
 --- a/service-t/src/com/android/server/ethernet/EthernetTracker.java
 +++ b/service-t/src/com/android/server/ethernet/EthernetTracker.java
 @@ -42,6 +42,7 @@ import android.os.RemoteCallbackList;
@@ -113,7 +113,7 @@ index 458d64f36f..af9f0bb38e 100644
  import android.text.TextUtils;
  import android.util.ArrayMap;
  import android.util.Log;
-@@ -624,7 +625,8 @@ public class EthernetTracker {
+@@ -626,7 +627,8 @@ public class EthernetTracker {
              nc = mNetworkCapabilities.get(hwAddress);
              if (nc == null) {
                  final boolean isTestIface = iface.matches(TEST_IFACE_REGEXP);
@@ -123,7 +123,7 @@ index 458d64f36f..af9f0bb38e 100644
              }
          }
  
-@@ -686,7 +688,7 @@ public class EthernetTracker {
+@@ -707,7 +709,7 @@ public class EthernetTracker {
      }
  
      private void maybeTrackInterface(String iface) {
@@ -132,7 +132,7 @@ index 458d64f36f..af9f0bb38e 100644
              return;
          }
  
-@@ -753,7 +755,7 @@ public class EthernetTracker {
+@@ -774,7 +776,7 @@ public class EthernetTracker {
          return new EthernetTrackerConfig(configString.split(";", /* limit of tokens */ 4));
      }
  
@@ -141,7 +141,7 @@ index 458d64f36f..af9f0bb38e 100644
          NetworkCapabilities.Builder builder = createNetworkCapabilities(
                  false /* clear default capabilities */, null, null)
                  .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_RESTRICTED)
-@@ -768,6 +770,8 @@ public class EthernetTracker {
+@@ -789,6 +791,8 @@ public class EthernetTracker {
          } else {
              builder.addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
          }
@@ -151,12 +151,12 @@ index 458d64f36f..af9f0bb38e 100644
          return builder.build();
      }
 diff --git a/service/src/com/android/server/connectivity/DnsManager.java b/service/src/com/android/server/connectivity/DnsManager.java
-index e8147bbc03..2fcd0dc844 100644
+index d385d9fcb3..d7f185e368 100644
 --- a/service/src/com/android/server/connectivity/DnsManager.java
 +++ b/service/src/com/android/server/connectivity/DnsManager.java
-@@ -392,6 +392,16 @@ public class DnsManager {
-         paramsParcel.transportTypes = nc.getTransportTypes();
-         paramsParcel.meteredNetwork = nc.isMetered();
+@@ -394,6 +394,16 @@ public class DnsManager {
+         paramsParcel.interfaceNames = lp.getAllInterfaceNames().toArray(new String[0]);
+         paramsParcel.dohParams = makeDohParamsParcel(privateDnsCfg, lp);
  
 +        String wg_dnses = SystemProperties.get("sys.volla.wg.dnses");
 +        String wg_domains = SystemProperties.get("sys.volla.wg.domains");
@@ -172,5 +172,5 @@ index e8147bbc03..2fcd0dc844 100644
              useTls = false;
              paramsParcel.tlsServers = new String[0];
 -- 
-2.29.2
+2.49.0
 

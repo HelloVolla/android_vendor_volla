@@ -1,4 +1,4 @@
-From 12b84ebcd742a6ccb7819e65d33e56e2ede4c3f7 Mon Sep 17 00:00:00 2001
+From a50a168a36d1be112f8b03a364310aab7c78ed08 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 30 Sep 2023 17:23:02 +0330
 Subject: [PATCH] Enable RESTRICTED_NETWORKING_MODE
@@ -9,10 +9,10 @@ Change-Id: I769e7a9329c6134b28d9afecde5fd41b4692b63e
  1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/packages/LineageSettingsProvider/src/org/lineageos/lineagesettings/LineageDatabaseHelper.java b/packages/LineageSettingsProvider/src/org/lineageos/lineagesettings/LineageDatabaseHelper.java
-index 3fc669c9..0aacf73a 100644
+index 16010910..8c490f37 100644
 --- a/packages/LineageSettingsProvider/src/org/lineageos/lineagesettings/LineageDatabaseHelper.java
 +++ b/packages/LineageSettingsProvider/src/org/lineageos/lineagesettings/LineageDatabaseHelper.java
-@@ -274,15 +274,20 @@ public class LineageDatabaseHelper extends SQLiteOpenHelper{
+@@ -252,15 +252,20 @@ public class LineageDatabaseHelper extends SQLiteOpenHelper{
          }
  
          if (upgradeVersion < 17) {
@@ -37,5 +37,5 @@ index 3fc669c9..0aacf73a 100644
                      org.lineageos.platform.internal.R.bool.config_fingerprintWakeAndUnlock)
                      ? 1 : 0; // Reversed since they're reversed again below
 -- 
-2.29.2
+2.49.0
 

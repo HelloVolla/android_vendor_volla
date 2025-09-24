@@ -1,4 +1,4 @@
-From c18ae6288a81ab13dea8189de5408b5e87e51953 Mon Sep 17 00:00:00 2001
+From 71bd4f70b9d433189b6e34db183d2e83db0229f2 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 10 Jul 2021 22:22:16 +0800
 Subject: [PATCH] LineageParts: set 1:1 ratio for easter egg
@@ -9,7 +9,7 @@ Change-Id: Id4c228e397bbbd1730caa1113ae4fc3e7065fa9e
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/org/lineageos/lineageparts/logo/PlatLogoActivity.java b/src/org/lineageos/lineageparts/logo/PlatLogoActivity.java
-index 2b326fe..4e11dcd 100644
+index 230bbba..a740450 100644
 --- a/src/org/lineageos/lineageparts/logo/PlatLogoActivity.java
 +++ b/src/org/lineageos/lineageparts/logo/PlatLogoActivity.java
 @@ -59,7 +59,7 @@ public class PlatLogoActivity extends Activity {
@@ -22,5 +22,5 @@ index 2b326fe..4e11dcd 100644
  
          /**
 -- 
-2.29.2
+2.49.0
 

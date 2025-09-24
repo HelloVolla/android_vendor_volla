@@ -1,61 +1,20 @@
-From d8ff1614e3ec49863f7fe8a846f61adc090c07fa Mon Sep 17 00:00:00 2001
+From 857d85d4f4ed30401efa967a8a5d62705d3c3dd8 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Fri, 11 Feb 2022 19:58:13 +0330
 Subject: [PATCH] Implement Firewall
 
 Change-Id: I085ced3f4a31f6c182f957445cf0533f8cd71303
 ---
- Android.mk                                    |   2 +-
- api/lineage_current.txt                       |  18 +
  .../platform/internal/FirewallService.java    | 426 ++++++++++++++++++
  lineage/res/res/values/config.xml             |   1 +
  .../app/LineageContextConstants.java          |   7 +
  .../lineageos/firewall/FirewallManager.java   | 147 ++++++
  .../lineageos/firewall/IFirewallService.aidl  |  39 ++
- 7 files changed, 639 insertions(+), 1 deletion(-)
+ 5 files changed, 620 insertions(+)
  create mode 100644 lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
  create mode 100644 sdk/src/java/lineageos/firewall/FirewallManager.java
  create mode 100644 sdk/src/java/lineageos/firewall/IFirewallService.aidl
 
-diff --git a/Android.mk b/Android.mk
-index 5129c7cb..90e9b951 100644
---- a/Android.mk
-+++ b/Android.mk
-@@ -29,7 +29,7 @@ include $(CLEAR_VARS)
- lineage_platform_res := APPS/org.lineageos.platform-res_intermediates/aapt
- 
- # List of packages used in lineage-api-stubs
--lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.util:lineageos.trust:lineageos.applock
-+lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.util:lineageos.trust:lineageos.applock:lineageos.firewall
- 
- lineage_framework_module := $(LOCAL_INSTALLED_MODULE)
- 
-diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index c12ac1d8..814660d3 100644
---- a/api/lineage_current.txt
-+++ b/api/lineage_current.txt
-@@ -868,3 +868,21 @@ package lineageos.applock {
-   }
- 
- }
-+
-+package lineageos.firewall {
-+
-+  public class FirewallManager {
-+    method public static lineageos.firewall.FirewallManager getInstance(android.content.Context);
-+    method public static lineageos.firewall.FirewallManager getService();
-+    method public void activate(boolean);
-+    method public boolean isActivate();
-+    method public void blacklistMode(boolean);
-+    method public boolean isBlacklistMode();
-+    method public void addDomainToList(java.lang.String);
-+    method public void removeDomainFromList(java.lang.String);
-+    method public boolean isDomainOnList(java.lang.String);
-+    method public int getDomainsListCount();
-+    java.util.List<java.lang.String> getDomainsList();
-+  }
-+
-+}
 diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
 new file mode 100644
 index 00000000..4dee74d8
@@ -489,10 +448,10 @@ index 00000000..4dee74d8
 +    }
 +}
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index 7830f16b..d7deb2d8 100644
+index 88fbc29c..5739bee7 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
-@@ -112,6 +112,7 @@
+@@ -104,6 +104,7 @@
          <item>org.lineageos.platform.internal.LineageGlobalActionsService</item>
          <item>org.lineageos.platform.internal.health.HealthInterfaceService</item>
          <item>org.lineageos.platform.internal.AppLockService</item>
@@ -501,10 +460,10 @@ index 7830f16b..d7deb2d8 100644
  
      <!-- The LineageSystemServer class that is invoked from Android's SystemServer -->
 diff --git a/sdk/src/java/lineageos/app/LineageContextConstants.java b/sdk/src/java/lineageos/app/LineageContextConstants.java
-index 9cdf4826..1ac4682b 100644
+index b3021cfd..c54a3f21 100644
 --- a/sdk/src/java/lineageos/app/LineageContextConstants.java
 +++ b/sdk/src/java/lineageos/app/LineageContextConstants.java
-@@ -99,6 +99,13 @@ public final class LineageContextConstants {
+@@ -88,6 +88,13 @@ public final class LineageContextConstants {
       */
      public static final String VOLLA_APPLOCK_SERVICE = "vollaapplock";
  
@@ -717,5 +676,5 @@ index 00000000..d9d9d67b
 +    List<String> getDomainsList();
 +}
 -- 
-2.29.2
+2.49.0
 

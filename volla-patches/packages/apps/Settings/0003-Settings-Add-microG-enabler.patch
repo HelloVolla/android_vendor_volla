@@ -1,0 +1,45 @@
+From 554dd178029506d086a42a87a2099b8316bdbb40 Mon Sep 17 00:00:00 2001
+From: techyminati <techyminati@outook.com>
+Date: Sat, 28 Jun 2025 06:58:24 +0000
+Subject: [PATCH 03/10] Settings: Add microG enabler
+
+Change-Id: I3a677d7259a65c3091b314548fdd8de3dfab942d
+Signed-off-by: techyminati <techyminati@outook.com>
+---
+ res/values/volla_strings.xml | 2 ++
+ res/xml/apps.xml             | 7 +++++++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/res/values/volla_strings.xml b/res/values/volla_strings.xml
+index 543d1a5f581..53ee6b220ef 100644
+--- a/res/values/volla_strings.xml
++++ b/res/values/volla_strings.xml
+@@ -2,5 +2,7 @@
+ <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+     <!-- Legal -->
+     <string name="lineage_legal_url">https://lineageos.org/legal</string>
++    <string name="enable_microg_title">Manage MicroG</string>
++    <string name="enable_microg_summary">Enable or disable MicroG</string>
+ 
+ </resources>
+diff --git a/res/xml/apps.xml b/res/xml/apps.xml
+index 77b210f1821..171158d428f 100644
+--- a/res/xml/apps.xml
++++ b/res/xml/apps.xml
+@@ -75,6 +75,13 @@
+             android:targetPackage="${applicationId}"/>
+     </Preference>
+ 
++    <lineageos.preference.LineageSystemSettingSwitchPreference
++        android:key="enable_microg"
++        android:title="@string/enable_microg_title"
++        android:summary="@string/enable_microg_summary"
++        android:order="-994"
++        android:defaultValue="false" />
++
+     <PreferenceCategory
+         android:key="dashboard_tile_placeholder"
+         android:order="10"/>
+-- 
+2.34.1
+

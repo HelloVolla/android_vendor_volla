@@ -1,4 +1,4 @@
-From d3b30c465c7a913d61c65a6086c94e323bcb965b Mon Sep 17 00:00:00 2001
+From 069a957d5db81c4fb84f04da935d79747d6f1ab4 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Tue, 20 Sep 2022 19:02:12 +0430
 Subject: [PATCH] AppLock: Handle removed apps
@@ -45,5 +45,5 @@ index f7640c26..52c2dd0b 100644
              if (isActivate())
                  mPackageManager.setApplicationEnabledSetting(packageName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, 0);
 -- 
-2.29.2
+2.49.0
 

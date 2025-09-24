@@ -1,0 +1,23 @@
+From 1e2c7f96daf5ff483aef6a3a9adbbd3dda6cc864 Mon Sep 17 00:00:00 2001
+From: Volla BuildBot <build@volla.com>
+Date: Tue, 24 Jun 2025 18:12:49 +0000
+Subject: [PATCH] Disable soong_filesystem_creator
+
+Change-Id: I27b6465dbf08ece3330f237a992c325968dc3078
+---
+ fsgen/Android.bp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fsgen/Android.bp b/fsgen/Android.bp
+index 365d954..9ff7d89 100644
+--- a/fsgen/Android.bp
++++ b/fsgen/Android.bp
+@@ -30,4 +30,5 @@ bootstrap_go_package {
+ 
+ soong_filesystem_creator {
+     name: "soong_filesystem_creator",
++    enabled: false,
+ }
+-- 
+2.34.1
+

@@ -1,0 +1,34 @@
+From 53b563582972a31a37567e435536d7a4d394dcbd Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sat, 7 Sep 2024 12:52:51 +0330
+Subject: [PATCH 7/8] hack: Move LINEAGE_RESTORE_BACKUP at the end
+
+---
+ res/raw/wizard_script.xml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/res/raw/wizard_script.xml b/res/raw/wizard_script.xml
+index 54ee2e6..ca9eb61 100644
+--- a/res/raw/wizard_script.xml
++++ b/res/raw/wizard_script.xml
+@@ -102,7 +102,7 @@
+         <result wizard:action="oem_post_setup" />
+     </WizardAction>
+     <WizardAction wizard:script="android.resource://com.google.android.setupwizard/xml/wizard_script_qr_provision_flow" id="qr_provision_flow" />
+-    <WizardAction wizard:uri="intent:#Intent;package=org.lineageos.setupwizard;action=org.lineageos.setupwizard.LINEAGE_RESTORE_BACKUP;end" id="oem_post_setup">
++    <WizardAction wizard:uri="intent:#Intent;package=org.lineageos.setupwizard;action=org.lineageos.setupwizard.NAVIGATION_SETTINGS;end" id="oem_post_setup">
+         <result wizard:action="device_specific" />
+     </WizardAction>
+     <WizardAction wizard:uri="intent:#Intent;package=org.lineageos.setupwizard;action=org.lineageos.setupwizard.DEVICE_SPECIFIC;end" id="device_specific">
+@@ -120,7 +120,7 @@
+     <WizardAction wizard:uri="intent:#Intent;package=org.lineageos.setupwizard;action=org.lineageos.setupwizard.THEME_SETTINGS;end" id="theme_settings">
+         <result wizard:action="navigation_settings" />
+     </WizardAction>
+-    <WizardAction wizard:uri="intent:#Intent;package=org.lineageos.setupwizard;action=org.lineageos.setupwizard.NAVIGATION_SETTINGS;end" id="navigation_settings">
++    <WizardAction wizard:uri="intent:#Intent;package=org.lineageos.setupwizard;action=org.lineageos.setupwizard.LINEAGE_RESTORE_BACKUP;end" id="navigation_settings">
+         <result wizard:action="finish" />
+     </WizardAction>
+     <WizardAction wizard:uri="intent:#Intent;package=org.lineageos.setupwizard;action=org.lineageos.setupwizard.LINEAGE_SETUP_COMPLETE;end" id="finish">
+-- 
+2.34.1
+

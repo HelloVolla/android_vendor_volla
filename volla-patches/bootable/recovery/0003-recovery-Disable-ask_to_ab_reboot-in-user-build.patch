@@ -1,4 +1,4 @@
-From a2e44212407e7924fc11d94edf40f99e31a4aca4 Mon Sep 17 00:00:00 2001
+From 4ca16377dd1f70e815ba57a0c593dcd2594872f9 Mon Sep 17 00:00:00 2001
 From: Mohammad Hasan Keramat J <ikeramat@protonmail.com>
 Date: Wed, 30 Aug 2023 20:51:57 +0000
 Subject: [PATCH] recovery: Disable `ask_to_ab_reboot` in user build
@@ -12,10 +12,10 @@ Change-Id: Iedcebc4aeaa1b1251619beeb3003bcc4e1bc9db9
  1 file changed, 3 insertions(+)
 
 diff --git a/recovery.cpp b/recovery.cpp
-index 9865876f..fba319e1 100644
+index f769154c..14a0b4c7 100644
 --- a/recovery.cpp
 +++ b/recovery.cpp
-@@ -172,6 +172,9 @@ static bool yes_no(Device* device, const char* question1, const char* question2)
+@@ -173,6 +173,9 @@ static bool yes_no(Device* device, const char* question1, const char* question2)
  }
  
  bool ask_to_ab_reboot(Device* device) {
@@ -26,5 +26,5 @@ index 9865876f..fba319e1 100644
    return yes_no(device, "To install additional packages, you need to reboot recovery first",
                  "Do you want to reboot to recovery now?");
 -- 
-2.29.2
+2.49.0
 

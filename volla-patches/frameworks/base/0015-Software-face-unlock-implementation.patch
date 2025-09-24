@@ -1,0 +1,176 @@
+From d3eb17ef3b60c638cc70b0a8ee45795e4388fb8c Mon Sep 17 00:00:00 2001
+From: nift4 <nift4@protonmail.com>
+Date: Sat, 15 Jul 2023 15:42:55 +0200
+Subject: [PATCH] volla: Software face unlock implementation
+
+* Based on patchset of Nift4, Erfan Abdi, Aryan Sinha & Dhina17
+Change-Id: Ieb2a75bddbd907cd4bbf55447685da36636e2b5f
+---
+ services/core/Android.bp                      |  1 +
+ .../face/aidl/FaceRevokeChallengeClient.java  | 10 +++-
+ .../face/hidl/HidlToAidlSensorAdapter.java    |  7 +++
+ .../server/biometrics/FaceUnlockService.java  | 54 +++++++++++++++++++
+ .../java/com/android/server/SystemServer.java |  4 ++
+ services/proguard.flags                       |  3 ++
+ 6 files changed, 78 insertions(+), 1 deletion(-)
+ create mode 100644 services/core/java/com/libremobileos/server/biometrics/FaceUnlockService.java
+
+diff --git a/services/core/Android.bp b/services/core/Android.bp
+index 9efd84a8838b..f5cedbaafac7 100644
+--- a/services/core/Android.bp
++++ b/services/core/Android.bp
+@@ -248,6 +248,7 @@ java_library_static {
+         "profiling_flags_lib",
+         "android.adpf.sessionmanager_aidl-java",
+         "uprobestats_flags_java_lib",
++        "LMOFaceServer",
+     ],
+     javac_shard_size: 50,
+     javacflags: [
+diff --git a/services/core/java/com/android/server/biometrics/sensors/face/aidl/FaceRevokeChallengeClient.java b/services/core/java/com/android/server/biometrics/sensors/face/aidl/FaceRevokeChallengeClient.java
+index 0d6143a7d0f0..ae0454fe5b0b 100644
+--- a/services/core/java/com/android/server/biometrics/sensors/face/aidl/FaceRevokeChallengeClient.java
++++ b/services/core/java/com/android/server/biometrics/sensors/face/aidl/FaceRevokeChallengeClient.java
+@@ -25,6 +25,7 @@ import android.util.Slog;
+ 
+ import com.android.server.biometrics.log.BiometricContext;
+ import com.android.server.biometrics.log.BiometricLogger;
++import com.android.server.biometrics.sensors.ErrorConsumer;
+ import com.android.server.biometrics.sensors.RevokeChallengeClient;
+ 
+ import java.util.function.Supplier;
+@@ -32,7 +33,8 @@ import java.util.function.Supplier;
+ /**
+  * Face-specific revokeChallenge client for the {@link IFace} AIDL HAL interface.
+  */
+-public class FaceRevokeChallengeClient extends RevokeChallengeClient<AidlSession> {
++public class FaceRevokeChallengeClient extends RevokeChallengeClient<AidlSession>
++        implements ErrorConsumer {
+ 
+     private static final String TAG = "FaceRevokeChallengeClient";
+ 
+@@ -61,4 +63,10 @@ public class FaceRevokeChallengeClient extends RevokeChallengeClient<AidlSession
+         final boolean success = challenge == mChallenge;
+         mCallback.onClientFinished(this, success);
+     }
++
++    @Override
++    public void onError(int errorCode, int vendorCode) {
++        Slog.e(TAG, "Error during revokeChallenge: " + errorCode);
++        mCallback.onClientFinished(this, false /* success */);
++    }
+ }
+diff --git a/services/core/java/com/android/server/biometrics/sensors/face/hidl/HidlToAidlSensorAdapter.java b/services/core/java/com/android/server/biometrics/sensors/face/hidl/HidlToAidlSensorAdapter.java
+index 444a6d18d27f..77565f7c3bb9 100644
+--- a/services/core/java/com/android/server/biometrics/sensors/face/hidl/HidlToAidlSensorAdapter.java
++++ b/services/core/java/com/android/server/biometrics/sensors/face/hidl/HidlToAidlSensorAdapter.java
+@@ -45,6 +45,8 @@ import com.android.server.biometrics.sensors.face.aidl.AidlSession;
+ import com.android.server.biometrics.sensors.face.aidl.FaceProvider;
+ import com.android.server.biometrics.sensors.face.aidl.Sensor;
+ 
++import com.libremobileos.faceunlock.client.FaceUnlockHalManager;
++
+ /**
+  * Convert HIDL sensor configurations to an AIDL Sensor.
+  */
+@@ -212,6 +214,11 @@ public class HidlToAidlSensorAdapter extends Sensor implements IHwBinder.DeathRe
+             Slog.e(TAG, "Failed to get face HAL", e);
+         }
+ 
++        if (mDaemon == null) {
++            Slog.i(TAG, "Loading software Face HAL");
++            mDaemon = FaceUnlockHalManager.getIBiometricsFace();
++        }
++
+         if (mDaemon == null) {
+             Slog.w(TAG, "Face HAL not available");
+             return null;
+diff --git a/services/core/java/com/libremobileos/server/biometrics/FaceUnlockService.java b/services/core/java/com/libremobileos/server/biometrics/FaceUnlockService.java
+new file mode 100644
+index 000000000000..743534934a5d
+--- /dev/null
++++ b/services/core/java/com/libremobileos/server/biometrics/FaceUnlockService.java
+@@ -0,0 +1,54 @@
++/*
++ * Copyright (C) 2023-2024 LibreMobileOS Foundation
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.libremobileos.server.biometrics;
++
++import static android.os.Process.THREAD_PRIORITY_DEFAULT;
++
++import android.content.Context;
++import android.content.pm.PackageManager;
++import android.util.Slog;
++
++import com.android.server.ServiceThread;
++import com.android.server.SystemService;
++
++import com.libremobileos.faceunlock.server.FaceUnlockServer;
++
++public class FaceUnlockService extends SystemService {
++    private static final String TAG = "FaceUnlockService";
++
++    private ServiceThread mServiceThread = null;
++    private FaceUnlockServer mServer = null;
++
++    public FaceUnlockService(Context context) {
++        super(context);
++    }
++
++    @Override
++    public void onStart() {
++        final PackageManager pm = getContext().getPackageManager();
++        final boolean supportsFace = pm.hasSystemFeature(PackageManager.FEATURE_FACE);
++        if (supportsFace) {
++            mServiceThread = new ServiceThread(TAG, THREAD_PRIORITY_DEFAULT, false);
++            mServiceThread.start();
++            mServer = new FaceUnlockServer(getContext(), mServiceThread.getLooper(),
++                    this::publishBinderService);
++        } else {
++            Slog.i(TAG, "Not using any face sensor.");
++        }
++    }
++
++}
+diff --git a/services/java/com/android/server/SystemServer.java b/services/java/com/android/server/SystemServer.java
+index e92ba3ed7dc3..2674b3754e3a 100644
+--- a/services/java/com/android/server/SystemServer.java
++++ b/services/java/com/android/server/SystemServer.java
+@@ -2659,6 +2659,10 @@ public final class SystemServer implements Dumpable {
+                     = mPackageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT);
+ 
+             if (hasFeatureFace) {
++                t.traceBegin("startLMOFaceUnlockService");
++                mSystemServiceManager.startService("com.libremobileos.server.biometrics.FaceUnlockService");
++                t.traceEnd();
++
+                 t.traceBegin("StartFaceSensor");
+                 final FaceService faceService =
+                         mSystemServiceManager.startService(FaceService.class);
+diff --git a/services/proguard.flags b/services/proguard.flags
+index 63e92eec8923..023965ce39a4 100644
+--- a/services/proguard.flags
++++ b/services/proguard.flags
+@@ -133,3 +133,6 @@
+ -keep,allowoptimization,allowaccessmodification class lineageos.** { *; }
+ -keep,allowoptimization,allowaccessmodification class org.lineageos.** { *; }
+ -keep,allowoptimization,allowaccessmodification class vendor.lineage.** { *; }
++
++# Keep lmodroid framework sources
++-keep,allowoptimization,allowaccessmodification class com.libremobileos.** { *; }
+-- 
+2.34.1
+

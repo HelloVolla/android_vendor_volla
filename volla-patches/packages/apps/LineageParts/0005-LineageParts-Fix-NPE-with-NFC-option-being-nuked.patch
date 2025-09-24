@@ -1,4 +1,4 @@
-From b71d782cdc03dcb00a395a4358f38464fccc17e7 Mon Sep 17 00:00:00 2001
+From 0244b0e4ec4418fe009a3e30c09c87427079b0b0 Mon Sep 17 00:00:00 2001
 From: techyminati <sinha.aryan03@gmail.com>
 Date: Mon, 4 Sep 2023 19:04:18 +0200
 Subject: [PATCH] LineageParts: Fix NPE with NFC option being nuked
@@ -103,10 +103,10 @@ Signed-off-by: techyminati <sinha.aryan03@gmail.com>
  2 files changed, 1 insertion(+), 8 deletions(-)
 
 diff --git a/src/org/lineageos/lineageparts/profiles/SetupActionsFragment.java b/src/org/lineageos/lineageparts/profiles/SetupActionsFragment.java
-index 13d6ba5..57510cd 100644
+index c77dfe0..8d28013 100644
 --- a/src/org/lineageos/lineageparts/profiles/SetupActionsFragment.java
 +++ b/src/org/lineageos/lineageparts/profiles/SetupActionsFragment.java
-@@ -189,9 +189,6 @@ public class SetupActionsFragment extends SettingsPreferenceFragment
+@@ -188,9 +188,6 @@ public class SetupActionsFragment extends SettingsPreferenceFragment
              if (DeviceUtils.deviceSupportsBluetooth(context)) {
                  mItems.add(generateTriggerItem(TriggerItem.BLUETOOTH));
              }
@@ -117,7 +117,7 @@ index 13d6ba5..57510cd 100644
  
          // connection overrides
 diff --git a/src/org/lineageos/lineageparts/profiles/actions/item/TriggerItem.java b/src/org/lineageos/lineageparts/profiles/actions/item/TriggerItem.java
-index ed086bb..ff197f3 100644
+index 98c73a6..cee11fb 100644
 --- a/src/org/lineageos/lineageparts/profiles/actions/item/TriggerItem.java
 +++ b/src/org/lineageos/lineageparts/profiles/actions/item/TriggerItem.java
 @@ -18,7 +18,7 @@ public class TriggerItem extends Item {
@@ -142,5 +142,5 @@ index ed086bb..ff197f3 100644
  
          return sb.toString();
 -- 
-2.29.2
+2.49.0
 

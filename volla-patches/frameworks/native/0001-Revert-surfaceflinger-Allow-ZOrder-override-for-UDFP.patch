@@ -1,18 +1,20 @@
-From 5b1111d6b3b7c0bef01da825fd65ac0e430830c6 Mon Sep 17 00:00:00 2001
-From: Volla BuildBot <build@volla.com>
-Date: Sun, 24 Nov 2024 15:20:57 +0000
+From f2ca523eaa7e7376e1333299fd71f4f6158c9f8a Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Fri, 27 Jun 2025 23:57:50 +0330
 Subject: [PATCH] Revert "surfaceflinger: Allow ZOrder override for UDFPS dim
  layer"
 
-This reverts commit 4249f5a0e6d140c193e414dbdfeecbde3d991853.
+This reverts commit c6fd302728026e54eb4ec1d90c760c7bb95da7d6.
+
+Change-Id: I9f3b02161f155792094b144d91620e8193fce01c
 ---
- .../include/compositionengine/UdfpsExtension.h         |  4 +---
- .../CompositionEngine/src/OutputLayer.cpp              | 10 +++-------
- .../CompositionEngine/src/UdfpsExtension.cpp           |  6 +-----
- 3 files changed, 5 insertions(+), 15 deletions(-)
+ .../include/compositionengine/UdfpsExtension.h              | 4 +---
+ .../surfaceflinger/CompositionEngine/src/OutputLayer.cpp    | 3 ---
+ .../surfaceflinger/CompositionEngine/src/UdfpsExtension.cpp | 6 +-----
+ 3 files changed, 2 insertions(+), 11 deletions(-)
 
 diff --git a/services/surfaceflinger/CompositionEngine/include/compositionengine/UdfpsExtension.h b/services/surfaceflinger/CompositionEngine/include/compositionengine/UdfpsExtension.h
-index cf69da9855..4306cb4a02 100644
+index 98ee237a46..6e63769a70 100644
 --- a/services/surfaceflinger/CompositionEngine/include/compositionengine/UdfpsExtension.h
 +++ b/services/surfaceflinger/CompositionEngine/include/compositionengine/UdfpsExtension.h
 @@ -1,5 +1,5 @@
@@ -28,33 +30,26 @@ index cf69da9855..4306cb4a02 100644
  #define UDFPS_BIOMETRIC_PROMPT_LAYER_NAME "BiometricPrompt"
 -#define UDFPS_DIM_LAYER_NAME "Dim Layer for UDFPS"
  #define UDFPS_LAYER_NAME "UdfpsControllerOverlay"
- #define UDFPS_TOUCHED_LAYER_NAME "SurfaceView[UdfpsControllerOverlay](BLAST)"
+ #define UDFPS_TOUCHED_LAYER_NAME " SurfaceView[UdfpsControllerOverlay](BLAST)"
  
 -extern uint32_t getUdfpsDimZOrder(uint32_t z);
  extern uint32_t getUdfpsZOrder(uint32_t z, bool touched);
  extern uint64_t getUdfpsUsageBits(uint64_t usageBits, bool touched);
  
 diff --git a/services/surfaceflinger/CompositionEngine/src/OutputLayer.cpp b/services/surfaceflinger/CompositionEngine/src/OutputLayer.cpp
-index 0220649cfa..408c58cc6e 100644
+index 68eba2d185..520750e22d 100644
 --- a/services/surfaceflinger/CompositionEngine/src/OutputLayer.cpp
 +++ b/services/surfaceflinger/CompositionEngine/src/OutputLayer.cpp
-@@ -459,13 +459,9 @@ void OutputLayer::writeOutputDependentGeometryStateToHWC(HWC2::Layer* hwcLayer,
-     }
- 
-     uint32_t z_udfps = z;
--    if (strncmp(getLayerFE().getDebugName(),
--                UDFPS_DIM_LAYER_NAME, strlen(UDFPS_DIM_LAYER_NAME)) == 0) {
--        z_udfps = getUdfpsDimZOrder(z);
--    } else if ((strncmp(getLayerFE().getDebugName(), UDFPS_LAYER_NAME,
--                        strlen(UDFPS_LAYER_NAME)) == 0) ||
--               (strncmp(getLayerFE().getDebugName(), UDFPS_BIOMETRIC_PROMPT_LAYER_NAME,
--                        strlen(UDFPS_BIOMETRIC_PROMPT_LAYER_NAME)) == 0)) {
-+    if ((strncmp(getLayerFE().getDebugName(), UDFPS_LAYER_NAME, strlen(UDFPS_LAYER_NAME)) == 0) ||
-+        (strncmp(getLayerFE().getDebugName(), UDFPS_BIOMETRIC_PROMPT_LAYER_NAME,
-+                 strlen(UDFPS_BIOMETRIC_PROMPT_LAYER_NAME)) == 0)) {
+@@ -542,9 +542,6 @@ void OutputLayer::writeOutputDependentGeometryStateToHWC(HWC2::Layer* hwcLayer,
+         (strncmp(getLayerFE().getDebugName(), UDFPS_BIOMETRIC_PROMPT_LAYER_NAME,
+                  strlen(UDFPS_BIOMETRIC_PROMPT_LAYER_NAME)) == 0)) {
          z_udfps = getUdfpsZOrder(z, false);
-     } else if (strncmp(getLayerFE().getDebugName(), UDFPS_TOUCHED_LAYER_NAME,
-                        strlen(UDFPS_TOUCHED_LAYER_NAME)) == 0) {
+-    } else if (strncmp(getLayerFE().getDebugName(), UDFPS_DIM_LAYER_NAME,
+-                       strlen(UDFPS_DIM_LAYER_NAME)) == 0) {
+-        z_udfps = getUdfpsDimZOrder(z);
+     } else if (strstr(getLayerFE().getDebugName(), UDFPS_TOUCHED_LAYER_NAME) != nullptr) {
+         z_udfps = getUdfpsZOrder(z, true);
+     }
 diff --git a/services/surfaceflinger/CompositionEngine/src/UdfpsExtension.cpp b/services/surfaceflinger/CompositionEngine/src/UdfpsExtension.cpp
 index 5ae381597d..2d9d086dd2 100644
 --- a/services/surfaceflinger/CompositionEngine/src/UdfpsExtension.cpp
@@ -78,5 +73,5 @@ index 5ae381597d..2d9d086dd2 100644
      return z;
  }
 -- 
-2.34.1
+2.49.0
 

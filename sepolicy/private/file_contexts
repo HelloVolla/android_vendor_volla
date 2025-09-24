@@ -1,11 +1,17 @@
 # Bootloader Manager
 /data/abm(/.*)?                                 u:object_r:abm_file:s0
+/data/unencrypted/abm(/.*)?                                 u:object_r:abm_file:s0
+/data/misc/abm_tmp/.abm_bootset(/.*)?                                 u:object_r:abm_file:s0
 
 # Signald
 /data/signald(/.*)?                             u:object_r:signald_file:s0
 
 # Wireguard
 /(system_ext|system/system_ext)/bin/wg-service  u:object_r:volla_wireguard_exec:s0
+
+# Bootloadermanager
+/(system_ext|system/system_ext)/bin/bootloadermanager  u:object_r:bootloadermanager_exec:s0
+/(system_ext|system/system_ext)/bin/dmsetup  u:object_r:bootloadermanager_exec:s0
 
 # Volla dnsmasq
 /(system_ext|system/system_ext)/bin/vdnsmasq  u:object_r:dnsmasq_exec:s0

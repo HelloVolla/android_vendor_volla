@@ -1,0 +1,50 @@
+From 508dbeb9f4d3f8445e7bd5cbf274bfc7a881e44c Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Wed, 14 Dec 2022 20:50:15 +0100
+Subject: [PATCH 04/35] Disable QS edit button on security mode
+
+Change-Id: Iab1f1f09ec4199f25b13be3805e9d619d6bd4dd5
+---
+ .../src/com/android/systemui/qs/QSFooterViewController.java  | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/QSFooterViewController.java b/packages/SystemUI/src/com/android/systemui/qs/QSFooterViewController.java
+index dc188c24e02b..4cb62c1c83e2 100644
+--- a/packages/SystemUI/src/com/android/systemui/qs/QSFooterViewController.java
++++ b/packages/SystemUI/src/com/android/systemui/qs/QSFooterViewController.java
+@@ -36,6 +36,8 @@ import com.android.systemui.util.ViewController;
+ 
+ import javax.inject.Inject;
+ 
++import lineageos.childmode.ChildModeManager;
++
+ /**
+  * Controller for {@link QSFooterView}.
+  */
+@@ -50,6 +52,7 @@ public class QSFooterViewController extends ViewController<QSFooterView> impleme
+     private final FalsingManager mFalsingManager;
+     private final ActivityStarter mActivityStarter;
+     private final RetailModeInteractor mRetailModeInteractor;
++    private final ChildModeManager mChildModeManager;
+ 
+     @Inject
+     QSFooterViewController(QSFooterView view,
+@@ -65,6 +68,7 @@ public class QSFooterViewController extends ViewController<QSFooterView> impleme
+         mFalsingManager = falsingManager;
+         mActivityStarter = activityStarter;
+         mRetailModeInteractor = retailModeInteractor;
++        mChildModeManager = ChildModeManager.getInstance(getContext());
+ 
+         mBuildText = mView.findViewById(R.id.build);
+         if (gsfQuickSettings()) {
+@@ -110,6 +114,7 @@ public class QSFooterViewController extends ViewController<QSFooterView> impleme
+         mEditButton
+                 .setVisibility(mRetailModeInteractor.isInRetailMode() ? View.GONE : View.VISIBLE);
+         mEditButton.setClickable(visibility == View.VISIBLE);
++        mEditButton.setVisibility(mChildModeManager.isActivate() ? View.GONE : View.VISIBLE);
+     }
+ 
+     @Override
+-- 
+2.49.0
+

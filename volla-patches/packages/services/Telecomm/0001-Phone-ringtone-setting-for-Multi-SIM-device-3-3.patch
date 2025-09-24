@@ -1,4 +1,4 @@
-From 2e7b8cd7f33d2b6d24611e97dd3daf9aa5e3349f Mon Sep 17 00:00:00 2001
+From 59bff48a198a6189d50d8d62254cc5a98d21671f Mon Sep 17 00:00:00 2001
 From: Ting Yu <ting.x.yu@sony.com>
 Date: Mon, 12 Nov 2018 16:03:04 +0800
 Subject: [PATCH] Phone ringtone setting for Multi SIM device [3/3]
@@ -16,7 +16,7 @@ Signed-off-by: techyminati <techyminati@icloud.com>
  1 file changed, 15 insertions(+), 6 deletions(-)
 
 diff --git a/src/com/android/server/telecom/RingtoneFactory.java b/src/com/android/server/telecom/RingtoneFactory.java
-index 16fa0c4cd..3dd2db62d 100644
+index c740c24..1229149 100644
 --- a/src/com/android/server/telecom/RingtoneFactory.java
 +++ b/src/com/android/server/telecom/RingtoneFactory.java
 @@ -30,6 +30,7 @@ import android.os.UserManager;
@@ -58,7 +58,7 @@ index 16fa0c4cd..3dd2db62d 100644
                  if (defaultRingtoneUri == null) {
                      Log.i(this, "getRingtone: Settings.System.DEFAULT_RINGTONE_URI is null.");
                  }
-@@ -196,12 +203,14 @@ public class RingtoneFactory {
+@@ -178,12 +185,14 @@ public class RingtoneFactory {
          return null;
      }
  

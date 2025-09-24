@@ -1,0 +1,20 @@
+type vollasngen, domain;
+type vollasngen_exec, exec_type, file_type;
+
+init_daemon_domain(vollasngen)
+net_domain(vollasngen)
+
+binder_use(vollasngen)
+hwbinder_use(vollasngen)
+allow vollasngen hwservicemanager_prop:file { getattr map open read };
+
+binder_call(vollasngen, mtk_hal_nvramagent)
+binder_call(vollasngen, rild)
+allow vollasngen mtk_hal_nvramagent_hwservice:hwservice_manager find;
+allow vollasngen mtk_hal_rild_hwservice:hwservice_manager find;
+
+get_prop(vollasngen, serialno_prop)
+get_prop(vollasngen, vendor_vollasngen_prop)
+set_prop(vollasngen, vendor_vollasngen_prop)
+
+allow vollasngen self:capability net_raw;

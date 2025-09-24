@@ -1,54 +1,20 @@
-From 79461951a0a8c5bbce0f42ecac3e2f15b0dc3ddc Mon Sep 17 00:00:00 2001
+From 19ab64524ef7e5253da42f6e7a89fdc077b84eff Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Thu, 10 Feb 2022 10:50:10 +0330
 Subject: [PATCH] Implement ChildMode
 
 Change-Id: I1d48248a381f4f47baea7443e9b4dfee4eb3a020
 ---
- Android.mk                                    |  2 +-
- api/lineage_current.txt                       | 11 +++
  .../platform/internal/ChildModeService.java   | 81 +++++++++++++++++
  lineage/res/res/values/config.xml             |  1 +
  .../app/LineageContextConstants.java          |  7 ++
  .../lineageos/childmode/ChildModeManager.java | 91 +++++++++++++++++++
  .../childmode/IChildModeService.aidl          | 25 +++++
- 7 files changed, 217 insertions(+), 1 deletion(-)
+ 5 files changed, 205 insertions(+)
  create mode 100644 lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
  create mode 100644 sdk/src/java/lineageos/childmode/ChildModeManager.java
  create mode 100644 sdk/src/java/lineageos/childmode/IChildModeService.aidl
 
-diff --git a/Android.mk b/Android.mk
-index 90e9b951..1591defe 100644
---- a/Android.mk
-+++ b/Android.mk
-@@ -29,7 +29,7 @@ include $(CLEAR_VARS)
- lineage_platform_res := APPS/org.lineageos.platform-res_intermediates/aapt
- 
- # List of packages used in lineage-api-stubs
--lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.util:lineageos.trust:lineageos.applock:lineageos.firewall
-+lineage_stub_packages := lineageos.app:lineageos.content:lineageos.hardware:lineageos.media:lineageos.os:lineageos.preference:lineageos.profiles:lineageos.providers:lineageos.platform:lineageos.util:lineageos.trust:lineageos.applock:lineageos.firewall:lineageos.childmode
- 
- lineage_framework_module := $(LOCAL_INSTALLED_MODULE)
- 
-diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index 814660d3..1f7527f8 100644
---- a/api/lineage_current.txt
-+++ b/api/lineage_current.txt
-@@ -886,3 +886,14 @@ package lineageos.firewall {
-   }
- 
- }
-+
-+package lineageos.childmode {
-+
-+  public class ChildModeManager {
-+    method public static lineageos.childmode.ChildModeManager getInstance(android.content.Context);
-+    method public static lineageos.childmode.ChildModeManager getService();
-+    method public void activate(boolean);
-+    method public boolean isActivate();
-+  }
-+
-+}
 diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java b/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
 new file mode 100644
 index 00000000..a5fcef7f
@@ -137,10 +103,10 @@ index 00000000..a5fcef7f
 +    };
 +}
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index d7deb2d8..d4ccc369 100644
+index 5739bee7..129f6168 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
-@@ -113,6 +113,7 @@
+@@ -105,6 +105,7 @@
          <item>org.lineageos.platform.internal.health.HealthInterfaceService</item>
          <item>org.lineageos.platform.internal.AppLockService</item>
          <item>org.lineageos.platform.internal.FirewallService</item>
@@ -149,10 +115,10 @@ index d7deb2d8..d4ccc369 100644
  
      <!-- The LineageSystemServer class that is invoked from Android's SystemServer -->
 diff --git a/sdk/src/java/lineageos/app/LineageContextConstants.java b/sdk/src/java/lineageos/app/LineageContextConstants.java
-index 1ac4682b..1af8f8a8 100644
+index c54a3f21..0488073d 100644
 --- a/sdk/src/java/lineageos/app/LineageContextConstants.java
 +++ b/sdk/src/java/lineageos/app/LineageContextConstants.java
-@@ -106,6 +106,13 @@ public final class LineageContextConstants {
+@@ -95,6 +95,13 @@ public final class LineageContextConstants {
       */
      public static final String VOLLA_FIREWALL_SERVICE = "vollafirewall";
  
@@ -295,5 +261,5 @@ index 00000000..ecae4484
 +    boolean isActivate();
 +}
 -- 
-2.29.2
+2.49.0
 

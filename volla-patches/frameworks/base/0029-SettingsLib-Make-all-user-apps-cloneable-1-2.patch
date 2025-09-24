@@ -1,0 +1,46 @@
+From 68489259ea14cdc90f96b1deb5afee604ae068e2 Mon Sep 17 00:00:00 2001
+From: Jyotiraditya Panda <jyotiraditya@aospa.co>
+Date: Tue, 20 Feb 2024 09:43:54 +0900
+Subject: [PATCH 29/35] SettingsLib: Make all user apps cloneable [1/2]
+
+ * Except system apps and overlays.
+
+Co-authored-by: someone5678 <someone5678@users.noreply.github.com>
+Change-Id: Ie6cb29778698de173b3abf5dc303688d0468cf04
+Signed-off-by: Jyotiraditya Panda <jyotiraditya@aospa.co>
+---
+ .../android/settingslib/applications/AppUtils.java  | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/packages/SettingsLib/src/com/android/settingslib/applications/AppUtils.java b/packages/SettingsLib/src/com/android/settingslib/applications/AppUtils.java
+index c4829951d61a..06007fa4ec07 100644
+--- a/packages/SettingsLib/src/com/android/settingslib/applications/AppUtils.java
++++ b/packages/SettingsLib/src/com/android/settingslib/applications/AppUtils.java
+@@ -44,6 +44,7 @@ import com.android.settingslib.utils.ThreadUtils;
+ 
+ import java.util.ArrayList;
+ import java.util.List;
++import java.util.stream.Collectors;
+ 
+ public class AppUtils {
+     private static final String TAG = "AppUtils";
+@@ -325,4 +326,16 @@ public class AppUtils {
+         }
+         return -1;
+     }
++
++    /**
++     * Returns list of clonable non-system, non-overlay app package names.
++     */
++    public static List<String> getCloneableAppList(Context context) {
++        return context.getPackageManager().getInstalledPackagesAsUser(0, UserHandle.myUserId())
++                .stream()
++                .filter(packageInfo -> !packageInfo.applicationInfo.isSystemApp()
++                        && !packageInfo.applicationInfo.isResourceOverlay())
++                .map(packageInfo -> packageInfo.packageName)
++                .collect(Collectors.toList());
++    }
+ }
+-- 
+2.49.0
+

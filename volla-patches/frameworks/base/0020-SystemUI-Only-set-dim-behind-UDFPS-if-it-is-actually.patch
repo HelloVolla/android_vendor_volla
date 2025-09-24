@@ -1,0 +1,44 @@
+From a04fc034e087efe734731adc8ab83d3b97f3c23c Mon Sep 17 00:00:00 2001
+From: danielml <daniel@danielml.dev>
+Date: Mon, 22 Jan 2024 23:31:13 +0100
+Subject: [PATCH 20/35] SystemUI: Only set dim behind UDFPS if it is actually
+ enabled
+
+Setting dim behind the UDFPS layer causes the BiometricPrompt to loose
+the dim behind the dialog itself.
+
+Change-Id: Ib806481dc18ef9dfb87801b488975059cb88a377
+Signed-off-by: danielml <daniel@danielml.dev>
+---
+ .../android/systemui/biometrics/UdfpsControllerOverlay.kt  | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsControllerOverlay.kt b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsControllerOverlay.kt
+index 778afb172ed3..eb1ee09b5ed8 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsControllerOverlay.kt
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsControllerOverlay.kt
+@@ -143,6 +143,9 @@ constructor(
+ 
+     private var overlayTouchListener: TouchExplorationStateChangeListener? = null
+ 
++    private val frameworkDimming = context.getResources().getBoolean(
++        R.bool.config_udfpsFrameworkDimming)
++
+     private val coreLayoutParams =
+         WindowManager.LayoutParams(
+                 WindowManager.LayoutParams.TYPE_NAVIGATION_BAR_PANEL,
+@@ -157,8 +160,10 @@ constructor(
+                     WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+                 flags =
+                     (Utils.FINGERPRINT_OVERLAY_LAYOUT_PARAM_FLAGS or
+-                        WindowManager.LayoutParams.FLAG_DIM_BEHIND or
+                         WindowManager.LayoutParams.FLAG_SPLIT_TOUCH)
++                if (frameworkDimming) {
++                    flags = flags or WindowManager.LayoutParams.FLAG_DIM_BEHIND
++                }
+                 privateFlags =
+                     WindowManager.LayoutParams.PRIVATE_FLAG_TRUSTED_OVERLAY or
+                         WindowManager.LayoutParams.PRIVATE_FLAG_EXCLUDE_FROM_SCREEN_MAGNIFICATION
+-- 
+2.49.0
+

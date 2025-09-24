@@ -1,0 +1,125 @@
+From 71993d4bafc553efa7d0cfe527eabbb08b362e48 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sun, 10 Aug 2025 12:15:58 +0330
+Subject: [PATCH] Update roboto json
+
+---
+ font_config.json | 97 +++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 96 insertions(+), 1 deletion(-)
+
+diff --git a/font_config.json b/font_config.json
+index f080f8b..51ca093 100644
+--- a/font_config.json
++++ b/font_config.json
+@@ -1,6 +1,101 @@
+ [
+     {
+         "name": "sans-serif",
++        "fonts": [
++            {
++                "file": "NotoSans-Thin.ttf",
++                "weight": "100",
++                "style": "normal"
++            },
++            {
++                "file": "NotoSans-ThinItalic.ttf",
++                "weight": "100",
++                "style": "italic"
++            },
++            {
++                "file": "NotoSans-ExtraLight.ttf",
++                "weight": "200",
++                "style": "normal"
++            },
++            {
++                "file": "NotoSans-ExtraLightItalic.ttf",
++                "weight": "200",
++                "style": "italic"
++            },
++            {
++                "file": "NotoSans-Light.ttf",
++                "weight": "300",
++                "style": "normal"
++            },
++            {
++                "file": "NotoSans-LightItalic.ttf",
++                "weight": "300",
++                "style": "italic"
++            },
++            {
++                "file": "NotoSans-Regular.ttf",
++                "weight": "400",
++                "style": "normal"
++            },
++            {
++                "file": "NotoSans-Italic.ttf",
++                "weight": "400",
++                "style": "italic"
++            },
++            {
++                "file": "NotoSans-Medium.ttf",
++                "weight": "500",
++                "style": "normal"
++            },
++            {
++                "file": "NotoSans-MediumItalic.ttf",
++                "weight": "500",
++                "style": "italic"
++            },
++            {
++                "file": "NotoSans-SemiBold.ttf",
++                "weight": "600",
++                "style": "normal"
++            },
++            {
++                "file": "NotoSans-SemiBoldItalic.ttf",
++                "weight": "600",
++                "style": "italic"
++            },
++            {
++                "file": "NotoSans-Bold.ttf",
++                "weight": "700",
++                "style": "normal"
++            },
++            {
++                "file": "NotoSans-BoldItalic.ttf",
++                "weight": "700",
++                "style": "italic"
++            },
++            {
++                "file": "NotoSans-ExtraBold.ttf",
++                "weight": "800",
++                "style": "normal"
++            },
++            {
++                "file": "NotoSans-ExtraBoldItalic.ttf",
++                "weight": "800",
++                "style": "italic"
++            },
++            {
++                "file": "NotoSans-Black.ttf",
++                "weight": "900",
++                "style": "normal"
++            },
++            {
++                "file": "NotoSans-BlackItalic.ttf",
++                "weight": "900",
++                "style": "italic"
++            }
++        ]
++    },
++    {
++        "name": "roboto",
+         "fonts": [
+             {
+                 "file": "Roboto-Regular.ttf",
+@@ -23,4 +118,4 @@
+             }
+         ]
+     }
+-]
+\ No newline at end of file
++]
+-- 
+2.49.0
+

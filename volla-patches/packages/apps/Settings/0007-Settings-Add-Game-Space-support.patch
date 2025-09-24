@@ -1,12 +1,9 @@
-From afd24cb4935604656f2ca028defcb7bb71543776 Mon Sep 17 00:00:00 2001
+From cf05ddbd9db1cd6f7d785ed5ff82449170b1d44c Mon Sep 17 00:00:00 2001
 From: Nauval Rizky <enuma.alrizky@gmail.com>
-Date: Sun, 28 Aug 2022 11:28:10 +0000
+Date: Thu, 19 Jun 2025 17:41:10 +0000
 Subject: [PATCH] Settings: Add Game Space support
 
-[@techyminati - VollaOS] Adapt code to VOS
-
-Co-authored-by: alanndz <alanndz7@gmail.com>
-Change-Id: Ic2cc28a77188b646dbd54f8151b3a18a8279ac05
+Change-Id: I58df104adcedd91a9172152fd2a82c75a9164cdf
 ---
  res/values/volla_strings.xml                  |  4 ++
  res/xml/apps.xml                              |  8 +++
@@ -15,20 +12,23 @@ Change-Id: Ic2cc28a77188b646dbd54f8151b3a18a8279ac05
  create mode 100644 src/com/android/settings/applications/GameSpaceController.java
 
 diff --git a/res/values/volla_strings.xml b/res/values/volla_strings.xml
-index 7128d134f84..e4d0827e0a1 100644
+index 53ee6b220ef..158af3af804 100644
 --- a/res/values/volla_strings.xml
 +++ b/res/values/volla_strings.xml
-@@ -11,4 +11,8 @@
-     <!-- Sound: Title for the option defining the phone ringtone for slot2 on Muilti SIM device. [CHAR LIMIT=50] -->
-     <string name="ringtone2_title">Phone ringtone - SIM 2</string>
+@@ -2,7 +2,11 @@
+ <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+     <!-- Legal -->
+     <string name="lineage_legal_url">https://lineageos.org/legal</string>
++    <!-- MicroG -->
+     <string name="enable_microg_title">Manage MicroG</string>
+     <string name="enable_microg_summary">Enable or disable MicroG</string>
  
 +    <!-- Game Space -->
-+    <string name="game_space_title">Volla GameSpace</string>
++    <string name="game_space_title">Game Space</string>
 +    <string name="game_space_summary">Enhance your gaming experience</string>
-+
  </resources>
 diff --git a/res/xml/apps.xml b/res/xml/apps.xml
-index 2557f914663..5e60fd818ff 100644
+index 8d8f81f4792..7b8a6565f0f 100644
 --- a/res/xml/apps.xml
 +++ b/res/xml/apps.xml
 @@ -83,6 +83,14 @@
@@ -120,5 +120,5 @@ index 00000000000..ca442f4757f
 +    }
 +}
 -- 
-2.29.2
+2.49.0
 

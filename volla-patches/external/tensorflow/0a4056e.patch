@@ -1,0 +1,58 @@
+From 0a4056e68919d07550e2e68dbd75205f2149858f Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Thu, 01 Feb 2024 07:42:27 +0000
+Subject: [PATCH] lite: Enable detection postprocess ops
+
+Change-Id: I40327b452da0bf7cc8efcd19d49301facb23b24f
+---
+
+diff --git a/tensorflow/lite/kernels/register.cc b/tensorflow/lite/kernels/register.cc
+index 5ec1197..480a755 100644
+--- a/tensorflow/lite/kernels/register.cc
++++ b/tensorflow/lite/kernels/register.cc
+@@ -360,9 +360,9 @@
+   AddCustom("Mfcc", tflite::ops::custom::Register_MFCC());
+   AddCustom("AudioSpectrogram",
+             tflite::ops::custom::Register_AUDIO_SPECTROGRAM());
++  */
+   AddCustom("TFLite_Detection_PostProcess",
+             tflite::ops::custom::Register_DETECTION_POSTPROCESS());
+-  */
+   // By definition, all of the ops added above are not user-defined ops,
+   // since they are supported by BuiltinOpResolver.
+   may_directly_contain_user_defined_ops_ = false;
+diff --git a/tensorflow/lite/kernels/register_ref.cc b/tensorflow/lite/kernels/register_ref.cc
+index a2be78a..403c43a 100644
+--- a/tensorflow/lite/kernels/register_ref.cc
++++ b/tensorflow/lite/kernels/register_ref.cc
+@@ -523,9 +523,9 @@
+   AddCustom("Mfcc", tflite::ops::custom::Register_MFCC());
+   AddCustom("AudioSpectrogram",
+             tflite::ops::custom::Register_AUDIO_SPECTROGRAM());
++  */
+   AddCustom("TFLite_Detection_PostProcess",
+             tflite::ops::custom::Register_DETECTION_POSTPROCESS());
+-  */
+ }
+ 
+ }  // namespace builtin
+diff --git a/tensorflow/lite/tflite_static.bp b/tensorflow/lite/tflite_static.bp
+index f70104f..0020476 100644
+--- a/tensorflow/lite/tflite_static.bp
++++ b/tensorflow/lite/tflite_static.bp
+@@ -69,6 +69,7 @@
+         "kernels/cpu_backend_context.cc",
+         "kernels/cpu_backend_gemm_eigen.cc",
+         "kernels/cumsum.cc",
++        "kernels/detection_postprocess.cc",
+         "kernels/densify.cc",
+         "kernels/depth_to_space.cc",
+         "kernels/depthwise_conv.cc",
+@@ -228,6 +229,7 @@
+     ],
+     cflags: [
+         "-DNAMESPACE_FOR_HASH_FUNCTIONS=farmhash",
++        "-DFLATBUFFERS_LOCALE_INDEPENDENT=0",
+         "-DTF_LITE_DISABLE_X86_NEON",
+         "-Wall",
+         "-Werror",

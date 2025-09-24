@@ -1,28 +1,15 @@
-From 3e9c663b68b87e8ab19f7ca487d582ce1d447ad0 Mon Sep 17 00:00:00 2001
+From c84c1b212a7d9a01f8dda42e781b55cbd0c19524 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Tue, 20 Sep 2022 19:21:04 +0430
 Subject: [PATCH] Firewall: Introduce clear domin list method
 
 Change-Id: I176c0905667933914328d53d51a564454486dfcd
 ---
- api/lineage_current.txt                             |  1 +
  .../platform/internal/FirewallService.java          | 13 +++++++++++++
  .../java/lineageos/firewall/FirewallManager.java    |  8 ++++++++
  .../java/lineageos/firewall/IFirewallService.aidl   |  2 ++
- 4 files changed, 24 insertions(+)
+ 3 files changed, 23 insertions(+)
 
-diff --git a/api/lineage_current.txt b/api/lineage_current.txt
-index c1f23ad5..e4ad0516 100644
---- a/api/lineage_current.txt
-+++ b/api/lineage_current.txt
-@@ -883,6 +883,7 @@ package lineageos.firewall {
-     method public boolean isDomainOnList(java.lang.String);
-     method public int getDomainsListCount();
-     java.util.List<java.lang.String> getDomainsList();
-+    method public void clearDomainList();
-   }
- 
- }
 diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
 index 29efc022..80659464 100644
 --- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
@@ -83,5 +70,5 @@ index d9d9d67b..d5588e81 100644
 +    void clearDomainList();
  }
 -- 
-2.29.2
+2.49.0
 

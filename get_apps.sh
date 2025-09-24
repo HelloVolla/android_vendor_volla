@@ -100,10 +100,9 @@ downloadFromFdroid com.aurora.store
 downloadFromFdroid org.fossify.calendar "Etar Calendar"
 downloadFromFdroid org.fossify.clock "DeskClock"
 downloadFromFdroid org.fossify.contacts "Contacts"
-downloadFromFdroid org.fossify.phone
 downloadFromFdroid org.fossify.filemanager
 downloadFromFdroid org.fossify.gallery "Gallery2 Gallery Gallery3D GalleryNew3D Glimpse"
-downloadFromFdroid org.fossify.musicplayer "Eleven"
+downloadFromFdroid org.fossify.musicplayer "Eleven Twelve"
 downloadFromFdroid net.osmand.plus
 downloadFromFdroid org.mozilla.fennec_fdroid "Jelly" YES
 downloadFromFdroid com.fsck.k9
@@ -117,7 +116,7 @@ downloadFromFdroid hideme.android.vpn.noPlayStore "" YES
 downloadFromFdroid com.maxfour.music "Eleven"
 downloadFromFdroid com.simplemobiletools.calendar.pro "Etar Calendar"
 
-repo=https://microg.org/fdroid/repo/
+repo=https://raw.githubusercontent.com/microg/fdroid-repo/refs/heads/main/fdroid/repo/
 downloadFromFdroid com.google.android.gms "" NO YES
 downloadFromFdroid com.google.android.gsf
 downloadFromFdroid com.android.vending "" NO YES
@@ -127,6 +126,10 @@ downloadFromFdroid com.volla.vollaboard
 
 repo=https://holochain-fdroid.volla.tech/fdroid/repo/
 downloadFromFdroid com.volla.messages "" YES
+
+repo=https://holochain-fdroid-nightly.volla.tech/fdroid/repo/
+downloadFromFdroid org.holochain.androidserviceruntime.app "" YES
+
 
 echo >> apps.mk
 

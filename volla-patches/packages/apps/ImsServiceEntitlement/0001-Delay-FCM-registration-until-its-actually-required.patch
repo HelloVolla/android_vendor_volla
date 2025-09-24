@@ -1,4 +1,4 @@
-From 984efa1267c2b6b637cf171d8f96f3d50caa8b41 Mon Sep 17 00:00:00 2001
+From 3306d9874d2c42338a64cc654de5f4c56c915fe0 Mon Sep 17 00:00:00 2001
 From: Luca Stefani <luca.stefani.ge1@gmail.com>
 Date: Thu, 20 Jan 2022 18:43:00 +0530
 Subject: [PATCH] Delay FCM registration until it's actually required

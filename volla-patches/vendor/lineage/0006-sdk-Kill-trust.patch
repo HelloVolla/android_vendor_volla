@@ -1,4 +1,4 @@
-From 33ad9d3be468e3bc7d476c873680462526a11568 Mon Sep 17 00:00:00 2001
+From aacf6c05e9bbe33ee0119c593f84591b6fac0384 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Tue, 20 Jul 2021 17:11:41 +0430
 Subject: [PATCH] sdk: Kill trust
@@ -9,7 +9,7 @@ Change-Id: Iab85dbf55ff90c8a8c4c35920a904dd61c7b16f3
  1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/config/lineage_sdk_common.mk b/config/lineage_sdk_common.mk
-index db335995..1a27ba02 100644
+index 306ebd27..e1b528c7 100644
 --- a/config/lineage_sdk_common.mk
 +++ b/config/lineage_sdk_common.mk
 @@ -5,8 +5,7 @@ PRODUCT_COPY_FILES += \
@@ -23,5 +23,5 @@ index db335995..1a27ba02 100644
  # Lineage Platform Library
  PRODUCT_PACKAGES += \
 -- 
-2.29.2
+2.49.0
 

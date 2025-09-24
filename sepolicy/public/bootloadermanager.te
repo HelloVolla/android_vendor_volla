@@ -1,0 +1,4 @@
+type bootloadermanager, domain;
+
+typeattribute bootloadermanager coredomain;
+typeattribute bootloadermanager mlstrustedsubject;

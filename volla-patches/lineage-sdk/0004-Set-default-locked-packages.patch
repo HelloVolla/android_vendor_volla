@@ -1,14 +1,16 @@
-From 1429f4449e4ea4ba54751fcfdd74154899fcd0ac Mon Sep 17 00:00:00 2001
+From 3a260186c5ff32e336c96fecf69e63f1c488d647 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 19 Feb 2022 12:43:04 +0330
 Subject: [PATCH] Set default locked packages
 
 Change-Id: I55c04b4ba7495841a9464ac605ec2f07037f86da
 ---
- .../org/lineageos/platform/internal/AppLockService.java   | 8 ++++++--
- lineage/res/res/values/config.xml                         | 6 ++++++
- lineage/res/res/values/symbols.xml                        | 4 ++++
- 3 files changed, 16 insertions(+), 2 deletions(-)
+ .../lineageos/platform/internal/AppLockService.java  |  8 ++++++--
+ lineage/res/res/values/volla_config.xml              | 12 ++++++++++++
+ lineage/res/res/values/volla_symbols.xml             | 10 ++++++++++
+ 3 files changed, 28 insertions(+), 2 deletions(-)
+ create mode 100644 lineage/res/res/values/volla_config.xml
+ create mode 100644 lineage/res/res/values/volla_symbols.xml
 
 diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java b/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
 index 8dbe5067..f7640c26 100644
@@ -29,34 +31,40 @@ index 8dbe5067..f7640c26 100644
          } catch (XmlPullParserException | IOException e) {
              throw new IllegalStateException("Failed to parse locked-apps.xml: " + mFile, e);
          }
-diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index d4ccc369..9c1df4d9 100644
---- a/lineage/res/res/values/config.xml
-+++ b/lineage/res/res/values/config.xml
-@@ -353,4 +353,10 @@
- 
-     <!-- Lockscreen rotation default -->
-     <bool name="config_lockScreenRotationEnabledByDefault">false</bool>
-+
+diff --git a/lineage/res/res/values/volla_config.xml b/lineage/res/res/values/volla_config.xml
+new file mode 100644
+index 00000000..cec51b95
+--- /dev/null
++++ b/lineage/res/res/values/volla_config.xml
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++     SPDX-FileCopyrightText: 2025 The VollaOS Project
++     SPDX-License-Identifier: Apache-2.0
++-->
++<resources>
 +    <!-- Array of packages to get locked by default. -->
 +    <string-array name="config_defaultLockedPackages">
 +        <item>org.fdroid.fdroid</item>
 +    </string-array>
 +
- </resources>
-diff --git a/lineage/res/res/values/symbols.xml b/lineage/res/res/values/symbols.xml
-index 3ef31da0..f1d0269f 100644
---- a/lineage/res/res/values/symbols.xml
-+++ b/lineage/res/res/values/symbols.xml
-@@ -213,4 +213,8 @@
- 
-     <!-- Lockscreen rotation default -->
-     <java-symbol type="bool" name="config_lockScreenRotationEnabledByDefault" />
-+    
++</resources>
+diff --git a/lineage/res/res/values/volla_symbols.xml b/lineage/res/res/values/volla_symbols.xml
+new file mode 100644
+index 00000000..326feab5
+--- /dev/null
++++ b/lineage/res/res/values/volla_symbols.xml
+@@ -0,0 +1,10 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++     SPDX-FileCopyrightText: 2025 The VollaOS Project
++     SPDX-License-Identifier: Apache-2.0
++-->
++<resources>
 +    <!-- AppLocker. -->
 +    <java-symbol type="array" name="config_defaultLockedPackages" />
-+    
- </resources>
++
++</resources>
 -- 
-2.29.2
+2.49.0
 

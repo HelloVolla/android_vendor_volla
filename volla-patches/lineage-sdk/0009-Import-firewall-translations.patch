@@ -1,4 +1,4 @@
-From b709de81a33de1747fa7fef9d299519d0ef29c7c Mon Sep 17 00:00:00 2001
+From 3dba565b7b183bc6e2ecef9e62372547a0e44c38 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Mon, 13 Jun 2022 02:12:16 +0430
 Subject: [PATCH] Import firewall translations
@@ -150,5 +150,5 @@ index 509ab03f..7e890c93 100644
  
  </resources>
 -- 
-2.29.2
+2.49.0
 

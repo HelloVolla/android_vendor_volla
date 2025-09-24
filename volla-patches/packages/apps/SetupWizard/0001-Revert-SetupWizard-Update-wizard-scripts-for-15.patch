@@ -1,0 +1,149 @@
+From 0dc8c8fd84f582174a3453f3a3189ff403a7c78e Mon Sep 17 00:00:00 2001
+From: Volla BuildBot <build@volla.com>
+Date: Fri, 15 Aug 2025 07:35:34 +0000
+Subject: [PATCH 1/8] Revert "SetupWizard: Update wizard scripts for 15"
+
+This reverts commit 00fff59802c351ef1479370b4708c0d3c19f6e96.
+---
+ res/raw/wizard_script.xml      | 32 ++------------------------------
+ res/raw/wizard_script_user.xml | 17 +++++++++--------
+ 2 files changed, 11 insertions(+), 38 deletions(-)
+
+diff --git a/res/raw/wizard_script.xml b/res/raw/wizard_script.xml
+index ee6d4d5..38ec267 100644
+--- a/res/raw/wizard_script.xml
++++ b/res/raw/wizard_script.xml
+@@ -1,7 +1,7 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <!--
+      SPDX-FileCopyrightText: 2014 Google Inc.
+-     SPDX-FileCopyrightText: 2017-2025 The LineageOS Project
++     SPDX-FileCopyrightText: 2017-2024 The LineageOS Project
+      SPDX-License-Identifier: Apache-2.0
+ -->
+ 
+@@ -21,28 +21,8 @@
+         <result wizard:action="check_user_unlock_dpm_user_complete" wizard:name="dpm_profile_complete" wizard:resultCode="112" />
+         <result wizard:action="check_user_unlock_work_setup_interrupted_qr_scan" wizard:name="check_user_unlock_work_setup_interrupted_qr_scan" wizard:resultCode="114" />
+         <result wizard:action="check_user_unlock_work_setup_interrupted_consumer_flow" wizard:name="check_user_unlock_work_setup_interrupted_consumer_flow" wizard:resultCode="115" />
+-        <result wizard:action="check_user_unlock_nfc" wizard:name="check_user_unlock_nfc" wizard:resultCode="124" />
+-        <result wizard:action="check_user_unlock_work_setup_interrupted_nfc_tap" wizard:name="check_user_unlock_work_setup_interrupted_nfc_tap" wizard:resultCode="125" />
+-        <result wizard:action="check_user_unlock_fail_provisioning" wizard:name="provisioning_extras_not_saved" wizard:resultCode="128" />
+         <result wizard:action="check_user_unlock" />
+     </WizardAction>
+-    <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.android.setupwizard.CHECK_USER_UNLOCK;end" id="check_user_unlock_fail_provisioning">
+-        <result wizard:action="fail_provisioning" />
+-    </WizardAction>
+-    <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.android.setupwizard.SHOW_PROVISIONING_ERROR;end" id="fail_provisioning" />
+-    <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.android.setupwizard.CHECK_USER_UNLOCK;end" id="check_user_unlock_work_setup_interrupted_nfc_tap">
+-        <result wizard:action="work_setup_interrupted_nfc_tap" />
+-    </WizardAction>
+-    <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.google.android.setupwizard.WORK_SETUP_INTERRUPTED;end" id="work_setup_interrupted_nfc_tap">
+-        <result wizard:action="nfc_provision_flow" wizard:name="continue_start_nfc_provisioning" wizard:resultCode="1" />
+-        <result wizard:action="factory_reset" />
+-    </WizardAction>
+-    <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.android.setupwizard.CHECK_USER_UNLOCK;end" id="check_user_unlock_nfc">
+-        <result wizard:action="nfc_provision_flow" />
+-    </WizardAction>
+-    <WizardAction wizard:script="android.resource://com.google.android.setupwizard/xml/wizard_script_nfc_provision_flow" id="nfc_provision_flow">
+-        <result wizard:action="oem_post_setup" />
+-    </WizardAction>
+     <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.android.setupwizard.CHECK_USER_UNLOCK;end" id="check_user_unlock_work_setup_interrupted_qr_scan" />
+     <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.google.android.setupwizard.WORK_SETUP_INTERRUPTED;end" id="work_setup_interrupted_qr_scan">
+         <result wizard:action="check_user_unlock_qr" wizard:name="continue_start_qr_scan" wizard:resultCode="1" />
+@@ -85,14 +65,12 @@
+     <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.google.android.setupwizard.CHECK_FRP;end" id="check_frp" />
+     <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.android.setupwizard.CHECK_QUICK_START;end" id="check_quick_start">
+         <result wizard:action="quick_start_flow" wizard:name="quick_start" wizard:resultCode="101" />
+-        <result wizard:action="connect_and_update" />
+     </WizardAction>
+     <WizardAction wizard:script="android.resource://com.google.android.setupwizard/xml/wizard_script_quick_start_flow" id="quick_start_flow">
+         <result wizard:action="oem_post_setup" />
+     </WizardAction>
+     <WizardAction wizard:script="android.resource://com.google.android.setupwizard/xml/wizard_script_connect_and_update_flow" id="connect_and_update">
+         <result wizard:action="no_network_flow" wizard:name="no_connection" wizard:resultCode="1" />
+-        <result wizard:action="no_network_flow" wizard:name="skip_in_esim_only" wizard:resultCode="102" />
+     </WizardAction>
+     <WizardAction wizard:script="android.resource://com.google.android.setupwizard/xml/wizard_script_zero_touch_flow" id="zero_touch">
+         <result wizard:action="post_dpm_user_flow" wizard:name="dpm_user_complete" wizard:resultCode="111" />
+@@ -112,7 +90,6 @@
+         <result wizard:action="oem_post_setup" />
+     </WizardAction>
+     <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.google.android.setupwizard.TRANSITION_TO_PERSONAL_PROFILE_SETUP;end" id="transition_to_personal_profile_setup">
+-        <result wizard:action="no_account_flow" wizard:name="skip_add_personal_account" wizard:resultCode="1" />
+         <result wizard:action="add_personal_account_after_work_profile" />
+     </WizardAction>
+     <WizardAction wizard:script="android.resource://com.google.android.setupwizard/xml/wizard_script_account_flow" id="add_personal_account_after_work_profile">
+@@ -121,15 +98,10 @@
+     <WizardAction wizard:flow="SetupAsNewFlow" wizard:script="android.resource://com.google.android.setupwizard/xml/wizard_script_account_flow" id="setup_as_new_flow">
+         <result wizard:action="oem_post_setup" />
+     </WizardAction>
+-    <WizardAction wizard:script="android.resource://com.google.android.setupwizard/xml/wizard_script_no_account_flow" id="no_account_flow">
+-        <result wizard:action="oem_post_setup" />
+-    </WizardAction>
+     <WizardAction wizard:script="android.resource://com.google.android.setupwizard/xml/wizard_script_post_dpm_user_flow" id="post_dpm_user_flow">
+         <result wizard:action="oem_post_setup" />
+     </WizardAction>
+-    <WizardAction wizard:script="android.resource://com.google.android.setupwizard/xml/wizard_script_qr_provision_flow" id="qr_provision_flow">
+-        <result wizard:action="oem_post_setup" />
+-    </WizardAction>
++    <WizardAction wizard:script="android.resource://com.google.android.setupwizard/xml/wizard_script_qr_provision_flow" id="qr_provision_flow" />
+     <WizardAction wizard:uri="intent:#Intent;package=org.lineageos.setupwizard;action=org.lineageos.setupwizard.LINEAGE_RESTORE_BACKUP;end" id="oem_post_setup">
+         <result wizard:action="device_specific" />
+     </WizardAction>
+diff --git a/res/raw/wizard_script_user.xml b/res/raw/wizard_script_user.xml
+index eedd73b..709b75f 100644
+--- a/res/raw/wizard_script_user.xml
++++ b/res/raw/wizard_script_user.xml
+@@ -1,7 +1,7 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <!--
+      SPDX-FileCopyrightText: 2014 Google Inc.
+-     SPDX-FileCopyrightText: 2017-2025 The LineageOS Project
++     SPDX-FileCopyrightText: 2017-2024 The LineageOS Project
+      SPDX-License-Identifier: Apache-2.0
+ -->
+ 
+@@ -23,23 +23,24 @@
+         <result wizard:action="oem_post_setup" />
+     </WizardAction>
+     <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.android.setupwizard.CHECK_USER_UNLOCK;end" id="check_user_unlock" />
++    <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.google.android.setupwizard.COMPLETE_IN_FLIGHT_UPDATES;end" id="complete_in_flight_updates" />
+     <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.android.setupwizard.NETWORK_SETTINGS;end" id="network_settings">
+         <result wizard:action="wifi_settings" wizard:name="see_all_wifi" wizard:resultCode="102" />
+         <result wizard:action="no_account_flow" wizard:name="skip" wizard:resultCode="1" />
+-        <result wizard:action="complete_in_flight_updates" />
++        <result wizard:action="consolidate_captive_portal" />
+     </WizardAction>
+     <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.android.setupwizard.WIFI_SETTINGS;end" id="wifi_settings">
+         <result wizard:action="no_account_flow" wizard:name="skip" wizard:resultCode="1" />
+     </WizardAction>
+-    <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.google.android.setupwizard.COMPLETE_IN_FLIGHT_UPDATES;end" id="complete_in_flight_updates" />
+-    <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.google.android.setupwizard.PRE_CHECKIN_AND_UPDATE;B.checkCaptivePortal=true;end" id="pre_checkin_and_update">
++    <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.android.setupwizard.CONSOLIDATE_CAPTIVE_PORTAL;end" id="consolidate_captive_portal">
+         <result wizard:action="network_unavailable" wizard:name="timeout" wizard:resultCode="101" />
++    </WizardAction>
++    <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.google.android.setupwizard.PRE_CHECKIN_AND_UPDATE;end" id="pre_checkin_and_update">
++        <result wizard:action="network_timeout" wizard:name="timeout" wizard:resultCode="101" />
+         <result wizard:action="post_checkin_and_update" />
+     </WizardAction>
++    <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.google.android.setupwizard.NETWORK_TIMEOUT;end" id="network_timeout" />
+     <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.google.android.setupwizard.POST_CHECKIN_AND_UPDATE;end" id="post_checkin_and_update">
+-        <result wizard:action="search_selector_presync" />
+-    </WizardAction>
+-    <WizardAction wizard:uri="intent:#Intent;package=com.google.android.apps.setupwizard.searchselector;action=com.google.android.setupwizard.SELECT_SEARCH_ENGINE_PRESYNC;end" id="search_selector_presync">
+         <result wizard:action="network_check" />
+     </WizardAction>
+     <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.google.android.setupwizard.NETWORK_CHECK;end" id="network_check">
+@@ -57,7 +58,7 @@
+     <WizardAction wizard:script="android.resource://com.google.android.setupwizard/xml/wizard_script_rollback_auth_early_update_flow" id="rollback_auth_early_update">
+         <result wizard:action="load_account_intent" />
+     </WizardAction>
+-    <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.google.android.setupwizard.GMS_ACCOUNT_CHECKIN;B.saveUserName=true;end" id="gms_account_checkin">
++    <WizardAction wizard:uri="intent:#Intent;package=com.google.android.setupwizard;action=com.google.android.setupwizard.GMS_ACCOUNT_CHECKIN;end" id="gms_account_checkin">
+         <result wizard:action="no_account_flow" wizard:name="skip" wizard:resultCode="1" />
+     </WizardAction>
+     <WizardAction wizard:flow="UserAccountFlow" wizard:script="android.resource://com.google.android.setupwizard/xml/wizard_script_user_account_flow" id="account_flow">
+-- 
+2.34.1
+

@@ -1,0 +1,253 @@
+From 24b446f88ce5a1a99b6763d28739c231a8d4d750 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sat, 26 Apr 2025 00:25:06 +0330
+Subject: [PATCH 8/8] volla: Add home page
+
+---
+ AndroidManifest.xml                           | 14 ++++
+ res/layout/setup_volla_home.xml               | 55 ++++++++++++++++
+ res/raw/lineage_wizard_script.xml             |  4 ++
+ res/raw/wizard_script.xml                     |  3 +
+ res/values/vollahome.xml                      | 22 +++++++
+ .../lineageos/setupwizard/SetupWizardApp.java |  1 +
+ .../setupwizard/VollaHomeActivity.java        | 64 +++++++++++++++++++
+ 7 files changed, 163 insertions(+)
+ create mode 100644 res/layout/setup_volla_home.xml
+ create mode 100644 res/values/vollahome.xml
+ create mode 100644 src/org/lineageos/setupwizard/VollaHomeActivity.java
+
+diff --git a/AndroidManifest.xml b/AndroidManifest.xml
+index 128e2a6..e8a73d0 100644
+--- a/AndroidManifest.xml
++++ b/AndroidManifest.xml
+@@ -33,6 +33,7 @@
+     <uses-permission android:name="lineageos.permission.FINISH_SETUP" />
+     <uses-permission android:name="lineageos.permission.WRITE_SETTINGS" />
+     <uses-permission android:name="lineageos.permission.WRITE_SECURE_SETTINGS" />
++    <uses-permission android:name="android.permission.MANAGE_ROLE_HOLDERS" />
+ 
+     <permission
+         android:name="lineageos.permission.FINISH_SETUP"
+@@ -243,6 +244,19 @@
+             </intent-filter>
+         </activity>
+ 
++        <activity android:name=".VollaHomeActivity"
++                  android:label="@string/activity_label_empty"
++                  android:excludeFromRecents="true"
++                  android:configChanges="mcc|mnc"
++                  android:immersive="true"
++                  android:exported="false"
++                  android:windowSoftInputMode="stateAlwaysHidden">
++            <intent-filter>
++                <action android:name="org.lineageos.setupwizard.LINEAGE_HOME" />
++                <category android:name="android.intent.category.DEFAULT" />
++            </intent-filter>
++        </activity>
++
+         <activity
+             android:name=".NavigationSettingsActivity"
+             android:label="@string/activity_label_empty"
+diff --git a/res/layout/setup_volla_home.xml b/res/layout/setup_volla_home.xml
+new file mode 100644
+index 0000000..7fd3d74
+--- /dev/null
++++ b/res/layout/setup_volla_home.xml
+@@ -0,0 +1,55 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++     SPDX-FileCopyrightText: 2023 The LineageOS Project
++     SPDX-License-Identifier: Apache-2.0
++-->
++<com.google.android.setupdesign.GlifLayout
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    android:id="@+id/setup_wizard_layout"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent">
++
++    <LinearLayout
++        android:orientation="vertical"
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        style="@style/SudContentFrame"
++        android:layout_marginTop="@dimen/base_margin_top">
++
++        <FrameLayout
++            android:id="@+id/page"
++            android:layout_width="match_parent"
++            android:layout_height="0dp"
++            android:layout_weight="1">
++
++            <ScrollView
++                android:layout_width="match_parent"
++                android:layout_height="match_parent"
++                android:fillViewport="true">
++
++                <RadioGroup
++                    android:id="@+id/volla_home_radio_group"
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content">
++
++                    <RadioButton
++                        android:id="@+id/volla_home_volla_btn"
++                        android:text="@string/volla_home_volla"
++                        style="@style/SudRadioButton" />
++
++                    <RadioButton
++                        android:id="@+id/volla_home_aosp_btn"
++                        android:text="@string/volla_home_aosp"
++                        style="@style/SudRadioButton" />
++
++                </RadioGroup>
++            </ScrollView>
++        </FrameLayout>
++
++        <org.lineageos.setupwizard.NavigationLayout
++            android:id="@+id/navigation_bar"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content" />
++
++    </LinearLayout>
++</com.google.android.setupdesign.GlifLayout>
+diff --git a/res/raw/lineage_wizard_script.xml b/res/raw/lineage_wizard_script.xml
+index 8a34d5b..e5950ae 100644
+--- a/res/raw/lineage_wizard_script.xml
++++ b/res/raw/lineage_wizard_script.xml
+@@ -81,6 +81,10 @@
+     </WizardAction>
+ 
+     <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_MICROG;end" id="microg">
++        <result wizard:action="volla_home" />
++    </WizardAction>
++
++    <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_HOME;end" id="volla_home">
+         <result wizard:action="biometric_settings" />
+     </WizardAction>
+ 
+diff --git a/res/raw/wizard_script.xml b/res/raw/wizard_script.xml
+index ca9eb61..cddb975 100644
+--- a/res/raw/wizard_script.xml
++++ b/res/raw/wizard_script.xml
+@@ -115,6 +115,9 @@
+         <result wizard:action="microg" />
+     </WizardAction>
+     <WizardAction wizard:uri="intent:#Intent;package=org.lineageos.setupwizard.LINEAGE_MICROG;end" id="microg">
++        <result wizard:action="volla_home" />
++    </WizardAction>
++    <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_HOME;end" id="volla_home">
+         <result wizard:action="theme_settings" />
+     </WizardAction>
+     <WizardAction wizard:uri="intent:#Intent;package=org.lineageos.setupwizard;action=org.lineageos.setupwizard.THEME_SETTINGS;end" id="theme_settings">
+diff --git a/res/values/vollahome.xml b/res/values/vollahome.xml
+new file mode 100644
+index 0000000..6a4844e
+--- /dev/null
++++ b/res/values/vollahome.xml
+@@ -0,0 +1,22 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++     Copyright (C) 2021 Hallo Welt Systeme UG
++
++     Licensed under the Apache License, Version 2.0 (the "License");
++     you may not use this file except in compliance with the License.
++     You may obtain a copy of the License at
++
++          http://www.apache.org/licenses/LICENSE-2.0
++
++     Unless required by applicable law or agreed to in writing, software
++     distributed under the License is distributed on an "AS IS" BASIS,
++     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++     See the License for the specific language governing permissions and
++     limitations under the License.
++-->
++<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
++    <string name="volla_home_title">Default Home App</string>
++    <string name="volla_home_summary">With the Volla home screen you get the Volla user experience with springboard, quick menu and collections. Alternatively, you can choose the classic Android home screen now or later in the system settings.</string>
++    <string name="volla_home_volla">Volla Launcher</string>
++    <string name="volla_home_aosp">AOSP Launcher</string>
++</resources>
+diff --git a/src/org/lineageos/setupwizard/SetupWizardApp.java b/src/org/lineageos/setupwizard/SetupWizardApp.java
+index eeec26f..f9b598e 100644
+--- a/src/org/lineageos/setupwizard/SetupWizardApp.java
++++ b/src/org/lineageos/setupwizard/SetupWizardApp.java
+@@ -42,6 +42,7 @@ public class SetupWizardApp extends Application {
+     public static final String ENABLE_RECOVERY_UPDATE = "enable_recovery_update";
+     public static final String UPDATE_RECOVERY_PROP = "persist.vendor.recovery_update";
+     public static final String ENABLE_MICROG = "enable_microg";
++    public static final String ENABLE_VOLLAHOME = "enable_volla_home";
+ 
+     public static final String NAVIGATION_OPTION_KEY = "navigation_option";
+ 
+diff --git a/src/org/lineageos/setupwizard/VollaHomeActivity.java b/src/org/lineageos/setupwizard/VollaHomeActivity.java
+new file mode 100644
+index 0000000..3ef63cb
+--- /dev/null
++++ b/src/org/lineageos/setupwizard/VollaHomeActivity.java
+@@ -0,0 +1,64 @@
++/*
++ * SPDX-FileCopyrightText: 2023-2024 The LineageOS Project
++ * SPDX-License-Identifier: Apache-2.0
++ */
++
++package org.lineageos.setupwizard;
++
++import android.app.role.RoleManager;
++import android.content.res.Configuration;
++import android.os.AsyncTask;
++import android.os.Bundle;
++import android.widget.RadioGroup;
++
++import androidx.annotation.Nullable;
++
++import java.util.concurrent.CompletableFuture;
++
++public class VollaHomeActivity extends BaseSetupWizardActivity {
++
++    public static final String TAG = VollaHomeActivity.class.getSimpleName();
++
++    @Override
++    protected void onCreate(@Nullable Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        getGlifLayout().setDescriptionText(getString(R.string.volla_home_summary));
++
++        RoleManager mRoleManager = getSystemService(RoleManager.class);
++        final CompletableFuture<Boolean> future = new CompletableFuture<>();
++        final RadioGroup radioGroup = findViewById(R.id.volla_home_radio_group);
++        mRoleManager.addRoleHolderAsUser(RoleManager.ROLE_HOME,
++                "com.volla.launcher", 0, android.os.Process.myUserHandle(),
++                AsyncTask.THREAD_POOL_EXECUTOR, future::complete);
++        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
++            switch (checkedId) {
++                case R.id.volla_home_volla_btn:
++                    mRoleManager.addRoleHolderAsUser(RoleManager.ROLE_HOME, 
++                            "com.volla.launcher", 0, android.os.Process.myUserHandle(),
++                            AsyncTask.THREAD_POOL_EXECUTOR, future::complete);
++                    break;
++                case R.id.volla_home_aosp_btn:
++                    mRoleManager.addRoleHolderAsUser(RoleManager.ROLE_HOME, 
++                            "com.android.launcher3", 0, android.os.Process.myUserHandle(),
++                            AsyncTask.THREAD_POOL_EXECUTOR, future::complete);
++                    break;
++            }
++        });
++        radioGroup.check(R.id.volla_home_volla_btn);
++    }
++
++    @Override
++    protected int getLayoutResId() {
++        return R.layout.setup_volla_home;
++    }
++
++    @Override
++    protected int getTitleResId() {
++        return R.string.volla_home_title;
++    }
++
++    @Override
++    protected int getIconResId() {
++        return R.drawable.ic_features;
++    }
++}
+-- 
+2.34.1
+
