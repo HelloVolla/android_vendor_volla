@@ -1,7 +1,7 @@
-From 8c5c440d598245faee5b848dff4052b9f1e6e3ce Mon Sep 17 00:00:00 2001
+From f0e2fa9f969222f8045287e840c7b120cb870dab Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Fri, 16 Jun 2023 16:57:01 +0330
-Subject: [PATCH 07/35] base: Introduce PropImitationHooks
+Subject: [PATCH] base: Introduce PropImitationHooks
 
 Change-Id: Icbf6ed3c736c385c0d40d182ee6fb03bcd6eea1e
 ---
@@ -11,10 +11,10 @@ Change-Id: Icbf6ed3c736c385c0d40d182ee6fb03bcd6eea1e
  create mode 100644 core/java/com/android/internal/util/PropImitationHooks.java
 
 diff --git a/core/java/android/app/Instrumentation.java b/core/java/android/app/Instrumentation.java
-index 7eacaac29d4b..5350e2b3ecf8 100644
+index 9938a19b498a..b71d908d37ff 100644
 --- a/core/java/android/app/Instrumentation.java
 +++ b/core/java/android/app/Instrumentation.java
-@@ -65,6 +65,7 @@ import android.view.Window;
+@@ -70,6 +70,7 @@ import android.view.Window;
  import android.view.WindowManagerGlobal;
  
  import com.android.internal.content.ReferrerIntent;
@@ -22,7 +22,7 @@ index 7eacaac29d4b..5350e2b3ecf8 100644
  
  import java.io.File;
  import java.lang.annotation.Retention;
-@@ -1356,6 +1357,7 @@ public class Instrumentation {
+@@ -1359,6 +1360,7 @@ public class Instrumentation {
          Application app = getFactory(context.getPackageName())
                  .instantiateApplication(cl, className);
          app.attach(context);
@@ -30,7 +30,7 @@ index 7eacaac29d4b..5350e2b3ecf8 100644
          return app;
      }
      
-@@ -1373,6 +1375,7 @@ public class Instrumentation {
+@@ -1377,6 +1379,7 @@ public class Instrumentation {
              ClassNotFoundException {
          Application app = (Application)clazz.newInstance();
          app.attach(context);

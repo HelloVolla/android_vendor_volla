@@ -1,0 +1,258 @@
+From 7fa7720090bd56afecba993a07389539ea0a2c50 Mon Sep 17 00:00:00 2001
+From: Dmitrii <bankersenator@gmail.com>
+Date: Wed, 4 Feb 2026 05:29:39 +0000
+Subject: [PATCH 3/3] SystemUI: fix roaming icon
+
+after google changes in QPR2
+Signed-off-by: Dmitrii <bankersenator@gmail.com>
+Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+---
+ .../mobile/ui/binder/MobileIconBinder.kt      |  9 ++++++++
+ .../ui/viewmodel/MobileIconViewModel.kt       | 14 +++++++++++++
+ .../ui/viewmodel/MobileIconViewModelKairos.kt | 21 +++++++++++++++++++
+ .../viewmodel/MobileIconsViewModelKairos.kt   |  1 +
+ .../viewmodel/StackedMobileIconViewModel.kt   | 20 ++++++++++++++++--
+ .../StackedMobileIconViewModelKairos.kt       | 11 +++++++++-
+ .../shared/ui/composable/StackedMobileIcon.kt |  2 +-
+ 7 files changed, 74 insertions(+), 4 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/binder/MobileIconBinder.kt b/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/binder/MobileIconBinder.kt
+index d834ddf58058..ad6f86564e62 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/binder/MobileIconBinder.kt
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/binder/MobileIconBinder.kt
+@@ -72,6 +72,7 @@ object MobileIconBinder {
+         val mobileDrawable = SignalDrawable(view.context)
+         val mobileHdView = view.requireViewById<ImageView>(R.id.mobile_hd)
+         val mobileHdSpace = view.requireViewById<Space>(R.id.mobile_hd_space)
++        val endSideRoamingView = view.requireViewById<ImageView>(R.id.mobile_roaming_updated)
+         val dotView = view.requireViewById<StatusBarIconView>(R.id.status_bar_dot)
+ 
+         view.isVisible = viewModel.isVisible.value
+@@ -230,6 +231,13 @@ object MobileIconBinder {
+                         }
+                     }
+ 
++                    // Set the roaming indicator (single SIM - end side)
++                    launch {
++                        viewModel.isRoamingVisible.distinctUntilChanged().collect { isRoaming ->
++                            endSideRoamingView.isVisible = isRoaming
++                        }
++                    }
++
+                     if (statusBarStaticInoutIndicators()) {
+                         // Set the opacity of the activity indicators
+                         launch {
+@@ -276,6 +284,7 @@ object MobileIconBinder {
+                                 networkTypeView.imageTintList = tint
+                             }
+ 
++                            endSideRoamingView.imageTintList = tint
+                             mobileHdView.imageTintList = tint
+                             activityIn.imageTintList = tint
+                             activityOut.imageTintList = tint
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MobileIconViewModel.kt b/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MobileIconViewModel.kt
+index 53726f996333..c4c038eaf834 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MobileIconViewModel.kt
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MobileIconViewModel.kt
+@@ -50,6 +50,7 @@ interface MobileIconViewModelCommon {
+     val icon: Flow<SignalIconModel>
+     val contentDescription: Flow<MobileContentDescription?>
+     val roaming: Flow<Boolean>
++    val isRoamingVisible: Flow<Boolean>
+     /** The RAT icon (LTE, 3G, 5G, etc) to be displayed. Null if we shouldn't show anything */
+     val networkTypeIcon: Flow<Icon.Resource?>
+     /** The slice attribution. Drawn as a background layer */
+@@ -126,6 +127,8 @@ class MobileIconViewModel(
+ 
+     override val roaming: Flow<Boolean> = vmProvider.flatMapLatest { it.roaming }
+ 
++    override val isRoamingVisible: Flow<Boolean> = vmProvider.flatMapLatest { it.isRoamingVisible }
++
+     override val networkTypeIcon: Flow<Icon.Resource?> =
+         vmProvider.flatMapLatest { it.networkTypeIcon }
+ 
+@@ -164,6 +167,7 @@ private class CarrierBasedSatelliteViewModelImpl(
+ 
+     /** These fields are not used for satellite icons currently */
+     override val roaming: Flow<Boolean> = flowOf(false)
++    override val isRoamingVisible: Flow<Boolean> = flowOf(false)
+     override val networkTypeIcon: Flow<Icon.Resource?> = flowOf(null)
+     override val networkTypeBackground: StateFlow<Icon.Resource?> = MutableStateFlow(null)
+     override val activityInVisible: Flow<Boolean> = flowOf(false)
+@@ -305,6 +309,16 @@ private class CellularIconViewModel(
+             )
+             .stateIn(scope, SharingStarted.WhileSubscribed(), false)
+ 
++    override val isRoamingVisible: StateFlow<Boolean> =
++        combine(
++                roaming,
++                iconInteractor.isRoamingForceHidden
++            ) { isRoaming, isHidden ->
++                isRoaming && !isHidden
++            }
++            .distinctUntilChanged()
++            .stateIn(scope, SharingStarted.WhileSubscribed(), false)
++
+     private val activity: Flow<DataActivityModel?> =
+         if (!constants.shouldShowActivityConfig) {
+             flowOf(null)
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MobileIconViewModelKairos.kt b/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MobileIconViewModelKairos.kt
+index 968c6acc6f1e..65b1645f3f1d 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MobileIconViewModelKairos.kt
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MobileIconViewModelKairos.kt
+@@ -50,6 +50,7 @@ interface MobileIconViewModelKairosCommon {
+     val icon: KairosState<SignalIconModel>
+     val contentDescription: KairosState<MobileContentDescription?>
+     val roaming: KairosState<Boolean>
++    val isRoamingVisible: KairosState<Boolean>
+     /** The RAT icon (LTE, 3G, 5G, etc) to be displayed. Null if we shouldn't show anything */
+     val networkTypeIcon: KairosState<Icon.Resource?>
+     /** The slice attribution. Drawn as a background layer */
+@@ -117,6 +118,8 @@ class MobileIconViewModelKairos(
+ 
+     override val roaming: KairosState<Boolean> = vmProvider.flatMap { it.roaming }
+ 
++    override val isRoamingVisible: KairosState<Boolean> = vmProvider.flatMap { it.isRoamingVisible }
++
+     override val networkTypeIcon: KairosState<Icon.Resource?> =
+         vmProvider.flatMap { it.networkTypeIcon }
+ 
+@@ -148,6 +151,7 @@ private class CarrierBasedSatelliteViewModelKairosImpl(
+ 
+     /** These fields are not used for satellite icons currently */
+     override val roaming: KairosState<Boolean> = stateOf(false)
++    override val isRoamingVisible: KairosState<Boolean> = stateOf(false)
+     override val networkTypeIcon: KairosState<Icon.Resource?> = stateOf(null)
+     override val networkTypeBackground: KairosState<Icon.Resource?> = stateOf(null)
+     override val activityInVisible: KairosState<Boolean> = stateOf(false)
+@@ -304,6 +308,23 @@ private class CellularIconViewModelKairos(
+             }
+         }
+ 
++    override val isRoamingVisible: KairosState<Boolean> =
++        combine(
++            iconInteractor.isRoaming,
++            iconInteractor.isRoamingForceHidden
++        ) { isRoaming, isHidden ->
++            isRoaming && !isHidden
++        }.also {
++            onActivated {
++                logDiffsForTable(
++                    name = nameTag { "CellularIconViewModelKairos(subId=$subscriptionId).isRoamingVisible" },
++                    it,
++                    iconInteractor.tableLogBuffer,
++                    columnName = "roamingVisible",
++                )
++            }
++        }
++
+     private val activity: KairosState<DataActivityModel?> =
+         if (!constants.shouldShowActivityConfig) {
+             stateOf(null)
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MobileIconsViewModelKairos.kt b/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MobileIconsViewModelKairos.kt
+index 520167f1a1c8..274b243d7bb1 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MobileIconsViewModelKairos.kt
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MobileIconsViewModelKairos.kt
+@@ -192,6 +192,7 @@ constructor(
+             override val contentDescription: State<MobileContentDescription?> =
+                 latest(null) { contentDescription }
+             override val roaming: State<Boolean> = latest(false) { roaming }
++            override val isRoamingVisible: KairosState<Boolean> = stateOf(false)
+             override val networkTypeIcon: State<Icon.Resource?> = latest(null) { networkTypeIcon }
+             override val networkTypeBackground: State<Icon.Resource?> =
+                 latest(null) { networkTypeBackground }
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/StackedMobileIconViewModel.kt b/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/StackedMobileIconViewModel.kt
+index 532dafef8bd7..8a86a6f2ee3a 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/StackedMobileIconViewModel.kt
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/StackedMobileIconViewModel.kt
+@@ -48,7 +48,7 @@ interface StackedMobileIconViewModel {
+     val activityContainerVisible: Boolean
+     /** [Context] to use when loading the [networkTypeIcon] */
+     val mobileContext: Context?
+-    val roaming: Boolean
++    val isRoamingVisible: Boolean
+     val isIconVisible: Boolean
+ }
+ 
+@@ -190,7 +190,7 @@ constructor(
+             initialValue = null,
+         )
+ 
+-    override val roaming: Boolean by
++    private val roaming: Boolean by
+         hydrator.hydratedStateOf(
+             traceName = "isRoaming",
+             source =
+@@ -211,6 +211,21 @@ constructor(
+             initialValue = false,
+         )
+ 
++    override val isRoamingVisible: Boolean by
++        hydrator.hydratedStateOf(
++            traceName = "isRoamingVisible",
++            source =
++                iconViewModelFlow.flatMapLatest { viewModels ->
++                    viewModels.firstOrNull()?.isRoamingVisible ?: flowOf(false)
++                }
++                .logDiffsForTable(
++                    tableLogBuffer = tableLogger,
++                    columnName = COL_ROAMING_VISIBLE,
++                    initialValue = false,
++                ),
++            initialValue = false,
++        )
++
+     override val isIconVisible: Boolean by
+         hydrator.hydratedStateOf(
+             traceName = "isIconVisible",
+@@ -245,5 +260,6 @@ constructor(
+     private companion object {
+         const val COL_IS_ICON_VISIBLE = "isIconVisible"
+         const val COL_ROAMING = "roam"
++        const val COL_ROAMING_VISIBLE = "roamVisible"
+     }
+ }
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/StackedMobileIconViewModelKairos.kt b/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/StackedMobileIconViewModelKairos.kt
+index 0cac207beffa..5b41b0106f23 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/StackedMobileIconViewModelKairos.kt
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/StackedMobileIconViewModelKairos.kt
+@@ -132,13 +132,22 @@ constructor(
+             initialValue = null,
+         )
+ 
+-    override val roaming: Boolean by
++    private val roaming: Boolean by
+         hydratedComposeStateOf(
+             name = "roaming",
+             source = iconList.flatMap { icons -> icons.firstOrNull()?.roaming ?: stateOf(false) },
+             initialValue = false,
+         )
+ 
++    override val isRoamingVisible: Boolean by
++        hydratedComposeStateOf(
++            name = "isRoamingVisible",
++            source = iconList.flatMap { icons -> 
++                icons.firstOrNull()?.isRoamingVisible ?: stateOf(false) 
++            },
++            initialValue = false,
++        )
++
+     override val isIconVisible: Boolean
+         get() = isStackable && dualSim != null
+ 
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/shared/ui/composable/StackedMobileIcon.kt b/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/shared/ui/composable/StackedMobileIcon.kt
+index 1e93ee0d4f64..1f35ef14b21d 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/shared/ui/composable/StackedMobileIcon.kt
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/pipeline/shared/ui/composable/StackedMobileIcon.kt
+@@ -123,7 +123,7 @@ fun StackedMobileIcon(viewModel: StackedMobileIconViewModel, modifier: Modifier
+             contentDescription = viewModel.contentDescription,
+         )
+ 
+-        if (viewModel.roaming) {
++        if (viewModel.isRoamingVisible) {
+             val height = with(LocalDensity.current) { RoamingIconHeightSp.toDp() }
+             val paddingTop = with(LocalDensity.current) { RoamingIconPaddingTopSp.toDp() }
+             Image(
+-- 
+2.34.1
+

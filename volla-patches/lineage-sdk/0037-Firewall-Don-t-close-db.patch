@@ -1,0 +1,41 @@
+From c572ce802bc55dbb2b13f312c740f15e02764cff Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Tue, 2 Jun 2026 20:55:53 +0330
+Subject: [PATCH] =?UTF-8?q?Firewall:=20Don=E2=80=99t=20close=20db?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Change-Id: I9c5aed705a131b99b6bacf4bd5925bf2ec1d899d
+---
+ .../lineageos/platform/internal/FirewallService.java   | 10 ----------
+ 1 file changed, 10 deletions(-)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index 17ff6613..2436aac3 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -1019,20 +1019,10 @@ public class FirewallService extends LineageSystemService {
+         SystemProperties.set("persist.volla.firewall.enable", enable ? "true" : "false");
+         SystemProperties.set("sys.volla.firewall.enable", enable ? "1" : "0");
+         if (enable) {
+-            if (mBlockDb == null) {
+-                mBlockDb = new FirewallBlockDatabase(mContext,
+-                    new File(Environment.getDataSystemCeDirectory(mUserId), "firewall_events.db")
+-                        .getAbsolutePath());
+-            }
+             mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
+             SystemProperties.set("ctl.start", "volla.dnsmasq");
+         } else {
+             SystemProperties.set("ctl.stop", "volla.dnsmasq");
+-            if (mBlockDb != null) {
+-                mBlockDb.checkpoint();
+-                mBlockDb.close();
+-                mBlockDb = null;
+-            }
+         }
+         mHandler.sendEmptyMessage(FirewallHandler.MSG_RESET_RESTRICTED_APPS);
+         activateWebServer(enable);
+-- 
+2.49.0
+

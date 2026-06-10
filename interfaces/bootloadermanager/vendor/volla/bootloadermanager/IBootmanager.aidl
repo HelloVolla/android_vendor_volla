@@ -10,4 +10,6 @@ interface IBootmanager {
     boolean dmsetup_remove(String name);
     boolean mount(String device, String path);
     boolean umount(String path);
+    boolean rereadpt(String path);
+    boolean copy(String src, String dst);
 }

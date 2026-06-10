@@ -1,0 +1,173 @@
+From 9d8e356a3c6663b2c7ee085d2834d6ef03274759 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Wed, 27 May 2026 05:38:51 +0330
+Subject: [PATCH] =?UTF-8?q?Firewall:=20Don=E2=80=99t=20keep=20lists=20in?=
+ =?UTF-8?q?=20memory?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Change-Id: I686ba2bd719653ed0ec0c239016da7d378dbc572
+---
+ .../platform/internal/FirewallService.java    | 75 ++++++++++++++-----
+ 1 file changed, 58 insertions(+), 17 deletions(-)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index e5f834ad..461529c5 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -124,7 +124,7 @@ public class FirewallService extends LineageSystemService {
+     private final ArrayList<String> mManualDomainsList = new ArrayList<String>();
+     private final ArrayList<String> mAppsList = new ArrayList<String>();
+     private final ArrayList<DomainListInfo> mDomainListInfoList = new ArrayList<DomainListInfo>();
+-    private final ArrayMap<String, List<String>> mDomainListDomains = new ArrayMap<>();
++    private final ArrayMap<String, List<String>> mPendingDomainListAdds = new ArrayMap<>();
+ 
+     public FirewallService(Context context) {
+         super(context);
+@@ -439,7 +439,7 @@ public class FirewallService extends LineageSystemService {
+     private void readDomainListsState() {
+         if (DEBUG_FIREWALL) Slog.v(TAG, "readDomainListsState()");
+         mDomainListInfoList.clear();
+-        mDomainListDomains.clear();
++        mPendingDomainListAdds.clear();
+         try (FileInputStream in = mDomainListsFile.openRead()) {
+             XmlPullParser parser = Xml.newPullParser();
+             parser.setInput(in, null);
+@@ -494,9 +494,8 @@ public class FirewallService extends LineageSystemService {
+                 }
+                 info.isBlacklist = Boolean.parseBoolean(
+                         parser.getAttributeValue(null, ATTRIBUTE_BLACKLIST));
+-                List<String> domains = parseDomainListDomains(parser);
++                parseDomainListDomains(parser); // advance past domain children, not stored in memory
+                 mDomainListInfoList.add(info);
+-                mDomainListDomains.put(info.id, domains);
+                 if (DEBUG_FIREWALL) Slog.v(TAG, "parseDomainLists(): id=" + info.id);
+             }
+         }
+@@ -521,9 +520,47 @@ public class FirewallService extends LineageSystemService {
+         return domains;
+     }
+ 
++    private ArrayMap<String, List<String>> readDomainListDomainsFromFile() {
++        ArrayMap<String, List<String>> result = new ArrayMap<>();
++        if (mDomainListsFile == null) return result;
++        try (FileInputStream in = mDomainListsFile.openRead()) {
++            XmlPullParser parser = Xml.newPullParser();
++            parser.setInput(in, null);
++            int type;
++            int depth;
++            int innerDepth = parser.getDepth() + 1;
++            while ((type = parser.next()) != XmlPullParser.END_DOCUMENT
++                    && ((depth = parser.getDepth()) >= innerDepth || type != XmlPullParser.END_TAG)) {
++                if (depth > innerDepth || type != XmlPullParser.START_TAG) continue;
++                if (parser.getName().equals(TAG_LISTED_DOMAIN_LISTS)) {
++                    int outerDepth = parser.getDepth() + 1;
++                    while ((type = parser.next()) != XmlPullParser.END_DOCUMENT
++                            && ((depth = parser.getDepth()) >= outerDepth || type != XmlPullParser.END_TAG)) {
++                        if (depth > outerDepth || type != XmlPullParser.START_TAG) continue;
++                        if (parser.getName().equals(TAG_DOMAIN_LIST)) {
++                            String id = parser.getAttributeValue(null, ATTRIBUTE_ID);
++                            List<String> domains = parseDomainListDomains(parser);
++                            if (id != null) result.put(id, domains);
++                        }
++                    }
++                    return result;
++                }
++            }
++        } catch (FileNotFoundException e) {
++            // no file yet
++        } catch (XmlPullParserException | IOException e) {
++            Slog.e(TAG, "Failed to read domain list domains from file", e);
++        }
++        return result;
++    }
++
+     private void writeDomainListsState() {
+         if (DEBUG_FIREWALL) Slog.v(TAG, "writeDomainListsState()");
+ 
++        ArrayMap<String, List<String>> domains = readDomainListDomainsFromFile();
++        domains.putAll(mPendingDomainListAdds);
++        mPendingDomainListAdds.clear();
++
+         FileOutputStream out = null;
+         try {
+             out = mDomainListsFile.startWrite();
+@@ -532,7 +569,7 @@ public class FirewallService extends LineageSystemService {
+             serializer.setFeature(
+                     "http://xmlpull.org/v1/doc/features.html#indent-output", true);
+             serializer.startDocument(null, true);
+-            serializeDomainLists(serializer);
++            serializeDomainLists(serializer, domains);
+             serializer.endDocument();
+             mDomainListsFile.finishWrite(out);
+             if (DEBUG_FIREWALL) Slog.v(TAG, "Wrote " + DOMAIN_LISTS_FILE_NAME + " successfully");
+@@ -546,7 +583,8 @@ public class FirewallService extends LineageSystemService {
+         }
+     }
+ 
+-    private void serializeDomainLists(XmlSerializer serializer) throws IOException {
++    private void serializeDomainLists(XmlSerializer serializer,
++            ArrayMap<String, List<String>> domains) throws IOException {
+         serializer.startTag(null, TAG_LISTED_DOMAIN_LISTS);
+         for (DomainListInfo info : new ArrayList<>(mDomainListInfoList)) {
+             serializer.startTag(null, TAG_DOMAIN_LIST);
+@@ -555,9 +593,9 @@ public class FirewallService extends LineageSystemService {
+             serializer.attribute(null, ATTRIBUTE_URL, info.url);
+             serializer.attribute(null, ATTRIBUTE_VERSION, String.valueOf(info.version));
+             serializer.attribute(null, ATTRIBUTE_BLACKLIST, String.valueOf(info.isBlacklist));
+-            List<String> domains = mDomainListDomains.get(info.id);
+-            if (domains != null) {
+-                for (String domain : domains) {
++            List<String> list = domains.get(info.id);
++            if (list != null) {
++                for (String domain : list) {
+                     serializer.startTag(null, TAG_DOMAIN);
+                     serializer.attribute(null, ATTRIBUTE_NAME, domain);
+                     serializer.endTag(null, TAG_DOMAIN);
+@@ -577,9 +615,9 @@ public class FirewallService extends LineageSystemService {
+             }
+         }
+         mDomainListInfoList.add(info);
+-        mDomainListDomains.put(info.id, new ArrayList<>(domains));
+-        mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
++        mPendingDomainListAdds.put(info.id, new ArrayList<>(domains));
+         mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_DOMAIN_LISTS_STATE);
++        mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
+     }
+ 
+     private void removeDomainList(String id) {
+@@ -595,10 +633,10 @@ public class FirewallService extends LineageSystemService {
+             if (DEBUG_FIREWALL) Slog.v(TAG, "removeDomainList: id not found");
+             return;
+         }
+-        mDomainListDomains.remove(id);
++        mPendingDomainListAdds.remove(id);
+         mDomainListInfoList.remove(target);
+-        mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
+         mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_DOMAIN_LISTS_STATE);
++        mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
+     }
+ 
+     private List<DomainListInfo> getDomainLists() {
+@@ -609,10 +647,13 @@ public class FirewallService extends LineageSystemService {
+         ArrayList<String> confLines = new ArrayList<String>();
+         boolean blacklist = isBlacklistMode();
+         ArrayList<String> allDomains = new ArrayList<>(mManualDomainsList);
+-        for (DomainListInfo info : mDomainListInfoList) {
+-            if (info.isBlacklist == blacklist) {
+-                List<String> listDomains = mDomainListDomains.get(info.id);
+-                if (listDomains != null) allDomains.addAll(listDomains);
++        if (!mDomainListInfoList.isEmpty()) {
++            ArrayMap<String, List<String>> listDomains = readDomainListDomainsFromFile();
++            for (DomainListInfo info : mDomainListInfoList) {
++                if (info.isBlacklist == blacklist) {
++                    List<String> domains = listDomains.get(info.id);
++                    if (domains != null) allDomains.addAll(domains);
++                }
+             }
+         }
+         File dnsmasqDir = new File(Environment.getDataSystemCeDirectory(0), "dnsmasq");
+-- 
+2.49.0
+

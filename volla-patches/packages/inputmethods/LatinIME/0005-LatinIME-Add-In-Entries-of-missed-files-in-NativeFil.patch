@@ -1,8 +1,8 @@
-From f6ae88b4aad01ddb132dfab898c347a34f9e42e3 Mon Sep 17 00:00:00 2001
+From 3c169733d0142f3b331a5ec0085f3baa74c020f1 Mon Sep 17 00:00:00 2001
 From: techyminati <sinha.aryan03@gmail.com>
 Date: Thu, 14 Mar 2024 21:47:52 +0530
-Subject: [PATCH 5/7] LatinIME: Add-In Entries of missed files in
- NativeFileList makefile
+Subject: [PATCH] LatinIME: Add-In Entries of missed files in NativeFileList
+ makefile
 
 * Fixes Standalone building
 
@@ -13,7 +13,7 @@ Signed-off-by: techyminati <sinha.aryan03@gmail.com>
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/native/jni/NativeFileList.mk b/native/jni/NativeFileList.mk
-index dbe1d809a6..a84fa3f327 100644
+index dbe1d809a..a84fa3f32 100644
 --- a/native/jni/NativeFileList.mk
 +++ b/native/jni/NativeFileList.mk
 @@ -87,7 +87,11 @@ LATIN_IME_CORE_SRC_FILES := \
@@ -37,5 +37,5 @@ index dbe1d809a6..a84fa3f327 100644
 \ No newline at end of file
 +    utils/time_keeper_test.cpp
 -- 
-2.34.1
+2.49.0
 

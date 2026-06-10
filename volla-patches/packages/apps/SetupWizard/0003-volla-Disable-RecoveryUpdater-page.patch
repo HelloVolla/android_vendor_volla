@@ -1,17 +1,17 @@
-From 68158524a875a97d6c0523dd72244381210d30ee Mon Sep 17 00:00:00 2001
+From 3b7917cdd0c5287b341ddd8b0a682df14201b616 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Fri, 14 Jan 2022 17:45:57 +0330
-Subject: [PATCH 3/8] volla: Disable RecoveryUpdater page
+Subject: [PATCH] volla: Disable RecoveryUpdater page
 
 ---
  .../setupwizard/util/SetupWizardUtils.java       | 16 +---------------
  1 file changed, 1 insertion(+), 15 deletions(-)
 
 diff --git a/src/org/lineageos/setupwizard/util/SetupWizardUtils.java b/src/org/lineageos/setupwizard/util/SetupWizardUtils.java
-index 8315523..9188237 100644
+index 3dd35a5..f0d4eb0 100644
 --- a/src/org/lineageos/setupwizard/util/SetupWizardUtils.java
 +++ b/src/org/lineageos/setupwizard/util/SetupWizardUtils.java
-@@ -90,21 +90,7 @@ public class SetupWizardUtils {
+@@ -86,21 +86,7 @@ public class SetupWizardUtils {
      }
  
      public static boolean hasRecoveryUpdater(Context context) {
@@ -35,5 +35,5 @@ index 8315523..9188237 100644
  
      public static boolean isOwner() {
 -- 
-2.34.1
+2.49.0
 

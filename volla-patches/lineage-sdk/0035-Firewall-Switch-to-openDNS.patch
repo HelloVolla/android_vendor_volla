@@ -1,0 +1,26 @@
+From cab6dc18024b4144ba2fc4abbd28de651ab3d99e Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Tue, 2 Jun 2026 20:29:09 +0330
+Subject: [PATCH] Firewall: Switch to openDNS
+
+Change-Id: I9e9afcffda96dfba555f2e630df954ecf54db945
+---
+ .../java/org/lineageos/platform/internal/FirewallService.java   | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index be310e06..a0366e24 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -163,7 +163,7 @@ public class FirewallService extends LineageSystemService {
+     private static final String ATTRIBUTE_URL = "url";
+     private static final String ATTRIBUTE_VERSION = "version";
+     private static final String ATTRIBUTE_BLACKLIST = "isBlacklist";
+-    private static final String COMMON_DNS = "1.1.1.1";
++    private static final String COMMON_DNS = "208.67.220.220";
+     private static final long AIRPLANE_RECONNECT_TIMEOUT_MS = 60_000L;
+     private static final long AIRPLANE_RECONNECT_POLL_MS = 3_000L;
+     private static final String ANDROID_KEYSTORE = "AndroidKeyStore";
+-- 
+2.49.0
+

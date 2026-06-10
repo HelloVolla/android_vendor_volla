@@ -1,2 +1,2 @@
 on post-fs
-     exec u:r:imei_restore:s0 -- restorecon -Rv /mnt/vendor/protect_f/* /mnt/vendor/nvdata/*
+     exec u:r:imei_restore:s0 -- restorecon -Rv /mnt/vendor/protect_f/* /mnt/vendor/nvdata/* /mnt/vendor/protect_s/md/*

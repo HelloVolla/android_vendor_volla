@@ -1,0 +1,433 @@
+From 9df4bba530acd2251bdcea40e0db5ee717169ce7 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Thu, 28 May 2026 08:35:16 +0330
+Subject: [PATCH] Firewall: Generate SSL certs on fly
+
+Change-Id: I187708206d2fdd1a5ced4d78919e06970f331a69
+---
+ Android.bp                                    |   1 +
+ .../platform/internal/FirewallService.java    | 336 ++++++++++++++++--
+ 2 files changed, 313 insertions(+), 24 deletions(-)
+
+diff --git a/Android.bp b/Android.bp
+index 2b3a7c49..c77052bb 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -92,6 +92,7 @@ java_defaults {
+         "vendor.lineage.livedisplay-V1-java",
+         "vendor.lineage.touch-V1-java",
+         "org.nanohttpd",
++        "bouncycastle-repackaged-unbundled",
+     ],
+ }
+ 
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index 0d48f84a..64669b59 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -63,17 +63,67 @@ import java.io.IOException;
+ import java.io.InputStream;
+ import java.net.InetSocketAddress;
+ import java.net.Socket;
++import android.security.keystore.KeyGenParameterSpec;
++import android.security.keystore.KeyProperties;
++import com.android.internal.org.bouncycastle.asn1.x509.BasicConstraints;
++import com.android.internal.org.bouncycastle.asn1.x509.Extension;
++import com.android.internal.org.bouncycastle.asn1.x509.GeneralName;
++import com.android.internal.org.bouncycastle.asn1.x509.GeneralNames;
++import com.android.internal.org.bouncycastle.asn1.x509.KeyUsage;
++import com.android.internal.org.bouncycastle.asn1.ASN1Encodable;
++import com.android.internal.org.bouncycastle.asn1.ASN1EncodableVector;
++import com.android.internal.org.bouncycastle.asn1.ASN1Integer;
++import com.android.internal.org.bouncycastle.asn1.ASN1ObjectIdentifier;
++import com.android.internal.org.bouncycastle.asn1.ASN1Primitive;
++import com.android.internal.org.bouncycastle.asn1.ASN1Sequence;
++import com.android.internal.org.bouncycastle.asn1.ASN1Set;
++import com.android.internal.org.bouncycastle.asn1.ASN1String;
++import com.android.internal.org.bouncycastle.asn1.DERBitString;
++import com.android.internal.org.bouncycastle.asn1.DERSequence;
++import com.android.internal.org.bouncycastle.asn1.DERSet;
++import com.android.internal.org.bouncycastle.asn1.DERIA5String;
++import com.android.internal.org.bouncycastle.asn1.DERUTF8String;
++import com.android.internal.org.bouncycastle.asn1.x500.X500Name;
++import com.android.internal.org.bouncycastle.asn1.x509.AlgorithmIdentifier;
++import com.android.internal.org.bouncycastle.asn1.x509.ExtensionsGenerator;
++import com.android.internal.org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
++import com.android.internal.org.bouncycastle.asn1.x509.TBSCertificate;
++import com.android.internal.org.bouncycastle.asn1.x509.Time;
++import com.android.internal.org.bouncycastle.asn1.x509.V3TBSCertificateGenerator;
++import java.io.ByteArrayInputStream;
++import java.security.Signature;
++import java.math.BigInteger;
++import java.security.MessageDigest;
++import java.util.Base64;
++import java.security.InvalidAlgorithmParameterException;
++import java.security.KeyPair;
++import java.security.KeyPairGenerator;
+ import java.security.KeyStore;
+ import java.security.KeyStoreException;
+ import java.security.NoSuchAlgorithmException;
++import java.security.PrivateKey;
++import java.security.PublicKey;
+ import java.security.UnrecoverableKeyException;
+ import java.security.cert.CertificateException;
+-import javax.net.ssl.KeyManagerFactory;
++import java.security.cert.CertificateFactory;
++import java.security.cert.X509Certificate;
++import java.security.spec.ECGenParameterSpec;
++import java.util.Date;
++import javax.net.ssl.ExtendedSSLSession;
++import javax.net.ssl.SSLEngine;
++import javax.net.ssl.KeyManager;
++import javax.net.ssl.SNIServerName;
++import javax.net.ssl.SSLContext;
++import javax.net.ssl.SSLSession;
++import javax.net.ssl.SSLSocket;
++import javax.net.ssl.X509ExtendedKeyManager;
+ import java.nio.charset.StandardCharsets;
+ import java.nio.file.Files;
+ import java.nio.file.Paths;
+ import java.util.ArrayList;
+ import java.util.List;
++import java.util.Locale;
++import javax.security.auth.x500.X500Principal;
+ import java.util.stream.IntStream;
+ import java.util.Set;
+ 
+@@ -109,6 +159,12 @@ public class FirewallService extends LineageSystemService {
+     private static final String COMMON_DNS = "1.1.1.1";
+     private static final long AIRPLANE_RECONNECT_TIMEOUT_MS = 60_000L;
+     private static final long AIRPLANE_RECONNECT_POLL_MS = 3_000L;
++    private static final String ANDROID_KEYSTORE = "AndroidKeyStore";
++    private static final String CA_KEY_ALIAS = "volla_firewall_ca";
++    private static final String CA_CERT_FILE = "firewall_ca.der";
++    private static final long LEAF_CERT_TTL_MS = 3_600_000L;
++    private static final AlgorithmIdentifier ECDSA_SHA256_ALG =
++        new AlgorithmIdentifier(new ASN1ObjectIdentifier("1.2.840.10045.4.3.2"));
+ 
+     private int mUserId;
+     private Context mContext;
+@@ -131,6 +187,11 @@ public class FirewallService extends LineageSystemService {
+     private final ArrayMap<String, List<String>> mPendingDomainListAdds = new ArrayMap<>();
+     private long mAirplaneRefreshDeadline = 0;
+ 
++    private X509Certificate mCACert;
++    private PrivateKey mCAPrivateKey;
++    private final Object mCertLock = new Object();
++    private final ArrayMap<String, LeafCertEntry> mLeafCertCache = new ArrayMap<>();
++
+     public FirewallService(Context context) {
+         super(context);
+ 
+@@ -158,6 +219,11 @@ public class FirewallService extends LineageSystemService {
+         if (!UserManager.get(mContext).isManagedProfile(userHandle)) {
+             if (DEBUG_FIREWALL) Slog.v(TAG, "onUserUnlocking() is NOT ManagedProfile");
+             mUserId = userHandle;
++            initCA();
++            if (isActivate()) {
++                SystemProperties.set("ctl.start", "volla.dnsmasq");
++                activateWebServer(true);
++            }
+             mHandler.sendEmptyMessage(FirewallHandler.MSG_INIT_DOMAINS);
+             mHandler.sendEmptyMessage(FirewallHandler.MSG_INIT_APPS);
+             mHandler.sendEmptyMessage(FirewallHandler.MSG_INIT_DOMAIN_LISTS);
+@@ -173,11 +239,6 @@ public class FirewallService extends LineageSystemService {
+             mPolicyManager = (NetworkPolicyManager) mContext
+                 .getSystemService(Context.NETWORK_POLICY_SERVICE);
+ 
+-            if (isActivate()) {
+-                SystemProperties.set("ctl.start", "volla.dnsmasq");
+-                activateWebServer(true);
+-            }
+-
+             IntentFilter airplaneFilter = new IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+             mContext.registerReceiver(mAirplaneModeReceiver, airplaneFilter);
+         }
+@@ -263,6 +324,193 @@ public class FirewallService extends LineageSystemService {
+         }
+     }
+ 
++    private static final class LeafCertEntry {
++        final X509Certificate cert;
++        final PrivateKey key;
++        final long expiresAt;
++
++        LeafCertEntry(X509Certificate cert, PrivateKey key, long expiresAt) {
++            this.cert = cert;
++            this.key = key;
++            this.expiresAt = expiresAt;
++        }
++    }
++
++    private void initCA() {
++        Slog.i(TAG, "initCA: starting");
++        try {
++            KeyStore ks = KeyStore.getInstance(ANDROID_KEYSTORE);
++            ks.load(null);
++            Slog.i(TAG, "initCA: keystore opened, alias exists=" + ks.containsAlias(CA_KEY_ALIAS));
++            if (!ks.containsAlias(CA_KEY_ALIAS)) {
++                Slog.i(TAG, "initCA: generating EC key pair in TEE");
++                KeyPairGenerator kpg = KeyPairGenerator.getInstance(
++                    KeyProperties.KEY_ALGORITHM_EC, ANDROID_KEYSTORE);
++                kpg.initialize(new KeyGenParameterSpec.Builder(
++                    CA_KEY_ALIAS, KeyProperties.PURPOSE_SIGN)
++                    .setDigests(KeyProperties.DIGEST_SHA256)
++                    .setAlgorithmParameterSpec(new ECGenParameterSpec("secp256r1"))
++                    .build());
++                kpg.generateKeyPair();
++                Slog.i(TAG, "initCA: key pair generated");
++            }
++            mCAPrivateKey = (PrivateKey) ks.getKey(CA_KEY_ALIAS, null);
++            Slog.i(TAG, "initCA: private key=" + (mCAPrivateKey != null ? mCAPrivateKey.getClass().getName() : "null"));
++            PublicKey caPub = ks.getCertificate(CA_KEY_ALIAS).getPublicKey();
++            Slog.i(TAG, "initCA: public key algorithm=" + caPub.getAlgorithm());
++
++            File caCertFile = new File(Environment.getDataSystemDirectory(), CA_CERT_FILE);
++            Slog.i(TAG, "initCA: cert file=" + caCertFile + " exists=" + caCertFile.exists());
++            if (caCertFile.exists()) {
++                byte[] der = Files.readAllBytes(Paths.get(caCertFile.getAbsolutePath()));
++                Slog.i(TAG, "initCA: loading existing CA cert (" + der.length + " bytes)");
++                mCACert = (X509Certificate) CertificateFactory.getInstance("X.509")
++                    .generateCertificate(new ByteArrayInputStream(der));
++            } else {
++                Slog.i(TAG, "initCA: building new CA cert with BouncyCastle");
++                X500Name caName = new X500Name("CN=Volla Firewall CA");
++                Date now = new Date();
++                Date expiry = new Date(now.getTime() + 10L * 365 * 24 * 60 * 60 * 1000);
++                ExtensionsGenerator extGen = new ExtensionsGenerator();
++                extGen.addExtension(Extension.basicConstraints, true, new BasicConstraints(true));
++                extGen.addExtension(Extension.keyUsage, true,
++                    new KeyUsage(KeyUsage.keyCertSign | KeyUsage.cRLSign));
++                mCACert = buildSignedCert(caName, caName, BigInteger.ONE, now, expiry,
++                    caPub, extGen);
++                Slog.i(TAG, "initCA: CA cert built, subject=" + mCACert.getSubjectDN());
++                Files.write(Paths.get(caCertFile.getAbsolutePath()), mCACert.getEncoded());
++                Slog.i(TAG, "initCA: CA cert written to " + caCertFile);
++                installToSystemCaStore(mCACert);
++            }
++            long hash = canonicalSubjectHash(mCACert.getSubjectX500Principal());
++            File userCaFile = new File("/data/misc/user/" + mUserId + "/cacerts-added",
++                String.format("%08x.0", hash));
++            if (!userCaFile.exists()) {
++                Slog.i(TAG, "initCA: CA missing from user store, reinstalling: " + userCaFile);
++                installToSystemCaStore(mCACert);
++            }
++            Slog.i(TAG, "initCA: done, CA=" + mCACert.getSubjectDN()
++                + " valid until " + mCACert.getNotAfter());
++        } catch (Exception e) {
++            Slog.e(TAG, "initCA: FAILED", e);
++        }
++    }
++
++    private X509Certificate buildSignedCert(X500Name issuer, X500Name subject, BigInteger serial,
++            Date notBefore, Date notAfter, PublicKey pubKey, ExtensionsGenerator extGen)
++            throws Exception {
++        V3TBSCertificateGenerator tbsGen = new V3TBSCertificateGenerator();
++        tbsGen.setSerialNumber(new ASN1Integer(serial));
++        tbsGen.setSignature(ECDSA_SHA256_ALG);
++        tbsGen.setIssuer(issuer);
++        tbsGen.setStartDate(new Time(notBefore));
++        tbsGen.setEndDate(new Time(notAfter));
++        tbsGen.setSubject(subject);
++        tbsGen.setSubjectPublicKeyInfo(SubjectPublicKeyInfo.getInstance(pubKey.getEncoded()));
++        if (extGen != null) {
++            tbsGen.setExtensions(extGen.generate());
++        }
++        TBSCertificate tbsCert = tbsGen.generateTBSCertificate();
++
++        Signature sig = Signature.getInstance("SHA256withECDSA");
++        sig.initSign(mCAPrivateKey);
++        sig.update(tbsCert.getEncoded());
++        byte[] sigBytes = sig.sign();
++
++        ASN1EncodableVector cv = new ASN1EncodableVector();
++        cv.add(tbsCert);
++        cv.add(ECDSA_SHA256_ALG);
++        cv.add(new DERBitString(sigBytes));
++        return (X509Certificate) CertificateFactory.getInstance("X.509")
++            .generateCertificate(new ByteArrayInputStream(new DERSequence(cv).getEncoded()));
++    }
++
++    private void installToSystemCaStore(X509Certificate cert) {
++        try {
++            File dir = new File("/data/misc/user/" + mUserId + "/cacerts-added");
++            dir.mkdirs();
++            long h = canonicalSubjectHash(cert.getSubjectX500Principal());
++            File certFile = new File(dir, String.format("%08x.0", h));
++            if (!certFile.exists()) {
++                byte[] pem = ("-----BEGIN CERTIFICATE-----\n"
++                    + Base64.getMimeEncoder(64, new byte[]{'\n'}).encodeToString(cert.getEncoded())
++                    + "\n-----END CERTIFICATE-----\n").getBytes(StandardCharsets.UTF_8);
++                Files.write(certFile.toPath(), pem);
++                certFile.setReadable(true, false);
++                Slog.i(TAG, "CA installed to user store: " + certFile);
++            }
++        } catch (Exception e) {
++            Slog.e(TAG, "Failed to install CA to system store", e);
++        }
++    }
++
++    // OpenSSL X509_NAME_hash: SHA-1 of the concatenated canonical DER encodings of each RDN SET,
++    // WITHOUT the outer SEQUENCE wrapper. String values (UTF8String/IA5String) are lowercased,
++    // trimmed, and whitespace-collapsed. Other types (PrintableString, etc.) are copied as-is.
++    private static long canonicalSubjectHash(X500Principal principal) throws Exception {
++        byte[] encoded = principal.getEncoded();
++        ASN1Sequence outer = ASN1Sequence.getInstance(ASN1Primitive.fromByteArray(encoded));
++        ByteArrayOutputStream baos = new ByteArrayOutputStream();
++        for (int i = 0; i < outer.size(); i++) {
++            ASN1Set rdnSet = ASN1Set.getInstance(outer.getObjectAt(i));
++            ASN1EncodableVector rdnVec = new ASN1EncodableVector();
++            for (int j = 0; j < rdnSet.size(); j++) {
++                ASN1Sequence atv = ASN1Sequence.getInstance(rdnSet.getObjectAt(j));
++                ASN1ObjectIdentifier oid = ASN1ObjectIdentifier.getInstance(atv.getObjectAt(0));
++                ASN1Encodable value = atv.getObjectAt(1);
++                if (value instanceof DERUTF8String || value instanceof DERIA5String) {
++                    String s = ((ASN1String) value).getString()
++                        .toLowerCase(Locale.ROOT).trim().replaceAll("\\s+", " ");
++                    value = new DERUTF8String(s);
++                }
++                ASN1EncodableVector atvVec = new ASN1EncodableVector();
++                atvVec.add(oid);
++                atvVec.add(value);
++                rdnVec.add(new DERSequence(atvVec));
++            }
++            baos.write(new DERSet(rdnVec).getEncoded());
++        }
++        byte[] hash = MessageDigest.getInstance("SHA-1").digest(baos.toByteArray());
++        return (hash[0] & 0xFFL) | ((hash[1] & 0xFFL) << 8)
++             | ((hash[2] & 0xFFL) << 16) | ((hash[3] & 0xFFL) << 24);
++    }
++
++    private LeafCertEntry generateLeafCert(String hostname) {
++        synchronized (mCertLock) {
++            LeafCertEntry cached = mLeafCertCache.get(hostname);
++            if (cached != null && System.currentTimeMillis() < cached.expiresAt) {
++                return cached;
++            }
++        }
++        if (mCACert == null || mCAPrivateKey == null) return null;
++        try {
++            KeyPairGenerator kpg = KeyPairGenerator.getInstance("EC");
++            kpg.initialize(new ECGenParameterSpec("secp256r1"));
++            KeyPair leafKp = kpg.generateKeyPair();
++
++            X500Name issuer = X500Name.getInstance(mCACert.getSubjectX500Principal().getEncoded());
++            X500Name subject = new X500Name("CN=" + hostname);
++            Date now = new Date();
++            Date expiry = new Date(now.getTime() + 24L * 60 * 60 * 1000);
++            ExtensionsGenerator extGen = new ExtensionsGenerator();
++            extGen.addExtension(Extension.subjectAlternativeName, false,
++                new GeneralNames(new GeneralName(GeneralName.dNSName, hostname)));
++            X509Certificate leafCert = buildSignedCert(issuer, subject,
++                BigInteger.valueOf(System.currentTimeMillis()), now, expiry,
++                leafKp.getPublic(), extGen);
++
++            LeafCertEntry entry = new LeafCertEntry(leafCert, leafKp.getPrivate(),
++                System.currentTimeMillis() + LEAF_CERT_TTL_MS);
++            synchronized (mCertLock) {
++                mLeafCertCache.put(hostname, entry);
++            }
++            return entry;
++        } catch (Exception e) {
++            Slog.e(TAG, "Failed to generate leaf cert for " + hostname, e);
++            return null;
++        }
++    }
++
+     private void initLockedDomains() {
+         if (DEBUG_FIREWALL) Slog.v(TAG, "initLockedDomains(" + mUserId + ")");
+         mDomainsFile = new AtomicFile(getDomainsFile());
+@@ -1016,6 +1264,59 @@ public class FirewallService extends LineageSystemService {
+         }
+     }
+ 
++    private class SNIKeyManager extends X509ExtendedKeyManager {
++        private String extractSNI(SSLSession session) {
++            if (session instanceof ExtendedSSLSession) {
++                List<SNIServerName> names =
++                    ((ExtendedSSLSession) session).getRequestedServerNames();
++                if (names != null && !names.isEmpty()) {
++                    String sni = new String(names.get(0).getEncoded(), StandardCharsets.US_ASCII);
++                    if (DEBUG_FIREWALL) Slog.v(TAG, "SNIKeyManager: SNI=" + sni);
++                    return sni;
++                }
++            }
++            return null;
++        }
++
++        @Override
++        public String chooseEngineServerAlias(String keyType,
++                java.security.Principal[] issuers, javax.net.ssl.SSLEngine engine) {
++            String sni = extractSNI(engine.getHandshakeSession());
++            return sni != null ? sni : "blocked.local";
++        }
++
++        @Override
++        public String chooseServerAlias(String keyType, java.security.Principal[] issuers,
++                java.net.Socket socket) {
++            if (socket instanceof SSLSocket) {
++                String sni = extractSNI(((SSLSocket) socket).getHandshakeSession());
++                if (sni != null) return sni;
++            }
++            return "blocked.local";
++        }
++
++        @Override
++        public X509Certificate[] getCertificateChain(String alias) {
++            LeafCertEntry entry = generateLeafCert(alias);
++            if (entry == null || mCACert == null) return null;
++            return new X509Certificate[]{entry.cert, mCACert};
++        }
++
++        @Override
++        public PrivateKey getPrivateKey(String alias) {
++            LeafCertEntry entry = generateLeafCert(alias);
++            return entry != null ? entry.key : null;
++        }
++
++        @Override
++        public String[] getClientAliases(String kt, java.security.Principal[] i) { return null; }
++        @Override
++        public String[] getServerAliases(String kt, java.security.Principal[] i) { return null; }
++        @Override
++        public String chooseClientAlias(String[] kt, java.security.Principal[] i,
++                java.net.Socket s) { return null; }
++    }
++
+     public class HttpWebServer extends NanoHTTPD {
+         public HttpWebServer() {
+             super(80);
+@@ -1030,25 +1331,12 @@ public class FirewallService extends LineageSystemService {
+     public class HttpsWebServer extends NanoHTTPD {
+         public HttpsWebServer() {
+             super(443);
+-            KeyStore keyStore = null;
+             try {
+-                keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+-                File initialFile = new File("/system/etc/localhost.bks");
+-                InputStream keyStoreStream = new FileInputStream(initialFile);
+-                keyStore.load(keyStoreStream, "myKeyStorePass".toCharArray());
+-                KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+-                keyManagerFactory.init(keyStore, "myKeyStorePass".toCharArray());
+-                makeSecure(NanoHTTPD.makeSSLSocketFactory(keyStore, keyManagerFactory), null);
+-            } catch (KeyStoreException e) {
+-                e.printStackTrace();
+-            } catch (UnrecoverableKeyException e) {
+-                e.printStackTrace();
+-            } catch (CertificateException e) {
+-                e.printStackTrace();
+-            } catch (IOException e) {
+-                e.printStackTrace();
+-            } catch (NoSuchAlgorithmException e) {
+-                e.printStackTrace();
++                SSLContext sslContext = SSLContext.getInstance("TLS");
++                sslContext.init(new KeyManager[]{new SNIKeyManager()}, null, null);
++                makeSecure(sslContext.getServerSocketFactory(), null);
++            } catch (Exception e) {
++                Slog.e(TAG, "Failed to create HTTPS server", e);
+             }
+         }
+ 
+-- 
+2.49.0
+

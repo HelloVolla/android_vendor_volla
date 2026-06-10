@@ -1,0 +1,229 @@
+From ca8a9228cd0083e35abf26bfe30a7fde5d548cc1 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Tue, 2 Jun 2026 11:34:25 +0330
+Subject: [PATCH] Firewall: Block all DoH
+
+Change-Id: Ibb6b84626db02b58df0c8ca988161d67eb8c6b72
+---
+ .../platform/internal/FirewallService.java    |   6 +
+ .../platform/internal/KnownDohDomains.java    | 191 ++++++++++++++++++
+ 2 files changed, 197 insertions(+)
+ create mode 100644 lineage/lib/main/java/org/lineageos/platform/internal/KnownDohDomains.java
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index f8592dc9..a6cffcaf 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -1008,6 +1008,12 @@ public class FirewallService extends LineageSystemService {
+                 confLines.add("address=/#/127.0.0.1");
+             }
+         }
++        // Always block known DoH providers so apps cannot bypass domain-level
++        // blocking by switching to an encrypted resolver. Applied in all modes.
++        for (String doh : KnownDohDomains.ALL) {
++            confLines.add("address=/" + doh + "/127.0.0.1");
++        }
++
+         try {
+             Files.write(Paths.get(dnsmasqDir.getAbsolutePath() + "/dns.conf"),
+               confLines, StandardCharsets.UTF_8);
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/KnownDohDomains.java b/lineage/lib/main/java/org/lineageos/platform/internal/KnownDohDomains.java
+new file mode 100644
+index 00000000..65b4e4d4
+--- /dev/null
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/KnownDohDomains.java
+@@ -0,0 +1,191 @@
++/**
++ * Copyright (C) 2022 Hallo Welt Systeme UG
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.lineageos.platform.internal;
++
++/**
++ * Domains belonging to known DNS-over-HTTPS (DoH) providers.
++ *
++ * When the firewall is active these are always redirected to 127.0.0.1 via
++ * dnsmasq regardless of blacklist/whitelist mode, so that apps cannot bypass
++ * domain-level blocking by switching to an encrypted DNS resolver.
++ */
++final class KnownDohDomains {
++
++    // Cloudflare
++    static final String[] CLOUDFLARE = {
++        "cloudflare-dns.com",
++        "1dot1dot1dot1.cloudflare-dns.com",
++        "dns.cloudflare.com",
++        "mozilla.cloudflare-dns.com",
++        "security.cloudflare-dns.com",
++        "family.cloudflare-dns.com",
++    };
++
++    // Google
++    static final String[] GOOGLE = {
++        "dns.google",
++        "dns.google.com",
++        "doh.dns.google",
++        "dns64.dns.google",
++    };
++
++    // Quad9
++    static final String[] QUAD9 = {
++        "dns.quad9.net",
++        "doh.quad9.net",
++        "dns10.quad9.net",
++        "dns11.quad9.net",
++    };
++
++    // NextDNS
++    static final String[] NEXTDNS = {
++        "dns.nextdns.io",
++        "nextdns.io",
++    };
++
++    // AdGuard
++    static final String[] ADGUARD = {
++        "dns.adguard.com",
++        "dns.adguard-dns.com",
++        "dns-family.adguard.com",
++        "dns-unfiltered.adguard.com",
++        "unfiltered.adguard-dns.com",
++        "family.adguard-dns.com",
++    };
++
++    // Cisco / OpenDNS
++    static final String[] OPENDNS = {
++        "doh.opendns.com",
++        "doh.familyshield.opendns.com",
++    };
++
++    // CleanBrowsing
++    static final String[] CLEANBROWSING = {
++        "doh.cleanbrowsing.org",
++        "family-filter-dns.cleanbrowsing.org",
++        "adult-filter-dns.cleanbrowsing.org",
++        "security-filter-dns.cleanbrowsing.org",
++    };
++
++    // Mullvad
++    static final String[] MULLVAD = {
++        "dns.mullvad.net",
++        "adblock.dns.mullvad.net",
++        "base.dns.mullvad.net",
++        "extended.dns.mullvad.net",
++        "all.dns.mullvad.net",
++    };
++
++    // ControlD
++    static final String[] CONTROLD = {
++        "freedns.controld.com",
++        "dns.controld.com",
++        "p0.freedns.controld.com",
++    };
++
++    // Comcast
++    static final String[] COMCAST = {
++        "doh.xfinity.com",
++    };
++
++    // Alibaba
++    static final String[] ALIBABA = {
++        "dns.alidns.com",
++    };
++
++    // DNSPod / Tencent
++    static final String[] DNSPOD = {
++        "doh.pub",
++        "dns.pub",
++    };
++
++    // SWITCH (Switzerland)
++    static final String[] SWITCH = {
++        "dns.switch.ch",
++    };
++
++    // LibreDNS
++    static final String[] LIBREDNS = {
++        "doh.libredns.gr",
++    };
++
++    // Digitale Gesellschaft (Switzerland)
++    static final String[] DIGITALE = {
++        "dns.digitale-gesellschaft.ch",
++    };
++
++    // DNS.SB
++    static final String[] DNSSB = {
++        "doh.dns.sb",
++        "dns.sb",
++    };
++
++    // BlahDNS
++    static final String[] BLAHDNS = {
++        "doh-de.blahdns.com",
++        "doh-jp.blahdns.com",
++        "doh-fi.blahdns.com",
++        "doh-sg.blahdns.com",
++    };
++
++    // Dnswarden
++    static final String[] DNSWARDEN = {
++        "doh.dnswarden.com",
++    };
++
++    // OpenBSD / dns0.eu
++    static final String[] DNS0EU = {
++        "dns0.eu",
++        "zero.dns0.eu",
++        "kids.dns0.eu",
++        "open.dns0.eu",
++    };
++
++    // AhaDNS
++    static final String[] AHADNS = {
++        "doh.ahadns.com",
++        "doh.nl.ahadns.net",
++        "doh.in.ahadns.net",
++    };
++
++    // Consolidated flat array used by resetDnsConf().
++    static final String[] ALL;
++
++    static {
++        // Count total
++        int total = CLOUDFLARE.length + GOOGLE.length + QUAD9.length
++            + NEXTDNS.length + ADGUARD.length + OPENDNS.length
++            + CLEANBROWSING.length + MULLVAD.length + CONTROLD.length
++            + COMCAST.length + ALIBABA.length + DNSPOD.length
++            + SWITCH.length + LIBREDNS.length + DIGITALE.length
++            + DNSSB.length + BLAHDNS.length + DNSWARDEN.length
++            + DNS0EU.length + AHADNS.length;
++
++        ALL = new String[total];
++        int i = 0;
++        for (String[] group : new String[][]{
++            CLOUDFLARE, GOOGLE, QUAD9, NEXTDNS, ADGUARD, OPENDNS,
++            CLEANBROWSING, MULLVAD, CONTROLD, COMCAST, ALIBABA, DNSPOD,
++            SWITCH, LIBREDNS, DIGITALE, DNSSB, BLAHDNS, DNSWARDEN,
++            DNS0EU, AHADNS
++        }) {
++            for (String d : group) ALL[i++] = d;
++        }
++    }
++
++    private KnownDohDomains() {}
++}
+-- 
+2.49.0
+

@@ -1,0 +1,49 @@
+From c309f2f4f537acf9874eb497063f868d722ed936 Mon Sep 17 00:00:00 2001
+From: minaripenguin <minaripenguin@users.noreply.github.com>
+Date: Sun, 3 Sep 2023 09:42:39 +0800
+Subject: [PATCH] BluetoothControllerImpl: Optimize connected battery level
+ scanning
+
+* replace streaming with for loop to reduce overheads
+* as soon as we find a device with a known battery level, perform an early return. This avoids scanning all devices when not necessary.
+
+Change-Id: I9cc9e8672908cc5e19939c6b37223b862cb9e5bc
+Signed-off-by: minaripenguin <minaripenguin@users.noreply.github.com>
+---
+ .../statusbar/policy/BluetoothControllerImpl.java   | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/policy/BluetoothControllerImpl.java b/packages/SystemUI/src/com/android/systemui/statusbar/policy/BluetoothControllerImpl.java
+index 44c6a08eb094..3cbbd604c183 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/policy/BluetoothControllerImpl.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/policy/BluetoothControllerImpl.java
+@@ -18,6 +18,7 @@ package com.android.systemui.statusbar.policy;
+ 
+ import android.annotation.Nullable;
+ import android.bluetooth.BluetoothAdapter;
++import android.bluetooth.BluetoothDevice;
+ import android.bluetooth.BluetoothProfile;
+ import android.content.Context;
+ import android.os.Handler;
+@@ -338,11 +339,13 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
+             if (mConnectedDevices.isEmpty()) {
+                 return BluetoothDevice.BATTERY_LEVEL_UNKNOWN;
+             }
+-            return mConnectedDevices.stream()
+-                .mapToInt(device -> device.getBatteryLevel())
+-                .filter(level -> level != BluetoothDevice.BATTERY_LEVEL_UNKNOWN)
+-                .findFirst()
+-                .orElse(BluetoothDevice.BATTERY_LEVEL_UNKNOWN);
++            for (CachedBluetoothDevice device : mConnectedDevices) {
++                int level = device.getBatteryLevel();
++                if (level != BluetoothDevice.BATTERY_LEVEL_UNKNOWN) {
++                    return level;
++                }
++            }
++            return BluetoothDevice.BATTERY_LEVEL_UNKNOWN;
+         }
+     }
+ 
+-- 
+2.49.0
+

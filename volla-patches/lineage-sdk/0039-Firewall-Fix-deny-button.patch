@@ -1,0 +1,53 @@
+From 0d6af8320e77a5481e0bbf252ae35bc1d810b1a4 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Thu, 4 Jun 2026 09:43:41 +0330
+Subject: [PATCH] Firewall: Fix deny button
+
+Change-Id: If6839e5a68d6bafa80ad545c1e61cbfac1552126
+---
+ .../org/lineageos/platform/internal/FirewallService.java  | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index 812820c2..8c5ad752 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -206,6 +206,7 @@ public class FirewallService extends LineageSystemService {
+     private final ArrayMap<String, Long> mAllowedDomains = new ArrayMap<>();
+     private BroadcastReceiver mNotifActionReceiver;
+     private FirewallBlockDatabase mBlockDb;
++    private final ArrayList<String> mDeniedAlertDomains = new ArrayList<>();
+ 
+     private final ArrayList<String> mManualDomainsList = new ArrayList<String>();
+     private final ArrayList<String> mAppsList = new ArrayList<String>();
+@@ -1296,7 +1297,10 @@ public class FirewallService extends LineageSystemService {
+                     mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
+                     if (mBlockDb != null) mBlockDb.updateAllowed(domain, "perm");
+                 }
+-                // ACTION_DENY: notification already cancelled above, nothing else to do
++                // ACTION_DENY: add to session deny list so the user isn't alerted again
++                if (ACTION_DENY.equals(action) && !mDeniedAlertDomains.contains(domain)) {
++                    mDeniedAlertDomains.add(domain);
++                }
+             }
+         };
+         IntentFilter filter = new IntentFilter();
+@@ -1332,6 +1336,7 @@ public class FirewallService extends LineageSystemService {
+         }
+ 
+         if (!isAlertMode()) return;
++        if (mDeniedAlertDomains.contains(domain)) return;
+         int notifId = domain.hashCode();
+ 
+         // Set package="android" to make the intent explicit — bypasses the
+@@ -1399,6 +1404,7 @@ public class FirewallService extends LineageSystemService {
+         @Override
+         public void activate(boolean enable) {
+             long token = clearCallingIdentity();
++            mDeniedAlertDomains.clear();
+             FirewallService.this.activate(enable);
+             restoreCallingIdentity(token);
+         }
+-- 
+2.49.0
+

@@ -1,46 +1,41 @@
-From 05ce26915cd9bdd4183c9883d3063388bb87d556 Mon Sep 17 00:00:00 2001
-From: techyminati <techyminati@outlook.com>
-Date: Thu, 17 Apr 2025 10:01:41 +0000
-Subject: [PATCH 10/10] Settings: Remove Vendor Security Patch
+From 229fca435d7fdada25d6943c3c770921ed612a8b Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sat, 4 Apr 2026 22:43:10 +0330
+Subject: [PATCH] Settings: Remove Vendor Security Patch
 
-TicketID: #440
-Test: m
+Change-Id: I64fddead47599112b5f33b40d4fb07ca1f572eed
 
-Change-Id: I659a6516717cd75bb75d1f354936a4d9181dfaa5
-Signed-off-by: techyminati <techyminati@outlook.com>
+Settings: Drop all references to LineageVendorSecurityPatchLevelPreference * Else it crashes about phone -> Android version preference with following logs:
+
+04-13 20:00:26.464 3732 3732 E AndroidRuntime: Caused by: android.content.res.Resources: String resource ID #0x3f09001d 04-13 20:00:26.464 3732 3732 E AndroidRuntime: at android.content.res.Resources.getText(Resources.java:480) 04-13 20:00:26.464 3732 3732 E AndroidRuntime: at android.content.Context.getText(Context.java:1174) 04-13 20:00:26.464 3732 3732 E AndroidRuntime: at com.android.settingslib.metadata.UtilsKt.getPreferenceTitle(Utils.kt:36) 04-13 20:00:26.464 3732 3732 E AndroidRuntime: at com.android.settingslib.preference.PreferenceBinding.bind(PreferenceBinding.kt:98) 04-13 20:00:26.464 3732 3732 E AndroidRuntime: at com.android.settings.deviceinfo.firmwareversion.LineageVendorSecurityPatchLevelPreference.bind(LineageVendorSecurityPatchLevelPreference.kt:42)
+
+Signed-off-by: Volla BuildBot <build@volla.com>
 ---
- res/xml/firmware_version.xml                  |  8 --
- ...ecurityPatchLevelPreferenceController.java | 73 -------------------
- 2 files changed, 81 deletions(-)
- delete mode 100644 src/com/android/settings/deviceinfo/firmwareversion/LineageVendorSecurityPatchLevelPreferenceController.java
+ .../firmwareversion/FirmwareVersionScreen.kt  |  1 -
+ ...neageVendorSecurityPatchLevelPreference.kt | 76 -------------------
+ 2 files changed, 77 deletions(-)
+ delete mode 100644 src/com/android/settings/deviceinfo/firmwareversion/LineageVendorSecurityPatchLevelPreference.kt
 
-diff --git a/res/xml/firmware_version.xml b/res/xml/firmware_version.xml
-index 4eb25fd5786..21d404e60b1 100644
---- a/res/xml/firmware_version.xml
-+++ b/res/xml/firmware_version.xml
-@@ -45,14 +45,6 @@
-         settings:enableCopying="true"
-         settings:controller="com.android.settings.deviceinfo.firmwareversion.SecurityPatchLevelPreferenceController"/>
- 
--    <!-- Vendor security patch -->
--    <Preference
--        android:key="vendor_security_key"
--        android:title="@*lineageos.platform:string/lineage_vendor_security_patch"
--        android:selectable="false"
--        settings:enableCopying="true"
--        settings:controller="com.android.settings.deviceinfo.firmwareversion.LineageVendorSecurityPatchLevelPreferenceController"/>
--
-     <!-- Mainline module version -->
-     <!--
-     <Preference
-diff --git a/src/com/android/settings/deviceinfo/firmwareversion/LineageVendorSecurityPatchLevelPreferenceController.java b/src/com/android/settings/deviceinfo/firmwareversion/LineageVendorSecurityPatchLevelPreferenceController.java
+diff --git a/src/com/android/settings/deviceinfo/firmwareversion/FirmwareVersionScreen.kt b/src/com/android/settings/deviceinfo/firmwareversion/FirmwareVersionScreen.kt
+index 1af3fb6fcea..5ba1fe5196a 100644
+--- a/src/com/android/settings/deviceinfo/firmwareversion/FirmwareVersionScreen.kt
++++ b/src/com/android/settings/deviceinfo/firmwareversion/FirmwareVersionScreen.kt
+@@ -72,7 +72,6 @@ open class FirmwareVersionScreen : PreferenceScreenMixin, PreferenceSummaryProvi
+             +FirmwareVersionDetailPreference()
+             +LineageVersionDetailPreference()
+             +SecurityPatchLevelPreference()
+-            +LineageVendorSecurityPatchLevelPreference()
+             +MainlineModuleVersionPreference()
+             +BasebandVersionPreference()
+             +KernelVersionPreference()
+diff --git a/src/com/android/settings/deviceinfo/firmwareversion/LineageVendorSecurityPatchLevelPreference.kt b/src/com/android/settings/deviceinfo/firmwareversion/LineageVendorSecurityPatchLevelPreference.kt
 deleted file mode 100644
-index 40887ee5805..00000000000
---- a/src/com/android/settings/deviceinfo/firmwareversion/LineageVendorSecurityPatchLevelPreferenceController.java
+index 2781173d7da..00000000000
+--- a/src/com/android/settings/deviceinfo/firmwareversion/LineageVendorSecurityPatchLevelPreference.kt
 +++ /dev/null
-@@ -1,73 +0,0 @@
+@@ -1,76 +0,0 @@
 -/*
-- * Copyright (C) 2019 The LineageOS Project
+- * Copyright (C) 2019-2025 The LineageOS Project
 - *
 - * Licensed under the Apache License, Version 2.0 (the "License");
 - * you may not use this file except in compliance with the License.
@@ -55,63 +50,66 @@ index 40887ee5805..00000000000
 - * limitations under the License.
 - */
 -
--package com.android.settings.deviceinfo.firmwareversion;
+-package com.android.settings.deviceinfo.firmwareversion
 -
--import android.content.Context;
--import android.os.SystemProperties;
--import android.text.format.DateFormat;
+-import android.content.Context
+-import android.os.SystemProperties
+-import android.text.format.DateFormat
+-import androidx.preference.Preference
+-import com.android.settings.R
+-import com.android.settingslib.metadata.PreferenceMetadata
+-import com.android.settingslib.metadata.PreferenceSummaryProvider
+-import com.android.settingslib.preference.PreferenceBinding
+-import java.text.ParseException
+-import java.text.SimpleDateFormat
+-import java.util.Date
+-import java.util.Locale
 -
--import com.android.settings.R;
--import com.android.settings.core.BasePreferenceController;
+-class LineageVendorSecurityPatchLevelPreference :
+-    PreferenceMetadata, PreferenceSummaryProvider, PreferenceBinding {
 -
--import java.text.ParseException;
--import java.text.SimpleDateFormat;
--import java.util.Date;
--import java.util.Locale;
+-    override val key: String
+-        get() = "vendor_security_key"
 -
--public class LineageVendorSecurityPatchLevelPreferenceController extends BasePreferenceController {
+-    override val title: Int
+-        get() = org.lineageos.platform.internal.R.string.lineage_vendor_security_patch
 -
--    private static final String TAG = "LineageVendorSecurityPatchCtrl";
--
--    private static final String KEY_AOSP_VENDOR_SECURITY_PATCH =
--            "ro.vendor.build.security_patch";
--
--    private static final String KEY_LINEAGE_VENDOR_SECURITY_PATCH =
--            "ro.lineage.build.vendor_security_patch";
--
--    public LineageVendorSecurityPatchLevelPreferenceController(Context context, String key) {
--        super(context, key);
+-    override fun bind(preference: Preference, metadata: PreferenceMetadata) {
+-        super.bind(preference, metadata)
+-        preference.isSelectable = false
+-        preference.isCopyingEnabled = true
 -    }
 -
--    @Override
--    public int getAvailabilityStatus() {
--        return AVAILABLE;
--    }
--
--    @Override
--    public CharSequence getSummary() {
--        String patchLevel = SystemProperties.get(KEY_AOSP_VENDOR_SECURITY_PATCH);
+-    override fun getSummary(context: Context): CharSequence {
+-        var patchLevel = SystemProperties.get(AOSP_VENDOR_SECURITY_PATCH_PROPERTY)
 -
 -        if (patchLevel.isEmpty()) {
--            patchLevel = SystemProperties.get(KEY_LINEAGE_VENDOR_SECURITY_PATCH);
+-            patchLevel = SystemProperties.get(LINEAGE_VENDOR_SECURITY_PATCH_PROPERTY)
 -        }
 -
--        if (!patchLevel.isEmpty()) {
+-        if (patchLevel.isNotEmpty()) {
 -            try {
--                SimpleDateFormat template = new SimpleDateFormat("yyyy-MM-dd");
--                Date patchLevelDate = template.parse(patchLevel);
--                String format = DateFormat.getBestDateTimePattern(Locale.getDefault(), "dMMMMyyyy");
--                patchLevel = DateFormat.format(format, patchLevelDate).toString();
--            } catch (ParseException e) {
+-                val template = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+-                val patchLevelDate = template.parse(patchLevel)
+-                val format = DateFormat.getBestDateTimePattern(Locale.getDefault(), "dMMMMyyyy")
+-                patchLevel = DateFormat.format(format, patchLevelDate).toString()
+-            } catch (_: ParseException) {
 -                // parsing failed, use raw string
 -            }
 -        } else {
--            patchLevel = mContext.getString(R.string.unknown);
+-            patchLevel = context.getString(R.string.unknown)
 -        }
 -
--        return patchLevel;
+-        return patchLevel
+-    }
+-
+-    companion object {
+-        const val AOSP_VENDOR_SECURITY_PATCH_PROPERTY: String =
+-            "ro.vendor.build.security_patch"
+-        const val LINEAGE_VENDOR_SECURITY_PATCH_PROPERTY: String =
+-            "ro.lineage.build.vendor_security_patch"
 -    }
 -}
 -- 
-2.34.1
+2.49.0
 

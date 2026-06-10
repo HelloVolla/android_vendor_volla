@@ -5,11 +5,8 @@ allow platform_app signald_file:file create_file_perms;
 allow platform_app signald_file:sock_file create_file_perms;
 allow platform_app signald_file:lnk_file create_file_perms;
 allow platform_app system_server:unix_stream_socket connectto;
-allow platform_app self:netlink_route_socket ioctl;
-allowxperm platform_app self:netlink_route_socket ioctl {
-  0x8b07
-};
 
 binder_call(platform_app, volla_wireguard)
+binder_call(platform_app, mycelium)
 
 set_prop(platform_app, ctl_restart_prop)

@@ -1,7 +1,7 @@
-From 8c77f22a624b88e4b25f777a0ae17a9b360174fd Mon Sep 17 00:00:00 2001
+From 8191b0cbe81cf806eb0a85a2a9ecd03a6eaa0463 Mon Sep 17 00:00:00 2001
 From: Nauval Rizky <enuma.alrizky@gmail.com>
 Date: Mon, 27 Dec 2021 17:05:57 +0700
-Subject: [PATCH 14/35] SystemUI: Add support for GameSpace
+Subject: [PATCH] SystemUI: Add support for GameSpace
 
 This is an addon for GameSpace for broadcasting about game start/stop.
 Additionally, it also has special option for suppressing fullscreen
@@ -31,10 +31,10 @@ Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
  create mode 100644 packages/SystemUI/src/com/android/systemui/statusbar/policy/GameSpaceManager.kt
 
 diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
-index df73ee384750..b00102b84201 100644
+index da803177142e..6878771476c5 100644
 --- a/core/java/android/provider/Settings.java
 +++ b/core/java/android/provider/Settings.java
-@@ -6486,6 +6486,20 @@ public final class Settings {
+@@ -6751,6 +6751,20 @@ public final class Settings {
          @Readable
          public static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
  
@@ -56,10 +56,10 @@ index df73ee384750..b00102b84201 100644
           * IMPORTANT: If you add a new public settings you also have to add it to
           * PUBLIC_SETTINGS below. If the new setting is hidden you have to add
 diff --git a/core/res/AndroidManifest.xml b/core/res/AndroidManifest.xml
-index ee9a3914c270..7bfbccc12d7f 100644
+index b3012c144ed2..c388f38ae3f7 100644
 --- a/core/res/AndroidManifest.xml
 +++ b/core/res/AndroidManifest.xml
-@@ -862,6 +862,10 @@
+@@ -869,6 +869,10 @@
      <!-- Used for long press power torch feature - automatic turn off on timeout -->
      <protected-broadcast android:name="com.android.server.policy.PhoneWindowManager.ACTION_TORCH_OFF" />
  
@@ -71,12 +71,12 @@ index ee9a3914c270..7bfbccc12d7f 100644
      <!--                          RUNTIME PERMISSIONS                           -->
      <!-- ====================================================================== -->
 diff --git a/packages/SystemUI/AndroidManifest.xml b/packages/SystemUI/AndroidManifest.xml
-index 84dbd45270ea..de039ba7c92a 100644
+index 5cc3fbf30900..a2cb1f53d303 100644
 --- a/packages/SystemUI/AndroidManifest.xml
 +++ b/packages/SystemUI/AndroidManifest.xml
-@@ -388,6 +388,9 @@
-     <!-- To be able to decipher default applications for certain roles in shortcut helper -->
-     <uses-permission android:name="android.permission.MANAGE_DEFAULT_APPLICATIONS" />
+@@ -403,6 +403,9 @@
+     <!-- To be able to set unrestricted system gesture exclusion rects -->
+     <uses-permission android:name="android.permission.SET_UNRESTRICTED_GESTURE_EXCLUSION"/>
  
 +    <!-- To broadcast status of the GameSpaceManager -->
 +    <uses-permission android:name="android.permission.MANAGE_GAME_MODE" />
@@ -85,10 +85,10 @@ index 84dbd45270ea..de039ba7c92a 100644
      <protected-broadcast android:name="com.android.settingslib.action.UNREGISTER_SLICE_RECEIVER" />
      <protected-broadcast android:name="com.android.settings.flashlight.action.FLASHLIGHT_CHANGED" />
 diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/CentralSurfaces.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/CentralSurfaces.java
-index ae311512db01..7e186864ade3 100644
+index 5eb23a08baa4..0d82f4061c2c 100644
 --- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/CentralSurfaces.java
 +++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/CentralSurfaces.java
-@@ -46,6 +46,7 @@ import com.android.systemui.plugins.ActivityStarter.OnDismissAction;
+@@ -44,6 +44,7 @@ import com.android.systemui.plugins.ActivityStarter.OnDismissAction;
  import com.android.systemui.qs.QSPanelController;
  import com.android.systemui.shared.statusbar.phone.BarTransitions;
  import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
@@ -96,26 +96,26 @@ index ae311512db01..7e186864ade3 100644
  import com.android.systemui.util.Compile;
  
  import java.io.PrintWriter;
-@@ -347,4 +348,5 @@ public interface CentralSurfaces extends Dumpable, LifecycleOwner, CoreStartable
+@@ -350,4 +351,5 @@ public interface CentralSurfaces extends Dumpable, LifecycleOwner, CoreStartable
       */
      ActivityTransitionAnimator.Controller getAnimatorControllerFromNotification(
              ExpandableNotificationRow associatedView);
 +    GameSpaceManager getGameSpaceManager();
  }
 diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/CentralSurfacesImpl.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/CentralSurfacesImpl.java
-index b62e40e388ab..83e0997e4b71 100644
+index 75f6112030a2..7570ea448aaa 100644
 --- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/CentralSurfacesImpl.java
 +++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/CentralSurfacesImpl.java
-@@ -221,6 +221,7 @@ import com.android.systemui.statusbar.policy.ConfigurationController.Configurati
+@@ -223,6 +223,7 @@ import com.android.systemui.statusbar.policy.ConfigurationController.Configurati
  import com.android.systemui.statusbar.policy.DeviceProvisionedController;
  import com.android.systemui.statusbar.policy.DeviceProvisionedController.DeviceProvisionedListener;
  import com.android.systemui.statusbar.policy.ExtensionController;
 +import com.android.systemui.statusbar.policy.GameSpaceManager;
- import com.android.systemui.statusbar.notification.headsup.HeadsUpManager;
  import com.android.systemui.statusbar.policy.KeyguardStateController;
  import com.android.systemui.statusbar.policy.UserInfoControllerImpl;
-@@ -452,6 +453,8 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
-     private final Provider<FingerprintManager> mFingerprintManager;
+ import com.android.systemui.statusbar.window.StatusBarWindowControllerStore;
+@@ -462,6 +463,8 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
+     private final UserTracker mUserTracker;
      private final ActivityStarter mActivityStarter;
  
 +    private GameSpaceManager mGameSpaceManager;
@@ -123,7 +123,7 @@ index b62e40e388ab..83e0997e4b71 100644
      private final DisplayMetrics mDisplayMetrics;
  
      // XXX: gesture research
-@@ -824,6 +827,8 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
+@@ -843,6 +846,8 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
          mActivityIntentHelper = new ActivityIntentHelper(mContext);
          mActivityTransitionAnimator = activityTransitionAnimator;
  
@@ -132,7 +132,7 @@ index b62e40e388ab..83e0997e4b71 100644
          // TODO(b/190746471): Find a better home for this.
          DateTimeView.setReceiverHandler(timeTickHandler);
  
-@@ -1467,6 +1472,12 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
+@@ -1478,6 +1483,12 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
          filter.addAction(Intent.ACTION_SCREEN_OFF);
          filter.addAction(lineageos.content.Intent.ACTION_SCREEN_CAMERA_GESTURE);
          mBroadcastDispatcher.registerReceiver(mBroadcastReceiver, filter, null, UserHandle.ALL);
@@ -146,18 +146,18 @@ index b62e40e388ab..83e0997e4b71 100644
  
      protected QS createDefaultQSFragment() {
 diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/StatusBarNotificationActivityStarter.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/StatusBarNotificationActivityStarter.java
-index e33baf7c33ae..c357c10f58ff 100644
+index 665681152cbd..10bbea326afd 100644
 --- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/StatusBarNotificationActivityStarter.java
 +++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/StatusBarNotificationActivityStarter.java
-@@ -81,6 +81,7 @@ import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
+@@ -83,6 +83,7 @@ import com.android.systemui.statusbar.notification.headsup.HeadsUpUtil;
+ import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
+ import com.android.systemui.statusbar.notification.row.ExpandableNotificationRowDragController;
  import com.android.systemui.statusbar.notification.row.OnUserInteractionCallback;
- import com.android.systemui.statusbar.notification.headsup.HeadsUpManager;
- import com.android.systemui.statusbar.notification.headsup.HeadsUpUtil;
 +import com.android.systemui.statusbar.policy.GameSpaceManager;
  import com.android.systemui.statusbar.policy.KeyguardStateController;
  import com.android.systemui.wmshell.BubblesManager;
  
-@@ -142,6 +143,7 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
+@@ -147,6 +148,7 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
      private final MetricsLogger mMetricsLogger;
      private final StatusBarNotificationActivityStarterLogger mLogger;
  
@@ -165,7 +165,7 @@ index e33baf7c33ae..c357c10f58ff 100644
      private final NotificationPresenter mPresenter;
      private final PanelExpansionInteractor mPanelExpansionInteractor;
      private final NotificationShadeWindowController mNotificationShadeWindowController;
-@@ -179,6 +181,7 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
+@@ -185,6 +187,7 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
              MetricsLogger metricsLogger,
              StatusBarNotificationActivityStarterLogger logger,
              OnUserInteractionCallback onUserInteractionCallback,
@@ -173,7 +173,7 @@ index e33baf7c33ae..c357c10f58ff 100644
              NotificationPresenter presenter,
              PanelExpansionInteractor panelExpansionInteractor,
              NotificationShadeWindowController notificationShadeWindowController,
-@@ -214,6 +217,7 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
+@@ -221,6 +224,7 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
          mShadeAnimationInteractor = shadeAnimationInteractor;
          mMetricsLogger = metricsLogger;
          mLogger = logger;
@@ -181,7 +181,7 @@ index e33baf7c33ae..c357c10f58ff 100644
          mOnUserInteractionCallback = onUserInteractionCallback;
          mPresenter = presenter;
          mActivityTransitionAnimator = activityTransitionAnimator;
-@@ -680,6 +684,11 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
+@@ -691,6 +695,11 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
  
      @VisibleForTesting
      void launchFullScreenIntent(NotificationEntry entry) {

@@ -1,4 +1,4 @@
-From d211beaa46ac1f1ff717bddc8b4dcc5b211b8aaf Mon Sep 17 00:00:00 2001
+From f93676e524dddd066af6c62e4dc137784a3f54f8 Mon Sep 17 00:00:00 2001
 From: Volla BuildBot <build@volla.com>
 Date: Thu, 15 Feb 2024 00:55:48 +0100
 Subject: [PATCH] Allow volla ethernet manager
@@ -9,10 +9,10 @@ Change-Id: Ib0b8bf3ac005c7115652241d08d23ab0a1b75a1a
  1 file changed, 1 insertion(+)
 
 diff --git a/framework-t/Android.bp b/framework-t/Android.bp
-index 26fc145978..4306a9bbbc 100644
+index 22ca3b3b6d..d03ad0f99b 100644
 --- a/framework-t/Android.bp
 +++ b/framework-t/Android.bp
-@@ -168,6 +168,7 @@ java_sdk_library {
+@@ -169,6 +169,7 @@ java_sdk_library {
          "//packages/modules/Connectivity/nearby:__subpackages__",
          "//packages/modules/Connectivity/remoteauth:__subpackages__",
          "//frameworks/base",

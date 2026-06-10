@@ -1,0 +1,63 @@
+From 56a4eb7828886a96f84acf47e8651b7c75aa0908 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Fri, 12 Apr 2024 15:12:07 +0330
+Subject: [PATCH] FirewallService: avoid ConcurrentModificationException
+
+Change-Id: Ib982e528cbefc0ba6346a26964f56eb7db63f730
+---
+ .../lineageos/platform/internal/FirewallService.java | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index 0e2158e7..b19490a3 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -298,7 +298,8 @@ public class FirewallService extends LineageSystemService {
+ 
+     private void serializeDomains(XmlSerializer serializer) throws IOException {
+         serializer.startTag(null, TAG_LISTED_DOMAINS);
+-        for (String domain : mDomainsList) {
++        ArrayList<String> newDomainsList = new ArrayList<>(mDomainsList);
++        for (String domain : newDomainsList) {
+             serializer.startTag(null, TAG_DOMAIN);
+             serializer.attribute(null, ATTRIBUTE_NAME, domain);
+             serializer.endTag(null, TAG_DOMAIN);
+@@ -398,7 +399,8 @@ public class FirewallService extends LineageSystemService {
+ 
+     private void serializeApps(XmlSerializer serializer) throws IOException {
+         serializer.startTag(null, TAG_LISTED_APPS);
+-        for (String app : mAppsList) {
++        ArrayList<String> newAppsList = new ArrayList<>(mAppsList);
++        for (String app : newAppsList) {
+             serializer.startTag(null, TAG_APP);
+             serializer.attribute(null, ATTRIBUTE_NAME, app);
+             serializer.endTag(null, TAG_APP);
+@@ -408,13 +410,14 @@ public class FirewallService extends LineageSystemService {
+ 
+     private void resetDnsConf() {
+         ArrayList<String> confLines = new ArrayList<String>();
++        ArrayList<String> newDomainsList = new ArrayList<>(mDomainsList);
+         boolean blacklist = isBlacklistMode();
+         File dnsmasqDir = new File(Environment.getDataSystemCeDirectory(0), "dnsmasq");
+         if (!dnsmasqDir.exists() && !dnsmasqDir.mkdirs())
+             Slog.e(TAG, "Error while creating dnsmasq directory: " + dnsmasqDir);
+         confLines.add("# Volla firewall fonfiguration file for dnsmasq.");
+         if (mDomainsList.size() > 0) {
+-            for (String domain : mDomainsList) {
++            for (String domain : newDomainsList) {
+                 if (blacklist)
+                     confLines.add("address=/" + domain + "/127.0.0.1");
+                 else
+@@ -434,7 +437,8 @@ public class FirewallService extends LineageSystemService {
+     }
+ 
+     private void resetRestrictedApps() {
+-        for (String app : mAppsList) {
++        ArrayList<String> newAppsList = new ArrayList<>(mAppsList);
++        for (String app : newAppsList) {
+             ApplicationInfo aInfo;
+             try {
+                 aInfo = mPackageManager.getApplicationInfo(app, 0);
+-- 
+2.49.0
+

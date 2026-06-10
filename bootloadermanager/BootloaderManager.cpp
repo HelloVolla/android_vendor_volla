@@ -143,38 +143,77 @@ sleep(1);
     return 0;
 }
 
+int copy_fr(const char *src, const char *dst) {
+    FILE *in = fopen(src, "rb");
+    if (!in) {
+        return -1;
+    }
+
+    FILE *out = fopen(dst, "wb");
+    if (!out) {
+        fclose(in);
+        return -1;
+    }
+
+    char buf[8192];
+    size_t n;
+
+    while ((n = fread(buf, 1, sizeof buf, in)) > 0) {
+        if (fwrite(buf, 1, n, out) != n) {
+            fclose(in);
+            fclose(out);
+            return -1;
+        }
+    }
+
+    if (ferror(in)) {
+        fclose(in);
+        fclose(out);
+        return -1;
+    }
+
+    fclose(in);
+    fclose(out);
+    return 0;
+}
+
 BootloaderManager::BootloaderManager() {
 
 }
 
 ndk::ScopedAStatus BootloaderManager::uncrypt(const std::string &file, const std::string &map_file, bool *_aidl_return) {
-    *_aidl_return = call_uncrypt(file.c_str(), map_file.c_str());
+    *_aidl_return = call_uncrypt(file.c_str(), map_file.c_str()) == 0;
     return ndk::ScopedAStatus::ok();
 }
 
 ndk::ScopedAStatus BootloaderManager::dmsetup_creat(const std::string &name, const std::string &map_path, bool *_aidl_return) {
-    *_aidl_return = dmsetup_creat_fr(name.c_str(), map_path.c_str());
+    *_aidl_return = dmsetup_creat_fr(name.c_str(), map_path.c_str()) == 0;
     return ndk::ScopedAStatus::ok();
 }
 
 
 ndk::ScopedAStatus BootloaderManager::dmsetup_remove(const std::string &name, bool *_aidl_return) {
-    *_aidl_return = dmsetup_remove_fr(name.c_str());
+    *_aidl_return = dmsetup_remove_fr(name.c_str()) == 0;
     return ndk::ScopedAStatus::ok();
 }
 
 ndk::ScopedAStatus BootloaderManager::mount(const std::string &device, const std::string &path, bool *_aidl_return) {
-    *_aidl_return = dmsetup_mount_fr(device.c_str(), path.c_str());
+    *_aidl_return = dmsetup_mount_fr(device.c_str(), path.c_str()) == 0;
     return ndk::ScopedAStatus::ok();
 }
 
 ndk::ScopedAStatus BootloaderManager::umount(const std::string &path, bool *_aidl_return) {
-    *_aidl_return = dmsetup_umount_fr(path.c_str());
+    *_aidl_return = dmsetup_umount_fr(path.c_str()) == 0;
     return ndk::ScopedAStatus::ok();
 }
 
 ndk::ScopedAStatus BootloaderManager::rereadpt(const std::string &device, bool *_aidl_return) {
-    *_aidl_return = dmsetup_rereadpt_fr(device.c_str());
+    *_aidl_return = dmsetup_rereadpt_fr(device.c_str()) == 0;
+    return ndk::ScopedAStatus::ok();
+}
+
+ndk::ScopedAStatus BootloaderManager::copy(const std::string &src, const std::string &dst, bool *_aidl_return) {
+    *_aidl_return = copy_fr(src.c_str(), dst.c_str()) == 0;
     return ndk::ScopedAStatus::ok();
 }
 

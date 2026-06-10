@@ -1,0 +1,45 @@
+From cda1e772ada0c095bcc5a51ad5a3e8eeb67eb549 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sat, 20 Jan 2024 04:20:43 +0330
+Subject: [PATCH 2/2] releasetools: support prebuilt vendor.img
+
+Signing builds with prebuilt vendor.img causes the following error:
+
+Traceback (most recent call last):
+  File "./build/make/tools/releasetools/sign_target_files_apks", line 1230, in <module>
+    main(sys.argv[1:])
+  File "./build/make/tools/releasetools/sign_target_files_apks", line 1223, in main
+    add_img_to_target_files.main(new_args)
+  File ".../build/make/tools/releasetools/add_img_to_target_files.py", line 942, in main
+    AddImagesToTargetFiles(args[0])
+  File ".../build/make/tools/releasetools/add_img_to_target_files.py", line 892, in AddImagesToTargetFiles
+    CheckAbOtaImages(output_zip, ab_partitions)
+  File ".../build/make/tools/releasetools/add_img_to_target_files.py", line 562, in CheckAbOtaImages
+    assert available, "Failed to find " + img_name
+AssertionError: Failed to find vendor.img
+
+This patch addresses this error by copying IMAGES/vendor.img if it exists in the input zip
+
+Test: Follow https://source.android.com/devices/tech/ota/sign_builds#release-keys and then
+https: //source.android.com/devices/tech/ota/sign_builds#creating-image-files
+Change-Id: I903ff20d79bcf7621ebf29f0b8dfe85ebc3fb1ff
+---
+ tools/releasetools/sign_target_files_apks.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/releasetools/sign_target_files_apks.py b/tools/releasetools/sign_target_files_apks.py
+index 73c4b50..a9d4ba7 100755
+--- a/tools/releasetools/sign_target_files_apks.py
++++ b/tools/releasetools/sign_target_files_apks.py
+@@ -741,7 +741,7 @@ def ProcessTargetFiles(input_tf_zip: zipfile.ZipFile, output_tf_zip: zipfile.Zip
+ 
+   for info in input_tf_zip.infolist():
+     filename = info.filename
+-    if filename.startswith("IMAGES/"):
++    if filename.startswith("IMAGES/") and not filename.endswith("vendor.img"):
+       continue
+ 
+     # Skip OTA-specific images (e.g. split super images), which will be
+-- 
+2.34.1
+

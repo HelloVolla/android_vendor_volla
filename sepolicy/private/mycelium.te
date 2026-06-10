@@ -1,0 +1,82 @@
+type mycelium_exec, system_file_type, exec_type, file_type;
+type mycelium, domain;
+
+typeattribute mycelium coredomain;
+typeattribute mycelium mlstrustedsubject;
+
+init_daemon_domain(mycelium)
+
+binder_use(mycelium)
+
+binder_service(mycelium)
+
+add_service(mycelium, mycelium_service)
+
+allow mycelium activity_service:service_manager find;
+allow mycelium dnsresolver_service:service_manager find;
+allow mycelium netd_service:service_manager find;
+allow mycelium shell_exec:file { execute execute_no_trans getattr map open read };
+allow mycelium sysfs:file { getattr open read };
+allow mycelium system_file:file execute_no_trans;
+allow mycelium self:netlink_route_socket { nlmsg_getneigh nlmsg_read nlmsg_readpriv nlmsg_write read setopt write getattr bind create };
+allow mycelium self:netlink_generic_socket { read setopt write getattr bind create };
+allow mycelium self:rawip_socket { create ioctl };
+allow mycelium self:udp_socket { create ioctl };
+allowxperm mycelium self:udp_socket ioctl {
+    SIOCGIFINDEX
+    SIOCSIFADDR
+    SIOCSIFFLAGS
+    SIOCSIFMTU
+    SIOCGIFMTU
+};
+
+allow mycelium self:capability { net_raw net_admin sys_module dac_override dac_read_search };
+allow mycelium self:global_capability_class_set { net_admin net_raw net_bind_service };
+allow mycelium app_data_file:file { create_file_perms x_file_perms };
+allow mycelium app_data_file:sock_file { create_file_perms };
+allow mycelium dnsproxyd_socket:sock_file { create_file_perms };
+allow mycelium app_data_file:dir create_dir_perms;
+allow mycelium net_data_file:file { getattr open read };
+allow mycelium net_data_file:dir search;
+allow mycelium system_server:binder call;
+allow mycelium fs_bpf:dir search;
+allow mycelium proc_net:file { getattr open read };
+allow mycelium system_file:file lock;
+allow mycelium bpfloader:bpf prog_run;
+allow mycelium fs_bpf:file read;
+allow mycelium netd:binder call;
+allow mycelium self:rawip_socket { getopt setopt };
+allow mycelium netd:unix_stream_socket connectto;
+allow mycelium self:udp_socket { bind setattr };
+allow mycelium tun_device:chr_file rw_file_perms;
+allow mycelium self:tun_socket create_socket_perms;
+allowxperm mycelium tun_device:chr_file ioctl {
+    TUNGETIFF
+    TUNSETIFF
+    TUNSETLINK
+    TUNSETCARRIER
+    TUNSETOFFLOAD
+    TUNSETVNETHDRSZ
+};
+
+allow mycelium self:tun_socket { relabelfrom relabelto };
+allow mycelium self:tun_socket create_stream_socket_perms;
+allow mycelium self:tcp_socket create_stream_socket_perms;
+allow mycelium self:udp_socket create_stream_socket_perms;
+allow mycelium port:tcp_socket { name_connect name_bind };
+allow mycelium node:tcp_socket { node_bind name_connect name_bind };
+allow mycelium port:udp_socket { name_bind };
+allow mycelium node:udp_socket { node_bind name_bind };
+allow mycelium fwmarkd_socket:sock_file create_file_perms;
+allow mycelium sysfs_net:dir r_dir_perms;
+allow mycelium sysfs_net:file rw_file_perms;
+
+allow netd mycelium:fd use;
+allow netd mycelium:tcp_socket create_stream_socket_perms;
+allow netd mycelium:udp_socket create_stream_socket_perms;
+allow netd system_file:dir add_name;
+allow netd system_file:file create;
+
+set_prop(mycelium, exported_system_prop)
+binder_call(untrusted_app_all, mycelium)
+binder_call(untrusted_app, mycelium)

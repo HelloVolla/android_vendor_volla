@@ -1,27 +1,18 @@
-From 0dc8c8fd84f582174a3453f3a3189ff403a7c78e Mon Sep 17 00:00:00 2001
+From 08bbdddce623300efa8690641a5f7d23da1a8fab Mon Sep 17 00:00:00 2001
 From: Volla BuildBot <build@volla.com>
 Date: Fri, 15 Aug 2025 07:35:34 +0000
-Subject: [PATCH 1/8] Revert "SetupWizard: Update wizard scripts for 15"
+Subject: [PATCH] Revert "SetupWizard: Update wizard scripts for 15"
 
 This reverts commit 00fff59802c351ef1479370b4708c0d3c19f6e96.
 ---
- res/raw/wizard_script.xml      | 32 ++------------------------------
- res/raw/wizard_script_user.xml | 17 +++++++++--------
- 2 files changed, 11 insertions(+), 38 deletions(-)
+ res/raw/wizard_script.xml      | 30 +-----------------------------
+ res/raw/wizard_script_user.xml | 15 ++++++++-------
+ 2 files changed, 9 insertions(+), 36 deletions(-)
 
 diff --git a/res/raw/wizard_script.xml b/res/raw/wizard_script.xml
-index ee6d4d5..38ec267 100644
+index a7311f1..e7693fd 100644
 --- a/res/raw/wizard_script.xml
 +++ b/res/raw/wizard_script.xml
-@@ -1,7 +1,7 @@
- <?xml version="1.0" encoding="utf-8"?>
- <!--
-      SPDX-FileCopyrightText: 2014 Google Inc.
--     SPDX-FileCopyrightText: 2017-2025 The LineageOS Project
-+     SPDX-FileCopyrightText: 2017-2024 The LineageOS Project
-      SPDX-License-Identifier: Apache-2.0
- -->
- 
 @@ -21,28 +21,8 @@
          <result wizard:action="check_user_unlock_dpm_user_complete" wizard:name="dpm_profile_complete" wizard:resultCode="112" />
          <result wizard:action="check_user_unlock_work_setup_interrupted_qr_scan" wizard:name="check_user_unlock_work_setup_interrupted_qr_scan" wizard:resultCode="114" />
@@ -92,18 +83,9 @@ index ee6d4d5..38ec267 100644
          <result wizard:action="device_specific" />
      </WizardAction>
 diff --git a/res/raw/wizard_script_user.xml b/res/raw/wizard_script_user.xml
-index eedd73b..709b75f 100644
+index 5ab6dec..36c9025 100644
 --- a/res/raw/wizard_script_user.xml
 +++ b/res/raw/wizard_script_user.xml
-@@ -1,7 +1,7 @@
- <?xml version="1.0" encoding="utf-8"?>
- <!--
-      SPDX-FileCopyrightText: 2014 Google Inc.
--     SPDX-FileCopyrightText: 2017-2025 The LineageOS Project
-+     SPDX-FileCopyrightText: 2017-2024 The LineageOS Project
-      SPDX-License-Identifier: Apache-2.0
- -->
- 
 @@ -23,23 +23,24 @@
          <result wizard:action="oem_post_setup" />
      </WizardAction>
@@ -145,5 +127,5 @@ index eedd73b..709b75f 100644
      </WizardAction>
      <WizardAction wizard:flow="UserAccountFlow" wizard:script="android.resource://com.google.android.setupwizard/xml/wizard_script_user_account_flow" id="account_flow">
 -- 
-2.34.1
+2.49.0
 

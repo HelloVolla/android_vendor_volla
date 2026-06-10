@@ -1,7 +1,7 @@
-From 931ec0e0ebf07c3d93326433f773885f3d79d2fe Mon Sep 17 00:00:00 2001
+From 3a74da96a232b0ea0429b0831e96a97725036ecc Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Wed, 21 Feb 2024 05:11:04 +0330
-Subject: [PATCH 04/10] Add microg controller
+Subject: [PATCH] Add microg controller
 
 Change-Id: I0df284f5c4c30edd06a528e554970bc639a6b626
 ---
@@ -11,7 +11,7 @@ Change-Id: I0df284f5c4c30edd06a528e554970bc639a6b626
  create mode 100644 src/com/android/settings/applications/MicrogController.java
 
 diff --git a/res/xml/apps.xml b/res/xml/apps.xml
-index 171158d428f..8d8f81f4792 100644
+index f427e60e44a..1c961ba952c 100644
 --- a/res/xml/apps.xml
 +++ b/res/xml/apps.xml
 @@ -80,7 +80,8 @@
@@ -81,5 +81,5 @@ index 00000000000..52a65d0dc0f
 +
 +}
 -- 
-2.34.1
+2.49.0
 

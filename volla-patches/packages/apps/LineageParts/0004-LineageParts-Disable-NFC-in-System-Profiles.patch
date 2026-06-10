@@ -1,4 +1,4 @@
-From 27ee549df2a2211f35fc5c60f81a170f16061eaf Mon Sep 17 00:00:00 2001
+From c457fec6d5b9edc92a4fa932ba805de70955ddc1 Mon Sep 17 00:00:00 2001
 From: techyminati <sinha.aryan03@gmail.com>
 Date: Thu, 31 Aug 2023 15:20:55 +0200
 Subject: [PATCH] LineageParts: Disable NFC in System Profiles

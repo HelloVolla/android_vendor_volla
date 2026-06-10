@@ -1,10 +1,12 @@
-From df65140e2ab618b1a59248525a6e18774111536f Mon Sep 17 00:00:00 2001
+From d201601d5d53c4a60972c8ee528731ea7bd2dd15 Mon Sep 17 00:00:00 2001
 From: techyminati <techyminati@outlook.com>
 Date: Sat, 28 Jun 2025 10:13:09 +0000
-Subject: [PATCH 02/35] Revert "Allow signature spoofing for microG
+Subject: [PATCH] Revert "Allow signature spoofing for microG
  Companion/Services"
 
 This reverts commit e41076c6ef0b00e5dcfc4aaff3df53f9841098a8.
+
+Change-Id: I9c07321f7fd22bd6cf3d4bc03850d0ae9d07ff87
 ---
  .../com/android/server/pm/AppsFilterImpl.java |  2 -
  .../com/android/server/pm/ComputerEngine.java | 54 -------------------
@@ -15,7 +17,7 @@ This reverts commit e41076c6ef0b00e5dcfc4aaff3df53f9841098a8.
  delete mode 100644 services/core/jni/com_android_server_pm_ComputerEngine.cpp
 
 diff --git a/services/core/java/com/android/server/pm/AppsFilterImpl.java b/services/core/java/com/android/server/pm/AppsFilterImpl.java
-index 57263da936d6..cc4c2b5bf893 100644
+index 135fb7b8b22e..319e09216208 100644
 --- a/services/core/java/com/android/server/pm/AppsFilterImpl.java
 +++ b/services/core/java/com/android/server/pm/AppsFilterImpl.java
 @@ -36,7 +36,6 @@ import static com.android.server.pm.AppsFilterUtils.canQueryAsUpdateOwner;
@@ -26,7 +28,7 @@ index 57263da936d6..cc4c2b5bf893 100644
  
  import android.annotation.NonNull;
  import android.annotation.Nullable;
-@@ -600,7 +599,6 @@ public final class AppsFilterImpl extends AppsFilterLocked implements Watchable,
+@@ -609,7 +608,6 @@ public final class AppsFilterImpl extends AppsFilterLocked implements Watchable,
              newIsForceQueryable = mForceQueryable.contains(newPkgSetting.getAppId())
                              /* shared user that is already force queryable */
                              || newPkgSetting.isForceQueryableOverride() /* adb override */
@@ -35,7 +37,7 @@ index 57263da936d6..cc4c2b5bf893 100644
                              || newPkg.isForceQueryable()
                              || ArrayUtils.contains(mForceQueryableByDevicePackageNames,
 diff --git a/services/core/java/com/android/server/pm/ComputerEngine.java b/services/core/java/com/android/server/pm/ComputerEngine.java
-index 3eb3df412706..be2f58dc276c 100644
+index 2128e5c1b37f..3f0c0e1aead4 100644
 --- a/services/core/java/com/android/server/pm/ComputerEngine.java
 +++ b/services/core/java/com/android/server/pm/ComputerEngine.java
 @@ -103,7 +103,6 @@ import android.content.pm.UserPackage;
@@ -46,7 +48,7 @@ index 3eb3df412706..be2f58dc276c 100644
  import android.os.IBinder;
  import android.os.ParcelableException;
  import android.os.PatternMatcher;
-@@ -177,7 +176,6 @@ import java.util.Collections;
+@@ -176,7 +175,6 @@ import java.util.Collections;
  import java.util.Comparator;
  import java.util.List;
  import java.util.Objects;
@@ -54,7 +56,7 @@ index 3eb3df412706..be2f58dc276c 100644
  import java.util.Set;
  import java.util.UUID;
  
-@@ -426,10 +424,6 @@ public class ComputerEngine implements Computer {
+@@ -422,10 +420,6 @@ public class ComputerEngine implements Computer {
      private final PackageManagerInternal.ExternalSourcesPolicy mExternalSourcesPolicy;
      private final CrossProfileIntentResolverEngine mCrossProfileIntentResolverEngine;
  
@@ -65,7 +67,7 @@ index 3eb3df412706..be2f58dc276c 100644
      // PackageManagerService attributes that are primitives are referenced through the
      // pms object directly.  Primitives are the only attributes so referenced.
      protected final PackageManagerService mService;
-@@ -1489,49 +1483,6 @@ public class ComputerEngine implements Computer {
+@@ -1482,49 +1476,6 @@ public class ComputerEngine implements Computer {
          return result;
      }
  
@@ -115,8 +117,8 @@ index 3eb3df412706..be2f58dc276c 100644
      public final PackageInfo generatePackageInfo(PackageStateInternal ps,
              @PackageManager.PackageInfoFlagsBits long flags, int userId) {
          if (!mUserManager.exists(userId)) return null;
-@@ -1587,11 +1538,6 @@ public class ComputerEngine implements Computer {
-                             mApexManager.getActivePackageNameForApexModuleName(apexModuleName));
+@@ -1588,11 +1539,6 @@ public class ComputerEngine implements Computer {
+                             developerVerificationStatusInternal.isAppMetadataVerified());
                  }
              }
 -
@@ -128,18 +130,18 @@ index 3eb3df412706..be2f58dc276c 100644
          } else if ((flags & (MATCH_UNINSTALLED_PACKAGES | MATCH_ARCHIVED_PACKAGES)) != 0
                  && PackageUserStateUtils.isAvailable(state, flags)) {
 diff --git a/services/core/jni/Android.bp b/services/core/jni/Android.bp
-index a4d192c8eb2a..4c0cee404b68 100644
+index 109abd5330be..6bd4e821b3d7 100644
 --- a/services/core/jni/Android.bp
 +++ b/services/core/jni/Android.bp
-@@ -71,7 +71,6 @@ cc_library_static {
+@@ -70,7 +70,6 @@ cc_library_static {
          "com_android_server_vibrator_VibratorManagerService.cpp",
          "com_android_server_pdb_PersistentDataBlockService.cpp",
          "com_android_server_am_LowMemDetector.cpp",
 -        "com_android_server_pm_ComputerEngine.cpp",
          "com_android_server_pm_PackageManagerShellCommandDataLoader.cpp",
          "com_android_server_sensor_SensorService.cpp",
-         "com_android_server_wm_TaskFpsCallbackController.cpp",
-@@ -95,12 +94,6 @@ cc_library_static {
+         "com_android_server_utils_LongMethodTracer.cpp",
+@@ -96,12 +95,6 @@ cc_library_static {
      header_libs: [
          "bionic_libc_platform_headers",
      ],
@@ -197,7 +199,7 @@ index bbe298097a2a..000000000000
 -
 -} // namespace android
 diff --git a/services/core/jni/onload.cpp b/services/core/jni/onload.cpp
-index 0d61a13d272d..09fd8d4ac02e 100644
+index f9d952e16469..d50b0f909ab6 100644
 --- a/services/core/jni/onload.cpp
 +++ b/services/core/jni/onload.cpp
 @@ -58,7 +58,6 @@ int register_android_server_utils_AnrTimer(JNIEnv *env);
@@ -208,7 +210,7 @@ index 0d61a13d272d..09fd8d4ac02e 100644
  int register_android_server_com_android_server_pm_PackageManagerShellCommandDataLoader(JNIEnv* env);
  int register_android_server_AdbDebuggingManager(JNIEnv* env);
  int register_android_server_FaceService(JNIEnv* env);
-@@ -125,7 +124,6 @@ extern "C" jint JNI_OnLoad(JavaVM* vm, void* /* reserved */)
+@@ -126,7 +125,6 @@ extern "C" jint JNI_OnLoad(JavaVM* vm, void* /* reserved */)
      register_android_server_utils_LazyJniRegistrar(env);
      register_com_android_server_soundtrigger_middleware_AudioSessionProviderImpl(env);
      register_com_android_server_soundtrigger_middleware_ExternalCaptureStateTracker(env);

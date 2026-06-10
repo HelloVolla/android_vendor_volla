@@ -1,19 +1,18 @@
-From 3d9d1141751630bb86da32c0cb9bbadffab2b63a Mon Sep 17 00:00:00 2001
+From 0ecee298437200f7098ab98a226be7c71c911f95 Mon Sep 17 00:00:00 2001
 From: techyminati <techyminati@outlook.com>
 Date: Sat, 28 Jun 2025 09:05:06 +0000
 Subject: [PATCH] SystemUI: Re-Implement Volla Lockscreen Clock
 
 Change-Id: Ia1a1d9befea95ff6a2602bdbf83eb5291ad02ce2
 ---
- .../android/systemui/animation/TextInterpolator.kt    |  7 +++++++
+ .../android/systemui/animation/TextInterpolator.kt    |  6 ++++++
+ .../customization/clocks/common/res/values/dimens.xml |  4 ++--
  .../customization/res/layout/clock_default_large.xml  | 11 ++++++-----
  .../customization/res/layout/clock_default_small.xml  |  9 +++++----
- packages/SystemUI/customization/res/values/dimens.xml |  4 ++--
- .../res-keyguard/layout/keyguard_clock_switch.xml     |  2 ++
- 5 files changed, 22 insertions(+), 11 deletions(-)
+ 4 files changed, 19 insertions(+), 11 deletions(-)
 
 diff --git a/packages/SystemUI/animation/src/com/android/systemui/animation/TextInterpolator.kt b/packages/SystemUI/animation/src/com/android/systemui/animation/TextInterpolator.kt
-index 9c0c0ffc8d41..4976fd237874 100644
+index cb19e4bbfa49..8de44e39d3c1 100644
 --- a/packages/SystemUI/animation/src/com/android/systemui/animation/TextInterpolator.kt
 +++ b/packages/SystemUI/animation/src/com/android/systemui/animation/TextInterpolator.kt
 @@ -18,6 +18,7 @@ package com.android.systemui.animation
@@ -24,23 +23,42 @@ index 9c0c0ffc8d41..4976fd237874 100644
  import android.graphics.fonts.FontVariationAxis
  import android.graphics.text.PositionedGlyphs
  import android.text.Layout
-@@ -241,10 +242,16 @@ class TextInterpolator(layout: Layout, var typefaceCache: TypefaceVariantCache)
-                     // Move to drawing origin.
-                     val origin = layout.getDrawOrigin(lineNo)
-                     canvas.translate(origin, layout.getLineBaseline(lineNo).toFloat())
-+                    // techyminati: Implement VollaOS Clock
+@@ -283,10 +284,15 @@ class TextInterpolator(
+                         origin - (origin + offset),
+                         layout.getLineBaseline(lineNo).toFloat(),
+                     )
 +                    var oldColor = tmpPaint.color
 +                    if (lineNo == 1) {
 +                       tmpPaint.setColor(Color.parseColor("#FF3615"))
-+                   }
++                    }
  
                      run.fontRuns.forEach { fontRun ->
                          drawFontRun(canvas, run, fontRun, lineNo, tmpPaint)
                      }
-+                tmpPaint.setColor(oldColor)
++                    tmpPaint.setColor(oldColor)
                  } finally {
                      canvas.restore()
                  }
+diff --git a/packages/SystemUI/customization/clocks/common/res/values/dimens.xml b/packages/SystemUI/customization/clocks/common/res/values/dimens.xml
+index ea954cc16a42..7d7e57c9614b 100644
+--- a/packages/SystemUI/customization/clocks/common/res/values/dimens.xml
++++ b/packages/SystemUI/customization/clocks/common/res/values/dimens.xml
+@@ -30,7 +30,7 @@
+     <dimen name="keyguard_large_clock_top_margin">-60dp</dimen>
+ 
+     <!-- additional offset for clock switch area items -->
+-    <dimen name="small_clock_height">114dp</dimen>
++    <dimen name="small_clock_height">195dp</dimen>
+     <dimen name="small_clock_padding_top">28dp</dimen>
+     <dimen name="clock_padding_start">28dp</dimen>
+     <dimen name="weather_date_icon_padding">28dp</dimen>
+@@ -45,4 +45,4 @@
+     <dimen name="enhanced_smartspace_height">104dp</dimen>
+     <dimen name="status_view_margin_horizontal">0dp</dimen>
+     <dimen name="lock_icon_margin_bottom">74dp</dimen>
+-</resources>
+\ No newline at end of file
++</resources>
 diff --git a/packages/SystemUI/customization/res/layout/clock_default_large.xml b/packages/SystemUI/customization/res/layout/clock_default_large.xml
 index 0139d50dcfba..d0791014de14 100644
 --- a/packages/SystemUI/customization/res/layout/clock_default_large.xml
@@ -85,39 +103,6 @@ index ff6d7f9e2240..52dd66b07b80 100644
 -    lockScreenWeight="400" />
 +    dozeWeight="300"
 +    lockScreenWeight="900" />
-diff --git a/packages/SystemUI/customization/res/values/dimens.xml b/packages/SystemUI/customization/res/values/dimens.xml
-index 2bb5541f4b0a..528edc77d9eb 100644
---- a/packages/SystemUI/customization/res/values/dimens.xml
-+++ b/packages/SystemUI/customization/res/values/dimens.xml
-@@ -30,7 +30,7 @@
-     <dimen name="keyguard_large_clock_top_margin">-60dp</dimen>
- 
-     <!-- additional offset for clock switch area items -->
--    <dimen name="small_clock_height">114dp</dimen>
-+    <dimen name="small_clock_height">195dp</dimen>
-     <dimen name="small_clock_padding_top">28dp</dimen>
-     <dimen name="clock_padding_start">28dp</dimen>
-     <dimen name="weather_date_icon_padding">28dp</dimen>
-@@ -42,4 +42,4 @@
-     <dimen name="enhanced_smartspace_height">104dp</dimen>
-     <dimen name="status_view_margin_horizontal">0dp</dimen>
-     <dimen name="lock_icon_margin_bottom">74dp</dimen>
--</resources>
-\ No newline at end of file
-+</resources>
-diff --git a/packages/SystemUI/res-keyguard/layout/keyguard_clock_switch.xml b/packages/SystemUI/res-keyguard/layout/keyguard_clock_switch.xml
-index 8bef4759c55d..ec6d2ae6ee1a 100644
---- a/packages/SystemUI/res-keyguard/layout/keyguard_clock_switch.xml
-+++ b/packages/SystemUI/res-keyguard/layout/keyguard_clock_switch.xml
-@@ -32,6 +32,8 @@
-         android:layout_alignParentStart="true"
-         android:layout_alignParentTop="true"
-         android:clipChildren="false"
-+        android:fontFamily="ibmplexsans"
-+        android:textStyle="bold"
-         android:paddingStart="@dimen/clock_padding_start"
-         android:visibility="invisible" />
-     <com.android.keyguard.KeyguardClockFrame
 -- 
 2.49.0
 

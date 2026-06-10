@@ -1,7 +1,7 @@
-From 6af4d2575f82edcf8a0b4363698f49bb025d87f7 Mon Sep 17 00:00:00 2001
+From 5c6fb8067d753ecbf3a0c81282ab5276dfb1ea73 Mon Sep 17 00:00:00 2001
 From: Aryan Sinha <techyminati@outlook.com>
 Date: Fri, 27 Jun 2025 17:03:13 +0000
-Subject: [PATCH 1/2] audiopolicy: Add native MTK gain control hack
+Subject: [PATCH] audiopolicy: Add native MTK gain control hack
 
 Change-Id: Ia0f3d6433acf8375cf0e6c4c15c98e35b3553d7a
 ---
@@ -9,10 +9,10 @@ Change-Id: Ia0f3d6433acf8375cf0e6c4c15c98e35b3553d7a
  1 file changed, 8 insertions(+)
 
 diff --git a/services/audiopolicy/managerdefault/AudioPolicyManager.cpp b/services/audiopolicy/managerdefault/AudioPolicyManager.cpp
-index f133dfa..4c15c85 100644
+index abf7655470..557727f460 100644
 --- a/services/audiopolicy/managerdefault/AudioPolicyManager.cpp
 +++ b/services/audiopolicy/managerdefault/AudioPolicyManager.cpp
-@@ -8643,6 +8643,14 @@ status_t AudioPolicyManager::checkAndSetVolume(IVolumeCurves &curves,
+@@ -8872,6 +8872,14 @@ status_t AudioPolicyManager::checkAndSetVolume(IVolumeCurves &curves,
          bool voiceVolumeManagedByHost = !isBtScoVolSrc &&
                  !isSingleDeviceType(deviceTypes, audio_is_ble_out_device);
          setVoiceVolume(index, curves, voiceVolumeManagedByHost, delayMs);
@@ -28,5 +28,5 @@ index f133dfa..4c15c85 100644
      return NO_ERROR;
  }
 -- 
-2.34.1
+2.49.0
 

@@ -1,0 +1,109 @@
+From 6d86b81c0fb9efa9b9ed112fe67ae35dbb42cba5 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sun, 9 Jun 2024 15:30:27 +0330
+Subject: [PATCH] ChildMode: Disable secondary user
+
+Change-Id: I9698ebb25d414291cb9f7e05c9eeb5d21f7359a9
+---
+ .../platform/internal/ChildModeService.java   | 26 +++++++++++++++----
+ .../lineageos/childmode/ChildModeManager.java |  8 ++++++
+ .../childmode/IChildModeService.aidl          |  2 ++
+ 3 files changed, 31 insertions(+), 5 deletions(-)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java b/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
+index 7b581e60..b000d2dc 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/ChildModeService.java
+@@ -22,6 +22,7 @@ import android.annotation.Nullable;
+ import android.content.Context;
+ import android.os.Environment;
+ import android.os.SystemProperties;
++import android.os.Binder;
+ import android.os.IBinder;
+ import android.os.UserHandle;
+ import android.os.UserManager;
+@@ -137,7 +138,7 @@ public class ChildModeService extends LineageSystemService {
+     }
+ 
+     public boolean setPassword(String password) {
+-        if (isActivate())
++        if (isActivate() && isPasswortSet())
+             return false;
+ 
+         byte[] hash = mDigest.digest(password.getBytes(StandardCharsets.UTF_8));
+@@ -181,7 +182,8 @@ public class ChildModeService extends LineageSystemService {
+     private final IBinder mService = new IChildModeService.Stub() {
+         @Override
+         public void activate(boolean enable) {
+-            ChildModeService.this.activate(enable);
++            if (isAvailable())
++                ChildModeService.this.activate(enable);
+         }
+ 
+         @Override
+@@ -191,17 +193,31 @@ public class ChildModeService extends LineageSystemService {
+ 
+         @Override
+         public boolean setPassword(String password) {
+-            return ChildModeService.this.setPassword(password);
++            if (isAvailable())
++                return ChildModeService.this.setPassword(password);
++
++            return false;
+         }
+ 
+         @Override
+         public boolean validatePassword(String password) {
+-            return ChildModeService.this.validatePassword(password);
++            if (isAvailable())
++                return ChildModeService.this.validatePassword(password);
++
++            return false;
+         }
+ 
+         @Override
+         public boolean isPasswortSet() {
+-            return ChildModeService.this.isPasswortSet();
++            if (isAvailable())
++                return ChildModeService.this.isPasswortSet();
++
++            return false;
++        }
++
++        @Override
++        public boolean isAvailable() {
++            return Binder.getCallingUserHandle().isSystem();
+         }
+     };
+ }
+diff --git a/sdk/src/java/lineageos/childmode/ChildModeManager.java b/sdk/src/java/lineageos/childmode/ChildModeManager.java
+index 63f80f06..69c36433 100644
+--- a/sdk/src/java/lineageos/childmode/ChildModeManager.java
++++ b/sdk/src/java/lineageos/childmode/ChildModeManager.java
+@@ -112,4 +112,12 @@ public class ChildModeManager {
+             throw e.rethrowFromSystemServer();
+         }
+     }
++
++    public boolean isAvailable() {
++        try {
++            return sService.isAvailable();
++        } catch (RemoteException e) {
++            throw e.rethrowFromSystemServer();
++        }
++    }
+ }
+diff --git a/sdk/src/java/lineageos/childmode/IChildModeService.aidl b/sdk/src/java/lineageos/childmode/IChildModeService.aidl
+index 9f81df68..68aa7cb3 100644
+--- a/sdk/src/java/lineageos/childmode/IChildModeService.aidl
++++ b/sdk/src/java/lineageos/childmode/IChildModeService.aidl
+@@ -28,4 +28,6 @@ interface IChildModeService {
+     boolean validatePassword(String password);
+ 
+     boolean isPasswortSet();
++
++    boolean isAvailable();
+ }
+-- 
+2.49.0
+

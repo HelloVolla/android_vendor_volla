@@ -1,0 +1,1259 @@
+From 311ed36fa14601907ff46684aa85b58c23c3b5e1 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Tue, 2 Jun 2026 04:44:43 +0330
+Subject: [PATCH] Firewall: Add alert mode support
+
+Change-Id: I53231500c41e07b5b5a9e5278b8287257772b43d
+---
+ Android.bp                                    |   1 -
+ .../platform/internal/FirewallService.java    | 355 ++++++++++--
+ .../lineageos/platform/internal/TcpProxy.java | 535 ++++++++++++++++++
+ lineage/res/res/values/volla_strings.xml      |  10 +
+ lineage/res/res/values/volla_symbols.xml      |   8 +
+ .../lineageos/firewall/AllowedDomain.aidl     |  19 +
+ .../lineageos/firewall/AllowedDomain.java     |  62 ++
+ .../lineageos/firewall/FirewallManager.java   |  32 ++
+ .../lineageos/firewall/IFirewallService.aidl  |   9 +
+ 9 files changed, 986 insertions(+), 45 deletions(-)
+ create mode 100644 lineage/lib/main/java/org/lineageos/platform/internal/TcpProxy.java
+ create mode 100644 sdk/src/java/lineageos/firewall/AllowedDomain.aidl
+ create mode 100644 sdk/src/java/lineageos/firewall/AllowedDomain.java
+
+diff --git a/Android.bp b/Android.bp
+index c77052bb..7313b42a 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -91,7 +91,6 @@ java_defaults {
+         "vendor.lineage.health-V2-java",
+         "vendor.lineage.livedisplay-V1-java",
+         "vendor.lineage.touch-V1-java",
+-        "org.nanohttpd",
+         "bouncycastle-repackaged-unbundled",
+     ],
+ }
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index 64669b59..d30a0b98 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -19,6 +19,13 @@ package org.lineageos.platform.internal;
+ import static android.net.NetworkPolicyManager.POLICY_REJECT_ALL;
+ 
+ import android.app.ActivityManager;
++import android.app.Notification;
++import android.app.NotificationChannel;
++import android.app.NotificationManager;
++import android.app.PendingIntent;
++import android.graphics.Bitmap;
++import android.graphics.Canvas;
++import android.graphics.drawable.Drawable;
+ import android.annotation.NonNull;
+ import android.annotation.Nullable;
+ import android.content.BroadcastReceiver;
+@@ -134,7 +141,6 @@ import lineageos.firewall.IFirewallService;
+ 
+ import static android.provider.Settings.Global.PRIVATE_DNS_DEFAULT_MODE;
+ 
+-import fi.iki.elonen.NanoHTTPD;
+ 
+ public class FirewallService extends LineageSystemService {
+ 
+@@ -163,6 +169,20 @@ public class FirewallService extends LineageSystemService {
+     private static final String CA_KEY_ALIAS = "volla_firewall_ca";
+     private static final String CA_CERT_FILE = "firewall_ca.der";
+     private static final long LEAF_CERT_TTL_MS = 3_600_000L;
++    private static final String PROP_ALERT_MODE  = "persist.volla.firewall.alertmode";
++    private static final String PKG_SYSTEM       = "android";
++    private static final String ALLOWED_FILE_NAME    = "list-allowed.xml";
++    private static final String TAG_ALLOWED_DOMAINS  = "list-allowed";
++    private static final String TAG_ALLOWED_DOMAIN   = "allowed-domain";
++    private static final String ATTRIBUTE_EXPIRY     = "expiry";
++    private static final long   ALLOW_TEMP_MS        = 5 * 60 * 1000L;
++    private static final String NOTIF_CHANNEL_ID     = "firewall_alerts";
++    private static final String ACTION_DENY          = "lineageos.firewall.DENY";
++    private static final String ACTION_ALLOW_TEMP    = "lineageos.firewall.ALLOW_TEMP";
++    private static final String ACTION_ALLOW_PERM    = "lineageos.firewall.ALLOW_PERM";
++    private static final String EXTRA_DOMAIN         = "domain";
++    private static final String EXTRA_PKG            = "pkg";
++    private static final String EXTRA_NOTIF_ID       = "notif_id";
+     private static final AlgorithmIdentifier ECDSA_SHA256_ALG =
+         new AlgorithmIdentifier(new ASN1ObjectIdentifier("1.2.840.10045.4.3.2"));
+ 
+@@ -177,10 +197,14 @@ public class FirewallService extends LineageSystemService {
+     private AtomicFile mDomainListsFile;
+     private final FirewallHandler mHandler;
+ 
+-    private HttpWebServer mHttpWebServer;
+-    private HttpsWebServer mHttpsWebServer;
++    private TcpProxy mHttpProxy;
++    private TcpProxy mHttpsProxy;
+     private boolean isWebServerEnabled;
+ 
++    private AtomicFile mAllowedFile;
++    private final ArrayMap<String, Long> mAllowedDomains = new ArrayMap<>();
++    private BroadcastReceiver mNotifActionReceiver;
++
+     private final ArrayList<String> mManualDomainsList = new ArrayList<String>();
+     private final ArrayList<String> mAppsList = new ArrayList<String>();
+     private final ArrayList<DomainListInfo> mDomainListInfoList = new ArrayList<DomainListInfo>();
+@@ -189,6 +213,7 @@ public class FirewallService extends LineageSystemService {
+ 
+     private X509Certificate mCACert;
+     private PrivateKey mCAPrivateKey;
++    private SSLContext mSSLContext;
+     private final Object mCertLock = new Object();
+     private final ArrayMap<String, LeafCertEntry> mLeafCertCache = new ArrayMap<>();
+ 
+@@ -219,6 +244,10 @@ public class FirewallService extends LineageSystemService {
+         if (!UserManager.get(mContext).isManagedProfile(userHandle)) {
+             if (DEBUG_FIREWALL) Slog.v(TAG, "onUserUnlocking() is NOT ManagedProfile");
+             mUserId = userHandle;
++            mAllowedFile = new AtomicFile(new File(
++                Environment.getDataSystemCeDirectory(mUserId), ALLOWED_FILE_NAME));
++            setupNotificationChannel();
++            registerNotifActionReceiver();
+             initCA();
+             if (isActivate()) {
+                 SystemProperties.set("ctl.start", "volla.dnsmasq");
+@@ -227,6 +256,7 @@ public class FirewallService extends LineageSystemService {
+             mHandler.sendEmptyMessage(FirewallHandler.MSG_INIT_DOMAINS);
+             mHandler.sendEmptyMessage(FirewallHandler.MSG_INIT_APPS);
+             mHandler.sendEmptyMessage(FirewallHandler.MSG_INIT_DOMAIN_LISTS);
++            mHandler.sendEmptyMessage(FirewallHandler.MSG_INIT_ALLOWED);
+             mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
+         }
+     }
+@@ -307,19 +337,21 @@ public class FirewallService extends LineageSystemService {
+     private void activateWebServer(boolean enable) {
+         if (!isWebServerEnabled && enable) {
+             try {
+-                mHttpWebServer = new HttpWebServer();
+-                mHttpWebServer.start();
+-                mHttpsWebServer = new HttpsWebServer();
+-                mHttpsWebServer.start();
++                mHttpProxy = new TcpProxy(80, null, this::getBlockedPage,
++                    this::onDomainBlocked, mPackageManager, this::isAllowed);
++                mHttpProxy.start();
++                mHttpsProxy = new TcpProxy(443, mSSLContext, this::getBlockedPage,
++                    this::onDomainBlocked, mPackageManager, this::isAllowed);
++                mHttpsProxy.start();
+                 isWebServerEnabled = true;
+             } catch (Exception e) {
+                 e.printStackTrace();
+             }
+         } else if (isWebServerEnabled && !enable) {
+-            if (mHttpWebServer != null)
+-                mHttpWebServer.stop();
+-            if (mHttpsWebServer != null)
+-                mHttpsWebServer.stop();
++            if (mHttpProxy != null)
++                mHttpProxy.stop();
++            if (mHttpsProxy != null)
++                mHttpsProxy.stop();
+             isWebServerEnabled = false;
+         }
+     }
+@@ -389,6 +421,8 @@ public class FirewallService extends LineageSystemService {
+                 Slog.i(TAG, "initCA: CA missing from user store, reinstalling: " + userCaFile);
+                 installToSystemCaStore(mCACert);
+             }
++            mSSLContext = SSLContext.getInstance("TLS");
++            mSSLContext.init(new KeyManager[]{new SNIKeyManager()}, null, null);
+             Slog.i(TAG, "initCA: done, CA=" + mCACert.getSubjectDN()
+                 + " valid until " + mCACert.getNotAfter());
+         } catch (Exception e) {
+@@ -951,13 +985,23 @@ public class FirewallService extends LineageSystemService {
+         confLines.add("# Volla firewall fonfiguration file for dnsmasq.");
+         if (!allDomains.isEmpty()) {
+             for (String domain : allDomains) {
+-                if (blacklist)
+-                    confLines.add("address=/" + domain + "/127.0.0.1");
+-                else
++                if (blacklist) {
++                    if (!isAllowed(domain))
++                        confLines.add("address=/" + domain + "/127.0.0.1");
++                } else {
+                     confLines.add("server=/" + domain + "/" + COMMON_DNS);
++                }
+             }
+-            if (!blacklist)
++            if (!blacklist) {
++                // In whitelist mode, temporarily allowed domains need a server= line
++                // so the catch-all address=/#/127.0.0.1 doesn't block them.
++                for (int i = 0; i < mAllowedDomains.size(); i++) {
++                    String allowed = mAllowedDomains.keyAt(i);
++                    if (isAllowed(allowed) && !allDomains.contains(allowed))
++                        confLines.add("server=/" + allowed + "/" + COMMON_DNS);
++                }
+                 confLines.add("address=/#/127.0.0.1");
++            }
+         }
+         try {
+             Files.write(Paths.get(dnsmasqDir.getAbsolutePath() + "/dns.conf"),
+@@ -1112,6 +1156,221 @@ public class FirewallService extends LineageSystemService {
+                 .replace("DARKMODE_STATUS", String.valueOf(mUiModeMgr.isNightMode(Display.DEFAULT_DISPLAY)));
+     }
+ 
++    // ── Alert mode ────────────────────────────────────────────────────────
++
++    private void setAlertMode(boolean enable) {
++        SystemProperties.set(PROP_ALERT_MODE, Boolean.toString(enable));
++    }
++
++    private boolean isAlertMode() {
++        return SystemProperties.getBoolean(PROP_ALERT_MODE, false);
++    }
++
++    // ── Allowed list ──────────────────────────────────────────────────────
++
++    private void initAllowedDomains() {
++        mAllowedDomains.clear();
++        if (mAllowedFile == null) return;
++        try (FileInputStream fis = mAllowedFile.openRead()) {
++            XmlPullParser parser = Xml.newPullParser();
++            parser.setInput(fis, StandardCharsets.UTF_8.name());
++            int type;
++            while ((type = parser.next()) != XmlPullParser.END_DOCUMENT) {
++                if (type == XmlPullParser.START_TAG && TAG_ALLOWED_DOMAIN.equals(parser.getName())) {
++                    String name = parser.getAttributeValue(null, ATTRIBUTE_NAME);
++                    long expiry = Long.parseLong(parser.getAttributeValue(null, ATTRIBUTE_EXPIRY));
++                    if (name != null && (expiry == -1 || System.currentTimeMillis() < expiry))
++                        mAllowedDomains.put(name, expiry);
++                }
++            }
++        } catch (FileNotFoundException ignored) {
++        } catch (Exception e) {
++            Slog.e(TAG, "Failed to read allowed list", e);
++        }
++        Slog.i(TAG, "initAllowedDomains: loaded " + mAllowedDomains.size() + " entries");
++    }
++
++    private void writeAllowedDomains() {
++        if (mAllowedFile == null) return;
++        FileOutputStream fos = null;
++        try {
++            fos = mAllowedFile.startWrite();
++            XmlSerializer out = Xml.newSerializer();
++            out.setOutput(fos, StandardCharsets.UTF_8.name());
++            out.startDocument(null, true);
++            out.startTag(null, TAG_ALLOWED_DOMAINS);
++            for (int i = 0; i < mAllowedDomains.size(); i++) {
++                out.startTag(null, TAG_ALLOWED_DOMAIN);
++                out.attribute(null, ATTRIBUTE_NAME, mAllowedDomains.keyAt(i));
++                out.attribute(null, ATTRIBUTE_EXPIRY, Long.toString(mAllowedDomains.valueAt(i)));
++                out.endTag(null, TAG_ALLOWED_DOMAIN);
++            }
++            out.endTag(null, TAG_ALLOWED_DOMAINS);
++            out.endDocument();
++            mAllowedFile.finishWrite(fos);
++        } catch (Exception e) {
++            mAllowedFile.failWrite(fos);
++            Slog.e(TAG, "Failed to write allowed list", e);
++        }
++    }
++
++    private boolean isAllowed(String domain) {
++        Long expiry = mAllowedDomains.get(domain);
++        if (expiry == null) return false;
++        return expiry == -1 || System.currentTimeMillis() < expiry;
++    }
++
++    private List<lineageos.firewall.AllowedDomain> getAllowedDomainsList() {
++        List<lineageos.firewall.AllowedDomain> result = new ArrayList<>();
++        for (int i = 0; i < mAllowedDomains.size(); i++) {
++            result.add(new lineageos.firewall.AllowedDomain(
++                mAllowedDomains.keyAt(i), mAllowedDomains.valueAt(i)));
++        }
++        return result;
++    }
++
++    private void removeAllowedDomain(String name) {
++        if (mAllowedDomains.remove(name) != null) {
++            mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_ALLOWED);
++            mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
++        }
++    }
++
++    // Use a method reference so the lambda body (field initializer) does not directly
++    // reference mHandler — a blank-final field only assigned in the constructor.
++    // mHandler is accessed inside checkExpiredAllowedDomains() at call time, which is safe.
++    private final Runnable mExpireRunnable = this::checkExpiredAllowedDomains;
++
++    private void checkExpiredAllowedDomains() {
++        long now = System.currentTimeMillis();
++        boolean changed = false;
++        for (int i = mAllowedDomains.size() - 1; i >= 0; i--) {
++            long exp = mAllowedDomains.valueAt(i);
++            if (exp != -1 && now >= exp) {
++                mAllowedDomains.removeAt(i);
++                changed = true;
++            }
++        }
++        if (changed) {
++            writeAllowedDomains();
++            mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
++        }
++    }
++
++    // ── Notifications ─────────────────────────────────────────────────────
++
++    private void setupNotificationChannel() {
++        NotificationManager nm = mContext.getSystemService(NotificationManager.class);
++        if (nm == null) return;
++        NotificationChannel ch = new NotificationChannel(
++            NOTIF_CHANNEL_ID,
++            mContext.getString(org.lineageos.platform.internal.R.string.firewall_notif_channel_name),
++            NotificationManager.IMPORTANCE_HIGH);
++        ch.setDescription(mContext.getString(
++            org.lineageos.platform.internal.R.string.firewall_notif_channel_desc));
++        nm.createNotificationChannel(ch);
++    }
++
++    private void registerNotifActionReceiver() {
++        if (mNotifActionReceiver != null) return;
++        mNotifActionReceiver = new BroadcastReceiver() {
++            @Override
++            public void onReceive(Context context, Intent intent) {
++                String action = intent.getAction();
++                String domain = intent.getStringExtra(EXTRA_DOMAIN);
++                int notifId = intent.getIntExtra(EXTRA_NOTIF_ID, 0);
++                if (domain == null || action == null) return;
++
++                NotificationManager nm = mContext.getSystemService(NotificationManager.class);
++                if (nm != null) nm.cancel(notifId);
++
++                if (ACTION_ALLOW_TEMP.equals(action)) {
++                    long expiry = System.currentTimeMillis() + ALLOW_TEMP_MS;
++                    mAllowedDomains.put(domain, expiry);
++                    writeAllowedDomains();
++                    mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
++                    mHandler.removeCallbacks(mExpireRunnable);
++                    mHandler.postDelayed(mExpireRunnable, ALLOW_TEMP_MS + 1000);
++                } else if (ACTION_ALLOW_PERM.equals(action)) {
++                    mAllowedDomains.put(domain, -1L);
++                    writeAllowedDomains();
++                    mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
++                }
++                // ACTION_DENY: notification already cancelled above, nothing else to do
++            }
++        };
++        IntentFilter filter = new IntentFilter();
++        filter.addAction(ACTION_DENY);
++        filter.addAction(ACTION_ALLOW_TEMP);
++        filter.addAction(ACTION_ALLOW_PERM);
++        mContext.registerReceiver(mNotifActionReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
++    }
++
++    void onDomainBlocked(String domain, int uid, String pkg, String appName) {
++        if (!isAlertMode()) return;
++        int notifId = domain.hashCode();
++
++        // Set package="android" to make the intent explicit — bypasses the
++        // AOSP protected-broadcast check for uid=1000 sending implicit broadcasts.
++        Intent denyIntent = new Intent(ACTION_DENY).setPackage(PKG_SYSTEM)
++            .putExtra(EXTRA_DOMAIN, domain).putExtra(EXTRA_NOTIF_ID, notifId);
++        Intent allowTmpIntent = new Intent(ACTION_ALLOW_TEMP).setPackage(PKG_SYSTEM)
++            .putExtra(EXTRA_DOMAIN, domain).putExtra(EXTRA_PKG, pkg)
++            .putExtra(EXTRA_NOTIF_ID, notifId);
++        Intent allowPermIntent = new Intent(ACTION_ALLOW_PERM).setPackage(PKG_SYSTEM)
++            .putExtra(EXTRA_DOMAIN, domain).putExtra(EXTRA_PKG, pkg)
++            .putExtra(EXTRA_NOTIF_ID, notifId);
++
++        int flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
++        PendingIntent denyPi     = PendingIntent.getBroadcast(mContext, notifId,     denyIntent,     flags);
++        PendingIntent allowTmpPi = PendingIntent.getBroadcast(mContext, notifId + 1, allowTmpIntent, flags);
++        PendingIntent allowPermPi = PendingIntent.getBroadcast(mContext, notifId + 2, allowPermIntent, flags);
++
++        Notification.Builder builder = new Notification.Builder(mContext, NOTIF_CHANNEL_ID)
++            .setSmallIcon(android.R.drawable.ic_dialog_alert)
++            .setContentTitle(mContext.getString(
++                org.lineageos.platform.internal.R.string.firewall_notif_title))
++            .setContentText(mContext.getString(
++                org.lineageos.platform.internal.R.string.firewall_notif_text, appName, domain))
++            .setAutoCancel(true)
++            .setTimeoutAfter(10_000)
++            .setVibrate(new long[]{0, 300, 100, 300})
++            .addAction(new Notification.Action.Builder(null, mContext.getString(
++                org.lineageos.platform.internal.R.string.firewall_notif_action_deny), denyPi).build())
++            .addAction(new Notification.Action.Builder(null, mContext.getString(
++                org.lineageos.platform.internal.R.string.firewall_notif_action_allow_temp), allowTmpPi).build())
++            .addAction(new Notification.Action.Builder(null, mContext.getString(
++                org.lineageos.platform.internal.R.string.firewall_notif_action_allow_perm), allowPermPi).build());
++
++        if (pkg != null) {
++            try {
++                Drawable d = mPackageManager.getApplicationIcon(pkg);
++                Bitmap icon = drawableToBitmap(d);
++                builder.setLargeIcon(icon);
++            } catch (Exception ignored) {}
++        }
++
++        NotificationManager nm = mContext.getSystemService(NotificationManager.class);
++        if (nm != null) {
++            nm.cancel(notifId);
++            nm.notify(notifId, builder.build());
++        }
++    }
++
++    private static Bitmap drawableToBitmap(Drawable drawable) {
++        if (drawable instanceof android.graphics.drawable.BitmapDrawable) {
++            Bitmap bm = ((android.graphics.drawable.BitmapDrawable) drawable).getBitmap();
++            if (bm != null) return bm;
++        }
++        int w = Math.max(drawable.getIntrinsicWidth(), 1);
++        int h = Math.max(drawable.getIntrinsicHeight(), 1);
++        Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
++        Canvas canvas = new Canvas(bm);
++        drawable.setBounds(0, 0, w, h);
++        drawable.draw(canvas);
++        return bm;
++    }
++
+     private final IBinder mService = new IFirewallService.Stub() {
+         @Override
+         public void activate(boolean enable) {
+@@ -1214,6 +1473,26 @@ public class FirewallService extends LineageSystemService {
+         public List<String> getAppsList() {
+             return FirewallService.this.getAppsList();
+         }
++
++        @Override
++        public void alertMode(boolean enable) {
++            FirewallService.this.setAlertMode(enable);
++        }
++
++        @Override
++        public boolean isAlertMode() {
++            return FirewallService.this.isAlertMode();
++        }
++
++        @Override
++        public List<lineageos.firewall.AllowedDomain> getAllowedDomains() {
++            return FirewallService.this.getAllowedDomainsList();
++        }
++
++        @Override
++        public void removeAllowedDomain(String name) {
++            FirewallService.this.removeAllowedDomain(name);
++        }
+     };
+ 
+     private class FirewallHandler extends Handler {
+@@ -1226,6 +1505,8 @@ public class FirewallService extends LineageSystemService {
+         public static final int MSG_RESET_RESTRICTED_APPS = 5;
+         public static final int MSG_INIT_DOMAIN_LISTS = 6;
+         public static final int MSG_WRITE_DOMAIN_LISTS_STATE = 7;
++        public static final int MSG_INIT_ALLOWED = 8;
++        public static final int MSG_WRITE_ALLOWED = 9;
+ 
+         public FirewallHandler(Looper looper) {
+             super(looper);
+@@ -1258,6 +1539,12 @@ public class FirewallService extends LineageSystemService {
+                 case MSG_WRITE_DOMAIN_LISTS_STATE:
+                     writeDomainListsState();
+                     break;
++                case MSG_INIT_ALLOWED:
++                    initAllowedDomains();
++                    break;
++                case MSG_WRITE_ALLOWED:
++                    writeAllowedDomains();
++                    break;
+                 default:
+                     Slog.w(TAG, "Unknown message:" + msg.what);
+             }
+@@ -1281,15 +1568,22 @@ public class FirewallService extends LineageSystemService {
+         @Override
+         public String chooseEngineServerAlias(String keyType,
+                 java.security.Principal[] issuers, javax.net.ssl.SSLEngine engine) {
+-            String sni = extractSNI(engine.getHandshakeSession());
++            // Prefer the SNI pre-parsed from the raw ClientHello bytes (set by TcpProxy
++            // via ThreadLocal). Conscrypt's getRequestedServerNames() is unreliable in the
++            // bridge setup and may return null even when the ClientHello contains SNI.
++            String sni = TcpProxy.sBridgeSni.get();
++            if (sni != null) return sni;
++            sni = extractSNI(engine.getHandshakeSession());
+             return sni != null ? sni : "blocked.local";
+         }
+ 
+         @Override
+         public String chooseServerAlias(String keyType, java.security.Principal[] issuers,
+                 java.net.Socket socket) {
++            String sni = TcpProxy.sBridgeSni.get();
++            if (sni != null) return sni;
+             if (socket instanceof SSLSocket) {
+-                String sni = extractSNI(((SSLSocket) socket).getHandshakeSession());
++                sni = extractSNI(((SSLSocket) socket).getHandshakeSession());
+                 if (sni != null) return sni;
+             }
+             return "blocked.local";
+@@ -1317,32 +1611,5 @@ public class FirewallService extends LineageSystemService {
+                 java.net.Socket s) { return null; }
+     }
+ 
+-    public class HttpWebServer extends NanoHTTPD {
+-        public HttpWebServer() {
+-            super(80);
+-        }
+-
+-        @Override
+-        public Response serve(IHTTPSession session) {
+-            return newFixedLengthResponse(getBlockedPage());
+-        }
+-    }
+-
+-    public class HttpsWebServer extends NanoHTTPD {
+-        public HttpsWebServer() {
+-            super(443);
+-            try {
+-                SSLContext sslContext = SSLContext.getInstance("TLS");
+-                sslContext.init(new KeyManager[]{new SNIKeyManager()}, null, null);
+-                makeSecure(sslContext.getServerSocketFactory(), null);
+-            } catch (Exception e) {
+-                Slog.e(TAG, "Failed to create HTTPS server", e);
+-            }
+-        }
+ 
+-        @Override
+-        public Response serve(IHTTPSession session) {
+-            return newFixedLengthResponse(getBlockedPage());
+-        }
+-    }
+ }
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/TcpProxy.java b/lineage/lib/main/java/org/lineageos/platform/internal/TcpProxy.java
+new file mode 100644
+index 00000000..b96c4d8b
+--- /dev/null
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/TcpProxy.java
+@@ -0,0 +1,535 @@
++/**
++ * Copyright (C) 2022 Hallo Welt Systeme UG
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.lineageos.platform.internal;
++
++import android.content.pm.PackageManager;
++import android.util.Slog;
++
++import java.io.BufferedReader;
++import java.io.ByteArrayOutputStream;
++import java.io.FileReader;
++import java.io.IOException;
++import java.io.InputStream;
++import java.io.OutputStream;
++import java.net.DatagramPacket;
++import java.net.DatagramSocket;
++import java.net.InetAddress;
++import java.net.InetSocketAddress;
++import java.net.ServerSocket;
++import java.net.Socket;
++import java.nio.charset.StandardCharsets;
++import java.util.Arrays;
++import java.util.Locale;
++import java.util.concurrent.ExecutorService;
++import java.util.concurrent.Executors;
++import java.util.function.Predicate;
++import java.util.function.Supplier;
++
++import javax.net.ssl.SSLContext;
++import javax.net.ssl.SSLSocket;
++
++import libcore.io.IoUtils;
++
++/**
++ * Raw TCP proxy on port 80 (HTTP) or 443 (HTTPS).
++ *
++ * Peeks the first bytes of each incoming connection to extract the hostname
++ * (SNI for HTTPS, Host header for HTTP), notifies the BlockListener, then
++ * serves the block page — plain HTTP on port 80, MITM TLS on port 443.
++ */
++class TcpProxy {
++
++    interface BlockListener {
++        void onBlocked(String domain, int uid, String packageName, String appName);
++    }
++
++    private static final String TAG = "TcpProxy";
++
++    // Passes the already-parsed SNI to SNIKeyManager during the MITM TLS handshake.
++    // Conscrypt's server-side getRequestedServerNames() is unreliable in the loopback
++    // bridge setup, so we carry the SNI on the calling thread via ThreadLocal instead.
++    static final ThreadLocal<String> sBridgeSni = new ThreadLocal<>();
++
++    private final int mPort;
++    private final SSLContext mSSLContext; // null for HTTP (port 80)
++    private final Supplier<String> mBlockPageSupplier;
++    private final BlockListener mListener;
++    private final PackageManager mPackageManager;
++    private final Predicate<String> mIsAllowed;
++
++    private ServerSocket mServerSocket;
++    private Thread mAcceptThread;
++    private volatile boolean mRunning;
++    private final ExecutorService mPool = Executors.newCachedThreadPool();
++
++    TcpProxy(int port, SSLContext sslContext, Supplier<String> blockPageSupplier,
++            BlockListener listener, PackageManager packageManager, Predicate<String> isAllowed) {
++        mPort = port;
++        mSSLContext = sslContext;
++        mBlockPageSupplier = blockPageSupplier;
++        mListener = listener;
++        mPackageManager = packageManager;
++        mIsAllowed = isAllowed;
++    }
++
++    void start() throws IOException {
++        mServerSocket = new ServerSocket(mPort);
++        mRunning = true;
++        mAcceptThread = new Thread(this::acceptLoop, "TcpProxy-" + mPort + "-accept");
++        mAcceptThread.setDaemon(true);
++        mAcceptThread.start();
++        Slog.i(TAG, "started on port " + mPort);
++    }
++
++    void stop() {
++        mRunning = false;
++        IoUtils.closeQuietly(mServerSocket);
++        mPool.shutdown();
++        Slog.i(TAG, "stopped port " + mPort);
++    }
++
++    private void acceptLoop() {
++        while (mRunning) {
++            try {
++                Socket client = mServerSocket.accept();
++                mPool.execute(() -> handle(client));
++            } catch (IOException e) {
++                if (mRunning) Slog.e(TAG, "accept error on port " + mPort, e);
++            }
++        }
++    }
++
++    private void handle(Socket client) {
++        try {
++            client.setSoTimeout(10_000);
++            byte[] peek = new byte[4096];
++            int n = client.getInputStream().read(peek);
++            if (n <= 0) {
++                IoUtils.closeQuietly(client);
++                return;
++            }
++
++            String domain = (mSSLContext != null)
++                ? parseSniFromClientHello(peek, n)
++                : parseHostFromHttpRequest(peek, n);
++
++            int uid = getUidFromSocket(client);
++            String pkg = getPackageForUid(mPackageManager, uid);
++            String appName = getAppNameForUid(mPackageManager, uid);
++            Slog.i(TAG, "App " + appName + " (" + pkg + ") on port " + mPort
++                + " trying to access " + domain);
++
++            // If the domain was recently allowed (e.g. after tapping "Allow" in a notification,
++            // or the browser DNS cache still points to us after dnsmasq was updated), pass through
++            // transparently to the real server instead of serving the block page.
++            if (domain != null && mIsAllowed.test(domain)) {
++                passThrough(client, peek, n, domain);
++                return;
++            }
++
++            mListener.onBlocked(domain != null ? domain : "unknown", uid, pkg, appName);
++
++            if (mSSLContext != null) {
++                sBridgeSni.set(domain);
++                try {
++                    mitmBlock(client, peek, n);
++                } finally {
++                    sBridgeSni.remove();
++                }
++            } else {
++                serveBlockPage(client);
++            }
++        } catch (Exception e) {
++            Slog.e(TAG, "handle error on port " + mPort, e);
++            IoUtils.closeQuietly(client);
++        }
++    }
++
++    // ── HTTPS MITM block (port 443) ────────────────────────────────────────
++
++    private void mitmBlock(Socket client, byte[] peeked, int n) {
++        try {
++            // Conscrypt doesn't support createSocket(Socket, InputStream, boolean).
++            // Use a loopback bridge so SSLSocket can use createSocket(Socket, String, int, boolean).
++            ServerSocket bridge = new ServerSocket(0, 1, InetAddress.getLoopbackAddress());
++            bridge.setSoTimeout(5000);
++            Socket connector = new Socket(InetAddress.getLoopbackAddress(), bridge.getLocalPort());
++            Socket bridgeAccepted = bridge.accept();
++            bridge.close();
++
++            // Replay peeked ClientHello bytes, then relay the rest of the client stream.
++            connector.getOutputStream().write(peeked, 0, n);
++            mPool.execute(() -> {
++                try { pipe(client.getInputStream(), connector.getOutputStream()); }
++                catch (Exception ignored) {}
++                finally { IoUtils.closeQuietly(connector); }
++            });
++
++            // Relay TLS-encrypted responses back to the browser.
++            mPool.execute(() -> {
++                try { pipe(connector.getInputStream(), client.getOutputStream()); }
++                catch (Exception ignored) {}
++                finally { IoUtils.closeQuietly(client); }
++            });
++
++            SSLSocket ssl = (SSLSocket) mSSLContext.getSocketFactory()
++                .createSocket(bridgeAccepted, "blocked.local", 443, true);
++            ssl.setUseClientMode(false);
++            ssl.setSoTimeout(10_000);
++            ssl.startHandshake();
++
++            // Drain HTTP request headers.
++            InputStream in = ssl.getInputStream();
++            byte[] req = new byte[8192];
++            int reqLen = 0;
++            while (reqLen < req.length) {
++                int b = in.read();
++                if (b < 0) break;
++                req[reqLen++] = (byte) b;
++                if (reqLen >= 4
++                        && req[reqLen - 4] == '\r' && req[reqLen - 3] == '\n'
++                        && req[reqLen - 2] == '\r' && req[reqLen - 1] == '\n') break;
++            }
++
++            byte[] body = mBlockPageSupplier.get().getBytes(StandardCharsets.UTF_8);
++            OutputStream out = ssl.getOutputStream();
++            out.write(("HTTP/1.1 200 OK\r\n"
++                + "Content-Type: text/html; charset=utf-8\r\n"
++                + "Content-Length: " + body.length + "\r\n"
++                + "Connection: close\r\n\r\n").getBytes(StandardCharsets.UTF_8));
++            out.write(body);
++            out.flush();
++            ssl.close();
++        } catch (Exception e) {
++            Slog.e(TAG, "mitmBlock error", e);
++            IoUtils.closeQuietly(client);
++        }
++    }
++
++    // ── HTTP block (port 80) ───────────────────────────────────────────────
++
++    private void serveBlockPage(Socket client) {
++        try {
++            byte[] body = mBlockPageSupplier.get().getBytes(StandardCharsets.UTF_8);
++            OutputStream out = client.getOutputStream();
++            out.write(("HTTP/1.1 200 OK\r\n"
++                + "Content-Type: text/html; charset=utf-8\r\n"
++                + "Content-Length: " + body.length + "\r\n"
++                + "Connection: close\r\n\r\n").getBytes(StandardCharsets.UTF_8));
++            out.write(body);
++            out.flush();
++        } catch (Exception e) {
++            Slog.e(TAG, "serveBlockPage error", e);
++        } finally {
++            IoUtils.closeQuietly(client);
++        }
++    }
++
++    // ── SNI / Host parsing ─────────────────────────────────────────────────
++
++    /**
++     * Extracts the SNI hostname from raw TLS ClientHello bytes.
++     * Returns null if not a ClientHello or the SNI extension is absent.
++     *
++     * TLS record: [0]=0x16 [1-2]=version [3-4]=recordLen
++     * Handshake:  [5]=0x01 [6-8]=bodyLen [9-10]=clientVersion
++     *             [11-42]=random [43]=sidLen …
++     * Extensions: type(2)+len(2)+data; SNI type=0x0000
++     */
++    static String parseSniFromClientHello(byte[] buf, int len) {
++        try {
++            if (len < 43) return null;
++            if ((buf[0] & 0xFF) != 0x16) return null;
++            if ((buf[5] & 0xFF) != 0x01) return null;
++
++            int pos = 43;
++            if (pos >= len) return null;
++
++            int sidLen = buf[pos++] & 0xFF;
++            pos += sidLen;
++            if (pos + 2 > len) return null;
++
++            int csLen = ((buf[pos] & 0xFF) << 8) | (buf[pos + 1] & 0xFF);
++            pos += 2 + csLen;
++            if (pos >= len) return null;
++
++            int cmLen = buf[pos++] & 0xFF;
++            pos += cmLen;
++            if (pos + 2 > len) return null;
++
++            int extTotal = ((buf[pos] & 0xFF) << 8) | (buf[pos + 1] & 0xFF);
++            pos += 2;
++            int extEnd = pos + extTotal;
++
++            while (pos + 4 <= extEnd && pos + 4 <= len) {
++                int extType = ((buf[pos] & 0xFF) << 8) | (buf[pos + 1] & 0xFF);
++                int extLen = ((buf[pos + 2] & 0xFF) << 8) | (buf[pos + 3] & 0xFF);
++                pos += 4;
++                if (extType == 0x0000) {
++                    pos += 2;
++                    if (pos >= len || buf[pos] != 0x00) return null;
++                    pos++;
++                    if (pos + 2 > len) return null;
++                    int nameLen = ((buf[pos] & 0xFF) << 8) | (buf[pos + 1] & 0xFF);
++                    pos += 2;
++                    if (pos + nameLen > len) return null;
++                    return new String(buf, pos, nameLen, StandardCharsets.US_ASCII);
++                }
++                pos += extLen;
++            }
++        } catch (Exception ignored) {}
++        return null;
++    }
++
++    /**
++     * Extracts the Host header value from raw HTTP request bytes.
++     * Returns null if the Host header is absent.
++     */
++    static String parseHostFromHttpRequest(byte[] buf, int len) {
++        try {
++            String req = new String(buf, 0, len, StandardCharsets.ISO_8859_1);
++            for (String line : req.split("\r\n")) {
++                if (line.isEmpty()) break;
++                if (line.toLowerCase(Locale.ROOT).startsWith("host:")) {
++                    String host = line.substring(5).trim();
++                    int colon = host.indexOf(':');
++                    return colon >= 0 ? host.substring(0, colon) : host;
++                }
++            }
++        } catch (Exception ignored) {}
++        return null;
++    }
++
++    // ── UID / app name lookup ──────────────────────────────────────────────
++
++    /**
++     * Reads /proc/net/tcp (IPv4) or /proc/net/tcp6 (IPv6) to find the UID of
++     * the app whose local socket endpoint matches the client's source address/port.
++     */
++    static int getUidFromSocket(Socket socket) {
++        try {
++            InetAddress addr = socket.getInetAddress();
++            int port = socket.getPort();
++            byte[] b = addr.getAddress();
++
++            String portHex = String.format("%04X", port);
++            String addrHex;
++            String procFile;
++
++            if (b.length == 4) {
++                addrHex = String.format("%02X%02X%02X%02X",
++                    b[3] & 0xFF, b[2] & 0xFF, b[1] & 0xFF, b[0] & 0xFF);
++                procFile = "/proc/net/tcp";
++            } else {
++                StringBuilder sb = new StringBuilder();
++                for (int i = 0; i < 4; i++) {
++                    int g = i * 4;
++                    sb.append(String.format("%02X%02X%02X%02X",
++                        b[g+3] & 0xFF, b[g+2] & 0xFF, b[g+1] & 0xFF, b[g] & 0xFF));
++                }
++                addrHex = sb.toString();
++                procFile = "/proc/net/tcp6";
++            }
++
++            String localTarget = addrHex + ":" + portHex;
++            try (BufferedReader br = new BufferedReader(new FileReader(procFile))) {
++                String header = br.readLine();
++                if (header == null) return -1;
++                int uidIdx = parseUidDataIndex(header);
++                String line;
++                while ((line = br.readLine()) != null) {
++                    String[] parts = line.trim().split("\\s+");
++                    if (parts.length > uidIdx
++                            && parts[1].equalsIgnoreCase(localTarget)
++                            && parts[3].equals("01")) {
++                        return Integer.parseInt(parts[uidIdx]);
++                    }
++                }
++            }
++        } catch (Exception ignored) {}
++        return -1;
++    }
++
++    /**
++     * Maps the "uid" word in the /proc/net/tcp header to its data-row field index,
++     * accounting for merged fields (tx_queue+rx_queue, tr+tm->when).
++     */
++    private static int parseUidDataIndex(String header) {
++        String[] words = header.trim().split("\\s+");
++        int merged = 0;
++        boolean prevWasTxQueue = false;
++        boolean prevWasTr = false;
++        for (int i = 0; i < words.length; i++) {
++            String w = words[i].toLowerCase(Locale.ROOT);
++            if ("uid".equals(w)) return i - merged;
++            if ("rx_queue".equals(w) && prevWasTxQueue) merged++;
++            if (w.startsWith("tm->") && prevWasTr) merged++;
++            prevWasTxQueue = "tx_queue".equals(w);
++            prevWasTr = "tr".equals(w);
++        }
++        return 7;
++    }
++
++    static String getPackageForUid(PackageManager pm, int uid) {
++        if (pm == null || uid < 0) return null;
++        try {
++            String[] pkgs = pm.getPackagesForUid(uid);
++            if (pkgs != null && pkgs.length > 0) return pkgs[0];
++        } catch (Exception ignored) {}
++        return null;
++    }
++
++    static String getAppNameForUid(PackageManager pm, int uid) {
++        if (pm == null || uid < 0) return "unknown";
++        try {
++            String[] pkgs = pm.getPackagesForUid(uid);
++            if (pkgs != null && pkgs.length > 0) {
++                return pm.getApplicationLabel(
++                    pm.getApplicationInfo(pkgs[0], 0)).toString();
++            }
++        } catch (Exception ignored) {}
++        return "uid:" + uid;
++    }
++
++    // ── Passthrough (for allowed domains) ─────────────────────────────────
++
++    private void passThrough(Socket client, byte[] peeked, int n, String domain) {
++        try {
++            InetAddress origin = resolveViaPublicDns(domain);
++            if (origin == null || origin.isLoopbackAddress()) {
++                Slog.e(TAG, "passThrough: bad origin for " + domain + " → " + origin);
++                IoUtils.closeQuietly(client);
++                return;
++            }
++            Socket originSock = new Socket(origin, mPort);
++            client.setSoTimeout(0);
++            originSock.setSoTimeout(0);
++            originSock.getOutputStream().write(peeked, 0, n);
++
++            mPool.execute(() -> {
++                try { pipe(client.getInputStream(), originSock.getOutputStream()); }
++                catch (Exception ignored) {}
++                finally { IoUtils.closeQuietly(client); IoUtils.closeQuietly(originSock); }
++            });
++            mPool.execute(() -> {
++                try { pipe(originSock.getInputStream(), client.getOutputStream()); }
++                catch (Exception ignored) {}
++                finally { IoUtils.closeQuietly(client); IoUtils.closeQuietly(originSock); }
++            });
++        } catch (Exception e) {
++            Slog.e(TAG, "passThrough error for " + domain, e);
++            IoUtils.closeQuietly(client);
++        }
++    }
++
++    /**
++     * Resolves a hostname via DNS-over-TCP to 1.1.1.1:53, bypassing the local
++     * dnsmasq (whose iptables rule only redirects UDP port 53).
++     * Falls back to system DNS if the TCP query fails, rejecting loopback results
++     * to prevent the proxy from connecting back to itself.
++     */
++    static InetAddress resolveViaPublicDns(String hostname) {
++        try {
++            byte[] qname = encodeDnsName(hostname);
++            int qlen = 12 + qname.length + 4;
++            byte[] query = new byte[qlen];
++            query[0] = 0x12; query[1] = 0x34;
++            query[2] = 0x01; query[3] = 0x00;
++            query[4] = 0x00; query[5] = 0x01;
++            System.arraycopy(qname, 0, query, 12, qname.length);
++            int p = 12 + qname.length;
++            query[p++] = 0x00; query[p++] = 0x01;
++            query[p++] = 0x00; query[p]   = 0x01;
++
++            InetAddress dnsServer = InetAddress.getByAddress(new byte[]{1, 1, 1, 1});
++            try (Socket tcp = new Socket()) {
++                tcp.connect(new InetSocketAddress(dnsServer, 53), 3000);
++                tcp.setSoTimeout(3000);
++                OutputStream out = tcp.getOutputStream();
++                out.write((qlen >> 8) & 0xFF);
++                out.write(qlen & 0xFF);
++                out.write(query);
++                out.flush();
++
++                InputStream in = tcp.getInputStream();
++                int hi = in.read(), lo = in.read();
++                if (hi < 0 || lo < 0) throw new IOException("EOF on response length");
++                byte[] resp = new byte[(hi << 8) | lo];
++                int off = 0;
++                while (off < resp.length) {
++                    int r = in.read(resp, off, resp.length - off);
++                    if (r < 0) throw new IOException("EOF on response body");
++                    off += r;
++                }
++                int ancount = ((resp[6] & 0xFF) << 8) | (resp[7] & 0xFF);
++                int rpos = skipDnsName(resp, 12) + 4;
++                for (int i = 0; i < ancount; i++) {
++                    rpos = skipDnsName(resp, rpos);
++                    int type = ((resp[rpos] & 0xFF) << 8) | (resp[rpos + 1] & 0xFF);
++                    rpos += 8;
++                    int rdlen = ((resp[rpos] & 0xFF) << 8) | (resp[rpos + 1] & 0xFF);
++                    rpos += 2;
++                    if (type == 1 && rdlen == 4) {
++                        InetAddress addr =
++                            InetAddress.getByAddress(Arrays.copyOfRange(resp, rpos, rpos + 4));
++                        if (!addr.isLoopbackAddress()) return addr;
++                    }
++                    rpos += rdlen;
++                }
++            }
++        } catch (Exception e) {
++            Slog.w(TAG, "DNS-over-TCP failed for " + hostname, e);
++        }
++        try {
++            InetAddress fallback = InetAddress.getByName(hostname);
++            if (!fallback.isLoopbackAddress()) return fallback;
++        } catch (Exception ignored) {}
++        return null;
++    }
++
++    private static byte[] encodeDnsName(String hostname) throws Exception {
++        ByteArrayOutputStream baos = new ByteArrayOutputStream();
++        for (String label : hostname.split("\\.")) {
++            byte[] lb = label.getBytes(StandardCharsets.US_ASCII);
++            baos.write(lb.length);
++            baos.write(lb);
++        }
++        baos.write(0);
++        return baos.toByteArray();
++    }
++
++    private static int skipDnsName(byte[] buf, int pos) {
++        while (pos < buf.length) {
++            int b = buf[pos] & 0xFF;
++            if (b == 0) return pos + 1;
++            if ((b & 0xC0) == 0xC0) return pos + 2;
++            pos += b + 1;
++        }
++        return pos;
++    }
++
++    // ── Helpers ────────────────────────────────────────────────────────────
++
++    private static void pipe(InputStream in, OutputStream out) throws IOException {
++        byte[] buf = new byte[8192];
++        int n;
++        while ((n = in.read(buf)) != -1) {
++            out.write(buf, 0, n);
++            out.flush();
++        }
++    }
++}
+diff --git a/lineage/res/res/values/volla_strings.xml b/lineage/res/res/values/volla_strings.xml
+index 7e890c93..1e5c4c54 100644
+--- a/lineage/res/res/values/volla_strings.xml
++++ b/lineage/res/res/values/volla_strings.xml
+@@ -2,4 +2,14 @@
+ <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+     <string name="firewall_text">This website cannot be accessed while security mode is on.</string>
+ 
++    <!-- Firewall alert notification -->
++    <string name="firewall_notif_channel_name">Firewall Alerts</string>
++    <string name="firewall_notif_channel_desc">Notifies when an app tries to access a blocked domain</string>
++    <string name="firewall_notif_title">Firewall Alert</string>
++    <!-- %1$s = app name, %2$s = domain -->
++    <string name="firewall_notif_text"><xliff:g id="app_name" example="Chrome">%1$s</xliff:g> tried to access <xliff:g id="domain" example="example.com">%2$s</xliff:g></string>
++    <string name="firewall_notif_action_deny">Deny</string>
++    <string name="firewall_notif_action_allow_temp">Allow 5 min</string>
++    <string name="firewall_notif_action_allow_perm">Allow permanently</string>
++
+ </resources>
+diff --git a/lineage/res/res/values/volla_symbols.xml b/lineage/res/res/values/volla_symbols.xml
+index de9b390a..de56b5fd 100644
+--- a/lineage/res/res/values/volla_symbols.xml
++++ b/lineage/res/res/values/volla_symbols.xml
+@@ -11,4 +11,12 @@
+     <java-symbol type="string" name="firewall_text" />
+     <java-symbol type="raw" name="firewall" />
+ 
++    <java-symbol type="string" name="firewall_notif_channel_name" />
++    <java-symbol type="string" name="firewall_notif_channel_desc" />
++    <java-symbol type="string" name="firewall_notif_title" />
++    <java-symbol type="string" name="firewall_notif_text" />
++    <java-symbol type="string" name="firewall_notif_action_deny" />
++    <java-symbol type="string" name="firewall_notif_action_allow_temp" />
++    <java-symbol type="string" name="firewall_notif_action_allow_perm" />
++
+ </resources>
+diff --git a/sdk/src/java/lineageos/firewall/AllowedDomain.aidl b/sdk/src/java/lineageos/firewall/AllowedDomain.aidl
+new file mode 100644
+index 00000000..c23a8a64
+--- /dev/null
++++ b/sdk/src/java/lineageos/firewall/AllowedDomain.aidl
+@@ -0,0 +1,19 @@
++/**
++ * Copyright (C) 2022 Hallo Welt Systeme UG
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package lineageos.firewall;
++
++parcelable AllowedDomain;
+diff --git a/sdk/src/java/lineageos/firewall/AllowedDomain.java b/sdk/src/java/lineageos/firewall/AllowedDomain.java
+new file mode 100644
+index 00000000..fdf2d8a4
+--- /dev/null
++++ b/sdk/src/java/lineageos/firewall/AllowedDomain.java
+@@ -0,0 +1,62 @@
++/**
++ * Copyright (C) 2022 Hallo Welt Systeme UG
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package lineageos.firewall;
++
++import android.os.Parcel;
++import android.os.Parcelable;
++
++public class AllowedDomain implements Parcelable {
++
++    public String name;
++    /** Expiry timestamp in milliseconds since epoch, or -1 for permanent. */
++    public long expiry;
++
++    public AllowedDomain() {}
++
++    public AllowedDomain(String name, long expiry) {
++        this.name = name;
++        this.expiry = expiry;
++    }
++
++    protected AllowedDomain(Parcel in) {
++        name = in.readString();
++        expiry = in.readLong();
++    }
++
++    @Override
++    public void writeToParcel(Parcel dest, int flags) {
++        dest.writeString(name);
++        dest.writeLong(expiry);
++    }
++
++    @Override
++    public int describeContents() {
++        return 0;
++    }
++
++    public static final Creator<AllowedDomain> CREATOR = new Creator<AllowedDomain>() {
++        @Override
++        public AllowedDomain createFromParcel(Parcel in) {
++            return new AllowedDomain(in);
++        }
++
++        @Override
++        public AllowedDomain[] newArray(int size) {
++            return new AllowedDomain[size];
++        }
++    };
++}
+diff --git a/sdk/src/java/lineageos/firewall/FirewallManager.java b/sdk/src/java/lineageos/firewall/FirewallManager.java
+index 2b92495a..4a57f363 100644
+--- a/sdk/src/java/lineageos/firewall/FirewallManager.java
++++ b/sdk/src/java/lineageos/firewall/FirewallManager.java
+@@ -232,4 +232,36 @@ public class FirewallManager {
+             throw e.rethrowFromSystemServer();
+         }
+     }
++
++    public void alertMode(boolean enable) {
++        try {
++            sService.alertMode(enable);
++        } catch (RemoteException e) {
++            throw e.rethrowFromSystemServer();
++        }
++    }
++
++    public boolean isAlertMode() {
++        try {
++            return sService.isAlertMode();
++        } catch (RemoteException e) {
++            throw e.rethrowFromSystemServer();
++        }
++    }
++
++    public List<AllowedDomain> getAllowedDomains() {
++        try {
++            return sService.getAllowedDomains();
++        } catch (RemoteException e) {
++            throw e.rethrowFromSystemServer();
++        }
++    }
++
++    public void removeAllowedDomain(String name) {
++        try {
++            sService.removeAllowedDomain(name);
++        } catch (RemoteException e) {
++            throw e.rethrowFromSystemServer();
++        }
++    }
+ }
+diff --git a/sdk/src/java/lineageos/firewall/IFirewallService.aidl b/sdk/src/java/lineageos/firewall/IFirewallService.aidl
+index 2c1593a6..70fabbee 100644
+--- a/sdk/src/java/lineageos/firewall/IFirewallService.aidl
++++ b/sdk/src/java/lineageos/firewall/IFirewallService.aidl
+@@ -16,6 +16,7 @@
+ 
+ package lineageos.firewall;
+ 
++import lineageos.firewall.AllowedDomain;
+ import lineageos.firewall.DomainListInfo;
+ 
+ /** @hide */
+@@ -61,4 +62,12 @@ interface IFirewallService {
+ 
+     List<String> getAppsList();
+ 
++    void alertMode(boolean enable);
++
++    boolean isAlertMode();
++
++    List<AllowedDomain> getAllowedDomains();
++
++    void removeAllowedDomain(String name);
++
+ }
+-- 
+2.49.0
+

@@ -1,8 +1,7 @@
-From 7d8970e53a062ad7de6711deaf0b2998db739044 Mon Sep 17 00:00:00 2001
+From 9eb2b7699f82f2b940e0e4b54f2bb54319e4a9f4 Mon Sep 17 00:00:00 2001
 From: Dhina17 <dhinalogu@gmail.com>
 Date: Mon, 11 Mar 2024 22:21:23 +0000
-Subject: [PATCH 16/35] services: Workaround for our face unlock initialization
- [1/2]
+Subject: [PATCH] services: Workaround for our face unlock initialization [1/2]
 
 AuthService registers the authenticators only once and
 then onAllAuthenticatorsRegistered() callbacks are invoked.
@@ -106,10 +105,10 @@ index 5a493e4dded8..f7dcc10f43ce 100644
  
      /**
 diff --git a/services/core/java/com/android/server/biometrics/sensors/face/FaceService.java b/services/core/java/com/android/server/biometrics/sensors/face/FaceService.java
-index 8c988729a1ae..a455d6db1181 100644
+index ab44ee723f43..f5fb9363414e 100644
 --- a/services/core/java/com/android/server/biometrics/sensors/face/FaceService.java
 +++ b/services/core/java/com/android/server/biometrics/sensors/face/FaceService.java
-@@ -769,7 +769,7 @@ public class FaceService extends SystemService {
+@@ -765,7 +765,7 @@ public class FaceService extends SystemService {
          mLockPatternUtils = new LockPatternUtils(context);
          mBiometricStateCallback = new BiometricStateCallback<>(UserManager.get(context));
          mAuthenticationStateListeners = new AuthenticationStateListeners();
@@ -142,10 +141,10 @@ index 0f0a81d24473..f11a6def1570 100644
      }
  
 diff --git a/services/core/java/com/android/server/biometrics/sensors/fingerprint/FingerprintService.java b/services/core/java/com/android/server/biometrics/sensors/fingerprint/FingerprintService.java
-index 2f6ba0b852ee..565a159242ea 100644
+index 29c12675361a..8e215a386b27 100644
 --- a/services/core/java/com/android/server/biometrics/sensors/fingerprint/FingerprintService.java
 +++ b/services/core/java/com/android/server/biometrics/sensors/fingerprint/FingerprintService.java
-@@ -1068,7 +1068,8 @@ public class FingerprintService extends SystemService {
+@@ -1069,7 +1069,8 @@ public class FingerprintService extends SystemService {
                                          resetLockoutRequiresHardwareAuthToken);
  
          mHandler = new Handler(Looper.getMainLooper());

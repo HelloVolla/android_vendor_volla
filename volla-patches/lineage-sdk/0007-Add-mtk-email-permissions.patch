@@ -1,4 +1,4 @@
-From ab99fc345809b037006bb011d59cdfbe991fcaa3 Mon Sep 17 00:00:00 2001
+From 873aa069f2f6e844402455ed4659920d782f83f6 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Thu, 7 Apr 2022 04:37:14 +0430
 Subject: [PATCH] Add mtk email permissions
@@ -13,7 +13,7 @@ Change-Id: Ia7dc8acb5f89af715ae0c2725b59ddfa921e0e8f
  create mode 100644 lineage/res/res/values/mtk_strings.xml
 
 diff --git a/lineage/res/AndroidManifest.xml b/lineage/res/AndroidManifest.xml
-index d5ebef05..23076cd0 100644
+index 11f82611..87650c5c 100644
 --- a/lineage/res/AndroidManifest.xml
 +++ b/lineage/res/AndroidManifest.xml
 @@ -81,4 +81,20 @@

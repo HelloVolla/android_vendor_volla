@@ -1,4 +1,4 @@
-From 1672776685fcc0971170675e5e86a2a157cf0f03 Mon Sep 17 00:00:00 2001
+From 8d10c352c3f0d052c11103608f40ad13acb0e81d Mon Sep 17 00:00:00 2001
 From: ghbhaha <ghbhaha@gmail.com>
 Date: Thu, 7 Nov 2019 19:06:00 +0100
 Subject: [PATCH] Settings: Add three-fingers-swipe to screenshot [2/2]
@@ -788,10 +788,10 @@ index 158af3af804..c24e060532a 100644
 +    <string name="swipe_to_screenshot_gesture_summary">Swipe three fingers to take screenshot</string>
  </resources>
 diff --git a/res/xml/gestures.xml b/res/xml/gestures.xml
-index 21fbbae5a52..103cda16808 100644
+index bfb359ae804..d70690a9a9c 100644
 --- a/res/xml/gestures.xml
 +++ b/res/xml/gestures.xml
-@@ -94,6 +94,12 @@
+@@ -81,6 +81,12 @@
          android:fragment="com.android.settings.gestures.PowerMenuSettings"
          settings:controller="com.android.settings.gestures.PowerMenuPreferenceController" />
  
@@ -1002,5 +1002,5 @@ index 00000000000..300948a5168
 +    }
 +}
 -- 
-2.34.1
+2.49.0
 

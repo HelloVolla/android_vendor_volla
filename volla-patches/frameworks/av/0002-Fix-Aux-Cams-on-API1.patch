@@ -1,7 +1,7 @@
-From 7c6afe45c671dfb97d956df0896a42b793fa4cb4 Mon Sep 17 00:00:00 2001
+From c63d15bc99d58d3a5c83d97326e1b2058ee3bc3a Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Wed, 7 May 2025 14:15:02 +0000
-Subject: [PATCH 2/2] Fix Aux Cams on API1
+Subject: [PATCH] Fix Aux Cams on API1
 
 Change-Id: Iaab0e2399fb4a4e37991589b3d8f9d10cb9ffdaf
 ---
@@ -9,10 +9,10 @@ Change-Id: Iaab0e2399fb4a4e37991589b3d8f9d10cb9ffdaf
  1 file changed, 3 insertions(+)
 
 diff --git a/services/camera/libcameraservice/CameraService.cpp b/services/camera/libcameraservice/CameraService.cpp
-index fdb5b7d..f91f8cc 100644
+index 988803b6ea..38c0c111f0 100644
 --- a/services/camera/libcameraservice/CameraService.cpp
 +++ b/services/camera/libcameraservice/CameraService.cpp
-@@ -429,6 +429,9 @@ void CameraService::updateCameraNumAndIds() {
+@@ -427,6 +427,9 @@ void CameraService::updateCameraNumAndIds() {
      mNumberOfCamerasWithoutSystemCamera = systemAndNonSystemCameras.second;
      mNormalDeviceIds =
              mCameraProviderManager->getAPI1CompatibleCameraDeviceIds();
@@ -23,5 +23,5 @@ index fdb5b7d..f91f8cc 100644
  }
  
 -- 
-2.34.1
+2.49.0
 

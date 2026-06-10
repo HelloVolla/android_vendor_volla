@@ -1,7 +1,7 @@
-From dd4ac75db946a6b2c4b577927983fcda464e16f6 Mon Sep 17 00:00:00 2001
+From 31af4b37db0313443f5ecff2260e887fb2e09aaf Mon Sep 17 00:00:00 2001
 From: Volla BuildBot <build@volla.com>
 Date: Sat, 28 Jun 2025 08:44:45 +0000
-Subject: [PATCH 01/35] Revert "Allow spoofing signingInfo for microG
+Subject: [PATCH] Revert "Allow spoofing signingInfo for microG
  Companion/Services"
 
 This reverts commit c60ecdffedf5ec9e05bd92dc022cbb763f49a104.
@@ -10,7 +10,7 @@ This reverts commit c60ecdffedf5ec9e05bd92dc022cbb763f49a104.
  1 file changed, 13 deletions(-)
 
 diff --git a/services/core/java/com/android/server/pm/ComputerEngine.java b/services/core/java/com/android/server/pm/ComputerEngine.java
-index 6f581306548c..3eb3df412706 100644
+index 1cc02de121f8..2128e5c1b37f 100644
 --- a/services/core/java/com/android/server/pm/ComputerEngine.java
 +++ b/services/core/java/com/android/server/pm/ComputerEngine.java
 @@ -170,7 +170,6 @@ import java.io.FileOutputStream;
@@ -20,8 +20,8 @@ index 6f581306548c..3eb3df412706 100644
 -import java.security.cert.CertificateException;
  import java.util.ArrayList;
  import java.util.Arrays;
- import java.util.Collection;
-@@ -1591,18 +1590,6 @@ public class ComputerEngine implements Computer {
+ import java.util.Collections;
+@@ -1592,18 +1591,6 @@ public class ComputerEngine implements Computer {
  
              generateFakeSignature(p).ifPresent(fakeSignature -> {
                  packageInfo.signatures = new Signature[]{fakeSignature};

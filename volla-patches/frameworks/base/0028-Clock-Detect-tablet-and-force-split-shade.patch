@@ -1,0 +1,28 @@
+From aacfde5ec8ba342360df117394b92c53d808eb97 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Wed, 3 Sep 2025 00:55:55 +0330
+Subject: [PATCH] Clock: Detect tablet and force split shade
+
+Change-Id: Idfe76849224df04dddb3005559ff88cfe2fd1eb1
+---
+ .../systemui/keyguard/ui/view/layout/sections/ClockSection.kt  | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/keyguard/ui/view/layout/sections/ClockSection.kt b/packages/SystemUI/src/com/android/systemui/keyguard/ui/view/layout/sections/ClockSection.kt
+index 7baddb8700a6..5f96ee920843 100644
+--- a/packages/SystemUI/src/com/android/systemui/keyguard/ui/view/layout/sections/ClockSection.kt
++++ b/packages/SystemUI/src/com/android/systemui/keyguard/ui/view/layout/sections/ClockSection.kt
+@@ -193,8 +193,9 @@ constructor(
+     }
+ 
+     fun applyDefaultConstraints(constraints: ConstraintSet) {
++        val isTablet = context.resources.configuration.smallestScreenWidthDp >= 600
+         val guideline =
+-            if (keyguardClockViewModel.clockShouldBeCentered.value) PARENT_ID
++            if (keyguardClockViewModel.clockShouldBeCentered.value && !isTablet) PARENT_ID
+             else R.id.split_shade_guideline
+         constraints.apply {
+             connect(ClockViewIds.LOCKSCREEN_CLOCK_VIEW_LARGE, START, PARENT_ID, START)
+-- 
+2.49.0
+

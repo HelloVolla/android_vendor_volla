@@ -1,4 +1,4 @@
-From c84c1b212a7d9a01f8dda42e781b55cbd0c19524 Mon Sep 17 00:00:00 2001
+From ddbf1c07df6572679ff790054c8fc71f8ac5080c Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Tue, 20 Sep 2022 19:21:04 +0430
 Subject: [PATCH] Firewall: Introduce clear domin list method

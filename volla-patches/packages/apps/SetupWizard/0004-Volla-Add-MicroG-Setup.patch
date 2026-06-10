@@ -1,7 +1,7 @@
-From e562c0458aad23aa59b0aed2b97196a05127f74a Mon Sep 17 00:00:00 2001
+From 9e3df1b945e1b17d4606a2cbba52ea70ea28e8ce Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 12 Nov 2023 16:40:38 +0330
-Subject: [PATCH 4/8] Volla Add MicroG Setup
+Subject: [PATCH] Volla Add MicroG Setup
 
 Change-Id: I7edd4479810316231adf8050c11c67076b31d4e0
 ---
@@ -10,12 +10,12 @@ Change-Id: I7edd4479810316231adf8050c11c67076b31d4e0
  res/layout/setup_volla_microg.xml             | 97 +++++++++++++++++++
  res/raw/lineage_wizard_script.xml             |  4 +
  res/raw/wizard_script.xml                     |  3 +
- res/values-de/microg.xml                      | 21 ++++
+ res/values-de/microg.xml                      | 23 +++++
  res/values/microg.xml                         | 21 ++++
- .../lineageos/setupwizard/SetupWizardApp.java |  1 +
+ .../lineageos/setupwizard/SetupWizardApp.java |  2 +
  .../setupwizard/VollaMicrogActivity.java      | 84 ++++++++++++++++
  .../setupwizard/util/SetupWizardUtils.java    | 13 +++
- 10 files changed, 280 insertions(+)
+ 10 files changed, 282 insertions(+)
  create mode 100644 res/drawable/microg_icon.xml
  create mode 100644 res/layout/setup_volla_microg.xml
  create mode 100644 res/values-de/microg.xml
@@ -23,7 +23,7 @@ Change-Id: I7edd4479810316231adf8050c11c67076b31d4e0
  create mode 100644 src/org/lineageos/setupwizard/VollaMicrogActivity.java
 
 diff --git a/AndroidManifest.xml b/AndroidManifest.xml
-index dd93126..128e2a6 100644
+index 662173b..4e7f723 100644
 --- a/AndroidManifest.xml
 +++ b/AndroidManifest.xml
 @@ -230,6 +230,19 @@
@@ -179,7 +179,7 @@ index 0000000..6fc8256
 +    </LinearLayout>
 +</com.google.android.setupdesign.GlifLayout>
 diff --git a/res/raw/lineage_wizard_script.xml b/res/raw/lineage_wizard_script.xml
-index 7c87abd..5d90f88 100644
+index 0ecce5a..71abdc3 100644
 --- a/res/raw/lineage_wizard_script.xml
 +++ b/res/raw/lineage_wizard_script.xml
 @@ -71,6 +71,10 @@
@@ -194,7 +194,7 @@ index 7c87abd..5d90f88 100644
      </WizardAction>
  
 diff --git a/res/raw/wizard_script.xml b/res/raw/wizard_script.xml
-index 38ec267..54ee2e6 100644
+index e7693fd..9bb3676 100644
 --- a/res/raw/wizard_script.xml
 +++ b/res/raw/wizard_script.xml
 @@ -112,6 +112,9 @@
@@ -209,13 +209,13 @@ index 38ec267..54ee2e6 100644
      <WizardAction wizard:uri="intent:#Intent;package=org.lineageos.setupwizard;action=org.lineageos.setupwizard.THEME_SETTINGS;end" id="theme_settings">
 diff --git a/res/values-de/microg.xml b/res/values-de/microg.xml
 new file mode 100644
-index 0000000..5fb095c
+index 0000000..e62187c
 --- /dev/null
 +++ b/res/values-de/microg.xml
-@@ -0,0 +1,21 @@
+@@ -0,0 +1,23 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<!--
-+     Copyright (C) 2021 Hallo Welt Systeme UG
++     Copyright (C) 2017-2026 Volla Systeme GmbH
 +
 +     Licensed under the Apache License, Version 2.0 (the "License");
 +     you may not use this file except in compliance with the License.
@@ -231,7 +231,9 @@ index 0000000..5fb095c
 +-->
 +<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 +    <string name="microg_title">MicroG</string>
-+    <string name="microg_warning">Die Systemerweiterung simuliert Google Play Dienste für die Ausführung von Apps, die diese nutzen. Es handelt sich um eine quielloffene Software, die unter der Apache 2.0 Lizenz veröffentlicht wurde. 2019 wurde sie vom Bundesministerium für Bildung und Forschung der Bundesrepublik Deutschland und dem Prototype Fund gefördert. Die Hallo Welt Systeme als Herausgeber von Volla OS übernimmt keine Haftung für Fehler der Software, eventualle Schäden oder Ansprüche Drtter. Der Anwender stimmt für die Installation dem Haftungsausschluss zu. Erfahren Sie mehr über die Systemerweiterung unter microG.org.</string>
++    <string name="microg_warning">
++        Die Systemerweiterung simuliert Google Play Dienste für die Ausführung von Apps, die diese nutzen. Es handelt sich um eine quelloffene Software, die unter der Apache 2.0 Lizenz veröffentlicht wurde. 2019 wurde sie vom Bundesministerium für Bildung und Forschung der Bundesrepublik Deutschland und dem Prototype Fund gefördert. Volla Systeme als Herausgeber von Volla OS übernimmt keine Haftung für Fehler der Software, eventuelle Schäden oder Ansprüche Dritter. Der Anwender stimmt für die Installation dem Haftungsausschluss zu. Erfahren Sie mehr über die Systemerweiterung unter microG.org.
++    </string>
 +    <string name="microg_switch_label">Aktivieren Sie MicroG</string>
 +</resources>
 diff --git a/res/values/microg.xml b/res/values/microg.xml
@@ -262,17 +264,18 @@ index 0000000..6cfb278
 +    <string name="microg_switch_label">Enable MicroG</string>
 +</resources>
 diff --git a/src/org/lineageos/setupwizard/SetupWizardApp.java b/src/org/lineageos/setupwizard/SetupWizardApp.java
-index d635bfa..32b43b1 100644
+index 88e7e46..ea04abf 100644
 --- a/src/org/lineageos/setupwizard/SetupWizardApp.java
 +++ b/src/org/lineageos/setupwizard/SetupWizardApp.java
-@@ -41,6 +41,7 @@ public class SetupWizardApp extends Application {
-     public static final String DISABLE_NAV_KEYS = "disable_nav_keys";
-     public static final String ENABLE_RECOVERY_UPDATE = "enable_recovery_update";
+@@ -44,6 +44,8 @@ public class SetupWizardApp extends Application {
      public static final String UPDATE_RECOVERY_PROP = "persist.vendor.recovery_update";
-+    public static final String ENABLE_MICROG = "enable_microg";
+     public static final String IGNORE_SIM_LOCALE_PROP = "ro.setupwizard.ignore_sim_locale";
  
++    public static final String ENABLE_MICROG = "enable_microg";
++
      public static final String NAVIGATION_OPTION_KEY = "navigation_option";
  
+     public static final int RADIO_READY_TIMEOUT = 10 * 1000;
 diff --git a/src/org/lineageos/setupwizard/VollaMicrogActivity.java b/src/org/lineageos/setupwizard/VollaMicrogActivity.java
 new file mode 100644
 index 0000000..93c3155
@@ -364,10 +367,10 @@ index 0000000..93c3155
 +    }
 +}
 diff --git a/src/org/lineageos/setupwizard/util/SetupWizardUtils.java b/src/org/lineageos/setupwizard/util/SetupWizardUtils.java
-index 9188237..60864be 100644
+index f0d4eb0..a8d966d 100644
 --- a/src/org/lineageos/setupwizard/util/SetupWizardUtils.java
 +++ b/src/org/lineageos/setupwizard/util/SetupWizardUtils.java
-@@ -24,6 +24,7 @@ import static org.lineageos.setupwizard.SetupWizardApp.KEY_SEND_METRICS;
+@@ -21,6 +21,7 @@ import static org.lineageos.setupwizard.SetupWizardApp.KEY_SEND_METRICS;
  import static org.lineageos.setupwizard.SetupWizardApp.LOGV;
  import static org.lineageos.setupwizard.SetupWizardApp.NAVIGATION_OPTION_KEY;
  import static org.lineageos.setupwizard.SetupWizardApp.UPDATE_RECOVERY_PROP;
@@ -375,7 +378,7 @@ index 9188237..60864be 100644
  
  import android.app.StatusBarManager;
  import android.app.WallpaperManager;
-@@ -181,6 +182,7 @@ public class SetupWizardUtils {
+@@ -177,6 +178,7 @@ public class SetupWizardUtils {
          handleNavKeys(context);
          handleRecoveryUpdate();
          handleNavigationOption();
@@ -383,7 +386,7 @@ index 9188237..60864be 100644
          WallpaperManager.getInstance(context).forgetLoadedWallpaper();
          disableHome(context);
          enableStatusBar();
-@@ -299,6 +301,17 @@ public class SetupWizardUtils {
+@@ -295,6 +297,17 @@ public class SetupWizardUtils {
          }
      }
  
@@ -402,5 +405,5 @@ index 9188237..60864be 100644
          final boolean virtualKeysEnabled = LineageSettings.System.getIntForUser(
                  context.getContentResolver(), LineageSettings.System.FORCE_SHOW_NAVBAR, 0,
 -- 
-2.34.1
+2.49.0
 

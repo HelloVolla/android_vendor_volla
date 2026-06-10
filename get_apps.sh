@@ -106,6 +106,8 @@ downloadFromFdroid org.fossify.musicplayer "Eleven Twelve"
 downloadFromFdroid net.osmand.plus
 downloadFromFdroid org.mozilla.fennec_fdroid "Jelly" YES
 downloadFromFdroid com.fsck.k9
+downloadFromFdroid net.thunderbird.android
+downloadFromFdroid org.fossify.messages
 downloadFromFdroid com.android.talkback "" YES
 
 
@@ -116,7 +118,7 @@ downloadFromFdroid hideme.android.vpn.noPlayStore "" YES
 downloadFromFdroid com.maxfour.music "Eleven"
 downloadFromFdroid com.simplemobiletools.calendar.pro "Etar Calendar"
 
-repo=https://raw.githubusercontent.com/microg/fdroid-repo/refs/heads/main/fdroid/repo/
+repo=https://microg.org/fdroid/repo/
 downloadFromFdroid com.google.android.gms "" NO YES
 downloadFromFdroid com.google.android.gsf
 downloadFromFdroid com.android.vending "" NO YES

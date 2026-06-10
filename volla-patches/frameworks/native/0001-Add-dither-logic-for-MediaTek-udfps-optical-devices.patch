@@ -1,0 +1,447 @@
+From 7b710ee6b608393d4098cb51af8151c47a3bf076 Mon Sep 17 00:00:00 2001
+From: Mashopy <eliasgheeraert@gmail.com>
+Date: Sat, 22 Nov 2025 11:34:07 +0100
+Subject: [PATCH] Add dither logic for MediaTek udfps optical devices
+
+MediaTek devices dither the framework hbm dimlayer from renderengine in order to
+make the background match the system brightness, effectively only making the udfps icon bright.
+
+Change-Id: I66cb2d7d2ca3d08f768c6a66521a60eaa66015aa
+---
+ libs/renderengine/Android.bp                  |  10 +-
+ .../include/renderengine/LayerSettings.h      |   3 +
+ .../mediatek/SkiaDitherEffect.cpp             | 109 ++++++++++++++++++
+ libs/renderengine/mediatek/SkiaDitherEffect.h |  56 +++++++++
+ libs/renderengine/skia/SkiaRenderEngine.cpp   |  63 ++++++++++
+ libs/renderengine/skia/SkiaRenderEngine.h     |   6 +
+ services/surfaceflinger/Android.bp            |   8 +-
+ .../include/compositionengine/LayerFE.h       |   8 ++
+ .../CompositionEngine/src/Output.cpp          |  12 ++
+ services/surfaceflinger/LayerFE.cpp           |   3 +
+ 10 files changed, 275 insertions(+), 3 deletions(-)
+ create mode 100644 libs/renderengine/mediatek/SkiaDitherEffect.cpp
+ create mode 100644 libs/renderengine/mediatek/SkiaDitherEffect.h
+
+diff --git a/libs/renderengine/Android.bp b/libs/renderengine/Android.bp
+index 847a88662b..f9a654cef4 100644
+--- a/libs/renderengine/Android.bp
++++ b/libs/renderengine/Android.bp
+@@ -30,7 +30,10 @@ cc_defaults {
+     cflags: [
+         "-DGL_GLEXT_PROTOTYPES",
+         "-DEGL_EGLEXT_PROTOTYPES",
+-    ],
++    ] + select(soong_config_variable("surfaceflinger", "has_mtk_udfps"), {
++        true: ["-DMTK_IN_DISPLAY_FINGERPRINT"],
++        default: [],
++    }),
+     shared_libs: [
+         "libbase",
+         "libcrypto",
+@@ -119,7 +122,10 @@ filegroup {
+         "skia/filters/MouriMap.cpp",
+         "skia/filters/RuntimeEffectManager.cpp",
+         "skia/filters/StretchShaderFactory.cpp",
+-    ],
++    ] + select(soong_config_variable("surfaceflinger", "has_mtk_udfps"), {
++        true: ["mediatek/SkiaDitherEffect.cpp"],
++        default: [],
++    }),
+ }
+ 
+ // Used to consolidate and simplify pulling Skia & Skia deps into targets that depend on
+diff --git a/libs/renderengine/include/renderengine/LayerSettings.h b/libs/renderengine/include/renderengine/LayerSettings.h
+index bd5a3dbdee..870dc4c180 100644
+--- a/libs/renderengine/include/renderengine/LayerSettings.h
++++ b/libs/renderengine/include/renderengine/LayerSettings.h
+@@ -166,6 +166,9 @@ struct LayerSettings {
+     float whitePointNits = -1.f;
+ 
+     std::shared_ptr<gui::DisplayLuts> luts;
++#ifdef MTK_IN_DISPLAY_FINGERPRINT
++    bool enableDither = false;
++#endif
+ };
+ 
+ // Keep in sync with custom comparison function in
+diff --git a/libs/renderengine/mediatek/SkiaDitherEffect.cpp b/libs/renderengine/mediatek/SkiaDitherEffect.cpp
+new file mode 100644
+index 0000000000..fc297f1344
+--- /dev/null
++++ b/libs/renderengine/mediatek/SkiaDitherEffect.cpp
+@@ -0,0 +1,109 @@
++/*
++ * Copyright 2026 The LineageOS Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++#define ATRACE_TAG ATRACE_TAG_GRAPHICS
++
++#include "SkiaDitherEffect.h"
++#include <SkCanvas.h>
++#include <SkTileMode.h>
++#include <SkData.h>
++#include <SkPaint.h>
++#include <SkRRect.h>
++#include <SkRuntimeEffect.h>
++#include <SkSize.h>
++#include <SkString.h>
++#include <SkSurface.h>
++#include <log/log.h>
++#include <utils/Trace.h>
++
++using namespace android;
++using android::hardware::graphics::common::V1_1::BufferUsage;
++
++namespace android {
++namespace renderengine {
++namespace skia {
++
++bool SkiaDitherEffect::isInitOK() {
++    return mInitOK;
++}
++
++SkiaDitherEffect::~SkiaDitherEffect(){
++}
++
++SkiaDitherEffect::SkiaDitherEffect() {
++    bool initOK = true;
++    static unsigned char ditherTable[8*8] = {0};
++
++    // following dither table is from Skia dither
++    for (int x = 0; x < 8; ++x) {
++        for (int y = 0; y < 8; ++y) {
++            unsigned int m = (y & 1) << 5 | (x & 1) << 4 |
++                             (y & 2) << 2 | (x & 2) << 1 |
++                             (y & 4) >> 1 | (x & 4) >> 2;
++            float value = float(m) * 1.0 / 64.0 - 63.0 / 128.0;
++            ditherTable[y * 8 + x] = (uint8_t)((value + 0.5) * 255.f + 0.5f);
++        }
++    }
++    mDitherBmp.setInfo(SkImageInfo::MakeA8(8, 8));
++    mDitherBmp.setPixels(const_cast<uint8_t*>(ditherTable));
++    mDitherBmp.setImmutable();
++
++    mInitOK = initOK;
++}
++
++
++sk_sp<SkShader> SkiaDitherEffect::makeDitherTableShader(SkiaGpuContext* context){
++    static SkiaGpuContext* current_context = nullptr;
++    if (current_context != context) {
++        mDitherTableShader = mDitherBmp.makeShader(SkTileMode::kRepeat, SkTileMode::kRepeat,
++                    SkSamplingOptions({SkFilterMode::kNearest, SkMipmapMode::kNone}));
++        current_context = context;
++    }
++    return mDitherTableShader;
++}
++
++sk_sp<SkShader> SkiaDitherEffect::createDitherShader(SkiaGpuContext* context, sk_sp<SkShader> input, const float ditherAlpha) {
++    sk_sp<SkShader> tableShader = makeDitherTableShader(context);
++    if (mDitherTableShader == nullptr){
++        ALOGE("%s(), makeDitherTableShader fail", __FUNCTION__);
++    }
++    SkString ditherString(R"(
++        uniform shader DataInput;
++        uniform shader table;
++        uniform float ditherAlpha;
++        half4 main(float2 xy) {
++            float4 c = float4(DataInput.eval(xy));
++            float dither = ((table.eval(xy).a) - 0.5)/256.0;
++            return float4(clamp(c.rgb*ditherAlpha+dither,0.0,1.0), c.a);
++        }
++
++    )");
++    auto [ditherEffect, error] = SkRuntimeEffect::MakeForShader(ditherString);
++    if (!ditherEffect) {
++       ALOGE("%s(), RuntimeShader error: %s", __FUNCTION__, error.c_str());
++       return nullptr;
++    }
++    mDitherEffect = std::move(ditherEffect);
++    SkRuntimeShaderBuilder ditherBuilder(mDitherEffect);
++    ditherBuilder.child("DataInput") =  input;
++    ditherBuilder.child("table") = tableShader;
++    ditherBuilder.uniform("ditherAlpha") = ditherAlpha;
++    return ditherBuilder.makeShader(nullptr);
++}
++
++} // namespace skia
++} // namespace renderengine
++} // namespace android
+diff --git a/libs/renderengine/mediatek/SkiaDitherEffect.h b/libs/renderengine/mediatek/SkiaDitherEffect.h
+new file mode 100644
+index 0000000000..5c8efc0138
+--- /dev/null
++++ b/libs/renderengine/mediatek/SkiaDitherEffect.h
+@@ -0,0 +1,56 @@
++/*
++ * Copyright 2026 The LineageOS Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++#ifndef __SKIA_DITHER_EFFECT__H__
++#define __SKIA_DITHER_EFFECT__H__
++
++#include <SkCanvas.h>
++#include <SkBitmap.h>
++#include <SkImage.h>
++#include <SkRuntimeEffect.h>
++#include <SkSurface.h>
++#include <GrAHardwareBufferUtils.h>
++#include <include/gpu/ganesh/GrDirectContext.h>
++#include <sys/types.h>
++#include <ui/GraphicBuffer.h>
++#include "../skia/compat/SkiaGpuContext.h"
++
++using namespace std;
++
++namespace android {
++namespace renderengine {
++namespace skia {
++
++class SkiaDitherEffect {
++public:
++    explicit SkiaDitherEffect();
++    virtual ~SkiaDitherEffect();
++    bool isInitOK();
++    sk_sp<SkShader> createDitherShader(SkiaGpuContext* context, sk_sp<SkShader> input, const float ditherAlpha);
++
++private:
++    bool mInitOK = false;
++    sk_sp<SkShader> makeDitherTableShader(SkiaGpuContext* context);
++    sk_sp<SkRuntimeEffect> mDitherEffect = nullptr;
++    SkBitmap mDitherBmp;
++    sk_sp<SkShader> mDitherTableShader = nullptr;
++};
++
++} // namespace skia
++} // namespace renderengine
++} // namespace android
++
++#endif
+diff --git a/libs/renderengine/skia/SkiaRenderEngine.cpp b/libs/renderengine/skia/SkiaRenderEngine.cpp
+index daa0ecc471..54f1994702 100644
+--- a/libs/renderengine/skia/SkiaRenderEngine.cpp
++++ b/libs/renderengine/skia/SkiaRenderEngine.cpp
+@@ -354,6 +354,9 @@ SkiaRenderEngine::SkiaRenderEngine(Threaded threaded, PixelFormat pixelFormat,
+     }
+ 
+     mCapture = std::make_unique<SkiaCapture>();
++#ifdef MTK_IN_DISPLAY_FINGERPRINT
++    mSkiaDitherEffect = new SkiaDitherEffect();
++#endif
+ }
+ 
+ SkiaRenderEngine::~SkiaRenderEngine() { }
+@@ -880,6 +883,21 @@ void SkiaRenderEngine::drawLayersInternal(
+     if (kPrintLayerSettings) {
+         logSettings(display);
+     }
++#ifdef MTK_IN_DISPLAY_FINGERPRINT
++        bool enableDither = false;
++        float ditherAlpha = 1.0f;
++        int ditherDimLayerCnt = 0;
++        for (const auto& layer : layers) {
++            if (layer.enableDither){
++                enableDither = true;
++                ditherDimLayerCnt ++;
++                ditherAlpha = ditherAlpha*(1.0f - (float)layer.alpha);
++            }
++        }
++        if (enableDither) {
++            ALOGI("ditherAlpha %f, dim layer cnt %d", ditherAlpha, ditherDimLayerCnt);
++        }
++#endif
+     for (const auto& layer : layers) {
+         SFTRACE_FORMAT("DrawLayer: %s", layer.name.c_str());
+ 
+@@ -1204,6 +1222,32 @@ void SkiaRenderEngine::drawLayersInternal(
+ 
+             sk_sp<SkShader> shader;
+ 
++#ifdef MTK_IN_DISPLAY_FINGERPRINT
++            if (mSkiaDitherEffect != nullptr &&
++                mSkiaDitherEffect->isInitOK() &&
++                layer.enableDither) {
++                ditherDimLayerCnt --;
++                if (!isProtected() && ditherDimLayerCnt == 0) {
++                    sk_sp<SkImage>  image = activeSurface->makeImageSnapshot();
++                    sk_sp<SkShader> shader = image->makeShader(SkSamplingOptions());
++                    shader = mSkiaDitherEffect->createDitherShader(context, shader, ditherAlpha);
++                    if (shader != nullptr){
++                        paint.setShader(shader);
++                    }else {
++                        ALOGE("%s(), createDitherShader fail", __FUNCTION__);
++                    }
++                    paint.setBlendMode(SkBlendMode::kSrc);
++                    if (!bounds.isRect()) {
++                         paint.setAntiAlias(true);
++                         canvas->drawRRect(bounds, paint);
++                    } else {
++                         canvas->drawRect(bounds.rect(), paint);
++                    }
++                    skgpu::ganesh::Flush(activeSurface);
++                }
++                continue;
++            }
++#endif
+             if (layer.source.buffer.useTextureFiltering) {
+                 shader = image->makeShader(SkTileMode::kClamp, SkTileMode::kClamp,
+                                            SkSamplingOptions(
+@@ -1218,6 +1262,22 @@ void SkiaRenderEngine::drawLayersInternal(
+                                           SkShaders::Color(SkColors::kBlack,
+                                                            toSkColorSpace(layerDataspace)));
+             }
++#ifdef MTK_IN_DISPLAY_FINGERPRINT
++            if (isProtected() && mSkiaDitherEffect != nullptr &&
++                mSkiaDitherEffect->isInitOK() &&
++                enableDither &&
++                !layer.enableDither //not Dim layers
++                && ditherDimLayerCnt
++                ) {
++                shader = mSkiaDitherEffect->createDitherShader(context, shader, ditherAlpha);
++                if (shader != nullptr){
++                    paint.setShader(shader);
++                }else {
++                    ALOGE("%s(), createDitherShader fail", __FUNCTION__);
++                }
++            }
++            else { //original flow
++#endif
+ 
+             SkRect imageBounds;
+             matrix.mapRect(&imageBounds, SkRect::Make(image->bounds()));
+@@ -1284,6 +1344,9 @@ void SkiaRenderEngine::drawLayersInternal(
+                 }
+                 paint.setColorFilter(SkColorFilters::Matrix(colorMatrix));
+             }
++#ifdef MTK_IN_DISPLAY_FINGERPRINT
++            }// original flow
++#endif
+         } else {
+             SFTRACE_NAME("DrawColor");
+             const auto color = layer.source.solidColor;
+diff --git a/libs/renderengine/skia/SkiaRenderEngine.h b/libs/renderengine/skia/SkiaRenderEngine.h
+index 26fab27b4a..f2f464ac11 100644
+--- a/libs/renderengine/skia/SkiaRenderEngine.h
++++ b/libs/renderengine/skia/SkiaRenderEngine.h
+@@ -45,6 +45,9 @@
+ #include "filters/MouriMap.h"
+ #include "filters/RuntimeEffectManager.h"
+ #include "filters/StretchShaderFactory.h"
++#ifdef MTK_IN_DISPLAY_FINGERPRINT
++#include "../mediatek/SkiaDitherEffect.h"
++#endif
+ 
+ class SkData;
+ 
+@@ -84,6 +87,9 @@ public:
+     void ensureContextsCreated();
+ 
+ protected:
++#ifdef MTK_IN_DISPLAY_FINGERPRINT
++    SkiaDitherEffect * mSkiaDitherEffect = nullptr;
++#endif
+     // This is so backends can stop the generic rendering state first before cleaning up
+     // backend-specific state. SkiaGpuContexts are invalid after invocation.
+     void finishRenderingAndAbandonContexts();
+diff --git a/services/surfaceflinger/Android.bp b/services/surfaceflinger/Android.bp
+index d39f7ad0f6..3b72183a1f 100644
+--- a/services/surfaceflinger/Android.bp
++++ b/services/surfaceflinger/Android.bp
+@@ -38,7 +38,13 @@ cc_defaults {
+         "-Wthread-safety",
+         "-Wunreachable-code",
+         "-Wunused",
+-    ],
++    ] + select(soong_config_variable("surfaceflinger", "has_mtk_udfps"), {
++        true: ["-DMTK_IN_DISPLAY_FINGERPRINT"],
++        default: [],
++    }) + select(soong_config_variable("surfaceflinger", "mtk_dim_layer"), {
++        any @ mtk_dim_layer: ["-DDITHER_LAYER_NAME=\"" + mtk_dim_layer + "\""],
++        default: ["-DDITHER_LAYER_NAME=\"OnScreenFingerprintDimLayer\""],
++    })
+ }
+ 
+ cc_defaults {
+diff --git a/services/surfaceflinger/CompositionEngine/include/compositionengine/LayerFE.h b/services/surfaceflinger/CompositionEngine/include/compositionengine/LayerFE.h
+index a9b0f81c6f..363950f590 100644
+--- a/services/surfaceflinger/CompositionEngine/include/compositionengine/LayerFE.h
++++ b/services/surfaceflinger/CompositionEngine/include/compositionengine/LayerFE.h
+@@ -139,6 +139,14 @@ public:
+         int32_t sequence = -1;
+     };
+ 
++#ifdef MTK_IN_DISPLAY_FINGERPRINT
++    struct Dither {
++        bool checked {false};
++        bool enabled {false};
++    };
++    Dither mDither;
++#endif
++
+     // Describes the states of the release fence. Checking the states allows checks
+     // to ensure that set_value() is not called on the same promise multiple times,
+     // and can indicate if the promise has been fulfilled.
+diff --git a/services/surfaceflinger/CompositionEngine/src/Output.cpp b/services/surfaceflinger/CompositionEngine/src/Output.cpp
+index 68092957ef..93ea28452c 100644
+--- a/services/surfaceflinger/CompositionEngine/src/Output.cpp
++++ b/services/surfaceflinger/CompositionEngine/src/Output.cpp
+@@ -1561,6 +1561,18 @@ std::vector<LayerFE::LayerSettings> Output::generateClientCompositionRequests(
+ 
+         const Region clip(viewportRegion.intersect(layerState.visibleRegion));
+         ALOGV("Layer: %s", layerFE.getDebugName());
++#ifdef MTK_IN_DISPLAY_FINGERPRINT
++    if (!layerFE.mDither.checked){
++        layerFE.mDither.enabled = false;
++        ALOGV("Dither is off");
++        std::string layerName = layerFE.getDebugName();
++        if (layerName.find(DITHER_LAYER_NAME) != std::string::npos) {
++            layerFE.mDither.enabled = true;
++            ALOGV("Dither is on");
++        }
++        layerFE.mDither.checked = true;
++    }
++#endif
+         if (clip.isEmpty()) {
+             ALOGV("  Skipping for empty clip");
+             firstLayer = false;
+diff --git a/services/surfaceflinger/LayerFE.cpp b/services/surfaceflinger/LayerFE.cpp
+index eafcb41e5f..6105ebe87c 100644
+--- a/services/surfaceflinger/LayerFE.cpp
++++ b/services/surfaceflinger/LayerFE.cpp
+@@ -189,6 +189,9 @@ std::optional<compositionengine::LayerFE::LayerSettings> LayerFE::prepareClientC
+     // Record the name of the layer for debugging further down the stack.
+     layerSettings.name = mSnapshot->name;
+     layerSettings.luts = mSnapshot->luts ? mSnapshot->luts : targetSettings.luts;
++#ifdef MTK_IN_DISPLAY_FINGERPRINT
++    layerSettings.enableDither = mDither.enabled;
++#endif
+ 
+     if (hasEffect() && !hasBufferOrSidebandStream()) {
+         prepareEffectsClientComposition(layerSettings, targetSettings);
+-- 
+2.34.1
+

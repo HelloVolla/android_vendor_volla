@@ -1,7 +1,7 @@
-From de24bf96655f7e3e16b3aa1d01bc17c9bd7f4862 Mon Sep 17 00:00:00 2001
+From 6409f024905bb59a36e91bf14205cc48ce3f5858 Mon Sep 17 00:00:00 2001
 From: johnny <johnny@localhost>
 Date: Wed, 22 Jun 2022 15:47:10 +0200
-Subject: [PATCH 3/7] LatinIME: fix gesture typing
+Subject: [PATCH] LatinIME: fix gesture typing
 
 Co-authored-by: nift4 <nift4@protonmail.com>
 Change-Id: I11344e95e32566507f937d6b72b6212e3cba2220
@@ -49,7 +49,7 @@ Signed-off-by: Mohammad Hasan Keramat J <ikeramat@protonmail.com>
 
 diff --git a/java/.gitignore b/java/.gitignore
 new file mode 100644
-index 0000000000..f3f41b81ae
+index 000000000..f3f41b81a
 --- /dev/null
 +++ b/java/.gitignore
 @@ -0,0 +1,8 @@
@@ -62,7 +62,7 @@ index 0000000000..f3f41b81ae
 +*.iml
 +*.ipr
 diff --git a/native/jni/Android.bp b/native/jni/Android.bp
-index ab14632f83..675f86ce23 100644
+index ab14632f8..675f86ce2 100644
 --- a/native/jni/Android.bp
 +++ b/native/jni/Android.bp
 @@ -81,7 +81,7 @@ filegroup {
@@ -89,7 +89,7 @@ index ab14632f83..675f86ce23 100644
          "src/dictionary/structure/backward/v402/ver4_dict_buffers.cpp",
          "src/dictionary/structure/backward/v402/ver4_dict_constants.cpp",
 diff --git a/native/jni/src/defines.h b/native/jni/src/defines.h
-index 1531b6cbe5..86854529d9 100644
+index 1531b6cbe..86854529d 100644
 --- a/native/jni/src/defines.h
 +++ b/native/jni/src/defines.h
 @@ -338,5 +338,6 @@ typedef enum {
@@ -100,7 +100,7 @@ index 1531b6cbe5..86854529d9 100644
  } CorrectionType;
  #endif // LATINIME_DEFINES_H
 diff --git a/native/jni/src/suggest/core/policy/traversal.h b/native/jni/src/suggest/core/policy/traversal.h
-index 5b6616d9ae..42fb40e782 100644
+index 5b6616d9a..42fb40e78 100644
 --- a/native/jni/src/suggest/core/policy/traversal.h
 +++ b/native/jni/src/suggest/core/policy/traversal.h
 @@ -30,6 +30,8 @@ class Traversal {
@@ -113,7 +113,7 @@ index 5b6616d9ae..42fb40e782 100644
              const DicNode *const dicNode) const = 0;
      virtual bool isSpaceOmissionTerminal(const DicTraverseSession *const traverseSession,
 diff --git a/native/jni/src/suggest/core/policy/weighting.cpp b/native/jni/src/suggest/core/policy/weighting.cpp
-index 450203d984..368db04dd2 100644
+index 450203d98..368db04dd 100644
 --- a/native/jni/src/suggest/core/policy/weighting.cpp
 +++ b/native/jni/src/suggest/core/policy/weighting.cpp
 @@ -134,6 +134,8 @@ static inline void profile(const CorrectionType correctionType, DicNode *const n
@@ -194,7 +194,7 @@ index 450203d984..368db04dd2 100644
 +    }
  }  // namespace latinime
 diff --git a/native/jni/src/suggest/core/policy/weighting.h b/native/jni/src/suggest/core/policy/weighting.h
-index 863c4eabef..dc437b3cb1 100644
+index 863c4eabe..dc437b3cb 100644
 --- a/native/jni/src/suggest/core/policy/weighting.h
 +++ b/native/jni/src/suggest/core/policy/weighting.h
 @@ -34,6 +34,11 @@ class Weighting {
@@ -231,7 +231,7 @@ index 863c4eabef..dc437b3cb1 100644
      static int getForwardInputCount(const CorrectionType correctionType);
  };
 diff --git a/native/jni/src/suggest/core/result/suggestions_output_utils.cpp b/native/jni/src/suggest/core/result/suggestions_output_utils.cpp
-index 7c37241def..2312c7cfbb 100644
+index 7c37241de..2312c7cfb 100644
 --- a/native/jni/src/suggest/core/result/suggestions_output_utils.cpp
 +++ b/native/jni/src/suggest/core/result/suggestions_output_utils.cpp
 @@ -27,11 +27,94 @@
@@ -330,7 +330,7 @@ index 7c37241def..2312c7cfbb 100644
          const Scoring *const scoringPolicy, DicTraverseSession *traverseSession,
          const float weightOfLangModelVsSpatialModel,
 diff --git a/native/jni/src/suggest/core/result/suggestions_output_utils.h b/native/jni/src/suggest/core/result/suggestions_output_utils.h
-index bcb75a4839..fc0d04e107 100644
+index bcb75a483..fc0d04e10 100644
 --- a/native/jni/src/suggest/core/result/suggestions_output_utils.h
 +++ b/native/jni/src/suggest/core/result/suggestions_output_utils.h
 @@ -45,12 +45,22 @@ class SuggestionsOutputUtils {
@@ -357,7 +357,7 @@ index bcb75a4839..fc0d04e107 100644
              DicTraverseSession *traverseSession, const DicNode *const terminalDicNode,
              const float weightOfLangModelVsSpatialModel, const bool boostExactMatches,
 diff --git a/native/jni/src/suggest/core/session/dic_traverse_session.cpp b/native/jni/src/suggest/core/session/dic_traverse_session.cpp
-index d7dd5a02da..4dc0e38530 100644
+index d7dd5a02d..4dc0e3853 100644
 --- a/native/jni/src/suggest/core/session/dic_traverse_session.cpp
 +++ b/native/jni/src/suggest/core/session/dic_traverse_session.cpp
 @@ -66,7 +66,8 @@ void DicTraverseSession::initializeProximityInfoStates(const int *const inputCod
@@ -371,7 +371,7 @@ index d7dd5a02da..4dc0e38530 100644
                  inputCodePoints, inputSize, inputXs, inputYs, times, pointerIds,
                  // Right now the line below is trying to figure out whether this is a gesture by
 diff --git a/native/jni/src/suggest/core/suggest.cpp b/native/jni/src/suggest/core/suggest.cpp
-index 52fa5a5dbe..95e9987298 100644
+index 52fa5a5db..95e998729 100644
 --- a/native/jni/src/suggest/core/suggest.cpp
 +++ b/native/jni/src/suggest/core/suggest.cpp
 @@ -52,6 +52,7 @@ void Suggest::getSuggestions(ProximityInfo *pInfo, void *traverseSession,
@@ -573,7 +573,7 @@ index 52fa5a5dbe..95e9987298 100644
 +    }
  } // namespace latinime
 diff --git a/native/jni/src/suggest/core/suggest.h b/native/jni/src/suggest/core/suggest.h
-index 65d5918cfb..39ae104df7 100644
+index 65d5918cf..39ae104df 100644
 --- a/native/jni/src/suggest/core/suggest.h
 +++ b/native/jni/src/suggest/core/suggest.h
 @@ -73,6 +73,15 @@ class Suggest : public SuggestInterface {
@@ -594,7 +594,7 @@ index 65d5918cfb..39ae104df7 100644
      const Traversal *const TRAVERSAL;
 diff --git a/native/jni/src/suggest/policyimpl/gesture/gesture_scoring.cpp b/native/jni/src/suggest/policyimpl/gesture/gesture_scoring.cpp
 new file mode 100644
-index 0000000000..ba56915480
+index 000000000..ba5691548
 --- /dev/null
 +++ b/native/jni/src/suggest/policyimpl/gesture/gesture_scoring.cpp
 @@ -0,0 +1,10 @@
@@ -611,7 +611,7 @@ index 0000000000..ba56915480
 \ No newline at end of file
 diff --git a/native/jni/src/suggest/policyimpl/gesture/gesture_scoring.h b/native/jni/src/suggest/policyimpl/gesture/gesture_scoring.h
 new file mode 100644
-index 0000000000..574c00e4ea
+index 000000000..574c00e4e
 --- /dev/null
 +++ b/native/jni/src/suggest/policyimpl/gesture/gesture_scoring.h
 @@ -0,0 +1,108 @@
@@ -725,7 +725,7 @@ index 0000000000..574c00e4ea
 +#endif //GOOGLEKEYBOARDV7_GESTURE_SCORING_H
 diff --git a/native/jni/src/suggest/policyimpl/gesture/gesture_suggest_policy.cpp b/native/jni/src/suggest/policyimpl/gesture/gesture_suggest_policy.cpp
 new file mode 100644
-index 0000000000..13c51e934c
+index 000000000..13c51e934
 --- /dev/null
 +++ b/native/jni/src/suggest/policyimpl/gesture/gesture_suggest_policy.cpp
 @@ -0,0 +1,10 @@
@@ -741,7 +741,7 @@ index 0000000000..13c51e934c
 +
 diff --git a/native/jni/src/suggest/policyimpl/gesture/gesture_suggest_policy.h b/native/jni/src/suggest/policyimpl/gesture/gesture_suggest_policy.h
 new file mode 100644
-index 0000000000..8d035a962b
+index 000000000..8d035a962
 --- /dev/null
 +++ b/native/jni/src/suggest/policyimpl/gesture/gesture_suggest_policy.h
 @@ -0,0 +1,50 @@
@@ -797,7 +797,7 @@ index 0000000000..8d035a962b
 +#endif //GOOGLEKEYBOARDV7_GESTURE_SUGGEST_POLICY_H
 diff --git a/native/jni/src/suggest/policyimpl/gesture/gesture_suggest_policy_factory.cpp b/native/jni/src/suggest/policyimpl/gesture/gesture_suggest_policy_factory.cpp
 deleted file mode 100644
-index 6d31739379..0000000000
+index 6d3173937..000000000
 --- a/native/jni/src/suggest/policyimpl/gesture/gesture_suggest_policy_factory.cpp
 +++ /dev/null
 @@ -1,21 +0,0 @@
@@ -823,7 +823,7 @@ index 6d31739379..0000000000
 -    const SuggestPolicy *(*GestureSuggestPolicyFactory::sGestureSuggestFactoryMethod)() = 0;
 -} // namespace latinime
 diff --git a/native/jni/src/suggest/policyimpl/gesture/gesture_suggest_policy_factory.h b/native/jni/src/suggest/policyimpl/gesture/gesture_suggest_policy_factory.h
-index 509b01fc0f..6052d9f985 100644
+index 509b01fc0..6052d9f98 100644
 --- a/native/jni/src/suggest/policyimpl/gesture/gesture_suggest_policy_factory.h
 +++ b/native/jni/src/suggest/policyimpl/gesture/gesture_suggest_policy_factory.h
 @@ -18,27 +18,22 @@
@@ -865,7 +865,7 @@ index 509b01fc0f..6052d9f985 100644
  #endif // LATINIME_GESTURE_SUGGEST_POLICY_FACTORY_H
 diff --git a/native/jni/src/suggest/policyimpl/gesture/gesture_traversal.cpp b/native/jni/src/suggest/policyimpl/gesture/gesture_traversal.cpp
 new file mode 100644
-index 0000000000..bfe046e6b1
+index 000000000..bfe046e6b
 --- /dev/null
 +++ b/native/jni/src/suggest/policyimpl/gesture/gesture_traversal.cpp
 @@ -0,0 +1,10 @@
@@ -882,7 +882,7 @@ index 0000000000..bfe046e6b1
 \ No newline at end of file
 diff --git a/native/jni/src/suggest/policyimpl/gesture/gesture_traversal.h b/native/jni/src/suggest/policyimpl/gesture/gesture_traversal.h
 new file mode 100644
-index 0000000000..fc298db49b
+index 000000000..fc298db49
 --- /dev/null
 +++ b/native/jni/src/suggest/policyimpl/gesture/gesture_traversal.h
 @@ -0,0 +1,190 @@
@@ -1078,7 +1078,7 @@ index 0000000000..fc298db49b
 +#endif //GOOGLEKEYBOARDV7_GESTURE_TRAVERSAL_H
 diff --git a/native/jni/src/suggest/policyimpl/gesture/gesture_weighting.cpp b/native/jni/src/suggest/policyimpl/gesture/gesture_weighting.cpp
 new file mode 100644
-index 0000000000..da124180ec
+index 000000000..da124180e
 --- /dev/null
 +++ b/native/jni/src/suggest/policyimpl/gesture/gesture_weighting.cpp
 @@ -0,0 +1,97 @@
@@ -1181,7 +1181,7 @@ index 0000000000..da124180ec
 +
 diff --git a/native/jni/src/suggest/policyimpl/gesture/gesture_weighting.h b/native/jni/src/suggest/policyimpl/gesture/gesture_weighting.h
 new file mode 100644
-index 0000000000..869acaecbb
+index 000000000..869acaecb
 --- /dev/null
 +++ b/native/jni/src/suggest/policyimpl/gesture/gesture_weighting.h
 @@ -0,0 +1,194 @@
@@ -1381,7 +1381,7 @@ index 0000000000..869acaecbb
 +#endif //GOOGLEKEYBOARDV7_GESTURE_WEIGHTING_H
 diff --git a/native/jni/src/suggest/policyimpl/gesture/scoring_params_g.cpp b/native/jni/src/suggest/policyimpl/gesture/scoring_params_g.cpp
 new file mode 100644
-index 0000000000..28712cc232
+index 000000000..28712cc23
 --- /dev/null
 +++ b/native/jni/src/suggest/policyimpl/gesture/scoring_params_g.cpp
 @@ -0,0 +1,30 @@
@@ -1417,7 +1417,7 @@ index 0000000000..28712cc232
 +
 diff --git a/native/jni/src/suggest/policyimpl/gesture/scoring_params_g.h b/native/jni/src/suggest/policyimpl/gesture/scoring_params_g.h
 new file mode 100644
-index 0000000000..d681fba9c9
+index 000000000..d681fba9c
 --- /dev/null
 +++ b/native/jni/src/suggest/policyimpl/gesture/scoring_params_g.h
 @@ -0,0 +1,35 @@
@@ -1457,7 +1457,7 @@ index 0000000000..d681fba9c9
 +
 +#endif //GOOGLEKEYBOARDV7_SCORING_PARAMS_G_H
 diff --git a/native/jni/src/suggest/policyimpl/typing/typing_traversal.h b/native/jni/src/suggest/policyimpl/typing/typing_traversal.h
-index b9b6314aeb..0d381dbf2c 100644
+index b9b6314ae..0d381dbf2 100644
 --- a/native/jni/src/suggest/policyimpl/typing/typing_traversal.h
 +++ b/native/jni/src/suggest/policyimpl/typing/typing_traversal.h
 @@ -73,6 +73,11 @@ class TypingTraversal : public Traversal {
@@ -1473,7 +1473,7 @@ index b9b6314aeb..0d381dbf2c 100644
              const DicTraverseSession *const traverseSession, const DicNode *const dicNode) const {
          if (!CORRECT_NEW_WORD_SPACE_SUBSTITUTION) {
 diff --git a/native/jni/src/suggest/policyimpl/typing/typing_weighting.h b/native/jni/src/suggest/policyimpl/typing/typing_weighting.h
-index 1338ac81a7..ff402b2aec 100644
+index 1338ac81a..ff402b2ae 100644
 --- a/native/jni/src/suggest/policyimpl/typing/typing_weighting.h
 +++ b/native/jni/src/suggest/policyimpl/typing/typing_weighting.h
 @@ -52,6 +52,11 @@ class TypingWeighting : public Weighting {
@@ -1489,5 +1489,5 @@ index 1338ac81a7..ff402b2aec 100644
          const bool isZeroCostOmission = parentDicNode->isZeroCostOmission();
          const bool isIntentionalOmission = parentDicNode->canBeIntentionalOmission();
 -- 
-2.34.1
+2.49.0
 

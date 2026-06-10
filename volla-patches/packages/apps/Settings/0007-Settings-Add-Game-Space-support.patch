@@ -1,4 +1,4 @@
-From cf05ddbd9db1cd6f7d785ed5ff82449170b1d44c Mon Sep 17 00:00:00 2001
+From a825f9a38a3db1c3d36e3427e9a12dbf2ab4dc4b Mon Sep 17 00:00:00 2001
 From: Nauval Rizky <enuma.alrizky@gmail.com>
 Date: Thu, 19 Jun 2025 17:41:10 +0000
 Subject: [PATCH] Settings: Add Game Space support
@@ -28,7 +28,7 @@ index 53ee6b220ef..158af3af804 100644
 +    <string name="game_space_summary">Enhance your gaming experience</string>
  </resources>
 diff --git a/res/xml/apps.xml b/res/xml/apps.xml
-index 8d8f81f4792..7b8a6565f0f 100644
+index 1c961ba952c..7cd686918a9 100644
 --- a/res/xml/apps.xml
 +++ b/res/xml/apps.xml
 @@ -83,6 +83,14 @@

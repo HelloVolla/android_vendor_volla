@@ -1,0 +1,89 @@
+From bc5c9b0d00e3c4ddaea119530afb9ce0d792fefb Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Wed, 27 May 2026 06:10:41 +0330
+Subject: [PATCH] Firewall: Add watch for airplane mode
+
+Change-Id: I5a7551e02b625c9923ec73afac98ac32d48b315b
+---
+ .../platform/internal/FirewallService.java    | 41 +++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index 461529c5..0d48f84a 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -61,6 +61,8 @@ import java.io.FileNotFoundException;
+ import java.io.FileOutputStream;
+ import java.io.IOException;
+ import java.io.InputStream;
++import java.net.InetSocketAddress;
++import java.net.Socket;
+ import java.security.KeyStore;
+ import java.security.KeyStoreException;
+ import java.security.NoSuchAlgorithmException;
+@@ -105,6 +107,8 @@ public class FirewallService extends LineageSystemService {
+     private static final String ATTRIBUTE_VERSION = "version";
+     private static final String ATTRIBUTE_BLACKLIST = "isBlacklist";
+     private static final String COMMON_DNS = "1.1.1.1";
++    private static final long AIRPLANE_RECONNECT_TIMEOUT_MS = 60_000L;
++    private static final long AIRPLANE_RECONNECT_POLL_MS = 3_000L;
+ 
+     private int mUserId;
+     private Context mContext;
+@@ -125,6 +129,7 @@ public class FirewallService extends LineageSystemService {
+     private final ArrayList<String> mAppsList = new ArrayList<String>();
+     private final ArrayList<DomainListInfo> mDomainListInfoList = new ArrayList<DomainListInfo>();
+     private final ArrayMap<String, List<String>> mPendingDomainListAdds = new ArrayMap<>();
++    private long mAirplaneRefreshDeadline = 0;
+ 
+     public FirewallService(Context context) {
+         super(context);
+@@ -172,9 +177,45 @@ public class FirewallService extends LineageSystemService {
+                 SystemProperties.set("ctl.start", "volla.dnsmasq");
+                 activateWebServer(true);
+             }
++
++            IntentFilter airplaneFilter = new IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED);
++            mContext.registerReceiver(mAirplaneModeReceiver, airplaneFilter);
+         }
+     }
+ 
++    private boolean isConnectedToNetwork() {
++        try (Socket socket = new Socket()) {
++            socket.connect(new InetSocketAddress(COMMON_DNS, 53), 2000);
++            return true;
++        } catch (IOException e) {
++            return false;
++        }
++    }
++
++    private final Runnable mConnectivityCheckRunnable = new Runnable() {
++        @Override
++        public void run() {
++            if (isConnectedToNetwork() || System.currentTimeMillis() >= mAirplaneRefreshDeadline) {
++                if (DEBUG_FIREWALL) Slog.v(TAG, "airplane mode: reactivating firewall");
++                activate(true);
++            } else {
++                mHandler.postDelayed(this, AIRPLANE_RECONNECT_POLL_MS);
++            }
++        }
++    };
++
++    private final BroadcastReceiver mAirplaneModeReceiver = new BroadcastReceiver() {
++        @Override
++        public void onReceive(Context context, Intent intent) {
++            if (!isActivate()) return;
++            if (DEBUG_FIREWALL) Slog.v(TAG, "airplane mode changed, refreshing firewall");
++            activate(false);
++            mAirplaneRefreshDeadline = System.currentTimeMillis() + AIRPLANE_RECONNECT_TIMEOUT_MS;
++            mHandler.removeCallbacks(mConnectivityCheckRunnable);
++            mHandler.postDelayed(mConnectivityCheckRunnable, AIRPLANE_RECONNECT_POLL_MS);
++        }
++    };
++
+     @Override
+     public void onUserSwitching(@Nullable TargetUser from, @NonNull TargetUser to) {
+         int userHandle = to.getUserIdentifier();
+-- 
+2.49.0
+

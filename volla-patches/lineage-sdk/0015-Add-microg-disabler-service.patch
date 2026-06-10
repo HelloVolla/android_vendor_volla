@@ -1,4 +1,4 @@
-From c91bf265c0b53a2589d966d2af5229dcb5b98de2 Mon Sep 17 00:00:00 2001
+From 3438771c2b882c9864a0faebe3ee839df8dca557 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Thu, 2 Feb 2023 06:29:46 +0330
 Subject: [PATCH] Add microg disabler service
@@ -113,7 +113,7 @@ index 00000000..ed6d2973
 +    }
 +}
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index 129f6168..8c611c86 100644
+index 37f98dab..46a4f51e 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
 @@ -106,6 +106,7 @@
@@ -125,10 +125,10 @@ index 129f6168..8c611c86 100644
  
      <!-- The LineageSystemServer class that is invoked from Android's SystemServer -->
 diff --git a/sdk/src/java/lineageos/providers/LineageSettings.java b/sdk/src/java/lineageos/providers/LineageSettings.java
-index 4b9403eb..4c610fe9 100644
+index f52b4220..4a7643e6 100644
 --- a/sdk/src/java/lineageos/providers/LineageSettings.java
 +++ b/sdk/src/java/lineageos/providers/LineageSettings.java
-@@ -2079,6 +2079,15 @@ public final class LineageSettings {
+@@ -2097,6 +2097,15 @@ public final class LineageSettings {
          public static final Validator ENABLE_TASKBAR_VALIDATOR =
                  sBooleanValidator;
  
@@ -144,7 +144,7 @@ index 4b9403eb..4c610fe9 100644
          /**
           * I can haz more bukkits
           * @hide
-@@ -2255,6 +2264,8 @@ public final class LineageSettings {
+@@ -2274,6 +2283,8 @@ public final class LineageSettings {
                      CLICK_PARTIAL_SCREENSHOT_VALIDATOR);
              VALIDATORS.put(ENABLE_TASKBAR,
                      ENABLE_TASKBAR_VALIDATOR);

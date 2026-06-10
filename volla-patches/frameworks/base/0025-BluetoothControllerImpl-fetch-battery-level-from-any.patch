@@ -1,0 +1,38 @@
+From 035b621dd6783737b0649baabb5263950ef75fb4 Mon Sep 17 00:00:00 2001
+From: jhonboy121 <alfredmathew05@gmail.com>
+Date: Tue, 22 Mar 2022 19:15:24 +0530
+Subject: [PATCH] BluetoothControllerImpl: fetch battery level from any device
+
+* When multiple devices are connected and only one or a few supports battery level reports, instead of fetching level from the first device, loop through the list to try and find any device that reports battery level, or just return unsupported value constant if there isn't any
+
+Signed-off-by: jhonboy121 <alfredmathew05@gmail.com>
+---
+ .../statusbar/policy/BluetoothControllerImpl.java      | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/policy/BluetoothControllerImpl.java b/packages/SystemUI/src/com/android/systemui/statusbar/policy/BluetoothControllerImpl.java
+index b705887be01e..44c6a08eb094 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/policy/BluetoothControllerImpl.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/policy/BluetoothControllerImpl.java
+@@ -335,11 +335,15 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
+     @Override
+     public int getBatteryLevel() {
+         synchronized (mConnectedDevices) {
+-            if (!mConnectedDevices.isEmpty()) {
+-                return mConnectedDevices.get(0).getBatteryLevel();
++            if (mConnectedDevices.isEmpty()) {
++                return BluetoothDevice.BATTERY_LEVEL_UNKNOWN;
+             }
++            return mConnectedDevices.stream()
++                .mapToInt(device -> device.getBatteryLevel())
++                .filter(level -> level != BluetoothDevice.BATTERY_LEVEL_UNKNOWN)
++                .findFirst()
++                .orElse(BluetoothDevice.BATTERY_LEVEL_UNKNOWN);
+         }
+-        return -1;
+     }
+ 
+     private void updateBattery() {
+-- 
+2.49.0
+

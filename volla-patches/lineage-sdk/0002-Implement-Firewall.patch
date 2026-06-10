@@ -1,4 +1,4 @@
-From 857d85d4f4ed30401efa967a8a5d62705d3c3dd8 Mon Sep 17 00:00:00 2001
+From 5d45eb85e0fd7889d7ac725b67d91db9ccbc0eb9 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Fri, 11 Feb 2022 19:58:13 +0330
 Subject: [PATCH] Implement Firewall
@@ -448,7 +448,7 @@ index 00000000..4dee74d8
 +    }
 +}
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index 88fbc29c..5739bee7 100644
+index ef04322d..be30dfd9 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
 @@ -104,6 +104,7 @@
@@ -460,7 +460,7 @@ index 88fbc29c..5739bee7 100644
  
      <!-- The LineageSystemServer class that is invoked from Android's SystemServer -->
 diff --git a/sdk/src/java/lineageos/app/LineageContextConstants.java b/sdk/src/java/lineageos/app/LineageContextConstants.java
-index b3021cfd..c54a3f21 100644
+index 6b985d7f..82456851 100644
 --- a/sdk/src/java/lineageos/app/LineageContextConstants.java
 +++ b/sdk/src/java/lineageos/app/LineageContextConstants.java
 @@ -88,6 +88,13 @@ public final class LineageContextConstants {

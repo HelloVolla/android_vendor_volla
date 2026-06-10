@@ -1,13 +1,13 @@
-From e7fdf0a8118e5b98c025d385c559dd3a61a6505a Mon Sep 17 00:00:00 2001
+From d77a94bd17d3991a5e96721a42c7ce16d72b36ef Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Fri, 19 Jul 2024 17:19:34 +0330
-Subject: [PATCH 01/10] LegalSettings: Move legal_url to resources
+Subject: [PATCH] LegalSettings: Move legal_url to resources
 
 Change-Id: I1270ff984b2c4143c3c1477896004a775ca2d848
 ---
- res/values/volla_strings.xml                                | 6 ++++++
- .../legal/LineageLicensePreferenceController.java           | 5 ++---
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ res/values/volla_strings.xml                         |  6 ++++++
+ .../deviceinfo/legal/LineageLegalPreference.kt       | 12 +++++-------
+ 2 files changed, 11 insertions(+), 7 deletions(-)
  create mode 100644 res/values/volla_strings.xml
 
 diff --git a/res/values/volla_strings.xml b/res/values/volla_strings.xml
@@ -22,31 +22,43 @@ index 00000000000..543d1a5f581
 +    <string name="lineage_legal_url">https://lineageos.org/legal</string>
 +
 +</resources>
-diff --git a/src/com/android/settings/deviceinfo/legal/LineageLicensePreferenceController.java b/src/com/android/settings/deviceinfo/legal/LineageLicensePreferenceController.java
-index a59f5cf1164..c727899f16f 100644
---- a/src/com/android/settings/deviceinfo/legal/LineageLicensePreferenceController.java
-+++ b/src/com/android/settings/deviceinfo/legal/LineageLicensePreferenceController.java
-@@ -25,11 +25,10 @@ import androidx.preference.Preference;
- import androidx.preference.PreferenceScreen;
+diff --git a/src/com/android/settings/deviceinfo/legal/LineageLegalPreference.kt b/src/com/android/settings/deviceinfo/legal/LineageLegalPreference.kt
+index a6b198d36e4..abea7fe0bfc 100644
+--- a/src/com/android/settings/deviceinfo/legal/LineageLegalPreference.kt
++++ b/src/com/android/settings/deviceinfo/legal/LineageLegalPreference.kt
+@@ -24,19 +24,17 @@ import com.android.settingslib.metadata.PreferenceAvailabilityProvider
+ import com.android.settingslib.metadata.PreferenceMetadata
+ import com.android.settingslib.metadata.PreferenceTitleProvider
  
- import com.android.settings.core.BasePreferenceController;
-+import com.android.settings.R;
++import com.android.settings.R
++
+ class LineageLegalPreference(override val key: String, @StringRes val defaultTitle: Int = 0) :
+     PreferenceMetadata, PreferenceTitleProvider, PreferenceAvailabilityProvider {
  
- public class LineageLicensePreferenceController extends BasePreferenceController {
- 
--    private static final String PROPERTY_LINEAGE_LICENSE_URL = "ro.lineagelegal.url";
+-    private companion object {
+-        const val PROPERTY_LINEAGE_LICENSE_URL = "ro.lineagelegal.url"
+-    }
 -
-     public LineageLicensePreferenceController(Context context, String key) {
-         super(context, key);
-     }
-@@ -58,6 +57,6 @@ public class LineageLicensePreferenceController extends BasePreferenceController
+-    private fun getLicenseUrl(): String = SystemProperties.get(PROPERTY_LINEAGE_LICENSE_URL)
++    private fun getLicenseUrl(context: Context): String = context.getString(R.string.lineage_legal_url)
  
-     private Intent getIntent() {
-         return new Intent(Intent.ACTION_VIEW,
--                Uri.parse(SystemProperties.get(PROPERTY_LINEAGE_LICENSE_URL)));
-+                Uri.parse(mContext.getString(R.string.lineage_legal_url)));
+     override fun getTitle(context: Context): CharSequence? = context.getText(defaultTitle)
+ 
+     override fun isAvailable(context: Context): Boolean {
+-        val url = getLicenseUrl()
++        val url = getLicenseUrl(context)
+         if (url.isNullOrBlank()) return false
+ 
+         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+@@ -44,7 +42,7 @@ class LineageLegalPreference(override val key: String, @StringRes val defaultTit
      }
- }
+ 
+     override fun intent(context: Context): Intent? {
+-        val url = getLicenseUrl()
++        val url = getLicenseUrl(context)
+         return if (url.isNotBlank()) {
+             Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+         } else null
 -- 
-2.34.1
+2.49.0
 

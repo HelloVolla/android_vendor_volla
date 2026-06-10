@@ -1,0 +1,406 @@
+From df5bfa463ad4d7baed254b50298e2a6aa11d5297 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Tue, 2 Jun 2026 10:43:36 +0330
+Subject: [PATCH] Firewall: Add database for events
+
+Change-Id: I8ed761eaf0f46b9be0513efd0a3b946a868180b7
+---
+ .../internal/FirewallBlockDatabase.java       | 115 ++++++++++++++++++
+ .../platform/internal/FirewallService.java    |  79 +++++++++++-
+ .../lineageos/platform/internal/TcpProxy.java |   4 +-
+ .../lineageos/firewall/BlockEventSchema.java  |  51 ++++++++
+ .../lineageos/firewall/FirewallManager.java   |  17 +++
+ .../lineageos/firewall/IFirewallService.aidl  |   4 +
+ 6 files changed, 267 insertions(+), 3 deletions(-)
+ create mode 100644 lineage/lib/main/java/org/lineageos/platform/internal/FirewallBlockDatabase.java
+ create mode 100644 sdk/src/java/lineageos/firewall/BlockEventSchema.java
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallBlockDatabase.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallBlockDatabase.java
+new file mode 100644
+index 00000000..3d207210
+--- /dev/null
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallBlockDatabase.java
+@@ -0,0 +1,115 @@
++/**
++ * Copyright (C) 2022 Hallo Welt Systeme UG
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.lineageos.platform.internal;
++
++import android.content.ContentValues;
++import android.content.Context;
++import android.database.sqlite.SQLiteDatabase;
++import android.database.sqlite.SQLiteOpenHelper;
++import android.util.Slog;
++
++import lineageos.firewall.BlockEventSchema;
++
++class FirewallBlockDatabase extends SQLiteOpenHelper {
++
++    private static final String TAG = "FirewallBlockDatabase";
++
++    private static final String CREATE_TABLE =
++        "CREATE TABLE " + BlockEventSchema.TABLE + " ("
++        + BlockEventSchema.COL_ID            + " INTEGER PRIMARY KEY AUTOINCREMENT,"
++        + BlockEventSchema.COL_TIMESTAMP     + " INTEGER NOT NULL,"
++        + BlockEventSchema.COL_DOMAIN        + " TEXT NOT NULL,"
++        + BlockEventSchema.COL_APP_NAME      + " TEXT,"
++        + BlockEventSchema.COL_APP_PKG       + " TEXT,"
++        + BlockEventSchema.COL_IS_HTTPS      + " INTEGER NOT NULL DEFAULT 0,"
++        + BlockEventSchema.COL_IS_BLACKLIST  + " INTEGER NOT NULL DEFAULT 0,"
++        + BlockEventSchema.COL_SOURCE_TYPE   + " TEXT NOT NULL DEFAULT 'manual',"
++        + BlockEventSchema.COL_TEMPLATE_NAME + " TEXT,"
++        + BlockEventSchema.COL_ALLOWED_TYPE  + " TEXT,"
++        + BlockEventSchema.COL_ALLOWED_AT    + " INTEGER NOT NULL DEFAULT 0"
++        + ")";
++
++    FirewallBlockDatabase(Context context, String path) {
++        super(context, path, null, BlockEventSchema.DB_VERSION);
++    }
++
++    @Override
++    public void onCreate(SQLiteDatabase db) {
++        db.execSQL(CREATE_TABLE);
++    }
++
++    @Override
++    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
++        // Future migrations go here.
++        Slog.w(TAG, "Upgrading block event DB from " + oldVersion + " to " + newVersion);
++        db.execSQL("DROP TABLE IF EXISTS " + BlockEventSchema.TABLE);
++        onCreate(db);
++    }
++
++    long insertEvent(long timestamp, String domain, String appName, String appPkg,
++            boolean isHttps, boolean isBlacklist, String sourceType, String templateName) {
++        ContentValues v = new ContentValues(9);
++        v.put(BlockEventSchema.COL_TIMESTAMP,     timestamp);
++        v.put(BlockEventSchema.COL_DOMAIN,        domain);
++        v.put(BlockEventSchema.COL_APP_NAME,      appName);
++        v.put(BlockEventSchema.COL_APP_PKG,       appPkg);
++        v.put(BlockEventSchema.COL_IS_HTTPS,      isHttps ? 1 : 0);
++        v.put(BlockEventSchema.COL_IS_BLACKLIST,  isBlacklist ? 1 : 0);
++        v.put(BlockEventSchema.COL_SOURCE_TYPE,   sourceType);
++        v.put(BlockEventSchema.COL_TEMPLATE_NAME, templateName);
++        try {
++            return getWritableDatabase().insert(BlockEventSchema.TABLE, null, v);
++        } catch (Exception e) {
++            Slog.e(TAG, "insertEvent failed", e);
++            return -1;
++        }
++    }
++
++    void updateAllowed(String domain, String allowedType) {
++        try {
++            ContentValues v = new ContentValues(2);
++            v.put(BlockEventSchema.COL_ALLOWED_TYPE, allowedType);
++            v.put(BlockEventSchema.COL_ALLOWED_AT,   System.currentTimeMillis());
++            getWritableDatabase().execSQL(
++                "UPDATE " + BlockEventSchema.TABLE
++                + " SET " + BlockEventSchema.COL_ALLOWED_TYPE + "=?,"
++                           + BlockEventSchema.COL_ALLOWED_AT   + "=?"
++                + " WHERE " + BlockEventSchema.COL_DOMAIN + "=?"
++                + "   AND "  + BlockEventSchema.COL_ALLOWED_TYPE + " IS NULL"
++                + " ORDER BY " + BlockEventSchema.COL_ID + " DESC LIMIT 1",
++                new Object[]{allowedType, System.currentTimeMillis(), domain});
++        } catch (Exception e) {
++            Slog.e(TAG, "updateAllowed failed for " + domain, e);
++        }
++    }
++
++    void clearEvents() {
++        try {
++            getWritableDatabase().delete(BlockEventSchema.TABLE, null, null);
++        } catch (Exception e) {
++            Slog.e(TAG, "clearEvents failed", e);
++        }
++    }
++
++    void checkpoint() {
++        try {
++            getWritableDatabase().execSQL("PRAGMA wal_checkpoint(TRUNCATE)");
++        } catch (Exception e) {
++            Slog.e(TAG, "checkpoint failed", e);
++        }
++    }
++}
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index d30a0b98..f8592dc9 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -40,6 +40,7 @@ import android.os.Environment;
+ import android.os.Handler;
+ import android.os.IBinder;
+ import android.os.Looper;
++import android.os.ParcelFileDescriptor;
+ import android.os.RemoteException;
+ import android.os.ServiceManager;
+ import android.os.SystemProperties;
+@@ -204,6 +205,7 @@ public class FirewallService extends LineageSystemService {
+     private AtomicFile mAllowedFile;
+     private final ArrayMap<String, Long> mAllowedDomains = new ArrayMap<>();
+     private BroadcastReceiver mNotifActionReceiver;
++    private FirewallBlockDatabase mBlockDb;
+ 
+     private final ArrayList<String> mManualDomainsList = new ArrayList<String>();
+     private final ArrayList<String> mAppsList = new ArrayList<String>();
+@@ -246,6 +248,9 @@ public class FirewallService extends LineageSystemService {
+             mUserId = userHandle;
+             mAllowedFile = new AtomicFile(new File(
+                 Environment.getDataSystemCeDirectory(mUserId), ALLOWED_FILE_NAME));
++            mBlockDb = new FirewallBlockDatabase(mContext,
++                new File(Environment.getDataSystemCeDirectory(mUserId), "firewall_events.db")
++                    .getAbsolutePath());
+             setupNotificationChannel();
+             registerNotifActionReceiver();
+             initCA();
+@@ -1033,10 +1038,20 @@ public class FirewallService extends LineageSystemService {
+     public void activate(boolean enable) {
+         SystemProperties.set("persist.volla.firewall.enable", enable ? "true" : "false");
+         if (enable) {
++            if (mBlockDb == null) {
++                mBlockDb = new FirewallBlockDatabase(mContext,
++                    new File(Environment.getDataSystemCeDirectory(mUserId), "firewall_events.db")
++                        .getAbsolutePath());
++            }
+             mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
+             SystemProperties.set("ctl.start", "volla.dnsmasq");
+         } else {
+             SystemProperties.set("ctl.stop", "volla.dnsmasq");
++            if (mBlockDb != null) {
++                mBlockDb.checkpoint();
++                mBlockDb.close();
++                mBlockDb = null;
++            }
+         }
+         mHandler.sendEmptyMessage(FirewallHandler.MSG_RESET_RESTRICTED_APPS);
+         activateWebServer(enable);
+@@ -1291,10 +1306,12 @@ public class FirewallService extends LineageSystemService {
+                     mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
+                     mHandler.removeCallbacks(mExpireRunnable);
+                     mHandler.postDelayed(mExpireRunnable, ALLOW_TEMP_MS + 1000);
++                    if (mBlockDb != null) mBlockDb.updateAllowed(domain, "temp");
+                 } else if (ACTION_ALLOW_PERM.equals(action)) {
+                     mAllowedDomains.put(domain, -1L);
+                     writeAllowedDomains();
+                     mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
++                    if (mBlockDb != null) mBlockDb.updateAllowed(domain, "perm");
+                 }
+                 // ACTION_DENY: notification already cancelled above, nothing else to do
+             }
+@@ -1306,7 +1323,31 @@ public class FirewallService extends LineageSystemService {
+         mContext.registerReceiver(mNotifActionReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+     }
+ 
+-    void onDomainBlocked(String domain, int uid, String pkg, String appName) {
++    void onDomainBlocked(String domain, int uid, String pkg, String appName, int port) {
++        // Determine domain source: manual list (in RAM) or a template (file lookup).
++        String sourceType, templateName;
++        if (mManualDomainsList.contains(domain)) {
++            sourceType = "manual";
++            templateName = null;
++        } else {
++            sourceType = "template";
++            templateName = null;
++            ArrayMap<String, List<String>> listDomains = readDomainListDomainsFromFile();
++            outer:
++            for (DomainListInfo info : mDomainListInfoList) {
++                List<String> domains = listDomains.get(info.id);
++                if (domains != null && domains.contains(domain)) {
++                    templateName = info.title;
++                    break outer;
++                }
++            }
++        }
++
++        if (mBlockDb != null) {
++            mBlockDb.insertEvent(System.currentTimeMillis(), domain, appName, pkg,
++                port == 443, isBlacklistMode(), sourceType, templateName);
++        }
++
+         if (!isAlertMode()) return;
+         int notifId = domain.hashCode();
+ 
+@@ -1493,6 +1534,42 @@ public class FirewallService extends LineageSystemService {
+         public void removeAllowedDomain(String name) {
+             FirewallService.this.removeAllowedDomain(name);
+         }
++
++        @Override
++        public ParcelFileDescriptor getBlockEventsDb() {
++            if (mBlockDb == null) return null;
++            try {
++                mBlockDb.checkpoint();
++                final File dbFile = new File(Environment.getDataSystemCeDirectory(mUserId),
++                    "firewall_events.db");
++                // Return a pipe so the client can read the raw bytes and save them
++                // to its own cache dir. A direct PFD to the file would have SQLite
++                // resolve the /proc/self/fd symlink back to the protected real path,
++                // causing SQLITE_CANTOPEN (Permission denied).
++                final ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createPipe();
++                new Thread(() -> {
++                    try (ParcelFileDescriptor.AutoCloseOutputStream out =
++                                new ParcelFileDescriptor.AutoCloseOutputStream(pipe[1]);
++                         java.io.FileInputStream in = new java.io.FileInputStream(dbFile)) {
++                        byte[] buf = new byte[8192];
++                        int n;
++                        while ((n = in.read(buf)) != -1) out.write(buf, 0, n);
++                    } catch (Exception e) {
++                        Slog.e(TAG, "getBlockEventsDb pipe write failed", e);
++                        IoUtils.closeQuietly(pipe[1]);
++                    }
++                }, "firewall-db-pipe").start();
++                return pipe[0];
++            } catch (Exception e) {
++                Slog.e(TAG, "getBlockEventsDb failed", e);
++                return null;
++            }
++        }
++
++        @Override
++        public void clearBlockEvents() {
++            if (mBlockDb != null) mBlockDb.clearEvents();
++        }
+     };
+ 
+     private class FirewallHandler extends Handler {
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/TcpProxy.java b/lineage/lib/main/java/org/lineageos/platform/internal/TcpProxy.java
+index b96c4d8b..d619297c 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/TcpProxy.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/TcpProxy.java
+@@ -54,7 +54,7 @@ import libcore.io.IoUtils;
+ class TcpProxy {
+ 
+     interface BlockListener {
+-        void onBlocked(String domain, int uid, String packageName, String appName);
++        void onBlocked(String domain, int uid, String packageName, String appName, int port);
+     }
+ 
+     private static final String TAG = "TcpProxy";
+@@ -141,7 +141,7 @@ class TcpProxy {
+                 return;
+             }
+ 
+-            mListener.onBlocked(domain != null ? domain : "unknown", uid, pkg, appName);
++            mListener.onBlocked(domain != null ? domain : "unknown", uid, pkg, appName, mPort);
+ 
+             if (mSSLContext != null) {
+                 sBridgeSni.set(domain);
+diff --git a/sdk/src/java/lineageos/firewall/BlockEventSchema.java b/sdk/src/java/lineageos/firewall/BlockEventSchema.java
+new file mode 100644
+index 00000000..28ff8fa7
+--- /dev/null
++++ b/sdk/src/java/lineageos/firewall/BlockEventSchema.java
+@@ -0,0 +1,51 @@
++/**
++ * Copyright (C) 2022 Hallo Welt Systeme UG
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package lineageos.firewall;
++
++/**
++ * Schema constants for the firewall block-events SQLite database.
++ *
++ * Dashboard clients import this class to avoid hardcoding column names.
++ * When DB_VERSION is bumped, update CREATE_TABLE and add an onUpgrade migration
++ * in FirewallBlockDatabase.
++ */
++public final class BlockEventSchema {
++
++    public static final int DB_VERSION = 1;
++
++    public static final String TABLE = "block_events";
++
++    public static final String COL_ID            = "id";
++    public static final String COL_TIMESTAMP     = "timestamp";
++    public static final String COL_DOMAIN        = "domain";
++    public static final String COL_APP_NAME      = "app_name";
++    public static final String COL_APP_PKG       = "app_pkg";
++    /** 1 = HTTPS (port 443), 0 = HTTP (port 80) */
++    public static final String COL_IS_HTTPS      = "is_https";
++    /** 1 = blacklist mode, 0 = whitelist mode */
++    public static final String COL_IS_BLACKLIST  = "is_blacklist";
++    /** "manual" or "template" */
++    public static final String COL_SOURCE_TYPE   = "source_type";
++    /** Template title; null when source_type = "manual" */
++    public static final String COL_TEMPLATE_NAME = "template_name";
++    /** null / "temp" / "perm" */
++    public static final String COL_ALLOWED_TYPE  = "allowed_type";
++    /** Epoch-ms when allowed; 0 if never allowed */
++    public static final String COL_ALLOWED_AT    = "allowed_at";
++
++    private BlockEventSchema() {}
++}
+diff --git a/sdk/src/java/lineageos/firewall/FirewallManager.java b/sdk/src/java/lineageos/firewall/FirewallManager.java
+index 4a57f363..292daf56 100644
+--- a/sdk/src/java/lineageos/firewall/FirewallManager.java
++++ b/sdk/src/java/lineageos/firewall/FirewallManager.java
+@@ -18,6 +18,7 @@ package lineageos.firewall;
+ 
+ import android.content.Context;
+ import android.os.IBinder;
++import android.os.ParcelFileDescriptor;
+ import android.os.RemoteException;
+ import android.os.ServiceManager;
+ import android.os.ServiceManager.ServiceNotFoundException;
+@@ -264,4 +265,20 @@ public class FirewallManager {
+             throw e.rethrowFromSystemServer();
+         }
+     }
++
++    public ParcelFileDescriptor getBlockEventsDb() {
++        try {
++            return sService.getBlockEventsDb();
++        } catch (RemoteException e) {
++            throw e.rethrowFromSystemServer();
++        }
++    }
++
++    public void clearBlockEvents() {
++        try {
++            sService.clearBlockEvents();
++        } catch (RemoteException e) {
++            throw e.rethrowFromSystemServer();
++        }
++    }
+ }
+diff --git a/sdk/src/java/lineageos/firewall/IFirewallService.aidl b/sdk/src/java/lineageos/firewall/IFirewallService.aidl
+index 70fabbee..d6d017fa 100644
+--- a/sdk/src/java/lineageos/firewall/IFirewallService.aidl
++++ b/sdk/src/java/lineageos/firewall/IFirewallService.aidl
+@@ -70,4 +70,8 @@ interface IFirewallService {
+ 
+     void removeAllowedDomain(String name);
+ 
++    ParcelFileDescriptor getBlockEventsDb();
++
++    void clearBlockEvents();
++
+ }
+-- 
+2.49.0
+

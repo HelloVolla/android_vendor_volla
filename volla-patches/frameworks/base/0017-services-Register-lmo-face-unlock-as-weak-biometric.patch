@@ -1,7 +1,7 @@
-From 1c1c694354fba6037bafb40e68fa1efe698a3923 Mon Sep 17 00:00:00 2001
+From f7acea5705f59848aa9eb33e51ca4a4fb7bcb727 Mon Sep 17 00:00:00 2001
 From: Dhina17 <dhinalogu@gmail.com>
 Date: Thu, 11 Jul 2024 18:50:34 +0530
-Subject: [PATCH 17/35] services: Register lmo face unlock as weak biometric
+Subject: [PATCH] services: Register lmo face unlock as weak biometric
 
 Our face unlock doesn't meet the requirements for
 Class 3 (Strong) biometric so whenever third party apps

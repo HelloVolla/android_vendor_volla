@@ -11,6 +11,9 @@
         <!-- Enable VoNR by default on supported devices -->
         <boolean name="vonr_enabled_bool" value="true"/>
 
+        <!-- Show VoNR pref in settings by default on supported devices -->
+        <boolean name="vonr_setting_visibility_bool" value="true" />
+
         <!-- Enable NR Advanced Where available -->
         <int name="nr_advanced_threshold_bandwidth_khz_int" value="0"/>
 

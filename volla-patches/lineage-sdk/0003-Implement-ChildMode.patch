@@ -1,4 +1,4 @@
-From 19ab64524ef7e5253da42f6e7a89fdc077b84eff Mon Sep 17 00:00:00 2001
+From 8b5e474e6b72d7ba065051ecd926214bf399ab7a Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Thu, 10 Feb 2022 10:50:10 +0330
 Subject: [PATCH] Implement ChildMode
@@ -103,7 +103,7 @@ index 00000000..a5fcef7f
 +    };
 +}
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index 5739bee7..129f6168 100644
+index be30dfd9..37f98dab 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
 @@ -105,6 +105,7 @@
@@ -115,7 +115,7 @@ index 5739bee7..129f6168 100644
  
      <!-- The LineageSystemServer class that is invoked from Android's SystemServer -->
 diff --git a/sdk/src/java/lineageos/app/LineageContextConstants.java b/sdk/src/java/lineageos/app/LineageContextConstants.java
-index c54a3f21..0488073d 100644
+index 82456851..e4634afc 100644
 --- a/sdk/src/java/lineageos/app/LineageContextConstants.java
 +++ b/sdk/src/java/lineageos/app/LineageContextConstants.java
 @@ -95,6 +95,13 @@ public final class LineageContextConstants {

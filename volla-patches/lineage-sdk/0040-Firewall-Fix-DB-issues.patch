@@ -1,0 +1,151 @@
+From 8fd13061a0544d8be74969392e1d71929fee0e4b Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Thu, 4 Jun 2026 10:10:15 +0330
+Subject: [PATCH] Firewall: Fix DB issues
+
+Change-Id: Ieca770b0e8dd78a110ad9134a0b0fc754ab2ec80
+---
+ .../internal/FirewallBlockDatabase.java       | 17 +++++--
+ .../platform/internal/FirewallService.java    | 48 ++++++++++++++-----
+ 2 files changed, 50 insertions(+), 15 deletions(-)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallBlockDatabase.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallBlockDatabase.java
+index 3d207210..04509d0c 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallBlockDatabase.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallBlockDatabase.java
+@@ -49,15 +49,24 @@ class FirewallBlockDatabase extends SQLiteOpenHelper {
+ 
+     @Override
+     public void onCreate(SQLiteDatabase db) {
++        // If this is logged after reboot, the DB file was missing or wiped before open.
++        Slog.w(TAG, "onCreate: creating fresh block_events table (first run or file was gone)");
+         db.execSQL(CREATE_TABLE);
+     }
+ 
+     @Override
+     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+-        // Future migrations go here.
+-        Slog.w(TAG, "Upgrading block event DB from " + oldVersion + " to " + newVersion);
+-        db.execSQL("DROP TABLE IF EXISTS " + BlockEventSchema.TABLE);
+-        onCreate(db);
++        Slog.w(TAG, "Upgrading block event DB v" + oldVersion + " → v" + newVersion
++            + " (preserving existing rows)");
++        // Add new columns introduced after v1 here with ALTER TABLE … ADD COLUMN.
++        // Never DROP the table — doing so wipes the entire history on every schema change.
++    }
++
++    @Override
++    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
++        // Tolerate downgrade (e.g. rolling back a build) without wiping data.
++        Slog.w(TAG, "Downgrading block event DB v" + oldVersion + " → v" + newVersion
++            + " (ignored, keeping data)");
+     }
+ 
+     long insertEvent(long timestamp, String domain, String appName, String appPkg,
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index 8c5ad752..9874bd7d 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -173,6 +173,7 @@ public class FirewallService extends LineageSystemService {
+     private static final String PROP_ALERT_MODE  = "persist.volla.firewall.alertmode";
+     private static final String PKG_SYSTEM       = "android";
+     private static final String ALLOWED_FILE_NAME    = "list-allowed.xml";
++    private static final String BLOCK_EVENTS_DB_NAME = "firewall_events.db";
+     private static final String TAG_ALLOWED_DOMAINS  = "list-allowed";
+     private static final String TAG_ALLOWED_DOMAIN   = "allowed-domain";
+     private static final String ATTRIBUTE_EXPIRY     = "expiry";
+@@ -249,9 +250,6 @@ public class FirewallService extends LineageSystemService {
+             mUserId = userHandle;
+             mAllowedFile = new AtomicFile(new File(
+                 Environment.getDataSystemCeDirectory(mUserId), ALLOWED_FILE_NAME));
+-            mBlockDb = new FirewallBlockDatabase(mContext,
+-                new File(Environment.getDataSystemCeDirectory(mUserId), "firewall_events.db")
+-                    .getAbsolutePath());
+             setupNotificationChannel();
+             registerNotifActionReceiver();
+             initCA();
+@@ -331,6 +329,7 @@ public class FirewallService extends LineageSystemService {
+         int userHandle = targetUser.getUserIdentifier();
+         if (DEBUG_FIREWALL) Slog.v(TAG, "onStopUser() userHandle:" + userHandle);
+         if (mUserId == userHandle) {
++            closeBlockDb();
+             mUserId = ActivityManager.getCurrentUser();
+             mHandler.sendEmptyMessage(FirewallHandler.MSG_INIT_DOMAINS);
+             mHandler.sendEmptyMessage(FirewallHandler.MSG_INIT_APPS);
+@@ -1028,14 +1027,28 @@ public class FirewallService extends LineageSystemService {
+         }
+     }
+ 
++    private void closeBlockDb() {
++        if (mBlockDb != null) {
++            mBlockDb.checkpoint();
++            mBlockDb.close();
++            mBlockDb = null;
++        }
++    }
++
+     public void activate(boolean enable) {
+         SystemProperties.set("persist.volla.firewall.enable", enable ? "true" : "false");
+         SystemProperties.set("sys.volla.firewall.enable", enable ? "1" : "0");
+         if (enable) {
++            if (mBlockDb == null) {
++                mBlockDb = new FirewallBlockDatabase(mContext,
++                    new File(Environment.getDataSystemCeDirectory(mUserId), BLOCK_EVENTS_DB_NAME)
++                        .getAbsolutePath());
++            }
+             mHandler.sendEmptyMessage(FirewallHandler.MSG_WRITE_CONF);
+             SystemProperties.set("ctl.start", "volla.dnsmasq");
+         } else {
+             SystemProperties.set("ctl.stop", "volla.dnsmasq");
++            closeBlockDb();
+         }
+         mHandler.sendEmptyMessage(FirewallHandler.MSG_RESET_RESTRICTED_APPS);
+         activateWebServer(enable);
+@@ -1526,15 +1539,17 @@ public class FirewallService extends LineageSystemService {
+ 
+         @Override
+         public ParcelFileDescriptor getBlockEventsDb() {
+-            if (mBlockDb == null) return null;
+             try {
+-                mBlockDb.checkpoint();
++                // Flush WAL to main file if the DB is currently open (firewall active).
++                // If mBlockDb is null (firewall inactive) the file is already self-contained.
++                if (mBlockDb != null) mBlockDb.checkpoint();
++
+                 final File dbFile = new File(Environment.getDataSystemCeDirectory(mUserId),
+-                    "firewall_events.db");
+-                // Return a pipe so the client can read the raw bytes and save them
+-                // to its own cache dir. A direct PFD to the file would have SQLite
+-                // resolve the /proc/self/fd symlink back to the protected real path,
+-                // causing SQLITE_CANTOPEN (Permission denied).
++                    BLOCK_EVENTS_DB_NAME);
++                if (!dbFile.exists()) return null;
++
++                // Stream bytes through a pipe — a direct PFD would have SQLite resolve
++                // /proc/self/fd back to the protected real path (SQLITE_CANTOPEN).
+                 final ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createPipe();
+                 new Thread(() -> {
+                     try (ParcelFileDescriptor.AutoCloseOutputStream out =
+@@ -1557,7 +1572,18 @@ public class FirewallService extends LineageSystemService {
+ 
+         @Override
+         public void clearBlockEvents() {
+-            if (mBlockDb != null) mBlockDb.clearEvents();
++            if (mBlockDb != null) {
++                mBlockDb.clearEvents();
++            } else {
++                // DB is closed (firewall inactive) — open temporarily to clear, then close.
++                File dbFile = new File(Environment.getDataSystemCeDirectory(mUserId),
++                    BLOCK_EVENTS_DB_NAME);
++                if (!dbFile.exists()) return;
++                FirewallBlockDatabase tmp = new FirewallBlockDatabase(
++                    mContext, dbFile.getAbsolutePath());
++                tmp.clearEvents();
++                tmp.close();
++            }
+         }
+     };
+ 
+-- 
+2.49.0
+

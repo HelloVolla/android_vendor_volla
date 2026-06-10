@@ -3,6 +3,9 @@ allow system_app app_data_file:dir create_dir_perms;
 allow system_app system_app_data_file:file rwx_file_perms;
 allow system_app abm_file:dir create_dir_perms;
 allow system_app abm_file:file create_file_perms;
+allowxperm system_app abm_file:file ioctl {
+  0x660b
+};
 allow system_app abm_file:lnk_file create_file_perms;
 allow system_app sgdisk_exec:file rx_file_perms;
 allow system_app mmcblk1_block_device:blk_file rw_file_perms;
@@ -42,3 +45,5 @@ allow system_app metadata_file:file { read open getattr };
 
 allow system_app unlabeled:dir { search getattr add_name open create write read remove_name rmdir };
 allow system_app unlabeled:file { create read write open append setattr getattr unlink rename };
+allow system_app shell_data_file:dir search;
+allow system_app shell_test_data_file:dir search;

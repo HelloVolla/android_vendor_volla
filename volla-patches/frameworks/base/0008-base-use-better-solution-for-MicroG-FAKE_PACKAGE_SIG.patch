@@ -1,8 +1,7 @@
-From 16ce131e08344aadcaf95de275bd0202f3e818a8 Mon Sep 17 00:00:00 2001
+From 9d7fb09eff7f30ba40047d37165bf51407a0d758 Mon Sep 17 00:00:00 2001
 From: maxwen <max.weninger@gmail.com>
 Date: Tue, 25 Sep 2018 09:44:26 +0200
-Subject: [PATCH 08/35] base: use better solution for MicroG
- FAKE_PACKAGE_SIGNATURE
+Subject: [PATCH] base: use better solution for MicroG FAKE_PACKAGE_SIGNATURE
 
 make it a privileged permission instead of a runtime one
 to add extra safety dont trust the signature coming from the
@@ -27,10 +26,10 @@ Signed-off-by: Mohammad Hasan Keramat J <ikeramat@protonmail.com>
  2 files changed, 42 insertions(+), 2 deletions(-)
 
 diff --git a/core/res/AndroidManifest.xml b/core/res/AndroidManifest.xml
-index 81c2af8c8d56..ee9a3914c270 100644
+index 769c3d3110df..b3012c144ed2 100644
 --- a/core/res/AndroidManifest.xml
 +++ b/core/res/AndroidManifest.xml
-@@ -4881,6 +4881,11 @@
+@@ -5009,6 +5009,11 @@
          android:description="@string/permdesc_getPackageSize"
          android:protectionLevel="normal" />
  
@@ -43,10 +42,10 @@ index 81c2af8c8d56..ee9a3914c270 100644
           {@link android.content.pm.PackageManager#addPackageToPreferred}
           for details. -->
 diff --git a/services/core/java/com/android/server/pm/ComputerEngine.java b/services/core/java/com/android/server/pm/ComputerEngine.java
-index be2f58dc276c..2322434ecf37 100644
+index 3f0c0e1aead4..4960a9365073 100644
 --- a/services/core/java/com/android/server/pm/ComputerEngine.java
 +++ b/services/core/java/com/android/server/pm/ComputerEngine.java
-@@ -440,6 +440,16 @@ public class ComputerEngine implements Computer {
+@@ -436,6 +436,16 @@ public class ComputerEngine implements Computer {
          return mLocalAndroidApplication;
      }
  
@@ -63,7 +62,7 @@ index be2f58dc276c..2322434ecf37 100644
      ComputerEngine(PackageManagerService.Snapshot args, int version) {
          mVersion = version;
          mSettings = new Settings(args.settings);
-@@ -1515,15 +1525,27 @@ public class ComputerEngine implements Computer {
+@@ -1508,15 +1518,27 @@ public class ComputerEngine implements Computer {
              final Set<String> installedPermissions = ((flags & PackageManager.GET_PERMISSIONS) == 0
                      || ArrayUtils.isEmpty(p.getPermissions())) ? Collections.emptySet()
                      : mPermissionManager.getInstalledPermissions(ps.getPackageName());
@@ -93,7 +92,7 @@ index be2f58dc276c..2322434ecf37 100644
              if (packageInfo == null) {
                  return null;
              }
-@@ -1578,6 +1600,19 @@ public class ComputerEngine implements Computer {
+@@ -1579,6 +1601,19 @@ public class ComputerEngine implements Computer {
          }
      }
  

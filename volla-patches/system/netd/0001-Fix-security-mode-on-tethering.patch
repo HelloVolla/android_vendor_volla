@@ -1,4 +1,4 @@
-From d556a2f06f1f1ecd7e4057446b315347e8d7021f Mon Sep 17 00:00:00 2001
+From d78bbdc890c4fdda58c28af016a6e20f6b6ea033 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Fri, 3 May 2024 20:16:44 +0330
 Subject: [PATCH] Fix security mode on tethering
@@ -9,7 +9,7 @@ Change-Id: I08e8eb870a033d49eac5ec8eeb26b0a65f55f5b5
  1 file changed, 14 insertions(+)
 
 diff --git a/server/TetherController.cpp b/server/TetherController.cpp
-index b159d958..e2c2178a 100644
+index b159d958..17bd9ee0 100644
 --- a/server/TetherController.cpp
 +++ b/server/TetherController.cpp
 @@ -40,6 +40,7 @@

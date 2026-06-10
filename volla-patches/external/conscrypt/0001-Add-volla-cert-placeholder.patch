@@ -1,0 +1,28 @@
+From 809866c1ff3ce28d97248715976a696c0fd5036b Mon Sep 17 00:00:00 2001
+From: Volla BuildBot <build@volla.com>
+Date: Tue, 2 Jun 2026 10:51:47 +0000
+Subject: [PATCH] Add volla cert placeholder
+
+---
+ apex/ca-certificates/files/735ba42f.0 | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+ create mode 100644 apex/ca-certificates/files/735ba42f.0
+
+diff --git a/apex/ca-certificates/files/735ba42f.0 b/apex/ca-certificates/files/735ba42f.0
+new file mode 100644
+index 0000000..c1b1097
+--- /dev/null
++++ b/apex/ca-certificates/files/735ba42f.0
+@@ -0,0 +1,9 @@
++-----BEGIN CERTIFICATE-----
++MIIBSTCB8KADAgECAgEBMAoGCCqGSM49BAMCMBwxGjAYBgNVBAMMEVZvbGxhIEZp
++cmV3YWxsIENBMB4XDTI2MDYwMjAwMjUxNVoXDTM2MDUzMDAwMjUxNVowHDEaMBgG
++A1UEAwwRVm9sbGEgRmlyZXdhbGwgQ0EwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNC
++AARh0sD7PX7oygJbLEuCGLkDpBngTZl5KZAq/Hf3rnHn+6ZHSX7XrA0r1VPtIlBR
++kkRi5BM/S2izSyhUheaU4fhyoyMwITAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB
++/wQEAwIBBjAKBggqhkjOPQQDAgNIADBFAiATcYi8yYpeAupIjcWTLZfvkenvGWfO
++ojmamdeNReEQLwIhAMm3VyOPvMzbNr2rJ6HP7OMhtgNEJXNb738h6KbSx/rB
++-----END CERTIFICATE-----
+-- 
+2.34.1
+

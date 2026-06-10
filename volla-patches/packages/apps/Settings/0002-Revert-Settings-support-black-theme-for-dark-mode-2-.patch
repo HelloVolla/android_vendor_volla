@@ -1,46 +1,27 @@
-From 3a12a6a24c992c7b5a4fefacefcdf2f2dd853d3b Mon Sep 17 00:00:00 2001
+From 569593eea3dcdee48021d8c60e1f56a3604ae58d Mon Sep 17 00:00:00 2001
 From: Volla BuildBot <build@volla.com>
 Date: Sat, 28 Jun 2025 06:56:08 +0000
-Subject: [PATCH 02/10] Revert "Settings: support black theme for dark mode
- [2/4]"
+Subject: [PATCH] Revert "Settings: support black theme for dark mode [2/4]"
 
 This reverts commit 01d72328e81d7bb27ce22f876dc16b828e4d6711.
----
- res/values/cm_strings.xml      | 4 ----
- res/xml/dark_mode_settings.xml | 7 -------
- 2 files changed, 11 deletions(-)
 
-diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
-index b3e7df2a079..05fe56eedda 100644
---- a/res/values/cm_strings.xml
-+++ b/res/values/cm_strings.xml
-@@ -32,10 +32,6 @@
-     <string name="backup_transport_setting_label">Change backup provider</string>
-     <string name="backup_transport_title">Select backup provider</string>
- 
--    <!-- Black theme for dark mode -->
--    <string name="berry_black_theme_title">Pure black</string>
--    <string name="berry_black_theme_summary">Pure black background for dark theme</string>
--
-     <!-- Device Info screen. LineageOS legal. -->
-     <string name="lineagelicense_title">LineageOS legal</string>
- 
-diff --git a/res/xml/dark_mode_settings.xml b/res/xml/dark_mode_settings.xml
-index e2a44f3ebf0..67095575763 100644
---- a/res/xml/dark_mode_settings.xml
-+++ b/res/xml/dark_mode_settings.xml
-@@ -62,11 +62,4 @@
-         settings:searchable="false"
-         settings:controller="com.android.settings.display.darkmode.DarkModeCustomModesPreferenceController" />
- 
--    <lineageos.preference.LineageSecureSettingSwitchPreference
--        android:key="berry_black_theme"
--        android:dependency="dark_ui_activated"
--        android:title="@string/berry_black_theme_title"
--        android:summary="@string/berry_black_theme_summary"
--        android:defaultValue="false"
--        settings:requiresPackage="org.lineageos.overlay.customization.blacktheme" />
- </PreferenceScreen>
+Change-Id: Iaf283d7e76013d80063d7419c0296d519edb30c8
+---
+ src/com/android/settings/display/darkmode/DarkModeScreen.kt | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/com/android/settings/display/darkmode/DarkModeScreen.kt b/src/com/android/settings/display/darkmode/DarkModeScreen.kt
+index 15744272a52..3874e50e5cd 100644
+--- a/src/com/android/settings/display/darkmode/DarkModeScreen.kt
++++ b/src/com/android/settings/display/darkmode/DarkModeScreen.kt
+@@ -112,7 +112,6 @@ abstract class BaseDarkModeScreen(context: Context) :
+                     +ExpandedDarkModeSelectorPreference(modeStorage)
+                 }
+             }
+-            +DarkModeBlackThemePreference(context, darkModeStorage)
+             +PreferenceCategory("display_category", R.string.dark_theme_timing_category) += {
+                 val uiModeManager = context.getSystemService(UiModeManager::class.java)
+                 +DarkModeSchedulePreference(uiModeManager!!, BedtimeSettings(context))
 -- 
-2.34.1
+2.49.0
 

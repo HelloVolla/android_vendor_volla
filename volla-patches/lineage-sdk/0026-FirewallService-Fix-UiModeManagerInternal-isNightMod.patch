@@ -1,0 +1,40 @@
+From f03b67b9d49e28f947e86256438bc47fa5ea8e06 Mon Sep 17 00:00:00 2001
+From: Aryan Sinha <techyminati@outlook.com>
+Date: Thu, 9 Apr 2026 11:45:46 +0200
+Subject: [PATCH] FirewallService: Fix UiModeManagerInternal isNightMode API
+ usage
+
+UiModeManagerInternal.isNightMode() requires a displayId
+in this framework version, but the imported patch was
+calling it without arguments.
+
+Update the call to use Display.DEFAULT_DISPLAY to match
+the current API and restore build compatibility.
+---
+ .../java/org/lineageos/platform/internal/FirewallService.java  | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index b19490a3..5d0f84d1 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -43,6 +43,7 @@ import android.util.ArraySet;
+ import android.util.AtomicFile;
+ import android.util.Slog;
+ import android.util.Xml;
++import android.view.Display;
+ 
+ import com.android.internal.os.BackgroundThread;
+ import com.android.server.SystemService;
+@@ -572,7 +573,7 @@ public class FirewallService extends LineageSystemService {
+         }
+         return outputStream.toString()
+                 .replace("BLOCKED_TEXT", mContext.getResources().getString(org.lineageos.platform.internal.R.string.firewall_text))
+-                .replace("DARKMODE_STATUS", String.valueOf(mUiModeMgr.isNightMode()));
++                .replace("DARKMODE_STATUS", String.valueOf(mUiModeMgr.isNightMode(Display.DEFAULT_DISPLAY)));
+     }
+ 
+     private final IBinder mService = new IFirewallService.Stub() {
+-- 
+2.49.0
+

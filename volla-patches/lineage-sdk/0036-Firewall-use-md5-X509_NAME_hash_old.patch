@@ -1,0 +1,55 @@
+From 6275e45478ea4bd713f2dff91920cbfe2092f97e Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Mon, 1 Jun 2026 16:34:57 +0330
+Subject: [PATCH] Firewall: use md5 X509_NAME_hash_old
+
+Change-Id: I73ea4d4b8441aa1cf002908ab28e65c5b13e2b42
+---
+ .../platform/internal/FirewallService.java    | 30 +++----------------
+ 1 file changed, 4 insertions(+), 26 deletions(-)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index a0366e24..17ff6613 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -479,33 +479,11 @@ public class FirewallService extends LineageSystemService {
+         }
+     }
+ 
+-    // OpenSSL X509_NAME_hash: SHA-1 of the concatenated canonical DER encodings of each RDN SET,
+-    // WITHOUT the outer SEQUENCE wrapper. String values (UTF8String/IA5String) are lowercased,
+-    // trimmed, and whitespace-collapsed. Other types (PrintableString, etc.) are copied as-is.
++    // OpenSSL X509_NAME_hash_old: MD5 of the raw subject SEQUENCE DER bytes, first 4 bytes LE.
++    // This matches what Android Settings uses when installing a CA certificate.
+     private static long canonicalSubjectHash(X500Principal principal) throws Exception {
+-        byte[] encoded = principal.getEncoded();
+-        ASN1Sequence outer = ASN1Sequence.getInstance(ASN1Primitive.fromByteArray(encoded));
+-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+-        for (int i = 0; i < outer.size(); i++) {
+-            ASN1Set rdnSet = ASN1Set.getInstance(outer.getObjectAt(i));
+-            ASN1EncodableVector rdnVec = new ASN1EncodableVector();
+-            for (int j = 0; j < rdnSet.size(); j++) {
+-                ASN1Sequence atv = ASN1Sequence.getInstance(rdnSet.getObjectAt(j));
+-                ASN1ObjectIdentifier oid = ASN1ObjectIdentifier.getInstance(atv.getObjectAt(0));
+-                ASN1Encodable value = atv.getObjectAt(1);
+-                if (value instanceof DERUTF8String || value instanceof DERIA5String) {
+-                    String s = ((ASN1String) value).getString()
+-                        .toLowerCase(Locale.ROOT).trim().replaceAll("\\s+", " ");
+-                    value = new DERUTF8String(s);
+-                }
+-                ASN1EncodableVector atvVec = new ASN1EncodableVector();
+-                atvVec.add(oid);
+-                atvVec.add(value);
+-                rdnVec.add(new DERSequence(atvVec));
+-            }
+-            baos.write(new DERSet(rdnVec).getEncoded());
+-        }
+-        byte[] hash = MessageDigest.getInstance("SHA-1").digest(baos.toByteArray());
++        byte[] encoded = principal.getEncoded(); // raw SEQUENCE DER
++        byte[] hash = MessageDigest.getInstance("MD5").digest(encoded);
+         return (hash[0] & 0xFFL) | ((hash[1] & 0xFFL) << 8)
+              | ((hash[2] & 0xFFL) << 16) | ((hash[3] & 0xFFL) << 24);
+     }
+-- 
+2.49.0
+

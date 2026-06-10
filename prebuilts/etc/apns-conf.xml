@@ -453,14 +453,36 @@
        mvno_match_data="890123"
   />
 
-  <apn carrier="KPN Mobiel Internet"
+  <apn carrier="KPN Internet"
        mcc="204"
        mnc="08"
-       apn="internet"
-       type="default,ia,supl"
+       apn="portalmmm.nl"
+       mmsc="http://mp.mobiel.kpn/mmsc"
+       mmsport="5080"
+       mmsproxy="10.10.100.20"
+       type="default,ia,supl,mms"
        protocol="IPV4V6"
        roaming_protocol="IPV4V6"
   />
+
+  <apn carrier="KPN Internet"
+       mcc="204"
+       mnc="08"
+       apn="internet"
+       password="gprs"
+       type="default,supl"
+       protocol="IPV4V6"
+       roaming_protocol="IPV4V6"
+  />
+
+   <apn carrier="KPN 4G"
+       mcc="204"
+       mnc="08"
+       apn="KPN4G.nl"
+       type="default,supl,ims"
+       protocol="IPV4V6"
+       roaming_protocol="IPV4V6"
+  /> 
 
   <apn carrier="IMS"
        mcc="204"

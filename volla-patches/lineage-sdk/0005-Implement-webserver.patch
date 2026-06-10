@@ -1,4 +1,4 @@
-From 9d3f895f02e1904e2d3ed0fbe96e957a1a7aef69 Mon Sep 17 00:00:00 2001
+From 8881138287000cc6cf816884dba2f0270c22cb8b Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 26 Feb 2022 20:00:26 +0330
 Subject: [PATCH] Implement webserver
@@ -10,13 +10,13 @@ Change-Id: I607251474bed8896b43032dd45bd186301f1d88f
  2 files changed, 89 insertions(+), 1 deletion(-)
 
 diff --git a/Android.bp b/Android.bp
-index 76f0f3d4..8f4456ce 100644
+index 074a4cc9..2b3a7c49 100644
 --- a/Android.bp
 +++ b/Android.bp
-@@ -93,6 +93,7 @@ java_defaults {
-         "vendor.lineage.livedisplay-V2.1-java",
+@@ -91,6 +91,7 @@ java_defaults {
+         "vendor.lineage.health-V2-java",
+         "vendor.lineage.livedisplay-V1-java",
          "vendor.lineage.touch-V1-java",
-         "vendor.lineage.touch-V1.0-java",
 +        "org.nanohttpd",
      ],
  }

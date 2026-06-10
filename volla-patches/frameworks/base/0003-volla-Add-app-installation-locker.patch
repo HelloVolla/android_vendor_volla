@@ -1,7 +1,7 @@
-From dc9021b897e0386eecf1378b6c5be2d7ed7fb72b Mon Sep 17 00:00:00 2001
+From cba20ec9e04e48964b012c8a65f5e422f90a47b2 Mon Sep 17 00:00:00 2001
 From: Your Name <you@example.com>
 Date: Sun, 20 Feb 2022 10:02:50 +0100
-Subject: [PATCH 03/35] volla: Add app installation locker
+Subject: [PATCH] volla: Add app installation locker
 
 Change-Id: I8ffb117e663b29bd158b730c5addf6f195413d67
 ---
@@ -9,7 +9,7 @@ Change-Id: I8ffb117e663b29bd158b730c5addf6f195413d67
  1 file changed, 6 insertions(+)
 
 diff --git a/packages/PackageInstaller/src/com/android/packageinstaller/PackageInstallerActivity.java b/packages/PackageInstaller/src/com/android/packageinstaller/PackageInstallerActivity.java
-index 824dd4a5fdaf..c654ec313c35 100644
+index f781fff206b7..cc0059204888 100644
 --- a/packages/PackageInstaller/src/com/android/packageinstaller/PackageInstallerActivity.java
 +++ b/packages/PackageInstaller/src/com/android/packageinstaller/PackageInstallerActivity.java
 @@ -45,6 +45,7 @@ import android.os.Handler;
@@ -20,7 +20,7 @@ index 824dd4a5fdaf..c654ec313c35 100644
  import android.os.UserManager;
  import android.provider.Settings;
  import android.text.Html;
-@@ -549,6 +550,11 @@ public class PackageInstallerActivity extends Activity {
+@@ -560,6 +561,11 @@ public class PackageInstallerActivity extends Activity {
       * Check if it is allowed to install the package and initiate install if allowed.
       */
      private void checkIfAllowedAndInitiateInstall() {

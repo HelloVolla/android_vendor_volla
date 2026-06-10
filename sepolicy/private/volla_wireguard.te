@@ -44,4 +44,7 @@ allow volla_wireguard self:rawip_socket { getopt setopt };
 allow volla_wireguard netd:unix_stream_socket connectto;
 allow volla_wireguard self:udp_socket { bind setattr };
 
+# Move it to volla_firewall
+allow volla_wireguard system_file:file entrypoint;
+
 set_prop(volla_wireguard, exported_system_prop)

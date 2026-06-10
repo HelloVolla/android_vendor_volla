@@ -1,7 +1,7 @@
-From b2e90b032e46d7ac1fb64116d83c8a9a1ea5c332 Mon Sep 17 00:00:00 2001
+From 89a0a6e574f8b15557d6465b839d29de5f78b27d Mon Sep 17 00:00:00 2001
 From: minaripenguin <minaripenguin@users.noreply.github.com>
 Date: Tue, 10 Oct 2023 09:47:56 +0800
-Subject: [PATCH 08/10] apps: Enable app-cloning feature
+Subject: [PATCH] apps: Enable app-cloning feature
 
 Signed-off-by: minaripenguin <minaripenguin@users.noreply.github.com>
 ---
@@ -9,10 +9,10 @@ Signed-off-by: minaripenguin <minaripenguin@users.noreply.github.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/res/values/config.xml b/res/values/config.xml
-index 95f8eba8f84..70e28d5a8e9 100644
+index 3a8f8ab2a2c..d3113455bac 100644
 --- a/res/values/config.xml
 +++ b/res/values/config.xml
-@@ -782,7 +782,7 @@
+@@ -813,7 +813,7 @@
      <bool name="config_battery_manager_consider_ac">false</bool>
  
      <!-- Whether to display Cloned Apps page in Settings (Settings > Apps > Cloned Apps).-->
@@ -22,5 +22,5 @@ index 95f8eba8f84..70e28d5a8e9 100644
      <!-- Whether to initiate Account login during Private Space setup.-->
      <bool name="config_privatespace_account_login_enabled">false</bool>
 -- 
-2.34.1
+2.49.0
 

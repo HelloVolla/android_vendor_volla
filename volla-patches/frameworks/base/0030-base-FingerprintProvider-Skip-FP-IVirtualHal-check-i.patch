@@ -1,0 +1,73 @@
+From 5172beb5a24b3fd4c9b6cb94d706695efcb0f58d Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Fri, 17 Oct 2025 21:55:44 +0330
+Subject: [PATCH] base: FingerprintProvider: Skip FP IVirtualHal check if hal
+ is not available
+
+Change-Id: I8a93410040f361bee721fce922b9e7e7c7c1641e
+---
+ .../FingerprintSensorConfigurations.java      |  5 ++++-
+ .../fingerprint/aidl/FingerprintProvider.java | 21 +++++++++++++------
+ 2 files changed, 19 insertions(+), 7 deletions(-)
+
+diff --git a/core/java/android/hardware/fingerprint/FingerprintSensorConfigurations.java b/core/java/android/hardware/fingerprint/FingerprintSensorConfigurations.java
+index 586830c8d189..8bf88c956102 100644
+--- a/core/java/android/hardware/fingerprint/FingerprintSensorConfigurations.java
++++ b/core/java/android/hardware/fingerprint/FingerprintSensorConfigurations.java
+@@ -189,10 +189,13 @@ public class FingerprintSensorConfigurations implements Parcelable {
+             String fqNameMapped = remapFqName(fqName);
+             Slog.i(TAG, "getIFingerprint fqName is mapped: " + fqName + "->" + fqNameMapped);
+             try {
++                if (ServiceManager.checkService(fqNameMapped) == null) {
++                    return null;
++                }
+                 IVirtualHal vhal = IVirtualHal.Stub.asInterface(
+                         Binder.allowBlocking(ServiceManager.waitForService(fqNameMapped)));
+                 return vhal.getFingerprintHal();
+-            } catch (RemoteException e) {
++            } catch (RemoteException | NullPointerException e) {
+                 Slog.e(TAG, "Remote exception in vhal.getFingerprintHal() call" + fqNameMapped);
+             }
+         }
+diff --git a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
+index 51ca147fc532..c428f786867e 100644
+--- a/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
++++ b/services/core/java/com/android/server/biometrics/sensors/fingerprint/aidl/FingerprintProvider.java
+@@ -233,6 +233,10 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
+ 
+     private void initSensors(boolean resetLockoutRequiresHardwareAuthToken, SensorProps[] props,
+             GestureAvailabilityDispatcher gestureAvailabilityDispatcher) {
++        if (props == null) {
++            Slog.w(TAG, "Sensor properties is null, skipping sensor initialization");
++            return;
++        }
+         if (!resetLockoutRequiresHardwareAuthToken) {
+             Slog.d(getTag(), "Adding HIDL configs");
+             for (SensorProps sensorConfig: props) {
+@@ -1020,12 +1024,17 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
+      */
+     public IVirtualHal getVhal() throws RemoteException {
+         if (mVhal == null && useVhalForTesting()) {
+-            mVhal = IVirtualHal.Stub.asInterface(
+-                    Binder.allowBlocking(
+-                            ServiceManager.waitForService(
+-                                    IVirtualHal.DESCRIPTOR + "/"
+-                                            + mHalInstanceNameCurrent)));
+-            Slog.d(getTag(), "getVhal " + mHalInstanceNameCurrent);
++            String serviceName = IVirtualHal.DESCRIPTOR + "/" + mHalInstanceNameCurrent;
++            IBinder binder = ServiceManager.checkService(serviceName);
++            if (binder != null) {
++                mVhal = IVirtualHal.Stub.asInterface(
++                        Binder.allowBlocking(
++                                ServiceManager.waitForService(serviceName)));
++                Slog.d(getTag(), "getVhal " + mHalInstanceNameCurrent);
++            } else {
++                Slog.w(TAG, "Virtual HAL service not found: " + serviceName);
++                return null;
++            }
+         }
+         return mVhal;
+     }
+-- 
+2.49.0
+

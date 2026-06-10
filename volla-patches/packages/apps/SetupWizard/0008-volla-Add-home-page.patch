@@ -1,7 +1,7 @@
-From 24b446f88ce5a1a99b6763d28739c231a8d4d750 Mon Sep 17 00:00:00 2001
+From 20e56ee0b8c6dfab24e44e4d14de6383abed83d9 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 26 Apr 2025 00:25:06 +0330
-Subject: [PATCH 8/8] volla: Add home page
+Subject: [PATCH] volla: Add home page
 
 ---
  AndroidManifest.xml                           | 14 ++++
@@ -17,7 +17,7 @@ Subject: [PATCH 8/8] volla: Add home page
  create mode 100644 src/org/lineageos/setupwizard/VollaHomeActivity.java
 
 diff --git a/AndroidManifest.xml b/AndroidManifest.xml
-index 128e2a6..e8a73d0 100644
+index 4e7f723..5ea4f5d 100644
 --- a/AndroidManifest.xml
 +++ b/AndroidManifest.xml
 @@ -33,6 +33,7 @@
@@ -110,7 +110,7 @@ index 0000000..7fd3d74
 +    </LinearLayout>
 +</com.google.android.setupdesign.GlifLayout>
 diff --git a/res/raw/lineage_wizard_script.xml b/res/raw/lineage_wizard_script.xml
-index 8a34d5b..e5950ae 100644
+index 95d3104..5359d18 100644
 --- a/res/raw/lineage_wizard_script.xml
 +++ b/res/raw/lineage_wizard_script.xml
 @@ -81,6 +81,10 @@
@@ -125,7 +125,7 @@ index 8a34d5b..e5950ae 100644
      </WizardAction>
  
 diff --git a/res/raw/wizard_script.xml b/res/raw/wizard_script.xml
-index ca9eb61..cddb975 100644
+index 75c8d94..6c0f33c 100644
 --- a/res/raw/wizard_script.xml
 +++ b/res/raw/wizard_script.xml
 @@ -115,6 +115,9 @@
@@ -167,12 +167,12 @@ index 0000000..6a4844e
 +    <string name="volla_home_aosp">AOSP Launcher</string>
 +</resources>
 diff --git a/src/org/lineageos/setupwizard/SetupWizardApp.java b/src/org/lineageos/setupwizard/SetupWizardApp.java
-index eeec26f..f9b598e 100644
+index ce44899..da99365 100644
 --- a/src/org/lineageos/setupwizard/SetupWizardApp.java
 +++ b/src/org/lineageos/setupwizard/SetupWizardApp.java
-@@ -42,6 +42,7 @@ public class SetupWizardApp extends Application {
-     public static final String ENABLE_RECOVERY_UPDATE = "enable_recovery_update";
-     public static final String UPDATE_RECOVERY_PROP = "persist.vendor.recovery_update";
+@@ -45,6 +45,7 @@ public class SetupWizardApp extends Application {
+     public static final String IGNORE_SIM_LOCALE_PROP = "ro.setupwizard.ignore_sim_locale";
+ 
      public static final String ENABLE_MICROG = "enable_microg";
 +    public static final String ENABLE_VOLLAHOME = "enable_volla_home";
  
@@ -249,5 +249,5 @@ index 0000000..3ef63cb
 +    }
 +}
 -- 
-2.34.1
+2.49.0
 

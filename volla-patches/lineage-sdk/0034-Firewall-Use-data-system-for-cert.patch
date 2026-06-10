@@ -1,0 +1,57 @@
+From 05a4ae5112f6954a391e979e599ef76047401ec4 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Tue, 2 Jun 2026 14:13:44 +0330
+Subject: [PATCH] Firewall: Use data system for cert
+
+Change-Id: Ifd7b973821f2d6304775a5eaf71a6cca0c7694c6
+---
+ .../lineageos/platform/internal/FirewallService.java  | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index a6cffcaf..be310e06 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -255,8 +255,7 @@ public class FirewallService extends LineageSystemService {
+             registerNotifActionReceiver();
+             initCA();
+             if (isActivate()) {
+-                SystemProperties.set("ctl.start", "volla.dnsmasq");
+-                activateWebServer(true);
++                activate(true);
+             }
+             mHandler.sendEmptyMessage(FirewallHandler.MSG_INIT_DOMAINS);
+             mHandler.sendEmptyMessage(FirewallHandler.MSG_INIT_APPS);
+@@ -420,8 +419,7 @@ public class FirewallService extends LineageSystemService {
+                 installToSystemCaStore(mCACert);
+             }
+             long hash = canonicalSubjectHash(mCACert.getSubjectX500Principal());
+-            File userCaFile = new File("/data/misc/user/" + mUserId + "/cacerts-added",
+-                String.format("%08x.0", hash));
++            File userCaFile = new File(Environment.getDataSystemDirectory(), String.format("%08x.0", hash));
+             if (!userCaFile.exists()) {
+                 Slog.i(TAG, "initCA: CA missing from user store, reinstalling: " + userCaFile);
+                 installToSystemCaStore(mCACert);
+@@ -466,10 +464,8 @@ public class FirewallService extends LineageSystemService {
+ 
+     private void installToSystemCaStore(X509Certificate cert) {
+         try {
+-            File dir = new File("/data/misc/user/" + mUserId + "/cacerts-added");
+-            dir.mkdirs();
+             long h = canonicalSubjectHash(cert.getSubjectX500Principal());
+-            File certFile = new File(dir, String.format("%08x.0", h));
++            File certFile = new File(Environment.getDataSystemDirectory(), String.format("%08x.0", h));
+             if (!certFile.exists()) {
+                 byte[] pem = ("-----BEGIN CERTIFICATE-----\n"
+                     + Base64.getMimeEncoder(64, new byte[]{'\n'}).encodeToString(cert.getEncoded())
+@@ -1043,6 +1039,7 @@ public class FirewallService extends LineageSystemService {
+ 
+     public void activate(boolean enable) {
+         SystemProperties.set("persist.volla.firewall.enable", enable ? "true" : "false");
++        SystemProperties.set("sys.volla.firewall.enable", enable ? "1" : "0");
+         if (enable) {
+             if (mBlockDb == null) {
+                 mBlockDb = new FirewallBlockDatabase(mContext,
+-- 
+2.49.0
+

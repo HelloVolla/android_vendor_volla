@@ -68,9 +68,9 @@ allow system_app sysfs_fs_ext4_features:dir search;
 allow bootloadermanager proc_misc:file { read open write ioctl };
 
 # Allow bootloadermanager to write to the device directory
-allow bootloadermanager device:dir { add_name write create };
+allow bootloadermanager device:dir { add_name remove_name write create };
 allow bootloadermanager device:chr_file { getattr create read write open ioctl };
-allow bootloadermanager device:blk_file { create setattr };
+allow bootloadermanager device:blk_file { create unlink setattr getattr };
 allow bootloadermanager dm_device:blk_file { getattr setattr read };
 allow system_app sysfs_fs_ext4_features:file read;
 allow system_app dm_device:blk_file ioctl;

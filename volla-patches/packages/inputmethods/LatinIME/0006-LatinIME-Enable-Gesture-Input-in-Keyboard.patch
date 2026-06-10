@@ -1,7 +1,7 @@
-From 4faaa46214b84876d3ed211fdb6f8487d7b6ff5e Mon Sep 17 00:00:00 2001
+From 5a5f0a8881801c2c5433b0b1b000bf94a032c2f6 Mon Sep 17 00:00:00 2001
 From: techyminati <sinha.aryan03@gmail.com>
 Date: Sun, 17 Mar 2024 15:06:05 +0530
-Subject: [PATCH 6/7] LatinIME: Enable Gesture Input in Keyboard
+Subject: [PATCH] LatinIME: Enable Gesture Input in Keyboard
 
 Change-Id: I9e7446a87b4248c399b15412f49d7c77fe3beff7
 Signed-off-by: techyminati <sinha.aryan03@gmail.com>
@@ -10,7 +10,7 @@ Signed-off-by: techyminati <sinha.aryan03@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/java/res/values/gesture-input.xml b/java/res/values/gesture-input.xml
-index 235616fbe0..445a389b81 100644
+index 235616fbe..445a389b8 100644
 --- a/java/res/values/gesture-input.xml
 +++ b/java/res/values/gesture-input.xml
 @@ -18,5 +18,5 @@
@@ -21,5 +21,5 @@ index 235616fbe0..445a389b81 100644
 +    <bool name="config_gesture_input_enabled_by_build_config">true</bool>
  </resources>
 -- 
-2.34.1
+2.49.0
 

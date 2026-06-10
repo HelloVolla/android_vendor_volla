@@ -1,4 +1,4 @@
-From a54934c2392f50194919e86b017e1c0e705f1bd3 Mon Sep 17 00:00:00 2001
+From 524c5cb8514c180c5ed4c2eff813bf22a306adce Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Tue, 20 Sep 2022 21:58:56 +0430
 Subject: [PATCH] Firewall: Introduce bluk domin list import method

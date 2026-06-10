@@ -3,3 +3,19 @@ service volla.dnsmasq /system_ext/bin/vdnsmasq --keep-in-foreground -x /data/mis
     group root
     writepid /dev/cpuset/foreground/tasks
     disabled
+
+on property:sys.volla.firewall.enable=1
+    mount none /data/system/735ba42f.0 /system/etc/security/cacerts/735ba42f.0 bind
+    mount none /data/system/735ba42f.0 /apex/com.android.conscrypt/cacerts/735ba42f.0 bind
+    exec u:r:volla_wireguard:s0 -- /system/bin/iptables -t nat -I OUTPUT 1 -p udp -d 208.67.220.220 --dport 53 -j RETURN
+    exec u:r:volla_wireguard:s0 -- /system/bin/iptables -t nat -I OUTPUT 1 -p tcp -d 208.67.220.220 --dport 53 -j RETURN
+    exec u:r:volla_wireguard:s0 -- /system/bin/iptables -t nat -A OUTPUT -p udp --dport 53 -j REDIRECT --to-ports 53
+    exec u:r:volla_wireguard:s0 -- /system/bin/iptables -t nat -A OUTPUT -p tcp --dport 53 -j REDIRECT --to-ports 53
+
+on property:sys.volla.firewall.enable=0
+    umount /system/etc/security/cacerts/735ba42f.0
+    umount /apex/com.android.conscrypt/cacerts/735ba42f.0
+    exec u:r:volla_wireguard:s0 -- /system/bin/iptables -t nat -D OUTPUT -p udp -d 208.67.220.220 --dport 53 -j RETURN
+    exec u:r:volla_wireguard:s0 -- /system/bin/iptables -t nat -D OUTPUT -p tcp -d 208.67.220.220 --dport 53 -j RETURN
+    exec u:r:volla_wireguard:s0 -- /system/bin/iptables -t nat -D OUTPUT -p udp --dport 53 -j REDIRECT --to-ports 53
+    exec u:r:volla_wireguard:s0 -- /system/bin/iptables -t nat -D OUTPUT -p tcp --dport 53 -j REDIRECT --to-ports 53

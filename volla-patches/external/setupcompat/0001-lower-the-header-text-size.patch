@@ -1,0 +1,32 @@
+From 2dad8d916191668769944e67a6ec5b74d091d1d6 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Tue, 10 Feb 2026 19:02:34 +0330
+Subject: [PATCH] lower the header text size
+
+Change-Id: I16f0ccdb4c4b91faa4c6df7f0050711f75665796
+---
+ main/res/values/config.xml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/main/res/values/config.xml b/main/res/values/config.xml
+index 218b669..980f9d7 100644
+--- a/main/res/values/config.xml
++++ b/main/res/values/config.xml
+@@ -43,12 +43,12 @@
+     <dimen name="setup_design_description_text_margin_top">24.0dip</dimen>
+     <dimen name="setup_design_description_text_size">18.0sp</dimen>
+     <dimen name="setup_design_header_auto_size_line_spacing_extra">8.0sp</dimen>
+-    <dimen name="setup_design_header_auto_size_max_text_size">36.0sp</dimen>
++    <dimen name="setup_design_header_auto_size_max_text_size">28.0sp</dimen>
+     <dimen name="setup_design_header_auto_size_min_text_size">28.0sp</dimen>
+     <dimen name="setup_design_header_container_margin_bottom">24.0dip</dimen>
+     <dimen name="setup_design_header_text_margin_bottom">0.0dip</dimen>
+     <dimen name="setup_design_header_text_margin_top">24.0dip</dimen>
+-    <dimen name="setup_design_header_text_size">36.0sp</dimen>
++    <dimen name="setup_design_header_text_size">28.0sp</dimen>
+     <dimen name="setup_design_icon_margin_top">32.0dip</dimen>
+     <dimen name="setup_design_icon_size">48.0dip</dimen>
+     <dimen name="setup_design_items_min_height">72.0dip</dimen>
+-- 
+2.49.0
+

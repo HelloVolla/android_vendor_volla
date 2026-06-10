@@ -1,7 +1,7 @@
-From 10aecfad22e4cfa31d2636c486e72dc3b92df57e Mon Sep 17 00:00:00 2001
+From 90c4fd72ee90d6dbce28a36729a7ccdb32fce5f9 Mon Sep 17 00:00:00 2001
 From: Ting Yu <ting.x.yu@sony.com>
 Date: Thu, 18 Oct 2018 20:10:38 +0800
-Subject: [PATCH 11/35] base: Phone ringtone setting for Multi SIM device [1/3]
+Subject: [PATCH] base: Phone ringtone setting for Multi SIM device [1/3]
 
 Add below changes to handle default phone ringtone for slot2.
 1. Add Settings.System.RINGTONE2 as the key in SettingsProvider to
@@ -34,10 +34,10 @@ index e15244ac0df0..3576ec87a7e7 100644
   * {@link System#DEFAULT_ALARM_ALERT_URI}. If the user chooses the "Silent"
   * item, the saved string will be an empty string.
 diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
-index 0dd963457087..df73ee384750 100644
+index 36e2193cec11..da803177142e 100644
 --- a/core/java/android/provider/Settings.java
 +++ b/core/java/android/provider/Settings.java
-@@ -5662,6 +5662,16 @@ public final class Settings {
+@@ -5830,6 +5830,16 @@ public final class Settings {
          @Readable
          public static final String RINGTONE = "ringtone";
  
@@ -54,7 +54,7 @@ index 0dd963457087..df73ee384750 100644
          /**
           * A {@link Uri} that will point to the current default ringtone at any
           * given time.
-@@ -5672,11 +5682,26 @@ public final class Settings {
+@@ -5840,11 +5850,26 @@ public final class Settings {
           */
          public static final Uri DEFAULT_RINGTONE_URI = getUriFor(RINGTONE);
  
@@ -68,9 +68,9 @@ index 0dd963457087..df73ee384750 100644
 +        /** {@hide} */
 +        public static final Uri DEFAULT_RINGTONE2_URI = getUriFor(RINGTONE2);
 +
-         /** {@hide} */
+         /** @hide */
          public static final String RINGTONE_CACHE = "ringtone_cache";
-         /** {@hide} */
+         /** @hide */
          public static final Uri RINGTONE_CACHE_URI = getUriFor(RINGTONE_CACHE);
  
 +        /** {@hide} */
@@ -81,7 +81,7 @@ index 0dd963457087..df73ee384750 100644
          /**
           * Persistent store for the system-wide default notification sound.
           *
-@@ -6516,6 +6541,7 @@ public final class Settings {
+@@ -6781,6 +6806,7 @@ public final class Settings {
              PUBLIC_SETTINGS.add(VOLUME_BLUETOOTH_SCO);
              PUBLIC_SETTINGS.add(VOLUME_ASSISTANT);
              PUBLIC_SETTINGS.add(RINGTONE);
@@ -89,7 +89,7 @@ index 0dd963457087..df73ee384750 100644
              PUBLIC_SETTINGS.add(NOTIFICATION_SOUND);
              PUBLIC_SETTINGS.add(ALARM_ALERT);
              PUBLIC_SETTINGS.add(TEXT_AUTO_REPLACE);
-@@ -6639,6 +6665,7 @@ public final class Settings {
+@@ -6911,6 +6937,7 @@ public final class Settings {
          public static final Map<String, String> CLONE_FROM_PARENT_ON_VALUE = new ArrayMap<>();
          static {
              CLONE_FROM_PARENT_ON_VALUE.put(RINGTONE, Secure.SYNC_PARENT_SOUNDS);
@@ -98,7 +98,7 @@ index 0dd963457087..df73ee384750 100644
              CLONE_FROM_PARENT_ON_VALUE.put(ALARM_ALERT, Secure.SYNC_PARENT_SOUNDS);
          }
 diff --git a/media/java/android/media/RingtoneManager.java b/media/java/android/media/RingtoneManager.java
-index 0f24654879cd..1970cb6cd27f 100644
+index b22019dd0ac5..67eae2d39ae4 100644
 --- a/media/java/android/media/RingtoneManager.java
 +++ b/media/java/android/media/RingtoneManager.java
 @@ -48,6 +48,7 @@ import android.provider.MediaStore.Audio.AudioColumns;
@@ -109,7 +109,7 @@ index 0f24654879cd..1970cb6cd27f 100644
  import android.util.Log;
  
  import com.android.internal.database.SortCursor;
-@@ -149,6 +150,7 @@ public class RingtoneManager {
+@@ -150,6 +151,7 @@ public class RingtoneManager {
       * for this {@link Uri}. If showing an item for "Default" (@see
       * {@link #EXTRA_RINGTONE_SHOW_DEFAULT}), this can also be one of
       * {@link System#DEFAULT_RINGTONE_URI},
@@ -117,7 +117,7 @@ index 0f24654879cd..1970cb6cd27f 100644
       * {@link System#DEFAULT_NOTIFICATION_URI}, or
       * {@link System#DEFAULT_ALARM_ALERT_URI} to have the "Default" item
       * checked.
-@@ -162,7 +164,7 @@ public class RingtoneManager {
+@@ -163,7 +165,7 @@ public class RingtoneManager {
       * Given to the ringtone picker as a {@link Uri}. The {@link Uri} of the
       * ringtone to play when the user attempts to preview the "Default"
       * ringtone. This can be one of {@link System#DEFAULT_RINGTONE_URI},
@@ -126,7 +126,7 @@ index 0f24654879cd..1970cb6cd27f 100644
       * {@link System#DEFAULT_ALARM_ALERT_URI} to have the "Default" point to
       * the current sound for the given default sound type. If you are showing a
       * ringtone picker for some other type of sound, you are free to provide any
-@@ -201,7 +203,7 @@ public class RingtoneManager {
+@@ -202,7 +204,7 @@ public class RingtoneManager {
       * It will be one of:
       * <li> the picked ringtone,
       * <li> a {@link Uri} that equals {@link System#DEFAULT_RINGTONE_URI},
@@ -135,7 +135,7 @@ index 0f24654879cd..1970cb6cd27f 100644
       * {@link System#DEFAULT_ALARM_ALERT_URI} if the default was chosen,
       * <li> null if the "Silent" item was picked.
       * 
-@@ -876,8 +878,8 @@ public class RingtoneManager {
+@@ -875,8 +877,8 @@ public class RingtoneManager {
      /**
       * Gets the current default sound's {@link Uri}. This will give the actual
       * sound {@link Uri}, instead of using this, most clients can use
@@ -146,7 +146,7 @@ index 0f24654879cd..1970cb6cd27f 100644
       * @param context A context used for querying.
       * @param type The type whose default sound should be returned. One of
       *            {@link #TYPE_RINGTONE}, {@link #TYPE_NOTIFICATION}, or
-@@ -886,7 +888,27 @@ public class RingtoneManager {
+@@ -885,7 +887,27 @@ public class RingtoneManager {
       * @see #setActualDefaultRingtoneUri(Context, int, Uri)
       */
      public static Uri getActualDefaultRingtoneUri(Context context, int type) {
@@ -175,7 +175,7 @@ index 0f24654879cd..1970cb6cd27f 100644
          if (setting == null) return null;
          final String uriString = Settings.System.getStringForUser(context.getContentResolver(),
                  setting, context.getUserId());
-@@ -913,7 +935,26 @@ public class RingtoneManager {
+@@ -912,7 +934,26 @@ public class RingtoneManager {
       * @see #getActualDefaultRingtoneUri(Context, int)
       */
      public static void setActualDefaultRingtoneUri(Context context, int type, Uri ringtoneUri) {
@@ -203,7 +203,7 @@ index 0f24654879cd..1970cb6cd27f 100644
          if (setting == null) return;
  
          final ContentResolver resolver = context.getContentResolver();
-@@ -1036,9 +1077,9 @@ public class RingtoneManager {
+@@ -1035,9 +1076,9 @@ public class RingtoneManager {
          }
      }
  
@@ -215,16 +215,16 @@ index 0f24654879cd..1970cb6cd27f 100644
          } else if ((type & TYPE_NOTIFICATION) != 0) {
              return Settings.System.NOTIFICATION_SOUND;
          } else if ((type & TYPE_ALARM) != 0) {
-@@ -1050,13 +1091,22 @@ public class RingtoneManager {
+@@ -1049,13 +1090,22 @@ public class RingtoneManager {
  
-     /** {@hide} */
+     /** @hide */
      public static Uri getCacheForType(int type) {
 -        return getCacheForType(type, UserHandle.getCallingUserId());
 +        return getCacheForTypeBySlot(type, UserHandle.getCallingUserId(),
 +                SubscriptionManager.getDefaultVoicePhoneId());
      }
  
-     /** {@hide} */
+     /** @hide */
      public static Uri getCacheForType(int type, int userId) {
 +        return getCacheForTypeBySlot(type, userId, SubscriptionManager.getDefaultVoicePhoneId());
 +    }
@@ -240,7 +240,7 @@ index 0f24654879cd..1970cb6cd27f 100644
          } else if ((type & TYPE_NOTIFICATION) != 0) {
              return ContentProvider.maybeAddUserId(Settings.System.NOTIFICATION_SOUND_CACHE_URI,
                      userId);
-@@ -1081,6 +1131,7 @@ public class RingtoneManager {
+@@ -1080,6 +1130,7 @@ public class RingtoneManager {
       * 
       * @param defaultRingtoneUri The default {@link Uri}. For example,
       *            {@link System#DEFAULT_RINGTONE_URI},
@@ -248,7 +248,7 @@ index 0f24654879cd..1970cb6cd27f 100644
       *            {@link System#DEFAULT_NOTIFICATION_URI}, or
       *            {@link System#DEFAULT_ALARM_ALERT_URI}.
       * @return The type of the defaultRingtoneUri, or -1.
-@@ -1106,7 +1157,8 @@ public class RingtoneManager {
+@@ -1105,7 +1156,8 @@ public class RingtoneManager {
              }
          }
  
@@ -258,7 +258,7 @@ index 0f24654879cd..1970cb6cd27f 100644
              return TYPE_RINGTONE;
          } else if (defaultRingtoneUri.equals(Settings.System.DEFAULT_NOTIFICATION_URI)) {
              return TYPE_NOTIFICATION;
-@@ -1122,13 +1174,31 @@ public class RingtoneManager {
+@@ -1121,13 +1173,31 @@ public class RingtoneManager {
       * Rather than returning the actual ringtone's sound {@link Uri}, this will
       * return the symbolic {@link Uri} which will resolved to the actual sound
       * when played.
@@ -292,7 +292,7 @@ index 0f24654879cd..1970cb6cd27f 100644
          } else if ((type & TYPE_NOTIFICATION) != 0) {
              return Settings.System.DEFAULT_NOTIFICATION_URI;
          } else if ((type & TYPE_ALARM) != 0) {
-@@ -1153,7 +1223,8 @@ public class RingtoneManager {
+@@ -1152,7 +1222,8 @@ public class RingtoneManager {
          // Try cached ringtone first since the actual provider may not be
          // encryption aware, or it may be stored on CE media storage
          final int type = getDefaultType(uri);
@@ -303,10 +303,10 @@ index 0f24654879cd..1970cb6cd27f 100644
          final ContentResolver resolver = context.getContentResolver();
  
 diff --git a/packages/SettingsProvider/src/com/android/providers/settings/SettingsHelper.java b/packages/SettingsProvider/src/com/android/providers/settings/SettingsHelper.java
-index ea8ae7b208cd..2b93f16b006a 100644
+index f80b7120fcbd..2f6a8eadfd14 100644
 --- a/packages/SettingsProvider/src/com/android/providers/settings/SettingsHelper.java
 +++ b/packages/SettingsProvider/src/com/android/providers/settings/SettingsHelper.java
-@@ -207,6 +207,7 @@ public class SettingsHelper {
+@@ -237,6 +237,7 @@ public class SettingsHelper {
              } else if (isAlreadyConfiguredCriticalAccessibilitySetting(name)) {
                  return;
              } else if (Settings.System.RINGTONE.equals(name)
@@ -314,7 +314,7 @@ index ea8ae7b208cd..2b93f16b006a 100644
                      || Settings.System.NOTIFICATION_SOUND.equals(name)
                      || Settings.System.ALARM_ALERT.equals(name)) {
                  setRingtone(name, value);
-@@ -291,11 +292,12 @@ public class SettingsHelper {
+@@ -346,11 +347,12 @@ public class SettingsHelper {
  
      public String onBackupValue(String name, String value) {
          // Special processing for backing up ringtones & notification sounds
@@ -329,7 +329,7 @@ index ea8ae7b208cd..2b93f16b006a 100644
                      // For ringtones, we need to distinguish between non-telephony vs telephony
                      if (mTelephonyManager != null && mTelephonyManager.isVoiceCapable()) {
                          // Backup a null ringtone as silent on voice-capable devices
-@@ -352,7 +354,7 @@ public class SettingsHelper {
+@@ -407,7 +409,7 @@ public class SettingsHelper {
      /**
       * Sets the ringtone of type specified by the name.
       *
@@ -338,7 +338,7 @@ index ea8ae7b208cd..2b93f16b006a 100644
       * or Settings.System.ALARM_ALERT.
       * @param value can be a canonicalized uri or "_silent" to indicate a silent (null) ringtone.
       */
-@@ -397,6 +399,8 @@ public class SettingsHelper {
+@@ -460,6 +462,8 @@ public class SettingsHelper {
          switch (name) {
              case Settings.System.RINGTONE:
                  return RingtoneManager.TYPE_RINGTONE;
@@ -348,10 +348,10 @@ index ea8ae7b208cd..2b93f16b006a 100644
                  return RingtoneManager.TYPE_NOTIFICATION;
              case Settings.System.ALARM_ALERT:
 diff --git a/packages/SettingsProvider/src/com/android/providers/settings/SettingsProtoDumpUtil.java b/packages/SettingsProvider/src/com/android/providers/settings/SettingsProtoDumpUtil.java
-index 37eda3ebf9a8..c6e8ac1f9eea 100644
+index 4ef9e9ebf659..b66bc6211f59 100644
 --- a/packages/SettingsProvider/src/com/android/providers/settings/SettingsProtoDumpUtil.java
 +++ b/packages/SettingsProvider/src/com/android/providers/settings/SettingsProtoDumpUtil.java
-@@ -2933,9 +2933,15 @@ class SettingsProtoDumpUtil {
+@@ -2988,9 +2988,15 @@ class SettingsProtoDumpUtil {
          dumpSetting(s, p,
                  Settings.System.RINGTONE,
                  SystemSettingsProto.Ringtone.DEFAULT_URI);
@@ -368,10 +368,10 @@ index 37eda3ebf9a8..c6e8ac1f9eea 100644
  
          final long rotationToken = p.start(SystemSettingsProto.ROTATION);
 diff --git a/packages/SettingsProvider/src/com/android/providers/settings/SettingsProvider.java b/packages/SettingsProvider/src/com/android/providers/settings/SettingsProvider.java
-index 17c47ab354c0..ca6886f35fac 100644
+index 6e4eba0b5aca..a12fe7e4a3cd 100644
 --- a/packages/SettingsProvider/src/com/android/providers/settings/SettingsProvider.java
 +++ b/packages/SettingsProvider/src/com/android/providers/settings/SettingsProvider.java
-@@ -821,6 +821,8 @@ public class SettingsProvider extends ContentProvider {
+@@ -853,6 +853,8 @@ public class SettingsProvider extends ContentProvider {
          final String cacheRingtoneSetting;
          if (Settings.System.RINGTONE_CACHE_URI.equals(uri)) {
              cacheRingtoneSetting = Settings.System.RINGTONE;
@@ -380,7 +380,7 @@ index 17c47ab354c0..ca6886f35fac 100644
          } else if (Settings.System.NOTIFICATION_SOUND_CACHE_URI.equals(uri)) {
              cacheRingtoneSetting = Settings.System.NOTIFICATION_SOUND;
          } else if (Settings.System.ALARM_ALERT_CACHE_URI.equals(uri)) {
-@@ -838,6 +840,8 @@ public class SettingsProvider extends ContentProvider {
+@@ -870,6 +872,8 @@ public class SettingsProvider extends ContentProvider {
      private String getCacheName(String setting) {
          if (Settings.System.RINGTONE.equals(setting)) {
              return Settings.System.RINGTONE_CACHE;

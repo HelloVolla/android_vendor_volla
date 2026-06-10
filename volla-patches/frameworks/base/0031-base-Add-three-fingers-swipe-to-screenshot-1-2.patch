@@ -1,0 +1,512 @@
+From 1d82b488a366610e8542dadffbe9c782e8454bd1 Mon Sep 17 00:00:00 2001
+From: ghbhaha <ghbhaha@gmail.com>
+Date: Thu, 29 Oct 2020 21:55:41 -0300
+Subject: [PATCH] base: Add three-fingers-swipe to screenshot [1/2]
+
+[@techyminati - Adapt to VollaOS 16]
+
+The feature is ported from Oppo ColorOS.
+With the options on, users can swipe down
+on the screen to have a screenshot.
+
+original smali port by: wuxianlin
+
+base: Improvements for swipe to screenshot
+
+* Cancel touch events when tap with three fingers
+
+base: SwipeToScreenshot: Import MIUI implementation
+
+Reverse engineered from Xiaomi/beryllium/beryllium:9/PKQ1.180729.001/9.2.25:user/release-keys
+
+[Ritesh & ralph950412: Refactor for A16 QPR1]
+
+Change-Id: I0b0ad1340a39f6644af30caebd1013a255fd8936
+Co-authored-by: jhenrique09 <jhenrique09.mcz@hotmail.com>
+Co-authored-by: Ritesh <SahanyRitesh@proton.me>
+Co-authored-by: ralph950412 <ralph950412@gmail.com>
+Signed-off-by: Adithya R <gh0strider.2k18.reborn@gmail.com>
+Reviewed-on: https://review.statixos.com/c/android_frameworks_base/+/6719
+Reviewed-by: Sourajit Karmakar <sourajit@live.com>
+Tested-by: Sourajit Karmakar <sourajit@live.com>
+Reviewed-on: https://review.statixos.com/c/android_frameworks_base/+/7069
+Reviewed-by: Anay Wadhera <anay1018@gmail.com>
+Tested-by: Anay Wadhera <anay1018@gmail.com>
+Reviewed-on: https://review.statixos.com/c/android_frameworks_base/+/8233
+---
+ core/java/android/app/IActivityManager.aidl   |   7 +
+ core/java/android/provider/Settings.java      |   7 +
+ core/java/android/view/ViewRootImpl.java      |  12 ++
+ .../server/am/ActivityManagerService.java     |  39 +++++
+ .../server/input/InputManagerService.java     |   6 +
+ .../server/input/KeyGestureController.java    |  37 ++++-
+ .../input/SwipeToScreenshotListener.java      | 148 ++++++++++++++++++
+ .../server/policy/PhoneWindowManager.java     |   2 +
+ .../server/wm/InputManagerCallback.java       |  10 ++
+ 9 files changed, 266 insertions(+), 2 deletions(-)
+ create mode 100644 services/core/java/com/android/server/input/SwipeToScreenshotListener.java
+
+diff --git a/core/java/android/app/IActivityManager.aidl b/core/java/android/app/IActivityManager.aidl
+index 7a6ace796b4b..649022cd2205 100644
+--- a/core/java/android/app/IActivityManager.aidl
++++ b/core/java/android/app/IActivityManager.aidl
+@@ -1056,4 +1056,11 @@ interface IActivityManager {
+      */
+     oneway void reportOptimizationInfo(in IBinder app, in String compilerFilter,
+             in String compilationReason);
++
++    /**
++     * @hide
++     *
++     *  Should disable touch if three fingers to screen shot is active?
++     */
++    boolean isSwipeToScreenshotGestureActive();
+ }
+diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
+index 6878771476c5..de84abd3c7ee 100644
+--- a/core/java/android/provider/Settings.java
++++ b/core/java/android/provider/Settings.java
+@@ -6647,6 +6647,13 @@ public final class Settings {
+         public static final String ACCESSIBILITY_FORCE_INVERT_COLOR_OVERRIDE_PACKAGES_TO_DISABLE =
+                 "accessibility_force_invert_color_override_packages_to_disable";
+ 
++        /**
++         * Swipe to screenshot gesture
++         * Also known as Three Fingers Screenshot.
++         * @hide
++         */
++        public static final String SWIPE_TO_SCREENSHOT = "swipe_to_screenshot";
++
+         /**
+          * Setting to determine whether or not to show the battery percentage in the status bar.
+          *    0 - Don't show percentage
+diff --git a/core/java/android/view/ViewRootImpl.java b/core/java/android/view/ViewRootImpl.java
+index fa1c190eb4e2..99639022d509 100644
+--- a/core/java/android/view/ViewRootImpl.java
++++ b/core/java/android/view/ViewRootImpl.java
+@@ -8342,6 +8342,10 @@ public final class ViewRootImpl implements ViewParent,
+                 mLastClickToolType = event.getToolType(event.getActionIndex());
+             }
+ 
++            if (event.getPointerCount() == 3 && isSwipeToScreenshotGestureActive()) {
++                event.setAction(MotionEvent.ACTION_CANCEL);
++            }
++
+             mAttachInfo.mUnbufferedDispatchRequested = false;
+             mAttachInfo.mHandlingPointerEvent = true;
+             // If the event was fully handled by the handwriting initiator, then don't dispatch it
+@@ -13824,4 +13828,12 @@ public final class ViewRootImpl implements ViewParent,
+     public Choreographer getChoreographer() {
+         return mChoreographer;
+     }
++
++    private boolean isSwipeToScreenshotGestureActive() {
++        try {
++            return ActivityManager.getService().isSwipeToScreenshotGestureActive();
++        } catch (RemoteException e) {
++            return false;
++        }
++    }
+ }
+diff --git a/services/core/java/com/android/server/am/ActivityManagerService.java b/services/core/java/com/android/server/am/ActivityManagerService.java
+index 143294982afa..1fef6f296842 100644
+--- a/services/core/java/com/android/server/am/ActivityManagerService.java
++++ b/services/core/java/com/android/server/am/ActivityManagerService.java
+@@ -1623,6 +1623,10 @@ public class ActivityManagerService extends IActivityManager.Stub
+ 
+     static final HostingRecord sNullHostingRecord =
+             new HostingRecord(HostingRecord.HOSTING_TYPE_EMPTY);
++
++    final SwipeToScreenshotObserver mSwipeToScreenshotObserver;
++    private boolean mIsSwipeToScreenshotEnabled;
++
+     /**
+      * Used to notify activity lifecycle events.
+      */
+@@ -2463,6 +2467,7 @@ public class ActivityManagerService extends IActivityManager.Stub
+         mComponentAliasResolver = new ComponentAliasResolver(this);
+         mApplicationSharedMemoryReadOnlyFd = null;
+         sCreatorTokenCacheCleaner = new Handler(mHandlerThread.getLooper());
++        mSwipeToScreenshotObserver = null;
+     }
+ 
+     // Note: This method is invoked on the main thread but may need to attach various
+@@ -2574,6 +2579,7 @@ public class ActivityManagerService extends IActivityManager.Stub
+         mTraceErrorLogger = new TraceErrorLogger();
+         mComponentAliasResolver = new ComponentAliasResolver(this);
+         sCreatorTokenCacheCleaner = new Handler(mHandlerThread.getLooper());
++        mSwipeToScreenshotObserver = new SwipeToScreenshotObserver(mHandler, mContext);
+ 
+         ApplicationSharedMemory applicationSharedMemory = ApplicationSharedMemory.getInstance();
+         // Install the cache into the process-wide singleton for in-proc queries, as well as
+@@ -9014,6 +9020,7 @@ public class ActivityManagerService extends IActivityManager.Stub
+                             .config_backgroundUserConsideredDispensableTimeSecs);
+             mUserController.setInitialConfig(userSwitchUiEnabled, maxRunningUsers,
+                     delayUserDataLocking, backgroundUserConsideredDispensableTimeSecs);
++            mSwipeToScreenshotObserver.registerObserver();
+         }
+         mAppErrors.loadAppsNotReportingCrashesFromConfig(res.getString(
+                 com.android.internal.R.string.config_appsNotReportingCrashes));
+@@ -19361,6 +19368,32 @@ public class ActivityManagerService extends IActivityManager.Stub
+         }
+     }
+ 
++    private class SwipeToScreenshotObserver extends ContentObserver {
++
++        private final Context mContext;
++
++        public SwipeToScreenshotObserver(Handler handler, Context context) {
++            super(handler);
++            mContext = context;
++        }
++
++        public void registerObserver() {
++            mContext.getContentResolver().registerContentObserver(
++                    Settings.System.getUriFor(Settings.System.SWIPE_TO_SCREENSHOT),
++                    false, this, UserHandle.USER_ALL);
++            update();
++        }
++
++        private void update() {
++            mIsSwipeToScreenshotEnabled = Settings.System.getIntForUser(mContext.getContentResolver(),
++                    Settings.System.SWIPE_TO_SCREENSHOT, 0, UserHandle.USER_CURRENT) == 1;
++        }
++
++        public void onChange(boolean selfChange) {
++            update();
++        }
++    }
++
+     @Override
+     public boolean isAppFreezerSupported() {
+         final long token = Binder.clearCallingIdentity();
+@@ -19943,4 +19976,10 @@ public class ActivityManagerService extends IActivityManager.Stub
+         }
+         r.getWindowProcessController().setOptimizationInfo(compilerFilter, compilationReason);
+     }
++
++    public boolean isSwipeToScreenshotGestureActive() {
++        synchronized (this) {
++            return mIsSwipeToScreenshotEnabled && SystemProperties.getBoolean("sys.android.screenshot", false);
++        }
++    }
+ }
+diff --git a/services/core/java/com/android/server/input/InputManagerService.java b/services/core/java/com/android/server/input/InputManagerService.java
+index 841cb61601ea..85c54b923bc5 100644
+--- a/services/core/java/com/android/server/input/InputManagerService.java
++++ b/services/core/java/com/android/server/input/InputManagerService.java
+@@ -3457,6 +3457,12 @@ public class InputManagerService extends IInputManager.Stub
+          * Provide information on whether the keyguard is currently locked or not.
+          */
+         boolean isKeyguardLocked(int displayId);
++
++        void registerPointerEventListener(WindowManagerPolicyConstants.PointerEventListener listener,
++                int displayId);
++        
++        void unregisterPointerEventListener(WindowManagerPolicyConstants.PointerEventListener listener,
++                int displayId);
+     }
+ 
+     /**
+diff --git a/services/core/java/com/android/server/input/KeyGestureController.java b/services/core/java/com/android/server/input/KeyGestureController.java
+index 3ca77fe37406..55df9b5143fa 100644
+--- a/services/core/java/com/android/server/input/KeyGestureController.java
++++ b/services/core/java/com/android/server/input/KeyGestureController.java
+@@ -79,6 +79,7 @@ import android.view.KeyCharacterMap;
+ import android.view.KeyEvent;
+ import android.view.ViewConfiguration;
+ import android.view.WindowManager;
++import android.view.WindowManagerPolicyConstants;
+ import android.widget.Toast;
+ 
+ import com.android.internal.R;
+@@ -93,6 +94,7 @@ import com.android.server.LocalServices;
+ import com.android.server.UiThread;
+ import com.android.server.input.data.InputDataStore;
+ import com.android.server.pm.UserManagerInternal;
++import com.android.server.policy.WindowManagerPolicy.WindowManagerFuncs;
+ import com.android.server.wm.WindowManagerInternal;
+ 
+ import lineageos.providers.LineageSettings;
+@@ -226,6 +228,8 @@ final class KeyGestureController {
+     @UserIdInt
+     @GuardedBy("mUserLock")
+     private int mCurrentUserId = UserHandle.USER_SYSTEM;
++    private boolean haveEnableGesture = false;
++    private SwipeToScreenshotListener mSwipeToScreenshot;
+ 
+     // Pending actions
+     private boolean mPendingMetaAction;
+@@ -288,6 +292,10 @@ final class KeyGestureController {
+         mSettingsObserver = new SettingsObserver(mHandler);
+         mAppLaunchShortcutManager = new AppLaunchShortcutManager(mContext);
+         mInputGestureManager = new InputGestureManager(mContext);
++        mSwipeToScreenshot = new SwipeToScreenshotListener(mContext, () -> 
++            mHandler.sendMessage(mHandler.obtainMessage(MSG_SCREENSHOT_SHORTCUT,
++                    SCREENSHOT_KEY_OTHER, DEFAULT_DISPLAY))
++        );
+         mAccessibilityShortcutController = injector.getAccessibilityShortcutController(mContext,
+                 mHandler);
+         mDisplayManager = Objects.requireNonNull(mContext.getSystemService(DisplayManager.class));
+@@ -333,6 +341,10 @@ final class KeyGestureController {
+         mVolUpAndDownMute = LineageSettings.System.getIntForUser(resolver,
+                 LineageSettings.System.VOLUME_UP_AND_DOWN_MUTE, 0,
+                 UserHandle.USER_CURRENT) == 1;
++
++        boolean threeFingerGesture = Settings.System.getIntForUser(resolver,
++                Settings.System.SWIPE_TO_SCREENSHOT, 0, UserHandle.USER_CURRENT) == 1;
++        enableSwipeThreeFingerGesture(threeFingerGesture);
+     }
+ 
+     private void initKeyCombinationRules() {
+@@ -683,7 +695,7 @@ final class KeyGestureController {
+         }
+ 
+         // Capture shortcuts and system keys if focused window is not capturing keys
+-        if (mInterceptStages.get(INTERCEPT_STAGE_SHORTCUTS_AFTER_KEY_CAPTURE).interceptKey(focus,
++        if (mWindowManagerCallbacks != null && mInterceptStages.get(INTERCEPT_STAGE_SHORTCUTS_AFTER_KEY_CAPTURE).interceptKey(focus,
+                 event)) {
+             return KEY_INTERCEPT_RESULT_CONSUMED;
+         }
+@@ -1330,6 +1342,9 @@ final class KeyGestureController {
+     public void setWindowManagerCallbacks(
+             @NonNull InputManagerService.WindowManagerCallbacks callbacks) {
+         mWindowManagerCallbacks = callbacks;
++        if (haveEnableGesture && mWindowManagerCallbacks != null) {
++            mWindowManagerCallbacks.registerPointerEventListener(mSwipeToScreenshot, DEFAULT_DISPLAY);
++        }
+     }
+ 
+     private boolean isDefaultDisplayOn() {
+@@ -1722,7 +1737,9 @@ final class KeyGestureController {
+             resolver.registerContentObserver(LineageSettings.System.getUriFor(
+                     LineageSettings.System.VOLUME_UP_AND_DOWN_MUTE), false, this,
+                     UserHandle.USER_ALL);
+-        }
++            resolver.registerContentObserver(Settings.System.getUriFor(
++                    Settings.System.SWIPE_TO_SCREENSHOT), false, this,
++                    UserHandle.USER_ALL);        }
+ 
+         @Override
+         public void onChange(boolean selfChange) {
+@@ -1802,6 +1819,22 @@ final class KeyGestureController {
+         return delayMs;
+     }
+ 
++    public void enableSwipeThreeFingerGesture(boolean enable) {
++        if (enable) {
++            if (haveEnableGesture) return;
++            haveEnableGesture = true;
++            if (mWindowManagerCallbacks != null) {
++                mWindowManagerCallbacks.registerPointerEventListener(mSwipeToScreenshot, DEFAULT_DISPLAY);
++            }
++        } else {
++            if (!haveEnableGesture) return;
++            haveEnableGesture = false;
++            if (mWindowManagerCallbacks != null) {
++                mWindowManagerCallbacks.unregisterPointerEventListener(mSwipeToScreenshot, DEFAULT_DISPLAY);
++            }
++        }
++    }
++
+     public void dump(IndentingPrintWriter ipw) {
+         ipw.println("KeyGestureController:");
+         ipw.increaseIndent();
+diff --git a/services/core/java/com/android/server/input/SwipeToScreenshotListener.java b/services/core/java/com/android/server/input/SwipeToScreenshotListener.java
+new file mode 100644
+index 000000000000..831e06b5d236
+--- /dev/null
++++ b/services/core/java/com/android/server/input/SwipeToScreenshotListener.java
+@@ -0,0 +1,148 @@
++/*
++ * Copyright (C) 2019 The PixelExperience Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.android.server.input;
++
++import android.content.Context;
++import android.os.SystemProperties;
++import android.provider.Settings;
++import android.util.Log;
++import android.util.DisplayMetrics;
++import android.view.MotionEvent;
++import android.view.WindowManagerPolicyConstants.PointerEventListener;
++
++public class SwipeToScreenshotListener implements PointerEventListener {
++    private static final String TAG = "SwipeToScreenshotListener";
++    private static final int THREE_GESTURE_STATE_NONE = 0;
++    private static final int THREE_GESTURE_STATE_DETECTING = 1;
++    private static final int THREE_GESTURE_STATE_DETECTED_FALSE = 2;
++    private static final int THREE_GESTURE_STATE_DETECTED_TRUE = 3;
++    private static final int THREE_GESTURE_STATE_NO_DETECT = 4;
++    private boolean mBootCompleted;
++    private Context mContext;
++    private boolean mDeviceProvisioned = false;
++    private float[] mInitMotionY;
++    private int[] mPointerIds;
++    private int mThreeGestureState = THREE_GESTURE_STATE_NONE;
++    private int mThreeGestureThreshold;
++    private int mThreshold;
++    private final Callbacks mCallbacks;
++    DisplayMetrics mDisplayMetrics;
++
++    public SwipeToScreenshotListener(Context context, Callbacks callbacks) {
++        mPointerIds = new int[3];
++        mInitMotionY = new float[3];
++        mContext = context;
++        mCallbacks = callbacks;
++        mDisplayMetrics = mContext.getResources().getDisplayMetrics();
++        mThreshold = (int) (50.0f * mDisplayMetrics.density);
++        mThreeGestureThreshold = mThreshold * 3;
++    }
++
++    @Override
++    public void onPointerEvent(MotionEvent event) {
++        if (!mBootCompleted) {
++            mBootCompleted = SystemProperties.getBoolean("sys.boot_completed", false);
++            return;
++        }
++        if (!mDeviceProvisioned) {
++            mDeviceProvisioned = Settings.Global.getInt(mContext.getContentResolver(),
++                Settings.Global.DEVICE_PROVISIONED, 0) != 0;
++            return;
++        }
++        if (event.getAction() == 0) {
++            changeThreeGestureState(THREE_GESTURE_STATE_NONE);
++        } else if (mThreeGestureState == THREE_GESTURE_STATE_NONE && event.getPointerCount() == 3) {
++            if (checkIsStartThreeGesture(event)) {
++                changeThreeGestureState(THREE_GESTURE_STATE_DETECTING);
++                for (int i = 0; i < 3; i++) {
++                    mPointerIds[i] = event.getPointerId(i);
++                    mInitMotionY[i] = event.getY(i);
++                }
++            } else {
++                changeThreeGestureState(THREE_GESTURE_STATE_NO_DETECT);
++            }
++        }
++        if (mThreeGestureState == THREE_GESTURE_STATE_DETECTING) {
++            if (event.getPointerCount() != 3) {
++                changeThreeGestureState(THREE_GESTURE_STATE_DETECTED_FALSE);
++                return;
++            }
++            if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
++                float distance = 0.0f;
++                int i = 0;
++                while (i < 3) {
++                    int index = event.findPointerIndex(mPointerIds[i]);
++                    if (index < 0 || index >= 3) {
++                        changeThreeGestureState(THREE_GESTURE_STATE_DETECTED_FALSE);
++                        return;
++                    } else {
++                        distance += event.getY(index) - mInitMotionY[i];
++                        i++;
++                    }
++                }
++                if (distance >= ((float) mThreeGestureThreshold)) {
++                    changeThreeGestureState(THREE_GESTURE_STATE_DETECTED_TRUE);
++                    mCallbacks.onSwipeThreeFinger();
++                }
++            }
++        }
++    }
++
++    private void changeThreeGestureState(int state) {
++        if (mThreeGestureState != state){
++            mThreeGestureState = state;
++            boolean shouldEnableProp = mThreeGestureState == THREE_GESTURE_STATE_DETECTED_TRUE ||
++                mThreeGestureState == THREE_GESTURE_STATE_DETECTING;
++            try {
++                SystemProperties.set("sys.android.screenshot", shouldEnableProp ? "true" : "false");
++            } catch(Exception e) {
++                Log.e(TAG, "Exception when setprop", e);
++            }
++        }
++    }
++
++    private boolean checkIsStartThreeGesture(MotionEvent event) {
++        if (event.getEventTime() - event.getDownTime() > 500) {
++            return false;
++        }
++        int height = mDisplayMetrics.heightPixels;
++        int width = mDisplayMetrics.widthPixels;
++        float minX = Float.MAX_VALUE;
++        float maxX = Float.MIN_VALUE;
++        float minY = Float.MAX_VALUE;
++        float maxY = Float.MIN_VALUE;
++        for (int i = 0; i < event.getPointerCount(); i++) {
++            float x = event.getX(i);
++            float y = event.getY(i);
++            if (y > ((float) (height - mThreshold))) {
++                return false;
++            }
++            maxX = Math.max(maxX, x);
++            minX = Math.min(minX, x);
++            maxY = Math.max(maxY, y);
++            minY = Math.min(minY, y);
++        }
++        if (maxY - minY <= mDisplayMetrics.density * 150.0f) {
++            return maxX - minX <= ((float) (width < height ? width : height));
++        }
++        return false;
++    }
++
++    interface Callbacks {
++        void onSwipeThreeFinger();
++    }
++}
+diff --git a/services/core/java/com/android/server/policy/PhoneWindowManager.java b/services/core/java/com/android/server/policy/PhoneWindowManager.java
+index 6ecbf2b3942b..251daae64e02 100644
+--- a/services/core/java/com/android/server/policy/PhoneWindowManager.java
++++ b/services/core/java/com/android/server/policy/PhoneWindowManager.java
+@@ -246,6 +246,7 @@ import com.android.internal.policy.LogDecelerateInterpolator;
+ import com.android.internal.policy.PhoneWindow;
+ import com.android.internal.policy.TransitionAnimation;
+ import com.android.internal.statusbar.IStatusBarService;
++import com.android.internal.util.ScreenshotHelper;
+ import com.android.internal.widget.LockPatternUtils;
+ import com.android.server.AccessibilityManagerInternal;
+ import com.android.server.DockObserverInternal;
+@@ -256,6 +257,7 @@ import com.android.server.LocalServices;
+ import com.android.server.SystemServiceManager;
+ import com.android.server.UiThread;
+ import com.android.server.input.InputManagerInternal;
++import com.android.server.input.data.InputDataStore;
+ import com.android.server.inputmethod.InputMethodManagerInternal;
+ import com.android.server.pm.UserManagerInternal;
+ import com.android.server.policy.keyguard.KeyguardServiceDelegate;
+diff --git a/services/core/java/com/android/server/wm/InputManagerCallback.java b/services/core/java/com/android/server/wm/InputManagerCallback.java
+index bfbdef1a92ce..76a8cd03866c 100644
+--- a/services/core/java/com/android/server/wm/InputManagerCallback.java
++++ b/services/core/java/com/android/server/wm/InputManagerCallback.java
+@@ -424,6 +424,16 @@ final class InputManagerCallback implements InputManagerService.WindowManagerCal
+                 stalledTransactionInfo.bufferId, stalledTransactionInfo.frameNumber);
+     }
+ 
++    @Override
++    public void registerPointerEventListener(WindowManagerPolicyConstants.PointerEventListener listener, int displayId) {
++        mService.registerPointerEventListener(listener, displayId);
++    }
++
++    @Override
++    public void unregisterPointerEventListener(WindowManagerPolicyConstants.PointerEventListener listener, int displayId) {
++        mService.unregisterPointerEventListener(listener, displayId);
++    }
++
+     void dump(PrintWriter pw, String prefix) {
+         if (mInputFreezeReason != null) {
+             pw.println(prefix + "mInputFreezeReason=" + mInputFreezeReason);
+-- 
+2.34.1
+

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2021 Hallo Welt Systeme UG
+     Copyright (C) 2017-2026 Volla Systeme GmbH
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -16,10 +16,6 @@
 -->
 
 <resources>
-    <!-- Default values for LiveDisplay -->
-    <bool name="config_enableLiveDisplay">false</bool>
-    <integer name="config_defaultLiveDisplayMode">0</integer>
-
     <!-- The list of vendor package signatures that should also be considered
          platform signatures, specifically for use on devices with a vendor partition. -->
     <string-array name="config_vendorPlatformSignatures" translatable="false">

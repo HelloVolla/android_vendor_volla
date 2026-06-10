@@ -1,0 +1,26 @@
+From 67869371ebb603984349155a6914f73f12a829a1 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Sun, 7 Jun 2026 19:43:31 +0330
+Subject: [PATCH] Firewall: Enable blacklist by default
+
+Change-Id: I0675c497eb178878145974cc5511cb919a22f19b
+---
+ .../java/org/lineageos/platform/internal/FirewallService.java   | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index ece64d83..f15006b0 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -1086,7 +1086,7 @@ public class FirewallService extends LineageSystemService {
+     }
+ 
+     public boolean isBlacklistMode() {
+-        return SystemProperties.getBoolean("persist.volla.blacklist.enable", false);
++        return SystemProperties.getBoolean("persist.volla.blacklist.enable", true);
+     }
+ 
+     private void addDomainToList(String domain) {
+-- 
+2.49.0
+

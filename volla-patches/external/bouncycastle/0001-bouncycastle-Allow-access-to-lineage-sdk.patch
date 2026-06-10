@@ -1,0 +1,24 @@
+From 2228d6d4a20c68b260a7a98e22150d62fc51b3e0 Mon Sep 17 00:00:00 2001
+From: Volla BuildBot <build@volla.com>
+Date: Thu, 28 May 2026 07:25:03 +0200
+Subject: [PATCH] bouncycastle: Allow access to lineage sdk
+
+---
+ Android.bp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Android.bp b/Android.bp
+index efbf076..db2efe5 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -151,6 +151,7 @@ java_library {
+         "//frameworks/base/packages/Connectivity/tests/unit",
+         "//frameworks/base/tests/net",
+         "//packages/modules/Connectivity/tests/unit",
++        "//lineage-sdk",
+     ],
+     defaults: ["bouncycastle-defaults"],
+     installable: true,
+-- 
+2.34.1
+

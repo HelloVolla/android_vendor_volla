@@ -1,0 +1,76 @@
+From 2ef4448b7d5816e18926d25d478c78b285aecc96 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Wed, 3 Jun 2026 02:26:19 +0330
+Subject: [PATCH] Firewall: Fix CA file generator
+
+Change-Id: I8ed6f6728e8cc9b07340c83f2798f05fcdb4c5eb
+---
+ .../platform/internal/FirewallService.java    | 44 ++++++++++++-------
+ 1 file changed, 28 insertions(+), 16 deletions(-)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+index 2436aac3..812820c2 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/FirewallService.java
+@@ -418,12 +418,9 @@ public class FirewallService extends LineageSystemService {
+                 Slog.i(TAG, "initCA: CA cert written to " + caCertFile);
+                 installToSystemCaStore(mCACert);
+             }
+-            long hash = canonicalSubjectHash(mCACert.getSubjectX500Principal());
+-            File userCaFile = new File(Environment.getDataSystemDirectory(), String.format("%08x.0", hash));
+-            if (!userCaFile.exists()) {
+-                Slog.i(TAG, "initCA: CA missing from user store, reinstalling: " + userCaFile);
+-                installToSystemCaStore(mCACert);
+-            }
++            // Always reinstall — installToSystemCaStore overwrites, so stale certs
++            // (same filename but different cert bytes) get replaced on every boot.
++            installToSystemCaStore(mCACert);
+             mSSLContext = SSLContext.getInstance("TLS");
+             mSSLContext.init(new KeyManager[]{new SNIKeyManager()}, null, null);
+             Slog.i(TAG, "initCA: done, CA=" + mCACert.getSubjectDN()
+@@ -465,17 +462,32 @@ public class FirewallService extends LineageSystemService {
+     private void installToSystemCaStore(X509Certificate cert) {
+         try {
+             long h = canonicalSubjectHash(cert.getSubjectX500Principal());
+-            File certFile = new File(Environment.getDataSystemDirectory(), String.format("%08x.0", h));
+-            if (!certFile.exists()) {
+-                byte[] pem = ("-----BEGIN CERTIFICATE-----\n"
+-                    + Base64.getMimeEncoder(64, new byte[]{'\n'}).encodeToString(cert.getEncoded())
+-                    + "\n-----END CERTIFICATE-----\n").getBytes(StandardCharsets.UTF_8);
+-                Files.write(certFile.toPath(), pem);
+-                certFile.setReadable(true, false);
+-                Slog.i(TAG, "CA installed to user store: " + certFile);
+-            }
++            String filename = String.format("%08x.0", h);
++
++            // /data/system/<hash>.0 — PEM format, matching /system/etc/security/cacerts/ style.
++            // Bind-mounted by init.rc into the system and APEX CA stores so curl trusts it.
++            byte[] pem = ("-----BEGIN CERTIFICATE-----\n"
++                + Base64.getMimeEncoder(64, new byte[]{'\n'}).encodeToString(cert.getEncoded())
++                + "\n-----END CERTIFICATE-----\n").getBytes(StandardCharsets.UTF_8);
++            File sysFile = new File(Environment.getDataSystemDirectory(), filename);
++            Files.write(sysFile.toPath(), pem);
++            if (!sysFile.setReadable(true, false))
++                Slog.w(TAG, "setReadable failed for " + sysFile);
++            Slog.i(TAG, "CA written (PEM) to bind-mount source: " + sysFile);
++
++            // /data/misc/user/<userId>/cacerts-added/<hash>.0 — raw DER format, matching what
++            // Android Settings writes when a user installs a CA manually. Android's
++            // TrustedCertificateStore reads DER from cacerts-added.
++            byte[] der = cert.getEncoded();
++            File userDir = new File("/data/misc/user/" + mUserId + "/cacerts-added");
++            userDir.mkdirs();
++            File userFile = new File(userDir, filename);
++            Files.write(userFile.toPath(), der);
++            if (!userFile.setReadable(true, false))
++                Slog.w(TAG, "setReadable failed for " + userFile);
++            Slog.i(TAG, "CA written (DER) to user cacerts-added: " + userFile);
+         } catch (Exception e) {
+-            Slog.e(TAG, "Failed to install CA to system store", e);
++            Slog.e(TAG, "Failed to install CA", e);
+         }
+     }
+ 
+-- 
+2.49.0
+

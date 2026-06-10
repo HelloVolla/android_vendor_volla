@@ -15,3 +15,6 @@
 
 # Volla dnsmasq
 /(system_ext|system/system_ext)/bin/vdnsmasq  u:object_r:dnsmasq_exec:s0
+
+# mycelium
+/(system_ext|system/system_ext)/bin/mycelium-service  u:object_r:mycelium_exec:s0

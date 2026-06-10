@@ -1,7 +1,7 @@
-From 98d546d94701357e3f66a0e8185a2cab04fbbfe1 Mon Sep 17 00:00:00 2001
+From cde14bdbff0e9723316a3c8780105c9fc96458c5 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Wed, 11 Aug 2021 14:44:41 +0430
-Subject: [PATCH 2/8] volla: Add VollaOS License page
+Subject: [PATCH] volla: Add VollaOS License page
 
 ---
  AndroidManifest.xml                           | 13 +++
@@ -16,7 +16,7 @@ Subject: [PATCH 2/8] volla: Add VollaOS License page
  create mode 100644 src/org/lineageos/setupwizard/VollaLicenseActivity.java
 
 diff --git a/AndroidManifest.xml b/AndroidManifest.xml
-index f9fdd4a..dd93126 100644
+index 1808b7b..662173b 100644
 --- a/AndroidManifest.xml
 +++ b/AndroidManifest.xml
 @@ -217,6 +217,19 @@
@@ -392,5 +392,5 @@ index 0000000..3441178
 +    }
 +}
 -- 
-2.34.1
+2.49.0
 

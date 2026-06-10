@@ -1,0 +1,81 @@
+From 8bf1b3113d4ac081b47a27e9214eb9120a2bdd98 Mon Sep 17 00:00:00 2001
+From: Mohammad Hasan Keramat J <ikeramat@libremobileos.com>
+Date: Mon, 29 Sep 2025 12:08:03 +0330
+Subject: [PATCH] base: FaceProvider: Skip Face IVirtualHal check if hal is not
+ available
+
+Change-Id: I59c9c9d84b6bc09ae3bb06d67df405914e30f518
+---
+ .../face/FaceSensorConfigurations.java        |  5 ++++-
+ .../sensors/face/aidl/FaceProvider.java       | 22 ++++++++++++++-----
+ 2 files changed, 20 insertions(+), 7 deletions(-)
+
+diff --git a/core/java/android/hardware/face/FaceSensorConfigurations.java b/core/java/android/hardware/face/FaceSensorConfigurations.java
+index 4964ed7d98d6..147626575f14 100644
+--- a/core/java/android/hardware/face/FaceSensorConfigurations.java
++++ b/core/java/android/hardware/face/FaceSensorConfigurations.java
+@@ -184,10 +184,13 @@ public class FaceSensorConfigurations implements Parcelable {
+             String fqNameMapped = remapFqName(fqName);
+             Slog.i(TAG, "getIFace fqName is mapped: " + fqName + "->" + fqNameMapped);
+             try {
++                if (ServiceManager.checkService(fqNameMapped) == null) {
++                    return null;
++                }
+                 IVirtualHal vhal = IVirtualHal.Stub.asInterface(
+                         Binder.allowBlocking(ServiceManager.waitForService(fqNameMapped)));
+                 return vhal != null ? vhal.getFaceHal() : null;
+-            } catch (RemoteException e) {
++            } catch (RemoteException | NullPointerException e) {
+                 Slog.e(TAG, "Remote exception in vhal.getFaceHal() call" + fqNameMapped);
+             }
+         }
+diff --git a/services/core/java/com/android/server/biometrics/sensors/face/aidl/FaceProvider.java b/services/core/java/com/android/server/biometrics/sensors/face/aidl/FaceProvider.java
+index 03ff8df3a48d..2374f690085c 100644
+--- a/services/core/java/com/android/server/biometrics/sensors/face/aidl/FaceProvider.java
++++ b/services/core/java/com/android/server/biometrics/sensors/face/aidl/FaceProvider.java
+@@ -229,6 +229,10 @@ public class FaceProvider implements IBinder.DeathRecipient, ServiceProvider {
+     }
+ 
+     private void initSensors(boolean resetLockoutRequiresChallenge, SensorProps[] props) {
++        if (props == null) {
++            Slog.w(TAG, "Sensor properties is null, skipping sensor initialization");
++            return;
++        }
+         if (resetLockoutRequiresChallenge) {
+             Slog.d(getTag(), "Adding HIDL configs");
+             for (SensorProps prop : props) {
+@@ -239,6 +243,7 @@ public class FaceProvider implements IBinder.DeathRecipient, ServiceProvider {
+             for (SensorProps prop : props) {
+                 addAidlSensors(prop, resetLockoutRequiresChallenge);
+             }
++
+         }
+     }
+ 
+@@ -907,12 +912,17 @@ public class FaceProvider implements IBinder.DeathRecipient, ServiceProvider {
+      */
+     public IVirtualHal getVhal() throws RemoteException {
+         if (mVhal == null && isVhalForTesting()) {
+-            mVhal = IVirtualHal.Stub.asInterface(
+-                    Binder.allowBlocking(
+-                            ServiceManager.waitForService(
+-                                    IVirtualHal.DESCRIPTOR + "/"
+-                                            + mHalInstanceNameCurrent)));
+-            Slog.d(getTag(), "getVhal " + mHalInstanceNameCurrent);
++            String serviceName = IVirtualHal.DESCRIPTOR + "/" + mHalInstanceNameCurrent;
++            IBinder binder = ServiceManager.checkService(serviceName);
++            if (binder != null) {
++                mVhal = IVirtualHal.Stub.asInterface(
++                        Binder.allowBlocking(
++                                ServiceManager.waitForService(serviceName)));
++                Slog.d(getTag(), "getVhal " + mHalInstanceNameCurrent);
++            } else {
++                Slog.w(TAG, "Virtual HAL service not found: " + serviceName);
++                return null;
++            }
+         }
+         return mVhal;
+     }
+-- 
+2.49.0
+

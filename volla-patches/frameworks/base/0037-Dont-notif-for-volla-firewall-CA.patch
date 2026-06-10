@@ -1,0 +1,34 @@
+From 02703ac636c838747ad2075e8f30d7cf9789d167 Mon Sep 17 00:00:00 2001
+From: Volla BuildBot <build@volla.com>
+Date: Tue, 2 Jun 2026 23:24:45 +0000
+Subject: [PATCH] Dont notif for volla firewall CA
+
+---
+ .../server/devicepolicy/CertificateMonitor.java        | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/services/devicepolicy/java/com/android/server/devicepolicy/CertificateMonitor.java b/services/devicepolicy/java/com/android/server/devicepolicy/CertificateMonitor.java
+index 35d4d32e568b..a57924746c76 100644
+--- a/services/devicepolicy/java/com/android/server/devicepolicy/CertificateMonitor.java
++++ b/services/devicepolicy/java/com/android/server/devicepolicy/CertificateMonitor.java
+@@ -152,8 +152,16 @@ public class CertificateMonitor {
+         }
+         mService.onInstalledCertificatesChanged(userHandle, installedCerts);
+ 
+-        final int pendingCertificateCount =
++        int pendingCertificateCount =
+                 installedCerts.size() - mService.getAcceptedCaCertificates(userHandle).size();
++        if (pendingCertificateCount > 0) {
++            for (String cert : installedCerts) {
++                if (cert.contains("735ba42f")) {
++                    pendingCertificateCount--;
++                    break;
++                }
++            }
++        }
+         if (pendingCertificateCount != 0) {
+             final Notification noti = buildNotification(userHandle, pendingCertificateCount);
+             mInjector.getNotificationManager().notifyAsUser(
+-- 
+2.34.1
+

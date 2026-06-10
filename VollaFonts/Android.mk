@@ -38,7 +38,9 @@ VOLLA_PRODUCT_FONTS := \
     selawkb.ttf \
     selawkl.ttf \
     selawksb.ttf \
-    selawksl.ttf
+    selawksl.ttf \
+	NotoSansP-VariableFont.ttf \
+    NotoSansP-Italic-VariableFont.ttf
 
 VOLLA_SYSTEM_FONTS := \
     NotoSans-Black.ttf \
@@ -58,7 +60,9 @@ VOLLA_SYSTEM_FONTS := \
     NotoSans-SemiBold.ttf \
     NotoSans-SemiBoldItalic.ttf \
     NotoSans-Thin.ttf \
-    NotoSans-ThinItalic.ttf
+    NotoSans-ThinItalic.ttf \
+    NotoSans-VariableFont.ttf \
+    NotoSans-Italic-VariableFont.ttf
 
 define define-volla-product-font
 include $$(CLEAR_VARS)

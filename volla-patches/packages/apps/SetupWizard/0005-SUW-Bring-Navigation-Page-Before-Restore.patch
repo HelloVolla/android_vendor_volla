@@ -1,7 +1,7 @@
-From f020beac9f6b70e6803f9821b3b4c9a807372745 Mon Sep 17 00:00:00 2001
+From 9eb927e8da209da7b61cbbf46b979be0a0fefd1c Mon Sep 17 00:00:00 2001
 From: techyminati <techyminati@outlook.com>
 Date: Wed, 13 Mar 2024 09:08:41 +0000
-Subject: [PATCH 5/8] SUW: Bring Navigation Page Before Restore
+Subject: [PATCH] SUW: Bring Navigation Page Before Restore
 
 Change-Id: I5cbb848eba789c4515da5b09f2b5b40389a913ed
 Signed-off-by: techyminati <techyminati@outlook.com>
@@ -11,7 +11,7 @@ Signed-off-by: techyminati <techyminati@outlook.com>
  2 files changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/res/raw/lineage_wizard_script.xml b/res/raw/lineage_wizard_script.xml
-index 5d90f88..8a34d5b 100644
+index 71abdc3..95d3104 100644
 --- a/res/raw/lineage_wizard_script.xml
 +++ b/res/raw/lineage_wizard_script.xml
 @@ -41,6 +41,12 @@
@@ -41,7 +41,7 @@ index 5d90f88..8a34d5b 100644
      </WizardAction>
  
 diff --git a/res/raw/lineage_wizard_script_user.xml b/res/raw/lineage_wizard_script_user.xml
-index 15325c6..c3042a9 100644
+index 0c46f98..f3fce18 100644
 --- a/res/raw/lineage_wizard_script_user.xml
 +++ b/res/raw/lineage_wizard_script_user.xml
 @@ -11,6 +11,12 @@
@@ -71,5 +71,5 @@ index 15325c6..c3042a9 100644
      </WizardAction>
  
 -- 
-2.34.1
+2.49.0
 

@@ -20,6 +20,7 @@ public:
     virtual ndk::ScopedAStatus mount(const std::string &device, const std::string &path, bool *_aidl_return);
     virtual ndk::ScopedAStatus umount(const std::string &path, bool *_aidl_return);
     virtual ndk::ScopedAStatus rereadpt(const std::string &device, bool *_aidl_return);
+    virtual ndk::ScopedAStatus copy(const std::string &src, const std::string &dst, bool *_aidl_return);
 
     // ------------------------------------------------------------------------
 };

@@ -1,8 +1,7 @@
-From d073c9e6da0fa81d9d39696297435bb7ea454ed1 Mon Sep 17 00:00:00 2001
+From 569b03a606d3fe4c9b6b2454c5c2def1c11479e7 Mon Sep 17 00:00:00 2001
 From: Ting Yu <ting.x.yu@sony.com>
 Date: Thu, 18 Oct 2018 16:56:22 +0800
-Subject: [PATCH 06/10] Settings: Phone ringtone setting for Multi SIM device
- [2/3]
+Subject: [PATCH] Settings: Phone ringtone setting for Multi SIM device [2/3]
 
 Support displaying phone ringtone setting for each slot as follows:
 "Phone ringtone - SIM 1"
@@ -32,10 +31,10 @@ Change-Id: I06c59016e9b6da51ed8a4678a66674fc48c20e40
  create mode 100644 tests/robotests/src/com/android/settings/notification/PhoneRingtone2PreferenceControllerTest.java
 
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 2e44c013a96..56f57baed70 100644
+index 3e4982057cb..54e378efd55 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
-@@ -8081,6 +8081,12 @@
+@@ -8869,6 +8869,12 @@
      <!-- Sound: Title for the option defining the phone ringtone. [CHAR LIMIT=30] -->
      <string name="ringtone_title">Phone ringtone</string>
  
@@ -49,26 +48,26 @@ index 2e44c013a96..56f57baed70 100644
      <string name="notification_ringtone_title">Default notification sound</string>
  
 diff --git a/res/xml/sound_settings.xml b/res/xml/sound_settings.xml
-index 6f932a7e699..9f6229c36c2 100644
+index 3070a7ac6e4..1027540dcdb 100644
 --- a/res/xml/sound_settings.xml
 +++ b/res/xml/sound_settings.xml
-@@ -115,6 +115,16 @@
-         android:order="-120"
-         settings:keywords="@string/sound_settings"/>
+@@ -128,6 +128,16 @@
+             android:order="-120"
+             settings:keywords="@string/sound_settings"/>
  
-+    <!-- Phone ringtone for Slot2 -->
-+    <com.android.settings.DefaultRingtonePreference
-+        android:key="ringtone2"
-+        android:title="@string/ringtone2_title"
-+        android:dialogTitle="@string/ringtone_title"
-+        android:summary="@string/summary_placeholder"
-+        android:ringtoneType="ringtone"
-+        settings:allowDividerAbove="false"
-+        android:order="-119"/>
++        <!-- Phone ringtone for Slot2 -->
++        <com.android.settings.DefaultRingtonePreference
++            android:key="ringtone2"
++            android:title="@string/ringtone2_title"
++            android:dialogTitle="@string/ringtone_title"
++            android:summary="@string/summary_placeholder"
++            android:ringtoneType="ringtone"
++            android:order="-119"
++            settings:keywords="@string/sound_settings"/>
 +
-     <!-- Live Caption -110 and Now Playing -105-->
- 
-     <!-- Spatial audio -->
+         <!-- Default notification ringtone -->
+         <com.android.settings.DefaultRingtonePreference
+             android:key="notification_ringtone"
 diff --git a/src/com/android/settings/DefaultRingtonePreference.java b/src/com/android/settings/DefaultRingtonePreference.java
 index 4c654887227..e6d5ced14b8 100644
 --- a/src/com/android/settings/DefaultRingtonePreference.java
@@ -278,10 +277,10 @@ index 29b9266335d..359ea71abdf 100644
          final CharSequence summary;
          try {
 diff --git a/src/com/android/settings/notification/SoundSettings.java b/src/com/android/settings/notification/SoundSettings.java
-index fffb7849bbc..7ae9e22ded7 100644
+index e0da708af3c..56a884b2b5b 100644
 --- a/src/com/android/settings/notification/SoundSettings.java
 +++ b/src/com/android/settings/notification/SoundSettings.java
-@@ -266,6 +266,7 @@ public class SoundSettings extends DashboardFragment implements OnActivityResult
+@@ -258,6 +258,7 @@ public class SoundSettings extends DashboardFragment implements OnActivityResult
  
          // === Phone & notification ringtone ===
          controllers.add(new PhoneRingtonePreferenceController(context));
@@ -394,7 +393,7 @@ index 00000000000..87fa6a5038c
 +    }
 +}
 diff --git a/tests/robotests/src/com/android/settings/notification/PhoneRingtonePreferenceControllerTest.java b/tests/robotests/src/com/android/settings/notification/PhoneRingtonePreferenceControllerTest.java
-index 9e49653c233..f8baad50f1c 100644
+index 1c876bdcc58..51ddb994382 100644
 --- a/tests/robotests/src/com/android/settings/notification/PhoneRingtonePreferenceControllerTest.java
 +++ b/tests/robotests/src/com/android/settings/notification/PhoneRingtonePreferenceControllerTest.java
 @@ -18,6 +18,7 @@ package com.android.settings.notification;
@@ -531,5 +530,5 @@ index f981f7fe73e..72d4a1140d7 100644
  
      @MediumTest
 -- 
-2.34.1
+2.49.0
 

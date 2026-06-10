@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Hallo Welt Systeme UG
+# Copyright (C) 2017-2026 Volla Systeme GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -56,17 +56,17 @@ PRODUCT_PACKAGES += \
     MtkCamera
 endif
 
-ifeq ($(filter %_yggdrasil %_algiz %_mimir,$(TARGET_PRODUCT)),)
+ifeq ($(filter %_yggdrasil %_algiz %_mimir %_vidofnir %_mimameid %_yggdrasilx,$(TARGET_PRODUCT)),)
 PRODUCT_PACKAGES += BootloaderManager
 endif
 
-ifneq ($(filter %_algiz %_mimir,$(TARGET_PRODUCT)),)
+ifneq ($(filter %_algiz %_mimir %_vidofnir %_mimameid %_yggdrasilx,$(TARGET_PRODUCT)),)
 PRODUCT_PACKAGES += BootloaderManager-new bootloadermanager
 PRODUCT_COPY_FILES += $(LOCAL_PATH)/bootloadermanager/dmsetupaa64:$(TARGET_COPY_OUT_SYSTEM_EXT)/bin/dmsetup
 endif
 
 
-ifneq ($(filter %_vidofnir,$(TARGET_PRODUCT)),)
+ifneq ($(filter %_vidofnir %_ansuz,$(TARGET_PRODUCT)),)
 PRODUCT_PACKAGES += \
     OpenEUICC
 endif
@@ -97,6 +97,13 @@ ifneq ($(filter %_yggdrasil %_yggdrasilx %_vidofnir %_mimameid %_algiz,$(TARGET_
 PRODUCT_PACKAGES += FossifyMusicRemover
 else
 PRODUCT_PACKAGES += MaxfourRemover
+endif
+
+# Use Thunderbird Mail & Fossify Messages for ansuz project
+ifneq ($(filter %_ansuz,$(TARGET_PRODUCT)),)
+PRODUCT_PACKAGES += MessagesRemover K9Remover
+else
+PRODUCT_PACKAGES += ThunderbirdRemover FossifyMessagesRemover
 endif
 
 # Updater
@@ -242,6 +249,25 @@ PRODUCT_ARTIFACT_PATH_REQUIREMENT_ALLOWED_LIST += \
 SYSTEM_OPTIMIZE_JAVA ?= true
 SYSTEMUI_OPTIMIZE_JAVA ?= true
 
+# Disable dex2oat debug
+USE_DEX2OAT_DEBUG := false
+
+# Strip Debug
+ART_BUILD_TARGET_NDEBUG := false
+ART_BUILD_TARGET_DEBUG := false
+ART_BUILD_HOST_NDEBUG := false
+ART_BUILD_HOST_DEBUG := false
+PRODUCT_ART_TARGET_INCLUDE_DEBUG_BUILD := false
+WITH_DEXPREOPT_DEBUG_INFO := false
+
+# Reduce system server verbosity
+PRODUCT_SYSTEM_SERVER_DEBUG_INFO := false
+
+# Strip the local variable table and the local variable type table to reduce
+# the size of the system image. This has no bearing on stack traces, but will
+# leave less information available via JDWP.
+PRODUCT_MINIMIZE_JAVA_DEBUG_INFO := true
+
 # Dex speed apps
 PRODUCT_DEXPREOPT_SPEED_APPS += \
     Launcher3QuickStep \
@@ -256,3 +282,34 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.volla.build.version=$(LINEAGE_VERSION) \
     ro.volla.display.version=$(LINEAGE_DISPLAY_VERSION) \
     ro.volla.releasetype=$(LINEAGE_BUILDTYPE)
+
+# Blur
+ifneq ($(filter %_ansuz %_algiz,$(TARGET_PRODUCT)),)
+    VOLLA_BLUR := true
+else
+    VOLLA_BLUR := false
+endif
+
+ifeq ($(VOLLA_BLUR), true)
+PRODUCT_PRODUCT_PROPERTIES += \
+    ro.sf.blurs_are_expensive=1 \
+    ro.surface_flinger.supports_background_blur=1
+endif
+
+# Enable Material Design 3 Expressive
+PRODUCT_PRODUCT_PROPERTIES += is_expressive_design_enabled=true
+
+# BatteryStats
+PRODUCT_PACKAGES += \
+    BatteryStatsViewer
+
+# Wallpaper Package
+ifneq ($(filter %_mimir,$(TARGET_PRODUCT)),)
+PRODUCT_PACKAGES += Backgrounds_tablet
+else 
+PRODUCT_PACKAGES += Backgrounds
+endif
+
+# Disable default frame rate limit for games
+PRODUCT_PRODUCT_PROPERTIES += \
+    debug.graphics.game_default_frame_rate.disabled=true

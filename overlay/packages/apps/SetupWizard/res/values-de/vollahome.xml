@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2021 Hallo Welt Systeme UG
+     Copyright (C) 2017-2026 Volla Systeme GmbH
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -16,7 +16,11 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="volla_home_title">Default Home App</string>
-    <string name="volla_home_summary">Mit der Volla Startansicht erhalten Sie die das Volla Benutzererlebnis mit Sprungbrett, Schnellmenü und Sammlungen. Alernativ können Sie jetzt die klassische Android Startansicht wählen oder später in den Systemeinstellungen.</string>
+
+    <string name="volla_home_summary">
+        Mit der Volla Startansicht erhalten Sie das Volla Benutzererlebnis mit Sprungbrett, Schnellmenü und Sammlungen. Alternativ können Sie jetzt die klassische Android Startansicht wählen oder später in den Systemeinstellungen.
+    </string>
+
     <string name="volla_home_volla">Volla Launcher</string>
     <string name="volla_home_aosp">AOSP Launcher</string>
 </resources>

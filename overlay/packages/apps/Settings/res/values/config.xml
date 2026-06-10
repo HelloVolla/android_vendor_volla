@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2025 Volla Systeme GmbH
+     Copyright (C) 2019 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,10 +15,15 @@
      limitations under the License.
 -->
 <resources>
-    <!-- Whether to display Cloned Apps page in Settings (Settings > Apps > Cloned Apps).-->
+    <!-- Whether to display Cloned Apps page in Settings (Settings > Apps > Cloned apps) -->
     <bool name="config_cloned_apps_page_enabled">true</bool>
 
     <!-- Whether memory from app_info_settings is available or not. -->
     <bool name="config_show_app_info_settings_memory">true</bool>
 
+    <!-- Whether to show the "glanceable hub" settings. -->
+    <bool name="config_show_glanceable_hub_toggle_setting">true</bool>
+
+    <!-- Whether to show the "glanceable hub" settings on mobile. -->
+    <bool name="config_show_glanceable_hub_toggle_setting_mobile">true</bool>
 </resources>

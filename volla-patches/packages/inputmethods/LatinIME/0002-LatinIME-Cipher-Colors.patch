@@ -1,7 +1,7 @@
-From 8529d61e998717d99b1bc5ed8dda5a5338590c63 Mon Sep 17 00:00:00 2001
+From b0927b7d35e08b18163840d6644d4e6002a33228 Mon Sep 17 00:00:00 2001
 From: techyminati <sinha.aryan03@gmail.com>
 Date: Wed, 13 Mar 2024 22:47:48 +0530
-Subject: [PATCH 2/7] LatinIME: Cipher Colors
+Subject: [PATCH] LatinIME: Cipher Colors
 
 Change-Id: I652d5e20ebf854dbdea49a4936e3df0cc9f244f1
 Signed-off-by: techyminati <sinha.aryan03@gmail.com>
@@ -12,7 +12,7 @@ Signed-off-by: techyminati <sinha.aryan03@gmail.com>
  3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/java/res/drawable/ic_launcher_background.xml b/java/res/drawable/ic_launcher_background.xml
-index 4c5c90e767..600c133edf 100644
+index 4c5c90e76..600c133ed 100644
 --- a/java/res/drawable/ic_launcher_background.xml
 +++ b/java/res/drawable/ic_launcher_background.xml
 @@ -13,8 +13,8 @@
@@ -27,7 +27,7 @@ index 4c5c90e767..600c133edf 100644
 +      android:fillColor="#7e7ef7"/>
  </vector>
 diff --git a/java/res/drawable/ic_launcher_foreground.xml b/java/res/drawable/ic_launcher_foreground.xml
-index 133977b77c..3633e5ece1 100644
+index 133977b77..3633e5ece 100644
 --- a/java/res/drawable/ic_launcher_foreground.xml
 +++ b/java/res/drawable/ic_launcher_foreground.xml
 @@ -14,7 +14,7 @@
@@ -40,7 +40,7 @@ index 133977b77c..3633e5ece1 100644
      <path
          android:pathData="M28.54,28.54m-72,0a72,72 0,1 1,144 0a72,72 0,1 1,-144 0"
 diff --git a/java/res/values/colors.xml b/java/res/values/colors.xml
-index 03619d28ee..bf7bff1fb0 100644
+index 03619d28e..bf7bff1fb 100644
 --- a/java/res/values/colors.xml
 +++ b/java/res/values/colors.xml
 @@ -58,7 +58,7 @@
@@ -53,5 +53,5 @@ index 03619d28ee..bf7bff1fb0 100644
      <color name="setup_welcome_video_margin_color">#FFCCCCCC</color>
      <!-- Accent color for the notification. We need to match this to the OS build -->
 -- 
-2.34.1
+2.49.0
 

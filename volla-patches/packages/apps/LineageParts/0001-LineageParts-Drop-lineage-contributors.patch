@@ -1,4 +1,4 @@
-From 45c0fa799b3d4f47b51eb817ae1bc526436b11cd Mon Sep 17 00:00:00 2001
+From ef8440bab305dfd74c12491be0f0aae3370d6679 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 10 Jul 2021 22:16:44 +0800
 Subject: [PATCH] LineageParts: Drop lineage contributors
@@ -9,10 +9,10 @@ Change-Id: I8650a02286c997020d50dfb387cc5a453591695f
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/AndroidManifest.xml b/AndroidManifest.xml
-index e2bc331..bace0ec 100644
+index d593f3a..4062ae9 100644
 --- a/AndroidManifest.xml
 +++ b/AndroidManifest.xml
-@@ -242,7 +242,7 @@
+@@ -296,7 +296,7 @@
                  android:resource="@string/trust_summary" />
          </activity-alias>
  
@@ -21,7 +21,7 @@ index e2bc331..bace0ec 100644
          <activity-alias
              android:name=".contributors.ContributorsCloudFragment"
              android:exported="true"
-@@ -266,7 +266,7 @@
+@@ -323,7 +323,7 @@
              <meta-data
                  android:name="com.android.settings.summary"
                  android:resource="@string/summary_empty" />

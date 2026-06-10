@@ -1,8 +1,7 @@
-From 303d565c3d08525035a73da411e1158dddaa9656 Mon Sep 17 00:00:00 2001
+From 1fdd24e6ff37ebce16a324b72c01351dccd2df91 Mon Sep 17 00:00:00 2001
 From: nift4 <nift4@protonmail.com>
 Date: Wed, 23 Aug 2023 13:04:44 +0200
-Subject: [PATCH 1/7] LatinIME: recreate keyboard theme when configuration
- changes
+Subject: [PATCH] LatinIME: recreate keyboard theme when configuration changes
 
 * checking if resources object is equal is not enough
 * fixes Material You accent not updating when switching light/dark mode
@@ -13,7 +12,7 @@ Change-Id: I798041cdcbf6b7bbcdc69f4edbb9d0bf392bbb69
  1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/java/src/com/android/inputmethod/keyboard/KeyboardSwitcher.java b/java/src/com/android/inputmethod/keyboard/KeyboardSwitcher.java
-index d842507b43..9b05e70638 100644
+index 0e813ae5c..de6a81272 100644
 --- a/java/src/com/android/inputmethod/keyboard/KeyboardSwitcher.java
 +++ b/java/src/com/android/inputmethod/keyboard/KeyboardSwitcher.java
 @@ -69,6 +69,9 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
@@ -40,5 +39,5 @@ index d842507b43..9b05e70638 100644
              KeyboardLayoutSet.onKeyboardThemeChanged();
              return true;
 -- 
-2.34.1
+2.49.0
 

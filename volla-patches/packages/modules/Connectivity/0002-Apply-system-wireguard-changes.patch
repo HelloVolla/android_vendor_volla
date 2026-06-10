@@ -1,4 +1,4 @@
-From 0977105200e5cdc963a559bc545d9dd76d85c3fe Mon Sep 17 00:00:00 2001
+From f748be9fc44b5c7a4f2fbccc7ec4a0c65204e5b5 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sat, 7 Oct 2023 17:33:50 +0330
 Subject: [PATCH] Apply system wireguard changes
@@ -7,15 +7,15 @@ Change-Id: Ia527559adf26dfb519ba6ef9ca65d623862f6f68
 ---
  .../networkstack/tethering/Tethering.java     | 18 ++++++++++++++++-
  .../tethering/TetheringInterfaceUtils.java    | 20 ++++++++++++++++++-
- .../server/ethernet/EthernetTracker.java      | 10 +++++++---
+ .../server/ethernet/EthernetTracker.java      |  8 ++++++--
  .../server/connectivity/DnsManager.java       | 10 ++++++++++
- 4 files changed, 53 insertions(+), 5 deletions(-)
+ 4 files changed, 52 insertions(+), 4 deletions(-)
 
 diff --git a/Tethering/src/com/android/networkstack/tethering/Tethering.java b/Tethering/src/com/android/networkstack/tethering/Tethering.java
-index 4c2103e875..a980f1485d 100644
+index ed4752262a..4d11541e79 100644
 --- a/Tethering/src/com/android/networkstack/tethering/Tethering.java
 +++ b/Tethering/src/com/android/networkstack/tethering/Tethering.java
-@@ -115,6 +115,7 @@ import android.os.RemoteCallbackList;
+@@ -129,6 +129,7 @@ import android.os.RemoteCallbackList;
  import android.os.RemoteException;
  import android.os.ResultReceiver;
  import android.os.ServiceSpecificException;
@@ -23,7 +23,7 @@ index 4c2103e875..a980f1485d 100644
  import android.os.UserHandle;
  import android.os.UserManager;
  import android.provider.Settings;
-@@ -1926,7 +1927,7 @@ public class Tethering {
+@@ -2170,7 +2171,7 @@ public class Tethering {
              // TODO: Set v4 and/or v6 DNS per available connectivity.
              final Collection<InetAddress> dnses = lp.getDnsServers();
              // TODO: Properly support the absence of DNS servers.
@@ -32,7 +32,7 @@ index 4c2103e875..a980f1485d 100644
              if (dnses != null && !dnses.isEmpty()) {
                  dnsServers = new String[dnses.size()];
                  int i = 0;
-@@ -1936,6 +1937,10 @@ public class Tethering {
+@@ -2180,6 +2181,10 @@ public class Tethering {
              } else {
                  dnsServers = mConfig.defaultIPv4DNS;
              }
@@ -43,7 +43,7 @@ index 4c2103e875..a980f1485d 100644
              final int netId = (network != null) ? network.getNetId() : NETID_UNSET;
              try {
                  mNetd.tetherDnsSet(netId, dnsServers);
-@@ -1948,6 +1953,17 @@ public class Tethering {
+@@ -2192,6 +2197,17 @@ public class Tethering {
                  mLog.e("setting DNS forwarders failed, " + e);
                  transitionTo(mSetDnsForwardersErrorState);
              }
@@ -102,48 +102,37 @@ index 3974fa54ae..5873905bd8 100644
          return (ri != null) ? ri.getInterface() : null;
      }
 diff --git a/service-t/src/com/android/server/ethernet/EthernetTracker.java b/service-t/src/com/android/server/ethernet/EthernetTracker.java
-index 5228aab74d..40e5d46d6e 100644
+index 5ba2096432..f9713580dc 100644
 --- a/service-t/src/com/android/server/ethernet/EthernetTracker.java
 +++ b/service-t/src/com/android/server/ethernet/EthernetTracker.java
-@@ -42,6 +42,7 @@ import android.os.RemoteCallbackList;
- import android.os.RemoteException;
- import android.os.ServiceSpecificException;
+@@ -52,6 +52,7 @@ import android.os.RemoteException;
+ import android.system.ErrnoException;
+ import android.system.Os;
  import android.system.OsConstants;
 +import android.os.SystemProperties;
  import android.text.TextUtils;
  import android.util.ArrayMap;
  import android.util.Log;
-@@ -626,7 +627,8 @@ public class EthernetTracker {
-             nc = mNetworkCapabilities.get(hwAddress);
+@@ -750,7 +751,8 @@ public class EthernetTracker {
+             nc = mNetworkCapabilities.get(port.getMacAddress().toString());
              if (nc == null) {
-                 final boolean isTestIface = iface.matches(TEST_IFACE_REGEXP);
+                 final boolean isTestIface = TEST_IFACE_REGEXP.matcher(iface).matches();
 -                nc = createDefaultNetworkCapabilities(isTestIface);
 +                final boolean isWgIface = iface.equals(SystemProperties.get("sys.volla.wg.iface"));
 +                nc = createDefaultNetworkCapabilities(isTestIface, isWgIface);
              }
          }
  
-@@ -707,7 +709,7 @@ public class EthernetTracker {
-     }
- 
-     private void maybeTrackInterface(String iface) {
--        if (!isValidEthernetInterface(iface)) {
-+        if (!SystemProperties.get("sys.volla.wg.iface").equals(iface) && !isValidEthernetInterface(iface)) {
-             return;
+@@ -856,12 +858,14 @@ public class EthernetTracker {
          }
- 
-@@ -774,7 +776,7 @@ public class EthernetTracker {
-         return new EthernetTrackerConfig(configString.split(";", /* limit of tokens */ 4));
      }
  
 -    private static NetworkCapabilities createDefaultNetworkCapabilities(boolean isTestIface) {
 +    private static NetworkCapabilities createDefaultNetworkCapabilities(boolean isTestIface, boolean isWgIface) {
-         NetworkCapabilities.Builder builder = createNetworkCapabilities(
-                 false /* clear default capabilities */, null, null)
-                 .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_RESTRICTED)
-@@ -789,6 +791,8 @@ public class EthernetTracker {
-         } else {
-             builder.addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
+         final NetworkCapabilities.Builder builder =
+                 new NetworkCapabilities.Builder(DEFAULT_CAPABILITIES);
+         if (isTestIface) {
+             builder.addTransportType(NetworkCapabilities.TRANSPORT_TEST);
          }
 +        if (isWgIface)
 +            builder.removeCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN);

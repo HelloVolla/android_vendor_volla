@@ -1,0 +1,65 @@
+From 20cdb7b7ea781e22fd1b39523d0f4153b11bbb3b Mon Sep 17 00:00:00 2001
+From: Volla BuildBot <build@volla.com>
+Date: Thu, 9 Apr 2026 10:44:43 +0200
+Subject: [PATCH] lite: Enable detection postprocess ops
+
+Signed-off-by: Volla BuildBot <build@volla.com>
+---
+ tensorflow/lite/kernels/register.cc     | 2 +-
+ tensorflow/lite/kernels/register_ref.cc | 2 +-
+ tensorflow/lite/tflite_static.bp        | 2 ++
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/tensorflow/lite/kernels/register.cc b/tensorflow/lite/kernels/register.cc
+index 5ec11971..480a7559 100644
+--- a/tensorflow/lite/kernels/register.cc
++++ b/tensorflow/lite/kernels/register.cc
+@@ -360,9 +360,9 @@ BuiltinOpResolver::BuiltinOpResolver() {
+   AddCustom("Mfcc", tflite::ops::custom::Register_MFCC());
+   AddCustom("AudioSpectrogram",
+             tflite::ops::custom::Register_AUDIO_SPECTROGRAM());
++  */
+   AddCustom("TFLite_Detection_PostProcess",
+             tflite::ops::custom::Register_DETECTION_POSTPROCESS());
+-  */
+   // By definition, all of the ops added above are not user-defined ops,
+   // since they are supported by BuiltinOpResolver.
+   may_directly_contain_user_defined_ops_ = false;
+diff --git a/tensorflow/lite/kernels/register_ref.cc b/tensorflow/lite/kernels/register_ref.cc
+index a2be78a9..403c43a8 100644
+--- a/tensorflow/lite/kernels/register_ref.cc
++++ b/tensorflow/lite/kernels/register_ref.cc
+@@ -523,9 +523,9 @@ BuiltinRefOpResolver::BuiltinRefOpResolver() {
+   AddCustom("Mfcc", tflite::ops::custom::Register_MFCC());
+   AddCustom("AudioSpectrogram",
+             tflite::ops::custom::Register_AUDIO_SPECTROGRAM());
++  */
+   AddCustom("TFLite_Detection_PostProcess",
+             tflite::ops::custom::Register_DETECTION_POSTPROCESS());
+-  */
+ }
+ 
+ }  // namespace builtin
+diff --git a/tensorflow/lite/tflite_static.bp b/tensorflow/lite/tflite_static.bp
+index b2b0952f..8cc0949c 100644
+--- a/tensorflow/lite/tflite_static.bp
++++ b/tensorflow/lite/tflite_static.bp
+@@ -69,6 +69,7 @@ filegroup {
+         "kernels/cpu_backend_context.cc",
+         "kernels/cpu_backend_gemm_eigen.cc",
+         "kernels/cumsum.cc",
++        "kernels/detection_postprocess.cc",
+         "kernels/densify.cc",
+         "kernels/depth_to_space.cc",
+         "kernels/depthwise_conv.cc",
+@@ -229,6 +230,7 @@ cc_library_static {
+     ],
+     cflags: [
+         "-DNAMESPACE_FOR_HASH_FUNCTIONS=farmhash",
++        "-DFLATBUFFERS_LOCALE_INDEPENDENT=0",
+         "-DTF_LITE_DISABLE_X86_NEON",
+         "-Werror",
+         "-Wno-user-defined-warnings",
+-- 
+2.34.1
+

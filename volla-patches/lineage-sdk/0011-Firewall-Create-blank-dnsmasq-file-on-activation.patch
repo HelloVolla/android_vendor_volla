@@ -1,4 +1,4 @@
-From 47f8f2850365cd6f273e75d7497fcbd6d09c4455 Mon Sep 17 00:00:00 2001
+From f5de2d01e7d3c860ba1199f2ebd6a4ecce439ca3 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Tue, 20 Sep 2022 19:11:08 +0430
 Subject: [PATCH] Firewall: Create blank dnsmasq file on activation

@@ -1,6 +1,6 @@
-From 78e59dcc62e14aede8a757a02c52aaee96378f54 Mon Sep 17 00:00:00 2001
+From 7bf2f1c61bf6b5018c16b559d648592604022e15 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
-Date: Sun, 31 Mar 2024 07:52:15 +0000
+Date: Thu, 9 Apr 2026 10:14:50 +0200
 Subject: [PATCH] bp: Make it visible for OnDevicePersonalization
 
 We added flatbuffers dependency in tensorflow and
@@ -13,16 +13,20 @@ OnDevicePersonalization (lib)
 
 Change-Id: I8bbf550b7d6041bc962c0ecac613cbed1ee65636
 ---
+ Android.bp | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/Android.bp b/Android.bp
-index 5f63853..3821a76 100644
+index e715631..4529955 100644
 --- a/Android.bp
 +++ b/Android.bp
-@@ -130,6 +130,7 @@
+@@ -124,6 +124,7 @@ cc_library {
          "//apex_available:platform",
-         "com.android.btservices",
+         "com.android.bt",
          "com.android.extservices",
 +        "com.android.ondevicepersonalization",
      ],
      min_sdk_version: "30",
  }
+--
+2.34.1

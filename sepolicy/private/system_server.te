@@ -10,3 +10,10 @@ add_service(system_server, faceunlock_service);
 typeattribute system_server data_between_core_and_vendor_violators;
 allow system_server face_vendor_data_file:file create_file_perms;
 allow system_server face_vendor_data_file:dir create_dir_perms;
+
+# unused but lets keep it for now
+allow system_server misc_user_data_file:dir create_dir_perms;
+allow system_server misc_user_data_file:file create_file_perms;
+
+# firewall needs to read app name
+allow system_server proc_net_tcp_udp:file r_file_perms;

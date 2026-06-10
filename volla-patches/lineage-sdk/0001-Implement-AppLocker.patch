@@ -1,4 +1,4 @@
-From a07b2ede8bddc7c36ad5580b79052726b1a70d67 Mon Sep 17 00:00:00 2001
+From 9487dee6164e04bafd9d0f5487b3c4ef1ec26c34 Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 6 Feb 2022 18:07:07 +0330
 Subject: [PATCH] Implement AppLocker
@@ -521,7 +521,7 @@ index 00000000..8dbe5067
 +    }
 +}
 diff --git a/lineage/res/res/values/config.xml b/lineage/res/res/values/config.xml
-index 46c12131..88fbc29c 100644
+index 2ced31a4..ef04322d 100644
 --- a/lineage/res/res/values/config.xml
 +++ b/lineage/res/res/values/config.xml
 @@ -103,6 +103,7 @@
@@ -533,7 +533,7 @@ index 46c12131..88fbc29c 100644
  
      <!-- The LineageSystemServer class that is invoked from Android's SystemServer -->
 diff --git a/sdk/src/java/lineageos/app/LineageContextConstants.java b/sdk/src/java/lineageos/app/LineageContextConstants.java
-index 07dbc1b4..b3021cfd 100644
+index 84acb541..6b985d7f 100644
 --- a/sdk/src/java/lineageos/app/LineageContextConstants.java
 +++ b/sdk/src/java/lineageos/app/LineageContextConstants.java
 @@ -81,6 +81,13 @@ public final class LineageContextConstants {

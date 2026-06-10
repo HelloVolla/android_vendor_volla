@@ -1,4 +1,4 @@
-From da1c75a07b8812588e705fea60048ad67a2090ff Mon Sep 17 00:00:00 2001
+From 2db00a5b8c40143ac17a072a67e2429ddfe9626b Mon Sep 17 00:00:00 2001
 From: Erfan Abdi <erfangplus@gmail.com>
 Date: Sun, 12 Nov 2023 16:31:55 +0330
 Subject: [PATCH] LineageParts: Kill trust
@@ -9,7 +9,7 @@ Subject: [PATCH] LineageParts: Kill trust
  2 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/AndroidManifest.xml b/AndroidManifest.xml
-index bace0ec..2761dcb 100644
+index 4062ae9..1ce0b79 100644
 --- a/AndroidManifest.xml
 +++ b/AndroidManifest.xml
 @@ -51,7 +51,7 @@
@@ -30,8 +30,8 @@ index bace0ec..2761dcb 100644
  
          <receiver
              android:name=".BootReceiver"
-@@ -216,7 +216,7 @@
-                 android:resource="@string/summary_empty" />
+@@ -270,7 +270,7 @@
+                 android:resource="@string/touchscreen_gesture_settings_summary" />
          </activity-alias>
  
 -        <!-- Trust interface (Privacy category) -->
@@ -39,7 +39,7 @@ index bace0ec..2761dcb 100644
          <activity-alias
              android:name=".trust.TrustPreferences"
              android:exported="true"
-@@ -240,7 +240,7 @@
+@@ -294,7 +294,7 @@
              <meta-data
                  android:name="com.android.settings.summary"
                  android:resource="@string/trust_summary" />

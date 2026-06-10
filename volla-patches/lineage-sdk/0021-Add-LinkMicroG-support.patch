@@ -1,0 +1,127 @@
+From cfd2e8f5ed19d741ea5ff911017dc361a340d3b8 Mon Sep 17 00:00:00 2001
+From: Erfan Abdi <erfangplus@gmail.com>
+Date: Wed, 21 Feb 2024 02:18:05 +0330
+Subject: [PATCH] Add LinkMicroG support
+
+Change-Id: Icc9142ee541f1c6d429bc36ec068ef887e46cfbf
+---
+ .../platform/internal/AppLockService.java     | 25 +++++++++++++++++++
+ .../lineageos/applock/AppLockManager.java     | 16 ++++++++++++
+ .../lineageos/applock/IAppLockService.aidl    |  4 +++
+ 3 files changed, 45 insertions(+)
+
+diff --git a/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java b/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
+index c848e8c1..acd612cf 100644
+--- a/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
++++ b/lineage/lib/main/java/org/lineageos/platform/internal/AppLockService.java
+@@ -34,6 +34,7 @@ import android.os.Looper;
+ import android.os.RemoteException;
+ import android.os.SystemProperties;
+ import android.os.UserManager;
++import android.os.UserHandle;
+ import android.util.ArrayMap;
+ import android.util.ArraySet;
+ import android.util.AtomicFile;
+@@ -60,6 +61,7 @@ import libcore.io.IoUtils;
+ import lineageos.app.LineageContextConstants;
+ import lineageos.applock.IAppLockCallback;
+ import lineageos.applock.IAppLockService;
++import lineageos.providers.LineageSettings;
+ 
+ public class AppLockService extends LineageSystemService {
+ 
+@@ -282,6 +284,9 @@ public class AppLockService extends LineageSystemService {
+                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED, 0);
+         }
+         SystemProperties.set("persist.volla.applock.enable", enable ? "true" : "false");
++        if (isLinkMicroGEnabled())
++            LineageSettings.System.putIntForUser(mContext.getContentResolver(),
++                    LineageSettings.System.ENABLE_MICROG, enable ? 0 : 1, UserHandle.USER_CURRENT);
+     }
+ 
+     public boolean isActivate() {
+@@ -296,6 +301,14 @@ public class AppLockService extends LineageSystemService {
+         return SystemProperties.getBoolean("persist.volla.unknown_app.block", false);
+     }
+ 
++    public void enableLinkMicroG(boolean enable) {
++        SystemProperties.set("persist.volla.linkmicrog", enable ? "true" : "false");
++    }
++
++    public boolean isLinkMicroGEnabled() {
++        return SystemProperties.getBoolean("persist.volla.linkmicrog", false);
++    }
++
+     private void addAppToList(String packageName) {
+         if (DEBUG_APPLOCK) Slog.v(TAG, "addAppToList packageName:" + packageName);
+         try {
+@@ -399,7 +412,9 @@ public class AppLockService extends LineageSystemService {
+     private final IBinder mService = new IAppLockService.Stub() {
+         @Override
+         public void activate(boolean enable) {
++            long token = clearCallingIdentity();
+             AppLockService.this.activate(enable);
++            restoreCallingIdentity(token);
+         }
+ 
+         @Override
+@@ -451,6 +466,16 @@ public class AppLockService extends LineageSystemService {
+         public void removeAppLockCallback(IAppLockCallback callback) {
+             AppLockService.this.removeAppLockCallback(callback);
+         }
++
++        @Override
++        public void enableLinkMicroG(boolean enable) {
++            AppLockService.this.enableLinkMicroG(enable);
++        }
++
++        @Override
++        public boolean isLinkMicroGEnabled() {
++            return AppLockService.this.isLinkMicroGEnabled();
++        }
+     };
+ 
+     private class AppLockHandler extends Handler {
+diff --git a/sdk/src/java/lineageos/applock/AppLockManager.java b/sdk/src/java/lineageos/applock/AppLockManager.java
+index 3bccbcb8..6bca3343 100644
+--- a/sdk/src/java/lineageos/applock/AppLockManager.java
++++ b/sdk/src/java/lineageos/applock/AppLockManager.java
+@@ -162,6 +162,22 @@ public class AppLockManager {
+         }
+     }
+ 
++    public void enableLinkMicroG(boolean enable) {
++        try {
++            sService.enableLinkMicroG(enable);
++        } catch (RemoteException e) {
++            throw e.rethrowFromSystemServer();
++        }
++    }
++
++    public boolean isLinkMicroGEnabled() {
++        try {
++            return sService.isLinkMicroGEnabled();
++        } catch (RemoteException e) {
++            throw e.rethrowFromSystemServer();
++        }
++    }
++
+     public abstract static class AppLockCallback extends IAppLockCallback.Stub {
+         @Override
+         public abstract void onAppStateChanged(String pkg);
+diff --git a/sdk/src/java/lineageos/applock/IAppLockService.aidl b/sdk/src/java/lineageos/applock/IAppLockService.aidl
+index 85d04f85..0e5bfef1 100644
+--- a/sdk/src/java/lineageos/applock/IAppLockService.aidl
++++ b/sdk/src/java/lineageos/applock/IAppLockService.aidl
+@@ -44,4 +44,8 @@ interface IAppLockService {
+ 
+     void removeAppLockCallback(IAppLockCallback callback);
+ 
++    void enableLinkMicroG(boolean enable);
++
++    boolean isLinkMicroGEnabled();
++
+ }
+-- 
+2.49.0
+

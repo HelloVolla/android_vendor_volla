@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Hallo Welt Systeme UG
+# Copyright (C) 2017-2026 Volla Systeme GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -48,10 +48,6 @@ PRODUCT_COPY_FILES += \
 # GSM NLP database
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/etc/com.volla.gsmnlp/lacells.db:$(TARGET_COPY_OUT_SYSTEM)/etc/com.volla.gsmnlp/lacells.db
-
-# Localhost SSL key
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/etc/localhost.bks:$(TARGET_COPY_OUT_SYSTEM)/etc/localhost.bks
 
 # APNs
 PRODUCT_COPY_FILES += \
